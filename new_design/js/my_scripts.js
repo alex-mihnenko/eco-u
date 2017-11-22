@@ -1178,7 +1178,7 @@
                 email: email
             }, function(msg){
                 if(msg.status == 'success') {
-                    window.location.reload();
+                    
                 } else {
                     
                 }
