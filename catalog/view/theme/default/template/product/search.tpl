@@ -1,0 +1,71 @@
+<?php if(empty($products)) { ?>
+        <div style="padding:20px;">По вашему запросу товары не найдены</div>
+<?php } ?>
+<ul class="list-letter search_product_list">
+    <?php foreach($products as $key => $product) { ?>
+    <li>
+        <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
+                <meta itemprop="position" content="<?php echo $key; ?>" />
+                <div class="box-p_o">
+                       <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
+                       <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
+                                <img src="<?php if(!empty($product['image'])) echo '/image/'.$product['image']; else echo '/image/placeholder.png'; ?>" alt="">
+                        </a>
+                        <div class="p-o_block">
+                                <?php if($product['sticker']['class']) { ?>
+                                    <?php if($product['sticker']['class'] == '21') { ?><div class="p-o_discount sticker_<?php echo $product['sticker']['class']; ?>">-<?php echo ceil(($product['price'] - $product['special']) / $product['price']); ?>%</div>
+                                    <?php } else { ?><div class="p-o_discount sticker_<?php echo $product['sticker']['class']; ?>"><?php echo $product['sticker']['name']; ?></div><?php } ?>
+                                <?php } ?>
+                                <div class="p-o_link">
+                                        <meta itemprop="name" content="<?php echo $product['name']; ?>">
+                                        <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a>
+                                </div>
+                                <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
+                                <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
+                                        <?php if(isset($cart_products[(int)$product['product_id']])) { ?>
+                                        <div class="not-available clearfix">
+                                                <div class="n-a_text"><?php echo $cart_products[$product['product_id']]; ?> <?php if(!empty($product['weight_variants'])) echo $product['weight_class']; else echo 'шт.'; ?> в корзине</div>
+                                                <input type="submit" value="" class="p-o_submit2">
+                                        </div>
+                                        <?php } elseif($product['stock_status_id'] == 7) { ?>
+                                        <div class="p-o_select">
+                                            <?php if(empty($product['weight_variants'])) { ?>
+                                                <select name="tech" class="tech">
+                                                        <?php for($i=1; $i<=5; $i++) { ?>
+                                                            <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                                        <? } ?>
+                                                </select> 
+                                            <?php } else { ?>
+                                                <select name="tech" class="tech">
+                                                        <?php 
+                                                        $arVariants = explode(',', $product['weight_variants']);
+                                                        foreach($arVariants as $variant) { ?>
+                                                            <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                        <? } ?>
+                                                </select> 
+                                            <?php } ?>
+                                        </div>
+                                        <div class="p-o_right">
+                                                <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                                <meta itemprop="priceCurrency" content="RUB" />
+                                                <?php if(empty($product['weight_variants'])) { ?>
+                                                    <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                <?php } else { ?>
+                                                    <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                                                <?php } ?>
+                                                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                <input type="submit" value="" class="p-o_submit">
+                                        </div>
+                                        <?php } else { ?>
+                                        <div class="not-available clearfix">
+                                                <div class="n-a_text">Скоро будет</div>
+                                                <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
+                                        </div>
+                                        <?php } ?>
+                                </div>
+                        </div>
+                </div>
+        </div>
+    </li>
+    <? } ?>
+</ul>
