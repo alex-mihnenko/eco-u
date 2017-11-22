@@ -201,6 +201,11 @@ class ControllerAjaxIndex extends Controller {
       }
   }
   
+  public function ajaxLogout() {
+      $this->customer->logout();
+      $this->response->setOutput(json_encode(Array('status' => 'success')));
+  }
+  
   // Создать заказ
   public function ajaxAddOrder() {
         $this->load->model('checkout/order');

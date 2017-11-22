@@ -1342,4 +1342,15 @@
         $('form.b-seach').submit(function(e){
             e.preventDefault();
         })
+        if(location.pathname == '/my-account') {
+            $('.b-profile').html('Выйти');
+                $('.b-profile').click(function(e){
+                        e.preventDefault();
+                        $.get('/?route=ajax/index/ajaxLogout', {}, function(msg){
+                           if(msg.status == 'success') {
+                               location.reload();
+                           } 
+                        }, 'json');
+                });
+        }
 });
