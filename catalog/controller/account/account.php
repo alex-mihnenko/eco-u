@@ -110,6 +110,8 @@ class ControllerAccountAccount extends Controller {
                         );
                     }
                     
+                    if(!isset($data['orders'])) $data['orders'] = Array();
+                    
                     $addresses = $this->customer->getAddresses();
                     $arAddress = Array();
                     if(!empty($addresses)) {
