@@ -1348,7 +1348,7 @@
                         e.preventDefault();
                         $.get('/?route=ajax/index/ajaxLogout', {}, function(msg){
                            if(msg.status == 'success') {
-                               location.reload();
+                               location.href = '/';
                            } 
                         }, 'json');
                 });
