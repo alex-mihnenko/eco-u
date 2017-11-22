@@ -119,6 +119,11 @@ class ControllerAccountAccount extends Controller {
                                 'value' => $address['address_1']
                             );
                         }
+                    } else {
+                        $arAddress[] = Array(
+                            'address_id' => 0,
+                            'value' => ''
+                        );
                     }
                     $data['customer'] = Array(
                         'firstname' => $this->customer->getFirstName(),
