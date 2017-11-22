@@ -99,7 +99,7 @@ class ControllerAccountAccount extends Controller {
                 if(!empty($customer_id)) {
                     $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
                     
-                    if(!$orders) foreach($orders as $order) {
+                    if(count($orders) > 0) foreach($orders as $order) {
                         $date = new DateTime($order['date_added']);
                         $data['orders'][] = Array(
                             'order_id' => $order['order_id'],
