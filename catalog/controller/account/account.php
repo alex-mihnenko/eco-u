@@ -112,11 +112,13 @@ class ControllerAccountAccount extends Controller {
                     
                     $addresses = $this->customer->getAddresses();
                     $arAddress = Array();
-                    foreach($addresses as $address) {
-                        $arAddress[] = Array(
-                            'address_id' => $address['address_id'],
-                            'value' => $address['address_1']
-                        );
+                    if(!empty($addresses)) {
+                        foreach($addresses as $address) {
+                            $arAddress[] = Array(
+                                'address_id' => $address['address_id'],
+                                'value' => $address['address_1']
+                            );
+                        }
                     }
                     $data['customer'] = Array(
                         'firstname' => $this->customer->getFirstName(),
