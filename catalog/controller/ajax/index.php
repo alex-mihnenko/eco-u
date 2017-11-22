@@ -522,6 +522,46 @@ class ControllerAjaxIndex extends Controller {
       $this->response->setOutput($tpl);
   }
   
+  // Получить предпочитаемые продукты для слайдера в личном кабинете
+  public function ajaxGetProductsPreferable() {
+      $this->load->model('catalog/product');
+      
+      $products = $this->model_catalog_product->getProductsPreferable();
+      $tpl = '';
+      foreach($products as $product) {
+        $tpl .= '<div>
+                <div class="box-p_o">
+                        <a href="#" class="p-o_thumb">
+                                <img src="/image/'.$product['image'].'" alt="">
+                        </a>
+                        <div class="p-o_block">
+                                <div class="p-o_link">
+                                        <a href="#">'.$product['name'].'</a>
+                                </div>
+                                <div class="clearfix">
+                                        <div class="p-o_select">
+                                            <select name="tech" class="tech">
+                                                        <option value="">1 шт.</option>
+                                                        <option value="">2 шт.</option>
+                                                        <option value="">3 шт.</option>
+                                                        <option value="">4 шт.</option>
+                                                        <option value="">5 шт.</option>
+                                                </select> 
+                                        </div>
+                                        <div class="p-o_right">
+                                                <input type="hidden" name="product_id" value="'.$product['product_id'].'">
+                                                <meta itemprop="price" content="'.(int)$product['price'].'">
+                                                <div class="p-o_price">'.(int)$product['price'].' <span>руб</span></div>
+                                                <input type="submit" value="" class="p-o_submit">
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>';
+      }
+      $this->response->setOutput($tpl);
+  }
+  
   public function ajaxApplyCoupon() {
       $this->load->model('extension/total/coupon');
       $arRequest = $this->request->post;
@@ -608,15 +648,34 @@ class ControllerAjaxIndex extends Controller {
   
   public function ajaxSetCustomerData() {
       $arRequest = $this->request->post;
+      $arRequest['telephone'] = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
       
+      $this->load->model('dadata/index');
+      $structure = Array();
+      $record = Array();
       foreach($arRequest['addresses'] as $address) {
-          $this->customer->setAddress($address['address_id'], $address['value']);
+          $structure[] = "ADDRESS";
+          $record[] = $address['value'];
       }
+      $result = $this->model_dadata_index->cleanRecord($structure, $record);
+      $toReplace = Array();
+      foreach($arRequest['addresses'] as $i => $address) {
+            if(in_array($result['data'][0][$i]['qc'], Array(0,3))) {
+                $this->customer->setAddress($address['address_id'], $result['data'][0][$i]['result']);
+                $toReplace[] = Array(
+                    'value' => $result['data'][0][$i]['result'],
+                    'id' => $address['address_id']
+                );
+            } else {
+                $this->customer->setAddress($address['address_id'], $address['value']);
+            }
+      }
+      
       $this->customer->setFirstName($arRequest['firstname']);
       $this->customer->setTelephone($arRequest['telephone']);
       $this->customer->setEmail($arRequest['email']);
       
-      $this->response->setOutput(json_encode(Array('status' => 'success')));
+      $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
   }
   
   public function ajaxSearchProducts() {

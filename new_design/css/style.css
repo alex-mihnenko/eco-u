@@ -2452,7 +2452,7 @@ footer {
 	top: 1px;
 	right: 0; 
 }
-.slider-favorite-products {
+.slider-favorite-products, .slider-preferable-products {
     box-sizing: border-box;
     padding: 0 105px;
 }

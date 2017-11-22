@@ -619,4 +619,29 @@ class ModelCatalogProduct extends Model {
             
             return $products;
         }
+       
+        // Получить любимые товары
+        public function getProductsPreferable() {
+            
+            $customer_id = $this->customer->getId();
+            $sql = "SELECT order_id FROM `".DB_PREFIX."order` WHERE customer_id = '{$customer_id}'";
+            $query = $this->db->query($sql);
+            $ordersStr = 'order_id IN (';
+            for($i = 0; $i<count($query->rows); $i++) {
+                $ordersStr .= $query->rows[$i]['order_id'];
+                if($i < count($query->rows)-1) $ordersStr .= ', '; 
+            }
+            $ordersStr .= ')';
+            
+            $sql = "SELECT * FROM `".DB_PREFIX."order_product` WHERE {$ordersStr}";
+            $query = $this->db->query($sql);
+            
+            $products = Array();
+            foreach($query->rows as $product) {
+                $arProduct = $this->getProduct($product['product_id']);
+                $products[] = $arProduct;
+            }
+            
+            return $products;
+        }
 }

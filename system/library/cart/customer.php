@@ -244,7 +244,7 @@ class Customer {
             }
         }
         public function setFirstName($firstname) {
-            if(!empty($telephone)) {
+            if(!empty($firstname)) {
                 $this->db->query("UPDATE ".DB_PREFIX."customer SET firstname = '".$this->db->escape($firstname)."' WHERE customer_id = ".(int)$this->customer_id);
             }
         }

@@ -1178,7 +1178,13 @@
                 email: email
             }, function(msg){
                 if(msg.status == 'success') {
-                    
+                    msg.dadata.forEach(function(item, i, arr){
+                        $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
+                    });
+                    $('.f-p_submit').html('Изменения сохранены');
+                    setTimeout(function(){
+                        $('.f-p_submit').html('Сохранить изменения');
+                    }, 3000);
                 } else {
                     
                 }
@@ -1315,6 +1321,82 @@
                 });
             });
         }
+        
+        if($('.slider-preferable-products').length > 0) {
+            $.get('/?route=ajax/index/ajaxGetProductsPreferable', {}, function(msg){
+                $('.slider-preferable-products').html(msg);
+                /*** slider-preferable-products ***/
+                $('.slider-preferable-products').slick({
+                        autoplay: true,
+                        autoplaySpeed: 2000000,
+                        slidesToShow: 5,
+                        slidesToScroll: 5,
+                          responsive: [
+                        {
+                          breakpoint: 374,
+                          settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 2, 
+                          }
+                        },
+                        {
+                          breakpoint: 480,
+                          settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 2,
+                          }
+                        },
+                        {
+                          breakpoint: 979,
+                          settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 2,
+                          }
+                        },
+                        {
+                          breakpoint: 1199,
+                          settings: {
+                                slidesToShow: 3,
+                                slidesToScroll: 3,
+                          }
+                        },
+                        {
+                          breakpoint: 1280,
+                          settings: {
+                                slidesToShow: 4,
+                                slidesToScroll: 4,
+                          }
+                        },
+                        {
+                          breakpoint: 1500,
+                          settings: {
+                                slidesToShow: 4,
+                                slidesToScroll: 4,
+                          }
+                        }]
+                });
+                initDropDown();
+                $('.slider-preferable-products').find('.p-o_submit').click(function(e){
+                    e.preventDefault();
+                    var pElement = $(this).parents('.p-o_block');
+                    var product_id = pElement.find('input[name="product_id"]').val();
+                    var quantity = parseInt(pElement.find('.selectric .label').html());
+                    var special_price = true;
+                    console.log(product_id, quantity);
+                    $.post('/?route=checkout/cart/add', {
+                        product_id: product_id,
+                        quantity: quantity
+                    }, function(msg){
+                        if(location.pathname == '/cart') {
+                            location.reload();
+                        } else {
+                            LoadCart();
+                        }
+                    }, "json");
+                });
+            });
+        }
+        
         
         function InitClamp(selector) {
             $(selector).each(function(i, item, arr){
