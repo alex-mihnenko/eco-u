@@ -99,16 +99,17 @@ class ControllerAccountAccount extends Controller {
                 if(!empty($customer_id)) {
                     $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
                     
-                    var_dump($orders);
-                    foreach($orders as $order) {
-                        $date = new DateTime($order['date_added']);
-                        $data['orders'][] = Array(
-                            'order_id' => $order['order_id'],
-                            'date' => $date->format('d.m.Y'),
-                            'status' => $order['status_text'],
-                            'status_id' => $order['order_status_id'],
-                            'total' => $order['total']
-                        );
+                    if($orders !== false) {
+                        foreach($orders as $order) {
+                            $date = new DateTime($order['date_added']);
+                            $data['orders'][] = Array(
+                                'order_id' => $order['order_id'],
+                                'date' => $date->format('d.m.Y'),
+                                'status' => $order['status_text'],
+                                'status_id' => $order['order_status_id'],
+                                'total' => $order['total']
+                            );
+                        }
                     }
                     
                     if(!isset($data['orders'])) $data['orders'] = Array();
