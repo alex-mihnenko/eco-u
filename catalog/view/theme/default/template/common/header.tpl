@@ -76,10 +76,10 @@
 			<!-- modal <div class="b-profile" data-remodal-target="modal">Войти</div>  -->
 			<div class="remodal modal-profile" data-remodal-id="modal">
 				<ul class="tabs__caption clearfix">
-					<li>Я новый покупатель</li>
-					<li class="active">Я уже покупал</li> 
+					<!--<li>Я новый покупатель</li>-->
+					<li class="active">Личный кабинет</li> 
 				</ul>
-				<div class="tabs__content">
+				<!--<div class="tabs__content">
 					<div class="m-p_shadow">
 						<div class="show-registration">
 							<div class="t-c_input input-error_1">
@@ -98,24 +98,25 @@
                                                         <div class="sms-hint"></div>
 						</div>
 					</div>
-				</div>
+				</div>-->
 				<div class="tabs__content active">
 					<div class="t-c_box">
-						<div class="js-hide_1">
+						<form class="js-hide_1" action="." method="POST">
 							<div class="t-c_title">Войти</div>
-							<div class="t-c_input input-error_1">
+							<div class="t-c_input">
 								<input type="text" placeholder="+7 913 44 30 37" class="input" id="phone3">
 								<span class="underline"></span>
 							</div>
-							<div class="t-c_input input-error_1">
+							<div class="t-c_input">
 								<input id="password3" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" class="input i-2">
 								<span class="underline"></span>
 							</div>
-							<input type="submit" value="Войти" class="m-p_entrance" data-remodal-action="confirm">
+                                                        <div class="login-wrong" style="padding-bottom:1em;">Неверный телефон или пароль.</div>
+							<input type="submit" value="Войти" class="m-p_entrance">
 							<div>
 								<div class="m-p_forgot">Напомнить пароль?</div>
 							</div>
-						</div>
+						</form>
 						<div class="show-forgot">
 							<div class="t-c_input">
 								<input type="text" placeholder="+7 913 44 30 37" class="input" id="phone4">

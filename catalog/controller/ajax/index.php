@@ -101,7 +101,8 @@ class ControllerAjaxIndex extends Controller {
         $arUser['email'] = $arUser['telephone'].'@eco-u.ru';
         
         $this->load->model('account/customer');
-        return $this->model_account_customer->addCustomer($arUser);
+        $customer_id = $this->model_account_customer->addCustomer($arUser);
+        return $customer_id;
   }
   
   // Отправка sms с подтверждением
@@ -146,8 +147,12 @@ class ControllerAjaxIndex extends Controller {
         else
         {
             $customer_id = $this->ajaxRegisterCustomer();
-            if($customer_id) $this->customer->loginByPhone($phone, $password);
-            echo json_encode(Array('status' => 'success', 'customer_id' => $customer_id));
+            if($customer_id) {
+                $this->customer->loginByPhone($phone, $password);
+                echo json_encode(Array('status' => 'success', 'customer_id' => $customer_id));
+            } else {
+                echo json_encode(Array('status' => 'error'));
+            }
         }
   }
   
@@ -452,10 +457,14 @@ class ControllerAjaxIndex extends Controller {
             $arUser['email'] = $arUser['telephone'].'@eco-u.ru';
 
             $this->load->model('account/customer');
-            $this->model_account_customer->addCustomer($arUser);
+            $customer_id = $this->model_account_customer->addCustomer($arUser);
             
-            $this->customer->loginByPhone($arUser['telephone'], $arUser['password']);
-            $this->response->setOutput(json_encode(Array('status' => 'success')));
+            if($customer_id) { 
+                $this->customer->loginByPhone($arUser['telephone'], $arUser['password']);
+                $this->response->setOutput(json_encode(Array('status' => 'success')));
+            } else {
+                $this->response->setOutput(json_encode(Array('status' => 'error')));
+            }
       } else {
           $this->response->setOutput(json_encode(Array('status' => 'error')));
       }

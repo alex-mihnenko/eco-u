@@ -909,7 +909,8 @@
                 }
 	});
         //Авторизация
-        $('.m-p_entrance').click(function(){
+        $('.m-p_entrance').click(function(e){
+            e.preventDefault();
             var phone = $('#phone3').val();
             var pass = $('#password3').val();
             if(phone != '' && pass != '') {
@@ -919,6 +920,9 @@
                 }, function(msg){
                     if(msg.status == 'success') {
                         window.location.href = '/';
+                    } else {
+                        $('.m-p_entrance').parent().find('.t-c_input').addClass('input-error_1').find('input').css('border-bottom', '3px solid #D00');
+                        $('.m-p_entrance').parent().find('.login-wrong').show();
                     }
                 }, "json");
             }
@@ -939,7 +943,9 @@
                             $('.password-sent').html('Вам выслана SMS с новым паролем.');
                             $('.show-forgot').find('.t-c_code').show();
                         } else {
+                            $('.t-c_input').addClass('input-error_1');
                             $('.password-sent').html('Пользователь с таким номером не зарегистрирован.');
+                            $('#phone4').focus();
                         }
                     }, "json");
                 } else if($('#phone4').val() != '' && $('#smscode4').val() != '') {
@@ -1205,8 +1211,8 @@
                     firstname: $(this).parents('#form1').find('.field_firstname').val(),
                     telephone: $(this).parents('#form1').find('.field_phone').val()
                 }, function(msg){
-                    $(this).find('.ajax-loader').css('display', '');
-                    $(this).css('font-size', '');
+                    $('#form1.order-information').find('.o-i_submit').find('.ajax-loader').css('display', '');
+                    $('#form1.order-information').find('.o-i_submit').css('font-size', '');
                     if(msg.status == 'success') {
                         $.post('/?route=ajax/index/ajaxAddOrder', {}, 
                             function(msg) {
@@ -1220,6 +1226,11 @@
                                 }
                             }
                         );
+                    } else {
+                        $('.customer-exists-error').show();
+                        setTimeout(function(){
+                            $('.b-profile').click();
+                        }, 1500);
                     }
                 }, "json");
             } else {

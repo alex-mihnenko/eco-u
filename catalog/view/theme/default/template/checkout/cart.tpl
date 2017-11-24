@@ -83,6 +83,7 @@
 					    					<div class="o-i_border">
 												<span class="o-i_submit"><span class="ajax-loader"></span>Оформить заказ</span>
                                                                                                 <div class="total-price-error">Сумма заказа меньше 1000 рублей.</div>
+                                                                                                <div class="customer-exists-error">Пользователь с таким номером уже зарегистрирован.</div>
 					    						<div class="mobile-center">
 						    						<div class="clearfix mobile-inline">
 							    						<div class="o-i_chek">

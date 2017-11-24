@@ -1,6 +1,10 @@
 <?php
 class ModelAccountCustomer extends Model {
 	public function addCustomer($data) {
+                
+                $cFound = $this->customer->getByPhone($data['telephone']);
+                if(isset($cFound['customer_id'])) return false;
+                
 		if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
 			$customer_group_id = $data['customer_group_id'];
 		} else {
