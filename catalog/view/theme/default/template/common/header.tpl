@@ -99,9 +99,10 @@
 						</div>
 					</div>
 				</div>-->
+                                <iframe name="ph_iframe" src="auth.php" style="display:none;"></iframe>
 				<div class="tabs__content active">
 					<div class="t-c_box">
-						<form class="js-hide_1" action="." method="POST">
+						<form class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
 							<div class="t-c_title">Войти</div>
 							<div class="t-c_input">
 								<input type="text" placeholder="+7 913 44 30 37" class="input" id="phone3">

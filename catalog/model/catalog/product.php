@@ -633,13 +633,17 @@ class ModelCatalogProduct extends Model {
             }
             $ordersStr .= ')';
             
-            $sql = "SELECT * FROM `".DB_PREFIX."order_product` WHERE {$ordersStr}";
+            $sql = "SELECT product_id FROM ".DB_PREFIX."order_product WHERE {$ordersStr}";
             $query = $this->db->query($sql);
             
             $products = Array();
             foreach($query->rows as $product) {
-                $arProduct = $this->getProduct($product['product_id']);
-                $products[] = $arProduct;
+                if(!isset($arPreferable[$product['product_id']])) {
+                    $arPreferable[$product['product_id']] = true;
+                } else {
+                    $arProduct = $this->getProduct($product['product_id']);
+                    $products[$product['product_id']] = $arProduct;
+                }
             }
             
             return $products;

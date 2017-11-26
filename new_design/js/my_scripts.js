@@ -914,18 +914,23 @@
             var phone = $('#phone3').val();
             var pass = $('#password3').val();
             if(phone != '' && pass != '') {
+                $('.js-hide_1').submit();
                 $.post('/?route=ajax/index/ajaxLoginByPhone',{
                     telephone: phone,
                     password: pass
                 }, function(msg){
                     if(msg.status == 'success') {
-                        window.location.href = '/';
+                        window.location.href = window.location.pathname;
                     } else {
                         $('.m-p_entrance').parent().find('.t-c_input').addClass('input-error_1').find('input').css('border-bottom', '3px solid #D00');
                         $('.m-p_entrance').parent().find('.login-wrong').show();
                     }
                 }, "json");
             }
+        });
+        
+        $('.js-hide_1').find('input').keydown(function(){
+                $('.login-wrong').hide();
         });
         
 	$('.m-p_forgot').on( 'click', function(){
@@ -954,7 +959,7 @@
                         password: $('#smscode4').val()
                     }, function(msg){
                         if(msg.status == 'success') {
-                            window.location.href = '/';
+                            window.location.href = window.location.pathname;
                         } else {
                             $('.password-sent').html('Пароль из SMS введен некорретно');
                         }
@@ -984,9 +989,13 @@
                 product_id: product_id,
                 quantity: quantity
             }, function(msg){
-                pElement.find('.clearfix').hide();
-                pElement.append('<div class="not-available clearfix"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
+                pElement.find('.p-o_select, .p-o_right').hide();
+                pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
                 LoadCart();
+                setTimeout(function(){
+                    pElement.find('.basket-added').remove();
+                    pElement.find('.p-o_select, .p-o_right').show();
+                }, 3000, pElement);
             }, "json");
         });
         // Добавление в корзину на странице товара
@@ -1187,9 +1196,9 @@
                     msg.dadata.forEach(function(item, i, arr){
                         $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
                     });
-                    $('.f-p_submit').html('Изменения сохранены');
+                    $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
                     setTimeout(function(){
-                        $('.f-p_submit').html('Сохранить изменения');
+                        $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
                     }, 3000);
                 } else {
                     

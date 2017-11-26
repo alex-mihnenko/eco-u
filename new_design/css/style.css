@@ -2631,8 +2631,14 @@ footer {
 	text-decoration: none;
 	padding: 14px 0;
 }
+.f-p_submit.changes-applied {
+    background-color:#fff;
+    border:2px solid #739d3d;
+    color:#739d3d;
+}
 .f-p_submit:hover {
 	background: #628535;
+        color:#fff;
 	transition: 0.3s ease-in-out all;
 }
 /* END History of orders */

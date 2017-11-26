@@ -156,12 +156,7 @@
                                                                                                             </div>
                                                                                                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                                                                                             <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
-                                                                                                                    <?php if(isset($cart_products[(int)$product['product_id']])) { ?>
-                                                                                                                    <div class="not-available clearfix">
-                                                                                                                            <div class="n-a_text"><?php echo $cart_products[$product['product_id']]; ?> <?php if(!empty($product['weight_variants'])) echo $product['weight_class']; else echo 'шт.'; ?> в корзине</div>
-                                                                                                                            <input type="submit" value="" class="p-o_submit2">
-                                                                                                                    </div>
-                                                                                                                    <?php } elseif($product['stock_status_id'] == 7) { ?>
+                                                                                                                    <?php if($product['stock_status_id'] == 7) { ?>
                                                                                                                     <div class="p-o_select">
                                                                                                                         <?php if(empty($product['weight_variants'])) { ?>
                                                                                                                             <select name="tech" class="tech">
