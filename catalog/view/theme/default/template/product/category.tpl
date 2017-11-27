@@ -81,6 +81,7 @@
 						<form class="b-seach">
 							<input type="text" placeholder="поиск..." class="b-seach_text">
 							<input type="submit" value="" class="b-seach_submit">
+                                                        <div class="cancel-search">&times;</div>
 						</form>
 					</div>
 					<div class="qwe2">
@@ -109,7 +110,7 @@
                                                                 ?>
 								<li>
                                                                         <a href="#l-p_<?php echo $category['id']; ?>">
-										<div class="l-p_icon l-p_i2"></div>
+										<div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?> ');"></div>
 										<span><?php echo $category['name']; ?></span>
 									</a>
 								</li>
@@ -135,9 +136,11 @@
                                                                 <div id="letter_<?php echo $lCode; ?>" class="rel">
 									<div class="big-letter"><?php echo $letter; ?></div>
 									<ul class="list-letter">
-										<?php foreach($products_asorted[$letter] as $key => $product) { ?>
+										<?php foreach($products_asorted[$letter] as $key => $product) { 
+                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+                                                                                ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
-                                                                                    <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
+                                                                                    <div id="asorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
                                                                                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
@@ -145,10 +148,8 @@
                                                                                                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
-                                                                                                            <?php if($product['sticker_class']) { ?>
-                                                                                                                <?php if($product['sticker_class'] == '21') { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>">-<?php echo ceil(($product['price'] - $product['special']) / $product['price']); ?>%</div>
-                                                                                                                <?php } else { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
-                                                                                                            <?php } ?>
+                                                                                                            <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
+                                                                                                            <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
                                                                                                             <div class="p-o_link">
                                                                                                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
                                                                                                                     <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a> 
@@ -156,7 +157,7 @@
                                                                                                             </div>
                                                                                                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                                                                                             <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
-                                                                                                                    <?php if($product['stock_status_id'] == 7) { ?>
+                                                                                                                    <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
                                                                                                                     <div class="p-o_select">
                                                                                                                         <?php if(empty($product['weight_variants'])) { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -185,7 +186,7 @@
                                                                                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                                                                                             <input type="submit" value="" class="p-o_submit">
                                                                                                                     </div>
-                                                                                                                    <?php } else { ?>
+                                                                                                                    <?php } elseif($product['quantity'] < 0 && $product['stock_status_id'] == 6) { ?>
                                                                                                                     <div class="not-available clearfix">
                                                                                                                             <div class="n-a_text">Скоро будет</div>
                                                                                                                             <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
@@ -279,7 +280,7 @@
 									<ul class="list-letter">
                                                                                 <?php foreach($products_catsorted[$category['id']] as $key => $product) { ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
-                                                                                    <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
+                                                                                    <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
                                                                                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
@@ -287,10 +288,8 @@
                                                                                                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/placeholder.png'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
-                                                                                                            <?php if($product['sticker_class']) { ?>
-                                                                                                                <?php if($product['sticker_class'] == '21') { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>">-<?php echo ceil(($product['price'] - $product['special']) / $product['price']); ?>%</div>
-                                                                                                                <?php } else { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
-                                                                                                            <?php } ?>
+                                                                                                            <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
+                                                                                                            <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
                                                                                                             <div class="p-o_link">
                                                                                                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
                                                                                                                     <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a>
@@ -325,7 +324,7 @@
                                                                                                                             <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
                                                                                                                             <meta itemprop="priceCurrency" content="RUB" />
                                                                                                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                                                                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                                                                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo (int)$product['price']; ?> руб</div>
                                                                                                                             <?php } else { ?>
                                                                                                                                 <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                                                                                                                             <?php } ?>
@@ -355,12 +354,10 @@
 				<div class="tabs__block">
 					<div class="width-1418">
 						<div class="auto-columnizer clearfix">
-                                                        <?php foreach($alphabet_list as $i => $letter) { 
-                                                            if(!isset($products_tagsorted[$letter])) continue;
-                                                        ?>
+                                                        <?php foreach($products_tagsorted as $letter => $arTagProducts) { ?>
                                                             <div class="no-pictures">
                                                                 <div class="n-p_title"><?php echo $letter; ?></div>
-                                                                <?php foreach($products_tagsorted[$letter] as $tag => $product) { ?>
+                                                                <?php foreach($arTagProducts as $tag => $product) { ?>
                                                                 <div class="n-p_list" data-remodal-target="modal5" data-tag="<?php echo $tag; ?>"><? echo $tag; ?></div>
                                                                 <?php } ?>
                                                             </div>

@@ -77,7 +77,7 @@ class ControllerProductCategory extends Controller {
 			$parts = explode('_', (string)$this->request->get['path']);
 
 			$category_id = (int)array_pop($parts);
-
+                        
 			foreach ($parts as $path_id) {
 				if (!$path) {
 					$path = (int)$path_id;
@@ -99,7 +99,7 @@ class ControllerProductCategory extends Controller {
 		}
 
 		$category_info = $this->model_catalog_category->getCategory($category_id);
-
+                
 		if ($category_info) {
 			$this->document->setTitle($category_info['meta_title']);
 			$this->document->setDescription($category_info['meta_description']);
@@ -172,7 +172,8 @@ class ControllerProductCategory extends Controller {
 				$data['categories'][] = array(
                                         'id' => $result['category_id'],
 					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
-					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
+					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url),
+                                        'image' => $result['image']
 				);
 			}
 
@@ -231,9 +232,13 @@ class ControllerProductCategory extends Controller {
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
                                
-                                if($special) $price = $special;
+                                if($special) {
+                                    $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                    $price = $special;
+                                }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
+                                        'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
                                         'description_short' => $result['description_short'],
@@ -251,6 +256,10 @@ class ControllerProductCategory extends Controller {
                                         'sticker_name' => $result['sticker']['name'],
                                         'sticker_class' => $result['sticker']['class']
 				);
+                                if(isset($discount_sticker)) {
+                                    $arProducts['discount_sticker'] = $discount_sticker;
+                                    unset($discount_sticker);
+                                }
                                 if($data['is_admin']) {
                                         $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
                                 }
@@ -296,7 +305,7 @@ class ControllerProductCategory extends Controller {
 				} else {
 					$special = false;
 				}
-
+                                
 				if ($this->config->get('config_tax')) {
 					$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price'], $this->session->data['currency']);
 				} else {
@@ -309,9 +318,13 @@ class ControllerProductCategory extends Controller {
 					$rating = false;
 				}
                                
-                                if($special) $price = $special;
+                                if($special) {
+                                    $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                    $price = $special;
+                                }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
+                                        'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
                                         'description_short' => $result['description_short'],
@@ -329,9 +342,14 @@ class ControllerProductCategory extends Controller {
                                         'sticker_name' => $result['sticker']['name'],
                                         'sticker_class' => $result['sticker']['class']
 				);
+                                if(isset($discount_sticker)) {
+                                    $arProducts['discount_sticker'] = $discount_sticker;
+                                    unset($discount_sticker);
+                                }
                                 if($data['is_admin']) {
                                         $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
                                 }
+                                
                                 $data['products_catsorted'][$category['id']][] = $arProducts;
                             }
                         }
@@ -492,7 +510,11 @@ class ControllerProductCategory extends Controller {
                             $data['cart_products'][(int)$product['product_id']] = $product['quantity'];
                         }
                         
-			$this->response->setOutput($this->load->view('product/category', $data));
+                        if($category_id == 59) {
+        			$this->response->setOutput($this->load->view('product/category', $data));
+                        } else {
+                                $this->response->setOutput($this->load->view('product/categoryother', $data));
+                        }
 		} else {
 			$url = '';
 

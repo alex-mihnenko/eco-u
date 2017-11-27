@@ -1,13 +1,10 @@
-<?php echo $header; 
-$testVisit = ($_SERVER['REMOTE_ADDR'] == '46.242.15.160');
-?>
+<?php echo $header; ?>
 
 <script>
     window.bodyClass = 'page_2';
 </script>
 
 <!-- Container -->
-<?php //if($testVisit) var_dump(get_defined_vars()); ?>
 <section class="fond-white">
         <div class="width-1194 pd-29">
                 <ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
@@ -51,11 +48,17 @@ $testVisit = ($_SERVER['REMOTE_ADDR'] == '46.242.15.160');
                         <div class="c-p_right">
                                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                                 <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
-                                <div class="c-p_city"></div>
-                                <div class="c-p_txt"></div>
-                                <div class="c-p_list" itemprop="description">
-                                        <?php echo $description_short; ?>
+                                <div class="c-p_city"><?php echo $description_short; ?></div>
+                                <div class="c-p_txt">
+                                    О продукте:
                                 </div>
+                                <ul class="c-p_list" itemprop="description">
+                                        <?php foreach($props3 as $prop) { 
+                                            if(!empty($prop)) { ?>
+                                            <li><?php echo $prop; ?></li>
+                                            <?php }
+                                        } ?>
+                                </ul>
                                 <div class="box-a_d">
                                         <a href="#anchor-details" class="anchor-details">Подробнее</a>
                                 </div>

@@ -4023,8 +4023,36 @@ footer {
     color:#b2b2b2;
 }
 
-
-
+.sticker_discount {
+    font-size:20px;
+}
+.sticker_20 {
+    font-size:11px;
+    background-color:#f17e46;
+    text-transform: uppercase;
+}
+.cancel-search {
+    display:none;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    height: 100%;
+    font-size: 2em;
+    color: #e2617f;
+    line-height: 100%;
+    padding: 0.1em 0.15em;
+}
+.category-icon {
+    width:27px;
+    height:27px;
+    background-size:contain;
+    background-position:center;
+    z-index:7;
+    display:inline-block;
+    background-repeat:no-repeat;
+    position:relative;
+}
 
 .b-delivery.b-delivery2 {
 	max-width: 500px;

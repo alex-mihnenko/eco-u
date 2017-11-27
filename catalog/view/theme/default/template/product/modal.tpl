@@ -14,31 +14,37 @@
                     <?php if(!empty($product['attribute_groups'])) { ?>
                         <div class="m-product_text"><span style="line-height:2em;">О продукте:</span><br></div>
                         <ul class="m-product_list">
-                                <?php
-                                foreach($product['attribute_groups'] as $aGroup) { 
-                                    if($aGroup['attribute_group_id'] == '7') { 
-                                        foreach($aGroup['attribute'] as $attribute) {
-                                        ?>
-                                            <li>
-                                                    <?php echo $attribute['name']; ?>: <?php echo $attribute['text']; ?>
-                                            </li>
-                                        <?php  
-                                        }
-                                    } 
-                                } 
-                                ?>
+                                <?php foreach($product['props3'] as $prop) { 
+                                    if(!empty($prop)) { ?>
+                                    <li><?php echo $prop; ?></li>
+                                    <?php }
+                                } ?>
                         </ul>
                     <?php } ?>
                     <div class="size-0">
                             <div class="m-product_select">
-                                <select name="tech" class="tech">
-                                        <?php for($i=1; $i<=5; $i++) { ?>
-                                            <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
-                                        <? } ?>
-                                </select> 
+                                <?php if(empty($product['weight_variants'])) { ?>
+                                    <select name="tech" class="tech">
+                                            <?php for($i=1; $i<=5; $i++) { ?>
+                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                            <? } ?>
+                                    </select> 
+                                <?php } else { ?>
+                                    <select name="tech" class="tech">
+                                            <?php 
+                                            $arVariants = explode(',', $product['weight_variants']);
+                                            foreach($arVariants as $variant) { ?>
+                                                <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                            <? } ?>
+                                    </select> 
+                                <?php } ?>
                             </div>
                             <input type="hidden" class="product_price" value="<?php if(!empty($product['special'])) echo (int)$product['special']; else echo (int)$product['price']; ?>">
-                            <div class="m-product_price"><?php if(!empty($product['special'])) echo (int)$product['special']; else echo (int)$product['price']; ?> руб</div>
+                            <?php if(empty($product['weight_variants'])) { ?>
+                                <div class="m-product_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo (int)$product['price']; ?> руб</div>
+                            <?php } else { ?>
+                                <div class="m-product_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                            <?php } ?>
                     </div>
                     <a href="#" class="m-product_submit">Добавить в корзину</a>
             </div>

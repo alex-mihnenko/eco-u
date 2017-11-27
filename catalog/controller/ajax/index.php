@@ -35,7 +35,6 @@ class ControllerAjaxIndex extends Controller {
       if(!empty($arRequest['tag'])) {
           $this->load->model('catalog/product');
           $data['products'] = $this->model_catalog_product->getProductsByTag($arRequest['tag']);
-          
           if(!empty($data['products'])) {
                 $this->response->setOutput($this->load->view('product/modal', $data));
           } else {
@@ -691,8 +690,17 @@ class ControllerAjaxIndex extends Controller {
       $search = $this->request->get['search'];
       
       $this->load->model('catalog/product');
+      $this->load->model('tool/image');
       
       $data['products'] = $this->model_catalog_product->searchProducts($search);
+      foreach($data['products'] as $i => $result) {
+            if ($result['image']) {
+                    $image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+            } else {
+                    $image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+            }
+            $data['products'][$i]['thumb'] = $image;
+      }
       $this->response->setOutput($this->load->view('product/search', $data));
   }
 }

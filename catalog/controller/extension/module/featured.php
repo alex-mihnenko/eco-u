@@ -3,6 +3,15 @@ class ControllerExtensionModuleFeatured extends Controller {
 	public function index($setting) {
 		$this->load->language('extension/module/featured');
 
+                if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
+                {
+                    $data['is_admin'] = true;
+                }
+                else
+                {
+                    $data['is_admin'] = false;
+                }
+                
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_tax'] = $this->language->get('text_tax');
@@ -58,20 +67,39 @@ class ControllerExtensionModuleFeatured extends Controller {
 						$rating = false;
 					}
 
-                                        if($special) $price = $special;
-					$data['products'][] = array(
-						'product_id'  => $product_info['product_id'],
-						'thumb'       => $image,
-						'name'        => $product_info['name'],
-						'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
-						'price'       => $price,
-						'special'     => $special,
-						'tax'         => $tax,
-						'rating'      => $rating,
-						'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
+                                        if($special) {
+                                            $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                            $price = $special;
+                                        }
+                                        $arProducts = array(
+                                                'product_id'  => $product_info['product_id'],
+                                                'quantity'    => $product_info['quantity'],
+                                                'thumb'       => $image,
+                                                'name'        => $product_info['name'],
+                                                'description_short' => $product_info['description_short'],
+                                                'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
+                                                'price'       => $price,
+                                                'special'     => $special,
+                                                'tax'         => $tax,
+                                                'minimum'     => $product_info['minimum'] > 0 ? $product_info['minimum'] : 1,
+                                                'rating'      => $product_info['rating'],
+                                                'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $product_info['product_id']),
                                                 'stock_status'      => $product_info['stock_status'],
-                                                'stock_status_id'   => $product_info['stock_status_id']
-					);
+                                                'stock_status_id'   => $product_info['stock_status_id'],
+                                                'weight_variants'   => $product_info['weight_variants'],
+                                                'weight_class' => $product_info['weight_class'],
+                                                'sticker_name' => $product_info['sticker']['name'],
+                                                'sticker_class' => $product_info['sticker']['class']
+                                        );
+                                        
+                                        if(isset($discount_sticker)) {
+                                            $arProducts['discount_sticker'] = $discount_sticker;
+                                            unset($discount_sticker);
+                                        }
+                                        if($data['is_admin']) {
+                                                $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product_info['product_id'];
+                                        }
+                                        $data['products'][] = $arProducts;
 				}
 			}
 		}
