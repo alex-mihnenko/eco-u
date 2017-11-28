@@ -2,7 +2,7 @@
 class ControllerCheckoutCart extends Controller {
 	public function index() {
 		$this->load->language('checkout/cart');
-
+                $this->load->model('checkout/order');
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['breadcrumbs'] = array();
@@ -299,9 +299,20 @@ class ControllerCheckoutCart extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
-
-			$this->response->setOutput($this->load->view('checkout/cart', $data));
+                        
+                        if($customer_id = $this->customer->isLogged()) {
+                            $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                            $data['customer_discount'] = $this->customer->getPersonalDiscount($customer_id, $orders);
+                        }
+			
+                        $this->response->setOutput($this->load->view('checkout/cart', $data));
 		} else {
+                        
+                        if($customer_id = $this->customer->isLogged()) {
+                            $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                            $data['customer_discount'] = $this->customer->getPersonalDiscount($customer_id, $orders);
+                        }
+                        
 			$data['heading_title'] = $this->language->get('heading_title');
 
 			$data['text_error'] = $this->language->get('text_empty');

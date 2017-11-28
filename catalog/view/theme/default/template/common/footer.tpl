@@ -4,16 +4,20 @@
 				<div class="width-1418">
 					<div class="f-stick">
 						<div class="clearfix">
-							<a href="#" class="logo-foot">
+							<a href="/" class="logo-foot">
 								<img src="/new_design/img/logo_2.png" alt="">
 							</a>
 							<div class="f-languages">
-							    <select name="tech" class="tech">
+							    <div class="selectric-wrapper selectric-tech selectric-dd-ready"><div class="selectric-hide-select"><select name="tech" class="tech dd-ready" tabindex="-1">
 									<option value="">English</option>
 									<option value="">Russian</option>
 									<option value="">Polish</option>
-								</select> 
+								</select></div><div class="selectric"><span class="label">English</span><b class="button">▾</b></div><div class="selectric-items" tabindex="-1"><div class="selectric-scroll"><ul><li data-index="0" class="selected">English</li><li data-index="1" class="">Russian</li><li data-index="2" class="last">Polish</li></ul></div></div><input class="selectric-input" tabindex="0"></div> 
 							</div>
+							<ul class="menu-foot">
+								<li><a href="#">Блог Eco-u</a></li>
+								<li><a href="#">O проекте</a></li>
+							</ul>
 						</div>
 					</div>
 					<div class="clearfix">

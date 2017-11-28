@@ -2641,6 +2641,11 @@ footer {
         color:#fff;
 	transition: 0.3s ease-in-out all;
 }
+.f-p_submit.changes-applied:hover {
+    background-color:#fff;
+    border:2px solid #739d3d;
+    color:#739d3d;
+}
 /* END History of orders */
 
 /*Plugin tabs*/
@@ -3300,7 +3305,15 @@ footer {
 .b-discount {
 	background: #EFF1F4;
 	margin: 0 0 32px 0;
-	padding: 33px 0 33px 0;
+	padding: 1px 0 33px 0;
+}
+.b-discount .personal-discount {
+    padding:6px 10px 6px 10px;
+    line-height:20px;
+    font-size:12px;
+    height:18px;
+    color:#287233;
+    text-align:center;
 }
 .b-d_coupon {
 	font-size: 16px;

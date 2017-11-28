@@ -1453,6 +1453,7 @@
                         search: search
                     }, function(msg){
                         $('#contentcontainer3 div.container').html(msg);
+                        window.saved_active_block = $('ul.tabs__catalog').find('li.active');
                         InitClamp('.p-o_link a, .p-o_short-descr');
                         $('.tabs__catalog').find('li:nth-child(4)').click();
                         initDropDown();
@@ -1465,6 +1466,7 @@
         $('.b-seach .cancel-search').on('click', function(e){
             $('.b-seach input[type="text"]').val('');
             $(this).hide();
+            window.saved_active_block.click();
         });
         $('form.b-seach').submit(function(e){
             e.preventDefault();

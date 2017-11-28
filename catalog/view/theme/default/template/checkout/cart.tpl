@@ -67,9 +67,19 @@
 					    			<div class="sidebar_right" data-sticky>
 					    				<div id="form1" class="order-information">
 					    					<div class="o-i_txt1">Стоимость заказа</div>
-					    					<div class="o-i_price"><?php if(isset($totals[0])) echo $totals[0]['text']?></div>
+					    					<div class="o-i_price"><?php if(isset($totals[0])) { echo ceil((int)$totals[0]['text'] * (1-$customer_discount/100)); } ?></div>
 					    					<div class="o-i_txt2">(без учета стоимости доставки)</div>
-					    					<div class="b-discount">
+                                                                                <div class="b-discount">
+                                                                                        <div class="personal-discount">
+                                                                                        <?php if(isset($customer_discount)) { 
+                                                                                            if(isset($totals[0])) { ?>
+                                                                                                Ваша скидка <?php echo (int)$totals[0]['text']*((int)$customer_discount/100); ?> руб
+                                                                                            <?php } else { ?>
+                                                                                                Ваша скидка <?php echo (int)$customer_discount; ?>%
+                                                                                            <?php } ?>
+                                                                                            <input type="hidden" id="customer_discount" value="<?php echo (int)$customer_discount; ?>">
+                                                                                        <?php } ?>
+                                                                                        </div>
 					    						<div class="b-d_coupon">Есть купон на скидку?</div>
 					    						<div class="b-d_hidden">
 					    							<div class="b-d_coupon2">Применить скидку</div>

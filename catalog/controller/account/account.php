@@ -99,7 +99,6 @@ class ControllerAccountAccount extends Controller {
                 if(!empty($customer_id)) {
                     $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
                     
-                    $totalCustomerOutcome = 0;
                     if($orders !== false) {
                         foreach($orders as $order) {
                             $date = new DateTime($order['date_added']);
@@ -110,13 +109,9 @@ class ControllerAccountAccount extends Controller {
                                 'status_id' => $order['order_status_id'],
                                 'total' => $order['total']
                             );
-                            if($order['order_status_id'] == 5) {
-                                $totalCustomerOutcome += $order['total'];
-                            }
                         }
                     }
-                    $data['customer_discount'] = -1*intval(floor($totalCustomerOutcome/10000));
-                    if($data['customer_discount'] < -10) $data['customer_discount'] = -10;
+                    $data['customer_discount'] = -1 * $this->customer->getPersonalDiscount($customer_id, $orders);
                     
                     if(!isset($data['orders'])) $data['orders'] = Array();
                     

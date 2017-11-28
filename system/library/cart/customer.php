@@ -258,4 +258,17 @@ class Customer {
                 $this->db->query("UPDATE ".DB_PREFIX."customer SET email = '".$this->db->escape($email)."' WHERE customer_id = ".(int)$this->customer_id);
             }
         }
+        public function getPersonalDiscount($customer_id, $orders) {
+            $totalCustomerOutcome = 0;
+            if($orders !== false) {
+                foreach($orders as $order) {
+                    if($order['order_status_id'] == 5) {
+                        $totalCustomerOutcome += $order['total'];
+                    }
+                }
+            }
+            $discount = intval(floor($totalCustomerOutcome/10000));
+            if($discount > 10) $discount = 10;
+            return $discount;
+        }
 }
