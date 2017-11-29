@@ -103,7 +103,7 @@
                                                 <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
                                                 <meta itemprop="priceCurrency" content="RUB" />
                                                 <?php if(empty($product['weight_variants'])) { ?>
-                                                    <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo (int)$product['price']; ?> руб</div>
+                                                    <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
                                                 <?php } else { ?>
                                                     <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                                                 <?php } ?>

@@ -20,12 +20,7 @@
                                             </div>
                                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                             <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
-                                                    <?php if(isset($cart_products[(int)$product['product_id']])) { ?>
-                                                    <div class="not-available clearfix">
-                                                            <div class="n-a_text"><?php echo $cart_products[$product['product_id']]; ?> <?php if(!empty($product['weight_variants'])) echo $product['weight_class']; else echo 'шт.'; ?> в корзине</div>
-                                                            <input type="submit" value="" class="p-o_submit2">
-                                                    </div>
-                                                    <?php } elseif($product['stock_status_id'] == 7) { ?>
+                                                    <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
                                                     <div class="p-o_select">
                                                         <?php if(empty($product['weight_variants'])) { ?>
                                                             <select name="tech" class="tech">
@@ -54,7 +49,7 @@
                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                             <input type="submit" value="" class="p-o_submit">
                                                     </div>
-                                                    <?php } else { ?>
+                                                    <?php } elseif($product['quantity'] < 0 && $product['stock_status_id'] == 6) { ?>
                                                     <div class="not-available clearfix">
                                                             <div class="n-a_text">Скоро будет</div>
                                                             <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>

@@ -1,4 +1,3 @@
-<script>console.log(<?php echo json_encode($products); ?>);</script>
 <?php foreach($products as $product) { ?>
 <div class="modal-product">
     <div class="clearfix">
