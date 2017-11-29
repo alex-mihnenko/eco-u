@@ -4170,6 +4170,7 @@ footer {
     line-height:1.25em;
     height:2.5em;
     overflow:hidden;
+    text-overflow: ellipsis;
 }
 @media screen and (max-width: 1919px) {
 	/* 1680 */
@@ -4226,7 +4227,8 @@ footer {
 	#contentcontainer2 {
 		
 	}
-	.page_2 .menu-foot,
+    .menu-foot,
+    .page_2 .menu-foot,
 	.page_3 .menu-foot {
 	    margin: 56px 10px 0 0;
 	}
@@ -4370,6 +4372,17 @@ footer {
 	    line-height: 60px;
 	    z-index: 999;
 	}
+
+    .button-alphabetic-shadow{
+    -webkit-box-shadow: 0px 2px 10px rgba(0,0,0,.3), 0px 0px 1px rgba(0,0,0,.1), inset 0px 1px 0px rgba(255,255,255,.25), inset 0px -1px 0px rgba(0,0,0,.15);
+    -moz-box-shadow: 0px 2px 10px rgba(0,0,0,.3),0px 0px 1px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.15);
+    /* box-shadow: 0px 2px 10px rgba(0,0,0,.3), 0px 0px 1px rgba(0,0,0,.1), inset 0px 1px 0px rgba(255,255,255,.25), inset 0px -1px 0px rgba(0,0,0,.15); */
+    }
+
+    }
+
+
+
 	.button-tabs2 {
 		display: block !important;
 		width: 60px;
@@ -4606,7 +4619,7 @@ footer {
 	    padding: 0 10px;
 	}
 	.container .p-o_link {
-	    padding: 20px 10px 0 10px;
+	    padding: 0px 10px 0 0px;
 	}
 	.container .p-o_select {
 	    margin: 18px 0 0 10px;
@@ -4747,12 +4760,12 @@ footer {
     	font-size: 10px;
 	}
 	.p-o_link {
-	    padding: 15px 10px 0 10px;
+	    padding: 0px 10px 0 10px;
 	}
 	.p-o_link a {
 		font-size: 14px;
 	    line-height: 16px;
-	    height: 32px;
+	    max-height: 32px;
 	}
 	.p-o_select,
 	.container .p-o_select {
@@ -5198,15 +5211,19 @@ footer {
 	    font-size: 8px;
 	    line-height: 15px;
 	}
-	.page_2 .menu-foot, 
+    .menu-foot,
+    .page_2 .menu-foot,
 	.page_3 .menu-foot {
 	    margin: 28px 10px 0 0;
 	}
-	.page_2 .menu-foot li, 
+    .menu-foot li,
+    .page_2 .menu-foot li,
 	.page_3 .menu-foot li {
 	    margin: 0 9px;
 	}
-	.page_2 .menu-foot a, 
+
+    .menu-foot a,
+    .page_2 .menu-foot a,
 	.page_3 .menu-foot a {
 	    font-size: 8px;
 	}
@@ -5851,6 +5868,7 @@ footer {
 	}
 	.box-p_o {
 	    width: 100%;
+        padding: 0 0 10px 0;
 	}
 	.slick-initialized .slick-slide {
 		padding: 0 10px;
@@ -5913,7 +5931,8 @@ footer {
         .p-o_short-descr
         {
             font-size:10px;
-            padding:5px 10px;
+            padding:5px 0px;
+            height: 2em;
         }
 	.h-box_center {
 		width: 30%;

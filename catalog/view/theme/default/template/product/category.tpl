@@ -124,7 +124,7 @@
 					
 				</div>
 				<div class="tabs__block active">
-					<div class="button-alphabetic" data-remodal-target="modal8">А-Я</div>
+					<div class="button-alphabetic button-alphabetic-shadow" data-remodal-target="modal8">А-Я</div>
 					<div class="clearfix rel"> 
 						
 						<div id="contentcontainer">
