@@ -4043,6 +4043,14 @@ footer {
     font-size:11px;
     background-color:#f17e46;
     text-transform: uppercase;
+    font-family: Roboto;
+    font-weight: bold;
+}
+.sticker_21, .sticker_17, .sticker_19 {
+    font-size:11px;
+    text-transform: uppercase;
+    font-family: Roboto;
+    font-weight: bold;
 }
 .cancel-search {
     display:none;
