@@ -878,6 +878,7 @@ footer {
 	width: 217px;
 	height: 39px;
 	margin: 37px 0 0 0;
+	display: none;
 }
 .f-stick {
 	padding: 0 0 35px 0;
@@ -1995,24 +1996,28 @@ footer {
 .page_3 .f-languages {
 	display: none;
 }
-.menu-foot {
-	display: none;
-}
+
+
+.menu-foot,
 .page_2 .menu-foot,
 .page_3 .menu-foot  {
 	display: block;
 	float: right;
 	margin: 56px 0 0 0;
 }
+.menu-foot li,
 .page_2 .menu-foot li,
 .page_3 .menu-foot li {
 	float: left;
 	margin: 0 18px;
 }
+.menu-foot li:last-child,
 .page_2 .menu-foot li:last-child,
 .page_3 .menu-foot li:last-child {
 	margin: 0 0 0 18px;
 }
+
+.menu-foot a,
 .page_2 .menu-foot a,
 .page_3 .menu-foot a {
 	display: block;
@@ -2022,6 +2027,8 @@ footer {
 	transition: 0.3s ease all;
 	text-decoration: none;
 }
+
+.menu-foot a:hover,
 .page_2 .menu-foot a:hover,
 .page_3 .menu-foot a:hover {
 	transition: 0.3s ease all;
@@ -4196,6 +4203,7 @@ footer {
 	}
 	.f-languages {
 	    margin: 37px 10px 0 0;
+		display: none;
 	}
 	.b-seach {
 		margin: 14px 10px 0 0;
@@ -4864,6 +4872,7 @@ footer {
 	.f-languages {
 	    margin: 18px 10px 0 0;
 	    width: 113px;
+		display: none;
 	}
 	.f-stick {
 	    padding: 0 0 20px 0;
