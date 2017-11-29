@@ -11,25 +11,25 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_1"></div>
 							</div>
-							<div class="l-a_title">Часть товаров мы производим на нашем производстве</div>
+							<div class="l-a_title">Выбирайте из более 700 редких и полезных продуктов</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_2"></div>
 							</div>
-							<div class="l-a_title">Часть товаров мы производим на нашем производстве</div>
+							<div class="l-a_title"> Ешьте свежие и качественные продукты</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_3"></div>
 							</div>
-							<div class="l-a_title">Мы используем только натуральную био-упаковку и заботимся об окружающей среде</div>
+							<div class="l-a_title">Используйте только натуральную био-упаковку</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_4"></div>
 							</div>
-							<div class="l-a_title">Доставляем заказы по Москве за 250 руб. или бесплатно от 4000 руб.</div>
+							<div class="l-a_title">Оформите доставку по Москве за 290 рублей или бесплатно от 3900 рублей</div>
 						</li>
 					</ul>
 				</div>
