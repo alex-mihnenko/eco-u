@@ -430,11 +430,13 @@ class Cart {
                 $total1 = $basePrice * $personal_discount;
             }
             $coupon = $this->customer->getCouponDiscount();
-            if($coupon['type'] == 'P') {
-                $coupon_discount = 1 - ($coupon['discount']/100);
-                $total2 = $basePrice * $coupon_discount;
-            } elseif($coupon['type'] == 'F') {
-                $total2 = $basePrice - $coupon['discount'];
+            if(isset($coupon['type'])) { 
+                if($coupon['type'] == 'P') {
+                    $coupon_discount = 1 - ($coupon['discount']/100);
+                    $total2 = $basePrice * $coupon_discount;
+                } elseif($coupon['type'] == 'F') {
+                    $total2 = $basePrice - $coupon['discount'];
+                }
             }
             
             if((int)$total1 <= (int)$total2) {

@@ -998,7 +998,6 @@
                     if($(item).html() == label) {
                         weight_variant = $(item).val();
                     }
-                    
                 });
                 $.post('/?route=checkout/cart/add', {
                     product_id: product_id,

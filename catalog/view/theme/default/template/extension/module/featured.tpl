@@ -34,7 +34,7 @@
                                                             <select name="tech" class="tech">
                                                                     <?php 
                                                                     $arVariants = explode(',', $product['weight_variants']);
-                                                                    foreach($arVariants as $variant) { ?>
+                                                                    foreach($arVariants as $i => $variant) { ?>
                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
                                                                     <? } ?>
                                                             </select> 

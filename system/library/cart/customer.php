@@ -273,11 +273,11 @@ class Customer {
             return $discount;
         }
         public function getCouponDiscount() {
-            $coupon_id = $this->session->data['coupon_id'];
-            
-            $sql = "SELECT * FROM " . DB_PREFIX . "coupon WHERE `status` = 1 AND `date_start` <= NOW() AND `date_end` >= NOW()";
+            if(isset($this->session->data['coupon_id'])) $coupon_id = $this->session->data['coupon_id'];
+            else $coupon_id = 0;
+            $sql = "SELECT * FROM " . DB_PREFIX . "coupon WHERE coupon_id = ".(int)$coupon_id." AND `status` = 1 AND `date_start` <= NOW() AND `date_end` >= NOW()";
             $query = $this->db->query($sql);
             
-            return $query->row;     
+            return $query->row;
         }
 }
