@@ -207,7 +207,7 @@
 					</div>
 				</div>
 				<div class="tabs__block">
-					<div class="button-tabs2" data-remodal-target="modal9"></div>
+					<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9"></div>
 					<div class="clearfix rel"> 
 						<div id="contentcontainer2">
 							<div class="container">
