@@ -262,7 +262,8 @@ class Cart {
 					'height'          => $product_query->row['height'],
 					'length_class_id' => $product_query->row['length_class_id'],
 					'recurring'       => $recurring,
-                                        'tax'             => ''
+                                        'tax'             => '',
+                                        'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
 				$this->remove($cart['cart_id']);
@@ -272,7 +273,7 @@ class Cart {
 		return $product_data;
 	}
 
-	public function add($product_id, $quantity = 1, $option = array(), $recurring_id = 0) {
+	public function add($product_id, $quantity = 1, $option = array(), $recurring_id = 0, $weight_variant = 0) {
                 // Спеццена
                 if(gettype($product_id) == 'string') {
                     if(strpos($product_id, '_special')) {
@@ -288,9 +289,9 @@ class Cart {
                 $queryCheckWeightVariants = $this->db->query("SELECT weight_variants FROM " . DB_PREFIX . "product WHERE product_id = ".$this->db->escape($product_id));
 
                 if (!$query->row['total'] || !empty($queryCheckWeightVariants->row['weight_variants'])) {
-			$this->db->query("INSERT " . DB_PREFIX . "cart SET special_price = " . $special_price . ", api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "', customer_id = '" . (int)$this->customer->getId() . "', session_id = '" . $this->db->escape($this->session->getId()) . "', product_id = '" . (int)$product_id . "', recurring_id = '" . (int)$recurring_id . "', `option` = '" . $this->db->escape(json_encode($option)) . "', quantity = '" . (float)$quantity . "', date_added = NOW()");
+			$this->db->query("INSERT " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "', customer_id = '" . (int)$this->customer->getId() . "', session_id = '" . $this->db->escape($this->session->getId()) . "', product_id = '" . (int)$product_id . "', recurring_id = '" . (int)$recurring_id . "', `option` = '" . $this->db->escape(json_encode($option)) . "', quantity = '" . (float)$quantity . "', date_added = NOW()");
 		} else {
-			$this->db->query("UPDATE " . DB_PREFIX . "cart SET special_price = " . $special_price . ", quantity = (quantity + " . (float)$quantity . ") WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
+			$this->db->query("UPDATE " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", quantity = (quantity + " . (float)$quantity . ") WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
 		}
 	}
 
@@ -419,4 +420,27 @@ class Cart {
 
 		return false;
 	}
+        
+        public function getOrderPrice() {
+            $basePrice = $this->getTotal();
+            $total1 = $basePrice;
+            $total2 = $basePrice;
+            if($this->customer->isLogged()) {
+                $personal_discount = 1 - ($this->session->data['personal_discount']/100);
+                $total1 = $basePrice * $personal_discount;
+            }
+            $coupon = $this->customer->getCouponDiscount();
+            if($coupon['type'] == 'P') {
+                $coupon_discount = 1 - ($coupon['discount']/100);
+                $total2 = $basePrice * $coupon_discount;
+            } elseif($coupon['type'] == 'F') {
+                $total2 = $basePrice - $coupon['discount'];
+            }
+            
+            if((int)$total1 <= (int)$total2) {
+                return $total1;
+            } else {
+                return $total2;
+            }
+        }
 }

@@ -391,6 +391,7 @@ class ControllerAjaxIndex extends Controller {
   // Оформление доставки
   public function ajaxSetDelivery() {
       $address = $this->request->post['address'];
+      $address_new = $this->request->post['address_new'];
       $comment = $this->request->post['comment'];
       $order_id = $this->request->post['order_id'];
       $payment_method = $this->request->post['payment_method'];
@@ -421,6 +422,8 @@ class ControllerAjaxIndex extends Controller {
       
       $this->load->model('checkout/order');
       if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data)) {
+          // Добавление адреса доставки в список адресов клиента
+          if($address_new) $this->customer->setAddress(0, $address);
           // Отправка sms        
             $this->load->model('sms/confirmation');
             $message = "Ваш заказ №{$order_id} принят. Менеджер свяжется с вами в течение часа.";
@@ -702,5 +705,14 @@ class ControllerAjaxIndex extends Controller {
             $data['products'][$i]['thumb'] = $image;
       }
       $this->response->setOutput($this->load->view('product/search', $data));
+  }
+  
+  public function ajaxGetOrderPrice() {
+      $response = Array(
+            'status' => 'success',
+            'price' => (int)$this->cart->getOrderPrice()
+      );
+      $response['discount'] = (int)$this->cart->getTotal() - $response['price'];
+      $this->response->setOutput(json_encode($response));
   }
 }

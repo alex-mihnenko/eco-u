@@ -6,6 +6,13 @@
 .block-delivery-price, .shipping-amount {
     display:none;
 }
+.search-not-found {
+    padding:20px;
+    font-size:15px;
+    font-family: Roboto;
+    font-weight:bold;
+    color:#374047;
+}
 a img {
 	border: none;
 }
@@ -3314,7 +3321,16 @@ footer {
 	margin: 0 0 32px 0;
 	padding: 1px 0 33px 0;
 }
-.b-discount .personal-discount {
+.b-discount .personal-discount  {
+    padding:6px 10px 6px 10px;
+    line-height:20px;
+    font-size:12px;
+    height:18px;
+    color:#287233;
+    text-align:center;
+}
+.b-discount .personal-coupon  {
+    display:none;
     padding:6px 10px 6px 10px;
     line-height:20px;
     font-size:12px;

@@ -26,26 +26,35 @@
 					    								</a>
 					    							</td>
 					    							<td class="table-b_width1">
-					    								<a href="<?php echo $product['href']; ?>" class="table-b_link"><?php echo $product['name']; ?></a>
+					    								<a href="<?php echo $product['href']; ?>" class="table-b_link">
+                                                                                                            <?php echo $product['name']; ?>
+                                                                                                            <?php $weight_variants = explode(',', $product['weight_variants']); ?>
+                                                                                                            <?php
+                                                                                                                if($weight_variants[0] != '') {
+                                                                                                                    echo '(<span id="variant_'.$product['cart_id'].'">'.$weight_variants[$product['weight_variant']].'</span> '.$product['weight_class'].')'; 
+                                                                                                                } else {
+                                                                                                                    echo '<span style="display:none" id="variant_'.$product['cart_id'].'">1</span>'; 
+                                                                                                                }
+                                                                                                            ?>
+                                                                                                        </a>
 					    								<!--<div class="table-b_text">1Л, Россия</div>-->
 					    							</td>
 					    							<td class="table-b_width2">
+                                                                                                        <?php if(empty($product['weight_variants'])) { ?>
 					    								<div>
-                                                                                                            <?php if(empty($product['weight_variants'])) { ?>
-					    									<div class="table-b_minus button_decrease" data-target="quantity_<?php echo $product['cart_id'];?>">-</div>
-                                                                                                                <input data-cart-id="<?php echo $product['cart_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" id="quantity_<?php echo $product['cart_id'];?>" type="text" value="<?php echo $product['quantity']; ?>" class="table-b_input">
-					    									<div class="table-b_quantity"><?php echo $product['weight_class']; ?></div>
-					    									<div class="table-b_minus button_increase" data-target="quantity_<?php echo $product['cart_id'];?>">+</div>
-                                                                                                            <?php } else { 
-                                                                                                                $arVariants = explode(',', $product['weight_variants']);
-                                                                                                            ?>
-                                                                                                                <select class="tech">
-                                                                                                                    <?php foreach($arVariants as $variant) { ?>
-                                                                                                                    <option value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                    <?php } ?>
-                                                                                                                </select>
-                                                                                                            <?php } ?>
+                                                                                                                <div class="table-b_minus button_decrease" data-variant="variant_<?php echo $product['cart_id'];?>" data-target="quantity_<?php echo $product['cart_id'];?>">-</div>
+                                                                                                                <input data-variant="variant_<?php echo $product['cart_id'];?>" data-cart-id="<?php echo $product['cart_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" id="quantity_<?php echo $product['cart_id'];?>" type="text" value="<?php echo $product['quantity']; ?>" class="table-b_input">
+					    									<div class="table-b_quantity"></div>
+					    									<div class="table-b_minus button_increase" data-variant="variant_<?php echo $product['cart_id'];?>" data-target="quantity_<?php echo $product['cart_id'];?>">+</div>
 					    								</div>
+                                                                                                        <?php } else { ?>
+                                                                                                        <div>
+                                                                                                                <div class="table-b_minus button_decrease" data-variant="variant_<?php echo $product['cart_id'];?>" data-target="quantity_<?php echo $product['cart_id'];?>">-</div>
+                                                                                                                <input data-variant="variant_<?php echo $product['cart_id'];?>" data-cart-id="<?php echo $product['cart_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" id="quantity_<?php echo $product['cart_id'];?>" type="text" value="<?php echo (int)((float)$product['quantity']/(float)$weight_variants[$product['weight_variant']]); ?>" class="table-b_input">
+					    									<div class="table-b_quantity"></div>
+					    									<div class="table-b_minus button_increase" data-variant="variant_<?php echo $product['cart_id'];?>" data-target="quantity_<?php echo $product['cart_id'];?>">+</div>
+					    								</div>
+                                                                                                        <?php } ?>
 					    							</td>
 					    							<td>
 					    								<div class="table-b_price"><?php echo ((int)$product['price'] * (float)$product['quantity']); ?> руб.</div>
@@ -67,20 +76,38 @@
 					    			<div class="sidebar_right" data-sticky>
 					    				<div id="form1" class="order-information">
 					    					<div class="o-i_txt1">Стоимость заказа</div>
-					    					<div class="o-i_price"><?php if(isset($totals[0])) { echo ceil((int)$totals[0]['text'] * (1-$customer_discount/100)); } ?></div>
+					    					<div class="o-i_price"><?php echo $order_price; ?> руб</div>
 					    					<div class="o-i_txt2">(без учета стоимости доставки)</div>
                                                                                 <div class="b-discount">
                                                                                         <div class="personal-discount">
                                                                                         <?php if(isset($customer_discount)) { 
                                                                                             if(isset($totals[0])) { ?>
-                                                                                                Ваша скидка <?php echo (int)$totals[0]['text']*((int)$customer_discount/100); ?> руб
+                                                                                                Ваша скидка <span class="c-d_amount"><?php echo (int)$totals[0]['text']*((int)$customer_discount/100); ?></span> руб
                                                                                             <?php } else { ?>
                                                                                                 Ваша скидка <?php echo (int)$customer_discount; ?>%
                                                                                             <?php } ?>
-                                                                                            <input type="hidden" id="customer_discount" value="<?php echo (int)$customer_discount; ?>">
+                                                                                            <input type="hidden" id="customer_discount" data-type="P" value="<?php echo (int)$customer_discount; ?>">
                                                                                         <?php } ?>
                                                                                         </div>
-					    						<div class="b-d_coupon">Есть купон на скидку?</div>
+                                                                                        <div class="personal-coupon">
+                                                                                        <?php if(isset($customer_coupon)) { ?>
+                                                                                            <?php if($customer_coupon['type'] == 'P') { 
+                                                                                                $cDcnt = (int)$totals[0]['text']*((int)$customer_coupon['discount']/100);
+                                                                                            ?>
+                                                                                                Ваша скидка <span class="c-d_amount"><?php echo $cDcnt; ?></span> руб
+                                                                                            <?php } elseif($customer_coupon['type'] == 'F') { ?>
+                                                                                                Ваша скидка <span class="c-d_amount"><?php echo (int)$customer_coupon['discount']; ?></span> руб
+                                                                                            <?php } ?>
+                                                                                            <input type="hidden" id="customer_coupon" data-type="<?php echo $customer_coupon['type']; ?>" value="<?php echo (int)$customer_coupon; ?>">
+                                                                                        <?php } ?>
+                                                                                        </div>
+                                                                                        <div class="b-d_coupon">
+                                                                                            <?php if(!isset($customer_coupon)) { ?>
+                                                                                                Есть купон на скидку?
+                                                                                            <?php } else { 
+                                                                                                echo $customer_coupon['code'];
+                                                                                            } ?>
+                                                                                        </div>
 					    						<div class="b-d_hidden">
 					    							<div class="b-d_coupon2">Применить скидку</div>
 					    							<input type="text" value="" class="b-dis_input">
@@ -132,10 +159,10 @@
 									<div class="delivery-address mobile-pd-30">
                                                                             <?php if(!empty($delivery_address)) { ?>
 									    <select id="delivery_address" name="tech" class="tech">
-                                                                                    <?php foreach($delivery_address as $address_id => $address) { ?>
-                                                                                    <option value="<?php echo $address_id; ?>"><?php echo $address; ?></option>
+                                                                                    <?php foreach($delivery_address as $address) { ?>
+                                                                                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['value']; ?></option>
                                                                                     <?php } ?>
-                                                                                    <option class="new_address" value="new">Новый адрес доставки</option>
+                                                                                    <option class="new_address" value="0">Новый адрес доставки</option>
                                                                             </select> 
                                                                             <?php } else { ?>
                                                                             <input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">

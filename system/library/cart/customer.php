@@ -269,6 +269,15 @@ class Customer {
             }
             $discount = intval(floor($totalCustomerOutcome/10000));
             if($discount > 10) $discount = 10;
+            $this->session->data['personal_discount'] = $discount;
             return $discount;
+        }
+        public function getCouponDiscount() {
+            $coupon_id = $this->session->data['coupon_id'];
+            
+            $sql = "SELECT * FROM " . DB_PREFIX . "coupon WHERE `status` = 1 AND `date_start` <= NOW() AND `date_end` >= NOW()";
+            $query = $this->db->query($sql);
+            
+            return $query->row;     
         }
 }

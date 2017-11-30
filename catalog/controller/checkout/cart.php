@@ -113,7 +113,6 @@ class ControllerCheckoutCart extends Controller {
 			$data['products'] = array();
 
 			$products = $this->cart->getProducts();
-
 			foreach ($products as $product) {
 				$product_total = 0;
 
@@ -202,7 +201,8 @@ class ControllerCheckoutCart extends Controller {
 					'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id']),
                                         'product_id' => $product['product_id'],
                                         'weight_class' => $product['weight_class'],
-                                        'weight_variants' => $product['weight_variants']
+                                        'weight_variants' => $product['weight_variants'],
+                                        'weight_variant' => $product['weight_variant']
 				);
 			}
 
@@ -304,6 +304,29 @@ class ControllerCheckoutCart extends Controller {
                             $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
                             $data['customer_discount'] = $this->customer->getPersonalDiscount($customer_id, $orders);
                         }
+                        
+                        if(isset($this->session->data['coupon_id'])) {
+                            $data['customer_coupon'] = $this->customer->getCouponDiscount();
+                        }
+                        
+                        $data['order_price'] = $this->cart->getOrderPrice();
+                        
+                        $addresses = $this->customer->getAddresses();
+                        $arAddress = Array();
+                        if(!empty($addresses)) {
+                            foreach($addresses as $address) {
+                                $arAddress[] = Array(
+                                    'address_id' => $address['address_id'],
+                                    'value' => $address['address_1']
+                                );
+                            }
+                        } else {
+                            $arAddress[] = Array(
+                                'address_id' => 0,
+                                'value' => ''
+                            );
+                        }
+                        $data['delivery_address'] = $arAddress;
 			
                         $this->response->setOutput($this->load->view('checkout/cart', $data));
 		} else {
@@ -344,6 +367,8 @@ class ControllerCheckoutCart extends Controller {
 		} else {
 			$product_id = 0;
 		}
+                
+                $weight_variant = $this->request->post['weight_variant'];
 
 		$this->load->model('catalog/product');
 
@@ -396,7 +421,7 @@ class ControllerCheckoutCart extends Controller {
                                 } else {
                                     $newProductId = $this->request->post['product_id'];
                                 }
-				$this->cart->add($newProductId, $quantity, $option, $recurring_id);
+				$this->cart->add($newProductId, $quantity, $option, $recurring_id, $weight_variant);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
 

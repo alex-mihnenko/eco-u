@@ -804,6 +804,14 @@
 	$('.check_agreement').change(function() {
 		check_agreement();
 	});
+        
+        $('select#delivery_address').change(function(){
+            if($(this).val() == 0) {
+                $(this).parents('.selectric-wrapper').remove();
+                $('.delivery-address').html('<input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">');
+            }
+        });
+        
 	/* END active checked */
 	/* accordion */
 	$(".b-accordion li").find(".b-accordion_text").hide().prev().on('click', function() {
@@ -977,18 +985,25 @@
             $(this).parent().find('.list-letter>li.hidden').removeClass('hidden');
             $(this).css('visibility', 'hidden');
         });
-        function BindAddToCartEvents() {
-            $('.p-o_submit').click(function(e){
+        function BindAddToCartEvents(block) {
+            block.find('.p-o_submit').click(function(e){
                 e.preventDefault();
                 var pElement = $(this).parents('.p-o_block');
                 var product_id = pElement.find('input[name="product_id"]').val();
                 var label = pElement.find('.selectric .label').html();
                 var quantity = parseFloat(label);
                 var weight_class = label.substr(label.indexOf(' ')+1);
-                console.log(product_id, quantity);
+                var weight_variant = 0;
+                pElement.find('.selectric-hide-select option').each(function(i, item) {
+                    if($(item).html() == label) {
+                        weight_variant = $(item).val();
+                    }
+                    
+                });
                 $.post('/?route=checkout/cart/add', {
                     product_id: product_id,
-                    quantity: quantity
+                    quantity: quantity,
+                    weight_variant: weight_variant
                 }, function(msg){
                     pElement.find('.p-o_select, .p-o_right').hide();
                     pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
@@ -1000,7 +1015,7 @@
                 }, "json");
             });
         }
-        BindAddToCartEvents();
+        BindAddToCartEvents($('body'));
         // Добавление в корзину на странице товара
         $('.c-p_submit').click(function(e){
             e.preventDefault();
@@ -1041,7 +1056,15 @@
                 
                 
                 $('.b-basket, .b-basket_mobile').find('.b-b_quantity').html(totalPositions);
-                $('.order-information').find('.o-i_price').html(totalPrice + ' <span>руб</span>');
+                $.get('/?route=ajax/index/ajaxGetOrderPrice', {}, function(msg){
+                    if(msg.status == 'success') {
+                        $('.order-information').find('.o-i_price').html(msg.price + ' <span>руб</span>');
+                        $('.b-discount .c-d_amount').html(msg.discount);
+                    } else {
+                        console.log('Ошибка расчета цены');
+                    }
+                }, "json");
+                
                 
                 $('.cart-container').find('.b-p_close').click(function(e){
                     var removeLink = $(this).data('href');
@@ -1067,31 +1090,38 @@
         });
         $('.table-basket').find('.button_decrease').click(function(){
             var targetField = $('#'+$(this).data('target'));
+            var variantField = $('#'+$(this).data('variant'));
             var value = parseInt(targetField.val());
+            var variant = parseFloat(variantField.html());
             if(value > 1) {
                 targetField.val(value-1);
-                var productTotal = (value - 1) * parseInt($(this).parents('tr').find('.table-b_price2').html());
+                console.log(value, variant, parseInt($(this).parents('tr').find('.table-b_price2').html()));
+                var productTotal = (value-1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
                 $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
                 if(window.quantityTimer) clearTimeout(quantityTimer);
-                window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val());
+                window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
             }
         });
         $('.table-basket').find('.button_increase').click(function(){
             var targetField = $('#'+$(this).data('target'));
+            var variantField = $('#'+$(this).data('variant'));
             var value = parseInt(targetField.val());
+            var variant = parseFloat(variantField.html());
             targetField.val(value+1);
-            var productTotal = (value + 1) * parseInt($(this).parents('tr').find('.table-b_price2').html());
+            var productTotal = (value+1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
-            window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val());
+            window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
         });
         $('.table-basket').find('.table-b_input').change(function(e){
             var quantity = $(this).val();
+            var variantField = $('#'+$(this).data('variant'));
+            var variant = parseFloat(variantField.html());
             var cart_id = $(this).data('cart-id');
-            var productTotal = quantity * parseInt($(this).parents('tr').find('.table-b_price2').html());
+            var productTotal = quantity * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
-            window.quantityTimer = setTimeout(ChangeCartQuantity, 500, cart_id, quantity);
+            window.quantityTimer = setTimeout(ChangeCartQuantity, 500, cart_id, quantity * variant);
         });
         function ChangeCartQuantity(cart_id, quantity) {
             $.post('/?route=ajax/index/ajaxChangeCartQuantity', {
@@ -1109,13 +1139,26 @@
                 code: $('.b-dis_input').val()
             }, function(msg){
                 if(msg.status == 'success') {
-                    $('.o-i_price').html(msg.total + ' <span>руб</span>');
+                    window.location.reload();
                 }
             }, "json");
         });
         
+        console.log(parseInt($('#customer_coupon').val()) > parseInt($('#customer_discount').val()));
+        if($('#customer_coupon').length > 0) {
+            if($('#customer_discount').length == 0 || (parseInt($('#customer_coupon').val()) > parseInt($('#customer_discount').val()))) {
+                $('.personal-discount').hide();
+                $('.personal-coupon').show();
+            }
+        }
+        
         $('.c-m_submit').click(function(){
             var address = $('#delivery_address').val();
+            if($('select#delivery_address').length > 0) {
+                var address_new = false;
+            } else if($('input#delivery_address').length > 0) {
+                var address_new = true;
+            }
             var comment = $('#delivery_comment').val();
             var date = $('#delivery_date').val();
             var time = $('#delivery_time').val();
@@ -1161,6 +1204,7 @@
                     btn.css('font-size', '0');
                     $.post('/?route=ajax/index/ajaxSetDelivery', {
                         address: address,
+                        address_new: address_new,
                         comment: comment,
                         order_id: order_id,
                         date: date,
@@ -1339,11 +1383,17 @@
                     var product_id = pElement.find('input[name="product_id"]').val();
                     var quantity = parseInt(pElement.find('.selectric .label').html());
                     var special_price = true;
-                    console.log(product_id, quantity);
+                    var weight_variant = 0;
+                    pElement.find('.selectric-hide-select option').each(function(i, item) {
+                        if($(item).html() == label) {
+                            weight_variant = $(item).val();
+                        }
+                    });
                     $.post('/?route=checkout/cart/add', {
                         product_id: product_id,
                         quantity: quantity,
-                        special_price: true
+                        special_price: true,
+                        weight_variant: weight_variant
                     }, function(msg){
                         if(location.pathname == '/cart') {
                             location.reload();
@@ -1415,10 +1465,16 @@
                     var product_id = pElement.find('input[name="product_id"]').val();
                     var quantity = parseInt(pElement.find('.selectric .label').html());
                     var special_price = true;
-                    console.log(product_id, quantity);
+                    var weight_variant = 0;
+                    pElement.find('.selectric-hide-select option').each(function(i, item) {
+                        if($(item).html() == label) {
+                            weight_variant = $(item).val();
+                        }
+                    });
                     $.post('/?route=checkout/cart/add', {
                         product_id: product_id,
-                        quantity: quantity
+                        quantity: quantity,
+                        weight_variant:weight_variant
                     }, function(msg){
                         if(location.pathname == '/cart') {
                             location.reload();
@@ -1457,7 +1513,7 @@
                         InitClamp('.p-o_link a, .p-o_short-descr');
                         $('.tabs__catalog').find('li:nth-child(4)').click();
                         initDropDown();
-                        BindAddToCartEvents();
+                        BindAddToCartEvents($('.tabs__block:nth-child(4)'));
                     });
                 }
             }, 500);
