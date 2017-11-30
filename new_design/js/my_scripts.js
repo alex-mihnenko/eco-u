@@ -843,14 +843,15 @@
 	$(document).click( function(event){
 		$(this).find(".h-menu").removeClass("js-background");
 	});
-	/** **/	
+	/** **/
+    $.mask.definitions['h'] = "[0-6,9]";
 	$("#date").mask("99-99",{placeholder:""});
 	$("#date2").mask("99-99",{placeholder:""});
-	$("#phone").mask("+7 (999) 999-99-99");
-	$('#phone2').mask("+7 (999) 999-99-99");
-	$("#phone3").mask("+7 (999) 999-99-99");
-	$("#phone4").mask("+7 (999) 999-99-99");
-	$("#phone5").mask("+7 (999) 999-99-99");
+	$("#phone").mask("+7 (h99) 999-99-99");
+	$('#phone2').mask("+7 (h99) 999-99-99");
+	$("#phone3").mask("+7 (h99) 999-99-99");
+	$("#phone4").mask("+7 (h99) 999-99-99");
+	$("#phone5").mask("+7 (h99) 999-99-99");
 	var $pane = $('.box-a_d');
 	$pane.on("click","a.anchor-details", function (event) {
 		event.preventDefault();
