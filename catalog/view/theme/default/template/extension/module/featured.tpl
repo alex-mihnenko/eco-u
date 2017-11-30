@@ -2,7 +2,9 @@
         <div class="width-1660">
                 <h2 class="p-o_title"><?php echo $heading_title; ?></h2>
                 <div class="slider-profitable_offer">
-                        <?php foreach($products as $key => $product) { ?>
+                        <?php foreach($products as $key => $product) { 
+                            if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+                        ?>
                         <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                             <meta itemprop="position" content="<?php echo $key; ?>" />
                             <div class="box-p_o">
