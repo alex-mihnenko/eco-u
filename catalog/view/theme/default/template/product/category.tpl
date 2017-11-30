@@ -137,7 +137,6 @@
 									<div class="big-letter"><?php echo $letter; ?></div>
 									<ul class="list-letter">
 										<?php foreach($products_asorted[$letter] as $key => $product) {
-                                        print_r($product);
                                                                                     if($product['quantity'] < 0 && $product['stock_status_id'] == 5 && $product['status'] == 1) continue;
                                         ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
