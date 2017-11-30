@@ -238,7 +238,8 @@ class ControllerProductCategory extends Controller {
                                 }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
-                                        'quantity'    => $result['quantity'],
+                    'status'      => $result['status'],
+                    'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
                                         'description_short' => $result['description_short'],

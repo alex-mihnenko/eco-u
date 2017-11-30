@@ -4066,14 +4066,14 @@ footer {
 .sticker_discount {
     font-size:20px;
 }
-.sticker_20 {
+.sticker_20, .sticker_22, .sticker_23, .sticker_24{
     font-size:11px;
     background-color:#f17e46;
     text-transform: uppercase;
     font-family: Roboto;
     font-weight: bold;
 }
-.sticker_21, .sticker_17, .sticker_19 {
+.sticker_16, .sticker_17, .sticker_18, .sticker_19 .sticker_21,{
     font-size:11px;
     text-transform: uppercase;
     font-family: Roboto;
