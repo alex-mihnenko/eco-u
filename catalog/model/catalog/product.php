@@ -14,10 +14,17 @@ class ModelCatalogProduct extends Model {
                         if($group['attribute_group_id'] == '8') {
                             foreach($group['attribute'] as $attribute) {
                                 $arStickers = Array(
+                                    26, // Наше
+                                    25, // Vegan
+                                    24, // RAW
+                                    23, // Конец сезона
+                                    22, // Сезон
                                     21, // Скидка
                                     20, // Новинка
                                     19, // Редкость
-                                    17  // Organic
+                                    18,  // Без ГМО
+                                    17,  // Organic
+                                    16  // Выгодно
                                 );
                                 if((!$sort || $attribute['sort'] < $sort) && in_array($attribute['attribute_id'], $arStickers)) {
                                     $sticker = Array(
@@ -36,6 +43,7 @@ class ModelCatalogProduct extends Model {
 				'product_id'       => $query->row['product_id'],
 				'name'             => $query->row['name'],
 				'description'      => $query->row['description'],
+                'available'        => $query->row['available'],
                                 'description_short'      => $query->row['description_short'],
 				'meta_title'       => $query->row['meta_title'],
 				'meta_description' => $query->row['meta_description'],

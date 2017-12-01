@@ -136,9 +136,9 @@
                                                                 <div id="letter_<?php echo $lCode; ?>" class="rel">
 									<div class="big-letter"><?php echo $letter; ?></div>
 									<ul class="list-letter">
-										<?php foreach($products_asorted[$letter] as $key => $product) { 
-                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
-                                                                                ?>
+										<?php foreach($products_asorted[$letter] as $key => $product) {
+                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5 && $product['status'] == 1) continue;
+                                        ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
                                                                                     <div id="asorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
@@ -207,7 +207,7 @@
 					</div>
 				</div>
 				<div class="tabs__block">
-					<div class="button-tabs2" data-remodal-target="modal9"></div>
+					<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9"></div>
 					<div class="clearfix rel"> 
 						<div id="contentcontainer2">
 							<div class="container">
@@ -220,8 +220,8 @@
 									<div class="big-thumb"><img src="img/icon_3.png" alt=""></div>
 									<div class="l-p_title"><?php echo $category['name']; ?></div>
 									<ul class="list-letter">
-                                                                                <?php foreach($products_catsorted[$category['id']] as $key => $product) { 
-                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+                                                                                <?php foreach($products_catsorted[$category['id']] as $key => $product) {
+                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5 && $product['status'] == 1) continue;
                                                                                 ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
                                                                                     <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">

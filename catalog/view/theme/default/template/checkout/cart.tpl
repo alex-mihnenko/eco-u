@@ -116,7 +116,7 @@
 					    					</div>
 					    					<div class="o-i_txt3">Контактные данные</div>
                                                                                 <input type="text" placeholder="Ваше имя *" class="o-i_input field_firstname" value="<?php echo $customer['first_name']; ?>">
-                                                                                <input type="text" placeholder="Номер телефона *" class="o-i_input field_phone" id="phone2" value="<?php echo $customer['phone']; ?>">
+                                                                                <input type="tel" placeholder="Номер телефона *" class="o-i_input field_phone" id="phone2" value="<?php echo $customer['phone']; ?>">
 					    					<div class="o-i_border">
 												<span class="o-i_submit"><span class="ajax-loader"></span>Оформить заказ</span>
                                                                                                 <div class="total-price-error">Сумма заказа меньше 1000 рублей.</div>

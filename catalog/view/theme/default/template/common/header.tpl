@@ -105,7 +105,7 @@
 						<form class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
 							<div class="t-c_title">Войти</div>
 							<div class="t-c_input">
-								<input type="text" placeholder="+7 913 44 30 37" class="input" id="phone3">
+								<input type="tel" placeholder="+7 (___) ___-__-__" class="input" id="phone3">
 								<span class="underline"></span>
 							</div>
 							<div class="t-c_input">
@@ -120,7 +120,7 @@
 						</form>
 						<div class="show-forgot">
 							<div class="t-c_input">
-								<input type="text" placeholder="+7 913 44 30 37" class="input" id="phone4">
+								<input type="tel" placeholder="+7 (___) ___-__-__" class="input" id="phone4">
 								<span class="underline"></span>
 							</div>
                                                         <div class="t-c_input t-c_code">
