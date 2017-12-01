@@ -15,10 +15,20 @@
                     e.preventDefault();
                     var pElement = $(this).parents('.modal-product');
                     var product_id = pElement.find('input.product_id').val();
-                    var quantity = parseInt(pElement.find('.selectric .label').html());
+                    var label = pElement.find('.selectric .label').html();
+                    var quantity = parseFloat(label);
+                    var weight_class = label.substr(label.indexOf(' ')+1);
+                    var weight_variant = 0;
+                    pElement.find('.selectric-hide-select option').each(function(i, item) {
+                        if($(item).html() == label) {
+                            weight_variant = $(item).val();
+                        }
+                    });
+                    console.log(product_id, quantity, weight_variant);
                     $.post('/?route=checkout/cart/add', {
                         product_id: product_id,
-                        quantity: quantity
+                        quantity: quantity,
+                        weight_variant: weight_variant
                     }, function(msg){
                         pElement.find('.m-product_submit').html('Добавлено в корзину');
                         LoadCart();
@@ -991,8 +1001,8 @@
                 e.preventDefault();
                 var pElement = $(this).parents('.p-o_block');
                 var product_id = pElement.find('input[name="product_id"]').val();
-                var quantity = parseFloat(label);
                 var label = pElement.find('.selectric .label').html();
+                var quantity = parseFloat(label);
                 var weight_class = label.substr(label.indexOf(' ')+1);
                 var weight_variant = 0;
                 pElement.find('.selectric-hide-select option').each(function(i, item) {
@@ -1144,7 +1154,6 @@
             }, "json");
         });
         
-        console.log(parseInt($('#customer_coupon').val()) > parseInt($('#customer_discount').val()));
         if($('#customer_coupon').length > 0) {
             if($('#customer_discount').length == 0 || (parseInt($('#customer_coupon').val()) > parseInt($('#customer_discount').val()))) {
                 $('.personal-discount').hide();

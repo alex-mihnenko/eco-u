@@ -1147,6 +1147,22 @@ footer {
 	font-size: 14px;
 	font-family: 'Circular Std';
 }
+.m-product_discount {
+	width: 62px;
+	height: 62px;
+	background: #749D3E;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 7px;
+	right: 7px;
+	text-align: center;
+	line-height: 62px;
+	color: #ffffff;
+	font-size: 14px;
+	font-family: 'Circular Std';
+}
 .not-available {
 	margin: 14px 0 0 24px;
 }
@@ -1842,6 +1858,7 @@ footer {
 	width: 280px;
 	height: 279px;
 	float: left;
+        position:relative;
 }
 .m-product_thumb img {
 	display: block;

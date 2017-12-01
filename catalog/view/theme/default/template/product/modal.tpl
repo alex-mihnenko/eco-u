@@ -1,9 +1,13 @@
-<?php foreach($products as $product) { ?>
+<?php foreach($products as $product) { 
+    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+?>
 <div class="modal-product">
     <div class="clearfix">
             <input type="hidden" class="product_id" value="<?php echo $product['product_id']; ?>">
             <a href="<?php echo $product['href']; ?>" class="m-product_thumb">
                 <img src="/image/<?php if(!empty($product['image'])) echo $product['image']; else echo 'eco_logo.jpg'; ?>" alt="">
+                <?php if(isset($product['discount_sticker'])) { ?><div class="m-product_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
+                <?php } elseif($product['sticker_class']) { ?><div class="m-product_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
             </a>
             <div class="m-product_right">
                     <div class="m-product_link">
@@ -32,7 +36,7 @@
                                     <select name="tech" class="tech">
                                             <?php 
                                             $arVariants = explode(',', $product['weight_variants']);
-                                            foreach($arVariants as $variant) { ?>
+                                            foreach($arVariants as $i => $variant) { ?>
                                                 <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
                                             <? } ?>
                                     </select> 

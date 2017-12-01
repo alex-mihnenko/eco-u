@@ -275,6 +275,11 @@ class ModelCatalogProduct extends Model {
                     $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
                     $product['href'] = $this->url->link('product/product', '&product_id=' . $row['product_id']);
                     $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                    $product['sticker_name'] = $product['sticker']['name'];
+                    $product['sticker_class'] = $product['sticker']['class'];
+                    if($product['special']) {
+                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
                     $products[] = $product;
                 }
                 return $products;

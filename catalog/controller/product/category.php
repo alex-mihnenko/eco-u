@@ -238,8 +238,8 @@ class ControllerProductCategory extends Controller {
                                 }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
-                    'status'      => $result['status'],
-                    'quantity'    => $result['quantity'],
+                                        'status'      => $result['status'],
+                                        'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
                                         'description_short' => $result['description_short'],
@@ -273,7 +273,11 @@ class ControllerProductCategory extends Controller {
                                     {
                                         $tagLetter = mb_strtoupper(mb_substr($tag, 0, 1));
                                         $tagFormat = $tagLetter.mb_substr($tag, 1);
-                                        $data['products_tagsorted'][$tagLetter][$tagFormat][] = $arProducts;
+                                        if($arProducts['quantity'] < 0 && $arProducts['stock_status_id'] == 5) {
+                                            
+                                        } else {
+                                            $data['products_tagsorted'][$tagLetter][$tagFormat][] = $arProducts;
+                                        }
                                     }
                                 }
                                 

@@ -137,7 +137,7 @@
 									<div class="big-letter"><?php echo $letter; ?></div>
 									<ul class="list-letter">
 										<?php foreach($products_asorted[$letter] as $key => $product) {
-                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5 && $product['status'] == 1) continue;
+                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
                                         ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
                                                                                     <div id="asorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
@@ -221,7 +221,7 @@
 									<div class="l-p_title"><?php echo $category['name']; ?></div>
 									<ul class="list-letter">
                                                                                 <?php foreach($products_catsorted[$category['id']] as $key => $product) {
-                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5 && $product['status'] == 1) continue;
+                                                                                    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
                                                                                 ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
                                                                                     <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
