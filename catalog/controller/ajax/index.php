@@ -384,8 +384,12 @@ class ControllerAjaxIndex extends Controller {
       $structure = array("ADDRESS");
       $record = array($address);
       $result = $this->model_dadata_index->cleanRecord($structure, $record);
-      
-      echo json_encode(Array('status' => 'success', 'result' => $result, 'mkad' => $result['data'][0][0]['beltway_hit']));
+      if(!isset($result['data'][0][0]['beltway_hit'])) {
+          $bwhit = 'NOT_IN_MKAD';
+      } else {
+          $bwhit = 'IN_MKAD';
+      }
+      echo json_encode(Array('status' => 'success', 'result' => $result, 'mkad' => $bwhit));
   }
   
   // Оформление доставки
@@ -404,10 +408,16 @@ class ControllerAjaxIndex extends Controller {
       $structure = array("ADDRESS");
       $record = array($address);
       $result = $this->model_dadata_index->cleanRecord($structure, $record);
-     
-      if($result['data'][0][0]['beltway_hit'] == 'IN_MKAD') {
-          $delivery_price = 250;
+      
+      if(isset($result['data'][0][0]['beltway_hit'])) {
+          $bwhit = $result['data'][0][0]['beltway_hit'];
+          if($result['data'][0][0]['beltway_hit'] == 'IN_MKAD') {
+              $delivery_price = 250;
+          } else {
+              $delivery_price = 600;
+          }
       } else {
+          $bwhit = 'NOT_IN_MKAD';
           $delivery_price = 600;
       }
       
@@ -417,7 +427,7 @@ class ControllerAjaxIndex extends Controller {
           'delivery_price' => $delivery_price,
           'delivery_time' => $strDateTime,
           'payment_method' => $payment_method,
-          'mkad' => $result['data'][0][0]['beltway_hit']
+          'mkad' => $bwhit
       );
       
       $this->load->model('checkout/order');

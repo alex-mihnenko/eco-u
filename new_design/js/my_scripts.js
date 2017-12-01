@@ -1162,11 +1162,14 @@
         }
         
         $('.c-m_submit').click(function(){
-            var address = $('#delivery_address').val();
+            var address = '';
             if($('select#delivery_address').length > 0) {
                 var address_new = false;
+                var addrIndex = $('select#delivery_address').val();
+                address = $('select#delivery_address').find('option[value="'+addrIndex+'"]').html();
             } else if($('input#delivery_address').length > 0) {
                 var address_new = true;
+                address = $('input#delivery_address').val();
             }
             var comment = $('#delivery_comment').val();
             var date = $('#delivery_date').val();
@@ -1194,7 +1197,7 @@
                             } else if(msg.mkad != 'IN_MKAD') {
                                 delivery_price = 600;
                             }
-                            $('#delivery_address').val(msg.result.data[0][0].result);
+                            $('input#delivery_address').val(msg.result.data[0][0].result);
                             $('.block-delivery-price .c-d_price').html(delivery_price+' руб');
                             $('.shipping-amount .sh-a_price').html((price+delivery_price)+' руб');
                             $('.can-toggle.demo-rebrand-1').show();
@@ -1211,6 +1214,7 @@
                     var btn = $(this);
                     btn.find('.ajax-loader').show();
                     btn.css('font-size', '0');
+                    console.log(address);
                     $.post('/?route=ajax/index/ajaxSetDelivery', {
                         address: address,
                         address_new: address_new,
