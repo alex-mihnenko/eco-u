@@ -990,8 +990,8 @@
                 e.preventDefault();
                 var pElement = $(this).parents('.p-o_block');
                 var product_id = pElement.find('input[name="product_id"]').val();
-                var label = pElement.find('.selectric .label').html();
                 var quantity = parseFloat(label);
+                var label = pElement.find('.selectric .label').html();
                 var weight_class = label.substr(label.indexOf(' ')+1);
                 var weight_variant = 0;
                 pElement.find('.selectric-hide-select option').each(function(i, item) {

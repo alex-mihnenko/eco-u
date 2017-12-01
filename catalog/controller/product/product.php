@@ -275,6 +275,15 @@ class ControllerProductProduct extends Controller {
                         $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
                         $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
                         
+                        if($product_info['special']) {
+                            $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
+                            $data['discount_sticker'] = $discount_sticker;
+                            unset($discount_sticker);
+                        }
+                        
+                        $data['sticker_name'] = $product_info['sticker']['name'];
+                        $data['sticker_class'] = $product_info['sticker']['class'];
+                        
 			if ($product_info['quantity'] <= 0) {
 				$data['stock'] = $product_info['stock_status'];
 			} elseif ($this->config->get('config_stock_display')) {
@@ -441,7 +450,7 @@ class ControllerProductProduct extends Controller {
 					$rating = false;
 				}
 
-				$data['products'][] = array(
+                                $arProduct = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
@@ -453,6 +462,7 @@ class ControllerProductProduct extends Controller {
 					'rating'      => $rating,
 					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
+				$data['products'][] = $arProduct;
 			}
 
 			$data['tags'] = array();

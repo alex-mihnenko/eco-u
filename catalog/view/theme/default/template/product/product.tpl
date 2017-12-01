@@ -26,6 +26,8 @@
                         <div class="c-p_left">
                                 <div class="c-p_thumb">
                                     <img src="<?php echo $popup; ?>" alt="" itemprop="image">
+                                    <?php if(isset($discount_sticker)) { ?><div class="c-p_discount sticker_discount">-<?php echo $discount_sticker; ?>%</div>
+                                    <?php } elseif($sticker_class) { ?><div class="c-p_discount sticker_<?php echo $sticker_class; ?>"><?php echo $sticker_name; ?></div><?php } ?>
                                 </div>
                                 <h1 class="c-p_title c-p_title-mobile" itemprop="name"><?php echo $heading_title; ?></h1>
                                 <ul class="list-composition">

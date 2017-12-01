@@ -1131,6 +1131,22 @@ footer {
 	font-size: 14px;
 	font-family: 'Circular Std';
 }
+.c-p_discount {
+	width: 62px;
+	height: 62px;
+	background: #749D3E;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	text-align: center;
+	line-height: 62px;
+	color: #ffffff;
+	font-size: 14px;
+	font-family: 'Circular Std';
+}
 .not-available {
 	margin: 14px 0 0 24px;
 }
@@ -2165,6 +2181,7 @@ footer {
 .c-p_thumb {
 	width: 100%;
 	height: auto;
+        position:relative;
 }
 .c-p_thumb img {
 	width: 100%;
