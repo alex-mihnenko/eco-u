@@ -113,7 +113,7 @@ class ControllerAjaxIndex extends Controller {
         if(!empty($phoneFormat))
         {
             $code = substr(str_replace('.', '', hexdec(md5(time()+$phone))), 0, 6);
-            $message = 'Код подтверждения: '.$code;
+            $message = str_replace('[REPLACE]', $code, $this->config->get('config_sms_confirmation_text'));
             $this->model_sms_confirmation->addCode($code, time()+300);
             $this->model_sms_confirmation->clearOldCodes();
             $result = json_decode($this->model_sms_confirmation->sendSMS($phoneFormat, $message));
@@ -436,7 +436,7 @@ class ControllerAjaxIndex extends Controller {
           if($address_new) $this->customer->setAddress(0, $address);
           // Отправка sms        
             $this->load->model('sms/confirmation');
-            $message = "Ваш заказ №{$order_id} принят. Менеджер свяжется с вами в течение часа.";
+            $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
             $this->model_sms_confirmation->sendSMS($telephone, $message);
           echo json_encode(Array('status' => 'success'));
       } else {
@@ -493,7 +493,7 @@ class ControllerAjaxIndex extends Controller {
       
       if(isset($result['customer_id'])) {
           $code = substr(str_replace('.', '', hexdec(md5(time()+$phoneFormat))), 0, 6);
-          $message = 'Ваш новый пароль: '.$code;
+          $message = str_replace('[REPLACE]', $code, $this->config->get('config_sms_password_new_text'));
           $this->model_sms_confirmation->addCode($code, time()+300);
           $this->model_sms_confirmation->clearOldCodes();
           $this->model_sms_confirmation->sendSMS($phoneFormat, $message);

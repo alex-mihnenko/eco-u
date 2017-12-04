@@ -38,12 +38,27 @@ class ModelCatalogProduct extends Model {
                     }
                 
                 
+                $arCompositePrice = $this->config->get('config_composite_price');
+                $compPrice = false;
+                if($query->row['composite_price'] == 1) {
+                    if($query->row['weight_class'] == 'кг' || $query->row['weight_class'] == 'л') {
+                        $compPrice = $arCompositePrice;
+                    } elseif($query->row['weight_class'] == 'г' || $query->row['weight_class'] == 'мл') {
+                        $arNewCompositePrice = Array();
+                        foreach($arCompositePrice as $key => $val) {
+                            $key = $key * 1000;
+                            $arNewCompositePrice[$key] = $val;
+                        }
+                        $compPrice = $arNewCompositePrice;
+                    }
+                }
+                    
                 if ($query->num_rows) {
 			return array(
 				'product_id'       => $query->row['product_id'],
 				'name'             => $query->row['name'],
 				'description'      => $query->row['description'],
-                'available'        => $query->row['available'],
+                                'available'        => $query->row['available'],
                                 'description_short'      => $query->row['description_short'],
 				'meta_title'       => $query->row['meta_title'],
 				'meta_description' => $query->row['meta_description'],
@@ -87,7 +102,8 @@ class ModelCatalogProduct extends Model {
 				'date_modified'    => $query->row['date_modified'],
 				'viewed'           => $query->row['viewed'],
                                 'sticker'          => $sticker,
-                                'customer_props3'  => $query->row['customer_props3']
+                                'customer_props3'  => $query->row['customer_props3'],
+                                'composite_price'  => $compPrice
 			);
 		} else {
 			return false;

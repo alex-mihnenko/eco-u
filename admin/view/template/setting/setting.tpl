@@ -189,6 +189,24 @@
                 </div>
               </div>
               <?php } ?>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sms-order-new-text"><?php echo $entry_sms_order_new_text; ?></label>
+                <div class="col-sm-10">
+                  <textarea name="config_sms_order_new_text" rows="3" placeholder="<?php echo $entry_sms_order_new_text; ?>" id="input-sms-order-new-text" class="form-control"><?php echo $config_sms_order_new_text; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sms-password-new-text"><?php echo $entry_sms_password_new_text; ?></label>
+                <div class="col-sm-10">
+                  <textarea name="config_sms_password_new_text" rows="3" placeholder="<?php echo $entry_sms_password_new_text; ?>" id="config_sms_password_new_text" class="form-control"><?php echo $config_sms_password_new_text; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-composite-price"><?php echo $entry_composite_price; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_composite_price" value="<?php echo $config_composite_price; ?>" placeholder="<?php echo $entry_composite_price; ?>" id="input-composite-price" class="form-control" />
+                </div>
+              </div>
             </div>
             <div class="tab-pane" id="tab-local">
               <div class="form-group">

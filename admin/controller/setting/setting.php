@@ -10,6 +10,11 @@ class ControllerSettingSetting extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+                        $objCompPrice = json_decode(html_entity_decode($this->request->post['config_composite_price']));
+                        unset($this->request->post['config_composite_price']);
+                        foreach($objCompPrice as $key => $val) {
+                            $this->request->post['config_composite_price'][$key] = $val;
+                        }
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
 			if ($this->config->get('config_currency_auto')) {
@@ -68,6 +73,9 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_open'] = $this->language->get('entry_open');
 		$data['entry_comment'] = $this->language->get('entry_comment');
 		$data['entry_location'] = $this->language->get('entry_location');
+                $data['entry_sms_order_new_text'] = $this->language->get('entry_sms_order_new_text');
+                $data['entry_sms_password_new_text'] = $this->language->get('entry_sms_password_new_text');
+                $data['entry_composite_price'] = $this->language->get('entry_composite_price');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
@@ -388,6 +396,24 @@ class ControllerSettingSetting extends Controller {
 
 		$data['token'] = $this->session->data['token'];
 
+                if (isset($this->request->post['config_sms_order_new_text'])) {
+			$data['config_sms_order_new_text'] = $this->request->post['config_sms_order_new_text'];
+		} else {
+			$data['config_sms_order_new_text'] = $this->config->get('config_sms_order_new_text');
+		}
+                
+                if (isset($this->request->post['config_sms_password_new_text'])) {
+			$data['config_sms_password_new_text'] = $this->request->post['config_sms_password_new_text'];
+		} else {
+			$data['config_sms_password_new_text'] = $this->config->get('config_sms_password_new_text');
+		}
+                
+                if (isset($this->request->post['config_composite_price'])) {
+			$data['config_composite_price'] = $this->request->post['config_composite_price'];
+		} else {
+			$data['config_composite_price'] = htmlentities(json_encode($this->config->get('config_composite_price')));
+		}
+                
 		if (isset($this->request->post['config_meta_title'])) {
 			$data['config_meta_title'] = $this->request->post['config_meta_title'];
 		} else {

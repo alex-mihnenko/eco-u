@@ -25,6 +25,7 @@
                         </ul>
                     <?php } ?>
                     <div class="size-0">
+                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo json_encode($product['composite_price']);?>'><? } ?>
                             <div class="m-product_select">
                                 <?php if(empty($product['weight_variants'])) { ?>
                                     <select name="tech" class="tech">

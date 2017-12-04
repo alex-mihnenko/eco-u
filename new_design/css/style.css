@@ -1511,7 +1511,7 @@ footer {
 	display: block;
 	font-size: 0;
 	position: relative;
-	z-index: 2;
+	z-index: 3;
 }
 /* Hiding products after the initial 5 */
 .list-letter>li.hidden

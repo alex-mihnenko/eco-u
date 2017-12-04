@@ -13,6 +13,7 @@
                                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/placeholder.png'; ?>" alt="">
                                     </a>
                                     <div class="p-o_block">
+                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
                                             <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
                                             <div class="p-o_link">

@@ -99,6 +99,9 @@ class ControllerExtensionModuleFeatured extends Controller {
                                         if($data['is_admin']) {
                                                 $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product_info['product_id'];
                                         }
+                                        if($product_info['composite_price'] !== false) {
+                                                $arProducts['composite_price'] = json_encode($product_info['composite_price']);       
+                                        }
                                         $data['products'][] = $arProducts;
 				}
 			}
