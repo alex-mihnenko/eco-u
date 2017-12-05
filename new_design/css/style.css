@@ -3609,10 +3609,10 @@ footer {
 .table-basket tr td.table-b_width1 {
 	box-sizing: border-box;
 	padding: 0 0 0 41px;
-	width: 231px;
+	width: 300px;
 }
 .table-basket tr td.table-b_width2 {
-	width: 380px;
+	width: 200px;
 }
 .table-b_minus {
 	display: inline-block;
@@ -4300,7 +4300,7 @@ footer {
 	    width: 33.33%;
 	}
 	.table-basket tr td.table-b_width2 {
-	    width: 350px;
+	    width: 200px;
 	}
 	.sidebar_left {
 	    padding: 0 25px 0 11px;
@@ -4625,7 +4625,7 @@ footer {
 	    padding: 50px 10px 0 10px;
 	}
 	.table-basket tr td.table-b_width2 {
-	    width: 290px;
+	    width: 200px;
 	}
 	.table-basket tr td.table-b_width1 {
 	    width: 180px;
