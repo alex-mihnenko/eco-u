@@ -755,7 +755,7 @@ header {
 }
 .b-p_title {
 	font-weight: 500;
-	color: #ffffff;
+	color: #FFFFFF;
 	font-size: 52px;
 	text-align: center;
 	line-height: 70px;
@@ -4220,6 +4220,7 @@ footer {
 .p-o_short-descr
 {
     font-size:12px;
+	color: #777777;
     margin:5px 15px;
     line-height:1.25em;
     height:2.5em;
@@ -4813,7 +4814,7 @@ footer {
     	font-size: 10px;
 	}
 	.p-o_link {
-	    padding: 0px 10px 0 10px;
+	    padding: 0px 0px 0 0px;
 	}
 	.p-o_link a {
 		font-size: 14px;
@@ -6074,7 +6075,7 @@ footer {
 	    padding: 20px 0 0 0px;
 	}
 	.p-o_link a {
-		font-size: 10px;
+		font-size: 11px;
 		line-height: 13px;
 		height: 26px;
 	}

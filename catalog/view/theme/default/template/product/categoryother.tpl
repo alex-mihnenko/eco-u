@@ -145,7 +145,7 @@
                                                                                             <div class="box-p_o">
                                                                                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
                                                                                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
-                                                                                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/placeholder.png'; ?>" alt="">
+                                                                                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
                                                                                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
