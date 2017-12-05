@@ -4101,7 +4101,7 @@ footer {
     font-size:20px;
 }
 .sticker_20, .sticker_22, .sticker_23, .sticker_24{
-    font-size:11px;
+    font-size:11px !important;
     background-color:#f17e46;
     text-transform: uppercase;
     font-family: Roboto;
