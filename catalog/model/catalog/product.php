@@ -36,10 +36,10 @@ class ModelCatalogProduct extends Model {
                             }
                         }
                     }
-               
+                    
+                $compPrice = false;
                 if($query->num_rows && $query->row['composite_price'] == 1) {
                     $arCompositePrice = $this->config->get('config_composite_price');
-                    $compPrice = false;
                     if($query->row['weight_class'] == 'кг' || $query->row['weight_class'] == 'л') {
                         $compPrice = $arCompositePrice;
                     } elseif($query->row['weight_class'] == 'г' || $query->row['weight_class'] == 'мл') {
