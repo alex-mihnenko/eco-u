@@ -269,7 +269,9 @@ class ModelCatalogProduct extends Model {
             $result = Array();
             foreach($items as $item) {
                 if(!isset($result[$item['product_id']])) {
-                    $result[$item['product_id']] = $this->getProduct($item['product_id']);
+                    $arProduct = $this->getProduct($item['product_id']);
+                    if($arProduct['status'] != 1) continue;
+                    $result[$item['product_id']] = $arProduct;
                     $result[$item['product_id']]['href'] = $this->url->link('product/product', '&product_id=' . $item['product_id']);
                 }
             }
