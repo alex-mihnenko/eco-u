@@ -505,7 +505,7 @@ header {
 .tabs__caption li {
 	display: inline-block;
 	vertical-align: top;
-	width: 50%;
+	width: 100%;
 	box-sizing: border-box;
 	font-weight: 500;
 	font-size: 19px;
