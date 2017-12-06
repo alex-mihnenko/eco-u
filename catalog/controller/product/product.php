@@ -276,7 +276,8 @@ class ControllerProductProduct extends Controller {
                         $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
                         
                         if($product_info['special']) {
-                            $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
+                            if($product_info['price'] != 0) $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
+                            else $discount_sticker = 0;
                             $data['discount_sticker'] = $discount_sticker;
                             unset($discount_sticker);
                         }

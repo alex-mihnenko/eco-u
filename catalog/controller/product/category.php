@@ -233,7 +233,8 @@ class ControllerProductCategory extends Controller {
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
                                
                                 if($special) {
-                                    $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                    if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                    else $discount_sticker = 0;
                                     $price = $special;
                                 }
 				$arProducts = array(
