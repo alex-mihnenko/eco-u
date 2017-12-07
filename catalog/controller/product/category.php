@@ -523,7 +523,7 @@ class ControllerProductCategory extends Controller {
                             $data['cart_products'][(int)$product['product_id']] = $product['quantity'];
                         }
                         
-                        if($category_id == 59) {
+                        if($category_id == 2) {
         			$this->response->setOutput($this->load->view('product/category', $data));
                         } else {
                                 $this->response->setOutput($this->load->view('product/categoryother', $data));
