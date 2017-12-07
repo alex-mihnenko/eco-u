@@ -426,6 +426,7 @@ class ControllerAjaxIndex extends Controller {
           'comment' => $comment,
           'delivery_price' => $delivery_price,
           'delivery_time' => $strDateTime,
+          'delivery_interval' => $this->request->post['date'].' '.$this->request->post['time'],
           'payment_method' => $payment_method,
           'mkad' => $bwhit
       );
