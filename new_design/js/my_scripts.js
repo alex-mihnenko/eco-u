@@ -979,6 +979,7 @@
         
 	$('.m-p_forgot').on( 'click', function(){
 		$('.js-hide_1').closest(".t-c_box").find(".js-hide_1").hide();
+                $('#smscode4').val('')
 		$(".show-forgot").show();
 	});
 	$(".m-p_registration.js-reg-2").on( 'click', function(){
