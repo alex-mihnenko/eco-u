@@ -814,6 +814,7 @@ class ModelCheckoutOrder extends Model {
             $order_data['comment'] = $data['delivery_time'].$data['comment'];
             $order_data['payment_method'] = $data['payment_method'];
             $order_data['delivery_time'] = $data['delivery_time'];
+            $order_data['delivery_interval'] = $data['delivery_interval'];
             if(($data['mkad'] != 'IN_MKAD') || ($data['mkad'] == 'IN_MKAD' && $order_data['total'] < 4000)) {
                 $order_data['total'] += $data['delivery_price'];
                 @$this->editOrder($order_id, $order_data);
