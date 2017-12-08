@@ -82,6 +82,7 @@
                             $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
                         });
                         $item.parents('.p-o_select').find('.selectric-items').find('li:first-child').click();
+                        
                         $item.parents('.m-product_select').find('.selectric-items').find('li').click(function(e){
                             var quantity = parseFloat($(this).html());
                             var price = parseFloat($(this).parents('.size-0').find('input.product_price').val());
@@ -98,10 +99,12 @@
                             $(this).parents('.size-0').find('.m-product_price').html(totalPrice + currencyStr);
                         });
                         $item.parents('.m-product_select').find('.selectric-items').find('li:first-child').click();
+                        
                         $item.parents('.c-p_select').find('.selectric-items').find('li').click(function(e){
                             var quantity = parseFloat($(this).html());
-                            var price = parseFloat($(this).parents('.size-0').find('meta[itemprop="price"]').attr('content'));
-                            var compPrice = $(this).parents('.size-0').find('.composite_price').val();
+                            var price = parseFloat($(this).parents('.c-p_right').find('meta[itemprop="price"]').attr('content'));
+                            var compPrice = $(this).parents('.c-p_right').find('.composite_price').val();
+                            
                             var mtpl = 1;
                             if(typeof(compPrice) != 'undefined') {
                                 var cpFormat = JSON.parse(compPrice);
@@ -110,10 +113,10 @@
                                 }
                             }
                             var totalPrice = Math.round(mtpl * quantity * price);
-                            if(totalPrice > 999) currencyStr = ' р';
-                            $(this).parents('.size-0').find('.c-p_price').html(totalPrice + currencyStr);
+                            console.log($(this).parents('.c-p_right').find('.c-p_price'), totalPrice);
+                            $(this).parents('.c-p_right').find('.c-p_price').html(totalPrice + currencyStr);
                         });
-			i++;
+                        $item.parents('.c-p_select').find('.selectric-items').find('li:first-child').click();
 		});
 		setTimeout(function() {
 				initDropDown();
@@ -979,6 +982,7 @@
         
 	$('.m-p_forgot').on( 'click', function(){
 		$('.js-hide_1').closest(".t-c_box").find(".js-hide_1").hide();
+                $('#smscode4').val('')
 		$(".show-forgot").show();
 	});
 	$(".m-p_registration.js-reg-2").on( 'click', function(){
@@ -1054,15 +1058,28 @@
         // Добавление в корзину на странице товара
         $('.c-p_submit').click(function(e){
             e.preventDefault();
-            var pElement = $(this).parents('.c-p_right');
-            var product_id = pElement.find('input[name="product_id"]').val();
-            var quantity = parseInt(pElement.find('.selectric .label').html());
-            $.post('/?route=checkout/cart/add', {
-                product_id: product_id,
-                quantity: quantity
-            }, function(msg){
-                LoadCart();
-            }, "json");
+                    var pElement = $(this).parents('.c-p_right');
+                    var product_id = pElement.find('input[name="product_id"]').val();
+                    var quantity = parseFloat(pElement.find('.selectric .label').html());
+                    var label = pElement.find('.selectric .label').html();
+                    var special_price = true;
+                    var weight_variant = 0;
+                    pElement.find('.selectric-hide-select option').each(function(i, item) {
+                        if($(item).html() == label) {
+                            weight_variant = $(item).val();
+                        }
+                    });
+                    $.post('/?route=checkout/cart/add', {
+                        product_id: product_id,
+                        quantity: quantity,
+                        weight_variant:weight_variant
+                    }, function(msg){
+                        if(location.pathname == '/cart') {
+                            location.reload();
+                        } else {
+                            LoadCart();
+                        }
+                    }, "json");
         });
         function LoadCart() {
             $.get('/?route=ajax/index/ajaxGetCart', {}, function(msg){
@@ -1419,7 +1436,7 @@
                     e.preventDefault();
                     var pElement = $(this).parents('.p-o_block');
                     var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = parseInt(pElement.find('.selectric .label').html());
+                    var quantity = parseFloat(pElement.find('.selectric .label').html());
                     var special_price = true;
                     var weight_variant = 0;
                     pElement.find('.selectric-hide-select option').each(function(i, item) {
@@ -1501,7 +1518,7 @@
                     e.preventDefault();
                     var pElement = $(this).parents('.p-o_block');
                     var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = parseInt(pElement.find('.selectric .label').html());
+                    var quantity = parseFloat(pElement.find('.selectric .label').html());
                     var special_price = true;
                     var weight_variant = 0;
                     pElement.find('.selectric-hide-select option').each(function(i, item) {

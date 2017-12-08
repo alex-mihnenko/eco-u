@@ -400,6 +400,7 @@ class ControllerAjaxIndex extends Controller {
       $order_id = $this->request->post['order_id'];
       $payment_method = $this->request->post['payment_method'];
       $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
+      $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
       $customer_id = $this->customer->getId();
       $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
       
@@ -426,6 +427,7 @@ class ControllerAjaxIndex extends Controller {
           'comment' => $comment,
           'delivery_price' => $delivery_price,
           'delivery_time' => $strDateTime,
+          'delivery_interval' => $strDeliveryInterval,
           'payment_method' => $payment_method,
           'mkad' => $bwhit
       );

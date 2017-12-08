@@ -274,6 +274,9 @@ class ControllerProductProduct extends Controller {
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
                         $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
                         $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
+                        $data['weight_variants'] = $product_info['weight_variants'];
+                        $data['weight_class'] = $product_info['weight_class'];
+                        $data['composite_price'] = json_encode($product_info['composite_price']);
                         
                         if($product_info['special']) {
                             if($product_info['price'] != 0) $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
@@ -490,6 +493,10 @@ class ControllerProductProduct extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
+                        if($product_info['quantity'] < 0 && $product_info['stock_status_id'] == 5) {
+                            $this->response->redirect($this->url->link('product/category', 'path='.$category_id));
+                        }
+                        
 			$this->response->setOutput($this->load->view('product/product', $data));
 		} else {
 			$url = '';
