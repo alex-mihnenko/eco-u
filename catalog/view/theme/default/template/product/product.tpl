@@ -49,6 +49,7 @@
                         </div>
                         <div class="c-p_right">
                                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                <?php if(isset($composite_price)) { ?><input type="hidden" class="composite_price" value='<?php echo $composite_price;?>'><? } ?>
                                 <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
                                 <div class="c-p_city"><?php echo $description_short; ?></div>
                                 <div class="c-p_txt">
@@ -68,13 +69,27 @@
                                         <meta itemprop="price" content="<?php if($special) echo (int)$special; else echo (int)$price; ?>">
                                         <meta itemprop="priceCurrency" content="RUB">
                                         <div class="c-p_select">
-                                            <select name="tech" class="tech">
-                                                    <?php for($i=1;$i<=5;$i++) { ?>
-                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?> шт. </option>
-                                                    <?php } ?>
-                                                </select> 
+                                                <?php if(empty($weight_variants)) { ?>
+                                                    <select name="tech" class="tech">
+                                                            <?php for($i=1; $i<=5; $i++) { ?>
+                                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                                            <? } ?>
+                                                    </select> 
+                                                <?php } else { ?>
+                                                    <select name="tech" class="tech">
+                                                            <?php 
+                                                            $arVariants = explode(',', $weight_variants);
+                                                            foreach($arVariants as $i => $variant) { ?>
+                                                                <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $weight_class; ?></option>
+                                                            <? } ?>
+                                                    </select> 
+                                                <?php } ?>
                                         </div>
-                                        <div class="c-p_price"><?php if($special) echo $special; else echo $price; ?></div>
+                                        <?php if(empty($product['weight_variants'])) { ?>
+                                            <div class="c-p_price"><?php if($special !== false) echo $special; else echo $price; ?></div>
+                                        <?php } else { ?>
+                                            <div class="c-p_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                                        <?php } ?>
                                 </div>
                                 <a href="#" class="c-p_submit">Добавить в корзину</a>
                         </div>
