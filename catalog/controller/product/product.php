@@ -5,6 +5,15 @@ class ControllerProductProduct extends Controller {
 	public function index() {
 		$this->load->language('product/product');
 
+                if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
+                {
+                    $data['is_admin'] = true;
+                }
+                else
+                {
+                    $data['is_admin'] = false;
+                }
+                
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -425,9 +434,9 @@ class ControllerProductProduct extends Controller {
 
 			foreach ($results as $result) {
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_related_width'), $this->config->get($this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get($this->config->get('config_theme') . '_image_related_width'), $this->config->get($this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -453,20 +462,44 @@ class ControllerProductProduct extends Controller {
 				} else {
 					$rating = false;
 				}
-
-                                $arProduct = array(
+                               
+                                if($special) {
+                                    if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
+                                    else $discount_sticker = 0;
+                                    $price = $special;
+                                }
+				$arProducts = array(
 					'product_id'  => $result['product_id'],
+                                        'status'      => $result['status'],
+                                        'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
-					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '..',
-                                        'price'       => $price,
+                                        'description_short' => $result['description_short'],
+					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
+					'price'       => $price,
 					'special'     => $special,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-					'rating'      => $rating,
-					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+					'rating'      => $result['rating'],
+					'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url),
+                                        'stock_status'      => $result['stock_status'],
+                                        'stock_status_id'   => $result['stock_status_id'],
+                                        'weight_variants'   => $result['weight_variants'],
+                                        'weight_class' => $result['weight_class'],
+                                        'sticker_name' => $result['sticker']['name'],
+                                        'sticker_class' => $result['sticker']['class']
 				);
-				$data['products'][] = $arProduct;
+                                if(isset($discount_sticker)) {
+                                    $arProducts['discount_sticker'] = $discount_sticker;
+                                    unset($discount_sticker);
+                                }
+                                if($data['is_admin']) {
+                                        $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
+                                }
+                                if($result['composite_price'] !== false) {
+                                        $arProducts['composite_price'] = json_encode($result['composite_price']);
+                                }
+				$data['products'][] = $arProducts;
 			}
 
 			$data['tags'] = array();
