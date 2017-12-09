@@ -193,6 +193,15 @@
                                                                                                                     </div>
                                                                                                                     <?php } else { ?>
                                                                                                                     <div class="not-available clearfix">
+                                                                                                                            <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                                                                                            <?php if(empty($product['weight_variants'])) { ?>
+                                                                                                                               <input type="hidden" name="quantity" value="1">
+                                                                                                                            <?php } else {
+                                                                                                                               $arVariants = explode(',', $product['weight_variants']); 
+                                                                                                                               $quantity = $arVariants[0]; ?>
+                                                                                                                                   <input type="hidden" name="quantity" value="<?php echo $quantity; ?>">
+                                                                                                                            <?php } ?>
+                                                                                                                            <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
                                                                                                                             <div class="n-a_text">Скоро будет</div>
                                                                                                                             <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
                                                                                                                     </div>

@@ -1034,6 +1034,10 @@
                 var quantity = parseFloat(label);
                 var weight_class = label.substr(label.indexOf(' ')+1);
                 var weight_variant = 0;
+                var special_price = false;
+                if(location.pathname == '/cart') {
+                    special_price = true;
+                }
                 pElement.find('.selectric-hide-select option').each(function(i, item) {
                     if($(item).html() == label) {
                         weight_variant = $(item).val();
@@ -1042,7 +1046,8 @@
                 $.post('/?route=checkout/cart/add', {
                     product_id: product_id,
                     quantity: quantity,
-                    weight_variant: weight_variant
+                    weight_variant: weight_variant,
+                    special_price: special_price
                 }, function(msg){
                     pElement.find('.p-o_select, .p-o_right').hide();
                     pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
@@ -1051,6 +1056,34 @@
                         pElement.find('.basket-added').remove();
                         pElement.find('.p-o_select, .p-o_right').show();
                     }, 3000, pElement);
+                    if(location.pathname == '/cart') location.href = '/cart';
+                }, "json");
+            });
+            block.find('.n-a_time').click(function(e){
+                e.preventDefault();
+                var pElement = $(this).parents('.p-o_block');
+                var product_id = pElement.find('input[name="product_id"]').val();
+                var quantity = parseFloat(pElement.find('input[name="quantity"]').val());
+                var weight_class = pElement.find('input[name="weight_class"]').val();
+                var weight_variant = 0;
+                var special_price = false;
+                if(location.pathname == '/cart') {
+                    special_price = true;
+                }
+                $.post('/?route=checkout/cart/add', {
+                    product_id: product_id,
+                    quantity: quantity,
+                    weight_variant: weight_variant,
+                    special_price: special_price
+                }, function(msg){
+                    pElement.find('.not-available.clearfix').hide();
+                    pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
+                    LoadCart();
+                    setTimeout(function(){
+                        pElement.find('.basket-added').remove();
+                        pElement.find('.not-available.clearfix').show();
+                    }, 3000, pElement);
+                    if(location.pathname == '/cart') location.href = '/cart';
                 }, "json");
             });
         }
@@ -1373,174 +1406,105 @@
                 }
             }
         });
-        if($('.slider-favorite-products').length > 0) {
-            $.get('/?route=ajax/index/ajaxGetProductsSpecialPrice', {}, function(msg){
-                $('.slider-favorite-products').html(msg);
-                /*** slider-favorite-products ***/
-                $('.slider-favorite-products').slick({
-                        autoplay: true,
-                        autoplaySpeed: 2000000,
-                        slidesToShow: 5,
-                        slidesToScroll: 5,
-                          responsive: [
-                        {
-                          breakpoint: 374,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2, 
-                          }
-                        },
-                        {
-                          breakpoint: 480,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2,
-                          }
-                        },
-                        {
-                          breakpoint: 979,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2,
-                          }
-                        },
-                        {
-                          breakpoint: 1199,
-                          settings: {
-                                slidesToShow: 3,
-                                slidesToScroll: 3,
-                          }
-                        },
-                        {
-                          breakpoint: 1280,
-                          settings: {
-                                slidesToShow: 4,
-                                slidesToScroll: 4,
-                          }
-                        },
-                        {
-                          breakpoint: 1500,
-                          settings: {
-                                slidesToShow: 4,
-                                slidesToScroll: 4,
-                          }
-                        }]
-                });
-                $('.f-p_all').on( 'click', function(){
-                        $(this).css("display","none");
-                        $(this).closest(".fond-f-p").find(".slider-favorite-products").fadeOut(100).css("display","none");
-                        $(this).closest(".fond-f-p").find(".list-favorite-products").fadeIn(2000).css("display","block");
-                });
-                initDropDown();
-                $('.slider-favorite-products').find('.p-o_submit').click(function(e){
-                    e.preventDefault();
-                    var pElement = $(this).parents('.p-o_block');
-                    var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = parseFloat(pElement.find('.selectric .label').html());
-                    var special_price = true;
-                    var weight_variant = 0;
-                    pElement.find('.selectric-hide-select option').each(function(i, item) {
-                        if($(item).html() == label) {
-                            weight_variant = $(item).val();
-                        }
-                    });
-                    $.post('/?route=checkout/cart/add', {
-                        product_id: product_id,
-                        quantity: quantity,
-                        special_price: true,
-                        weight_variant: weight_variant
-                    }, function(msg){
-                        if(location.pathname == '/cart') {
-                            location.reload();
-                        } else {
-                            LoadCart();
-                        }
-                    }, "json");
-                });
-            });
-        }
+        $('.slider-favorite-products').slick({
+                autoplay: true,
+                autoplaySpeed: 2000000,
+                slidesToShow: 5,
+                slidesToScroll: 5,
+                  responsive: [
+                {
+                  breakpoint: 374,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2, 
+                  }
+                },
+                {
+                  breakpoint: 480,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                  }
+                },
+                {
+                  breakpoint: 979,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                  }
+                },
+                {
+                  breakpoint: 1199,
+                  settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                  }
+                },
+                {
+                  breakpoint: 1500,
+                  settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                  }
+                }]
+        });
         
-        if($('.slider-preferable-products').length > 0) {
-            $.get('/?route=ajax/index/ajaxGetProductsPreferable', {}, function(msg){
-                $('.slider-preferable-products').html(msg);
-                /*** slider-preferable-products ***/
-                $('.slider-preferable-products').slick({
-                        autoplay: true,
-                        autoplaySpeed: 2000000,
-                        slidesToShow: 5,
-                        slidesToScroll: 5,
-                          responsive: [
-                        {
-                          breakpoint: 374,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2, 
-                          }
-                        },
-                        {
-                          breakpoint: 480,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2,
-                          }
-                        },
-                        {
-                          breakpoint: 979,
-                          settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2,
-                          }
-                        },
-                        {
-                          breakpoint: 1199,
-                          settings: {
-                                slidesToShow: 3,
-                                slidesToScroll: 3,
-                          }
-                        },
-                        {
-                          breakpoint: 1280,
-                          settings: {
-                                slidesToShow: 4,
-                                slidesToScroll: 4,
-                          }
-                        },
-                        {
-                          breakpoint: 1500,
-                          settings: {
-                                slidesToShow: 4,
-                                slidesToScroll: 4,
-                          }
-                        }]
-                });
-                initDropDown();
-                $('.slider-preferable-products').find('.p-o_submit').click(function(e){
-                    e.preventDefault();
-                    var pElement = $(this).parents('.p-o_block');
-                    var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = parseFloat(pElement.find('.selectric .label').html());
-                    var special_price = true;
-                    var weight_variant = 0;
-                    pElement.find('.selectric-hide-select option').each(function(i, item) {
-                        if($(item).html() == label) {
-                            weight_variant = $(item).val();
-                        }
-                    });
-                    $.post('/?route=checkout/cart/add', {
-                        product_id: product_id,
-                        quantity: quantity,
-                        weight_variant:weight_variant
-                    }, function(msg){
-                        if(location.pathname == '/cart') {
-                            location.reload();
-                        } else {
-                            LoadCart();
-                        }
-                    }, "json");
-                });
-            });
-        }
-        
+        $('.slider-preferable-products').slick({
+                autoplay: true,
+                autoplaySpeed: 2000000,
+                slidesToShow: 5,
+                slidesToScroll: 5,
+                  responsive: [
+                {
+                  breakpoint: 374,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2, 
+                  }
+                },
+                {
+                  breakpoint: 480,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                  }
+                },
+                {
+                  breakpoint: 979,
+                  settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                  }
+                },
+                {
+                  breakpoint: 1199,
+                  settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                  }
+                },
+                {
+                  breakpoint: 1500,
+                  settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                  }
+                }]
+        });
         
         function InitClamp(selector) {
             $(selector).each(function(i, item, arr){
