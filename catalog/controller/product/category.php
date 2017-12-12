@@ -193,19 +193,19 @@ class ControllerProductCategory extends Controller {
 
                         $catSortTime = $this->cache->get('latest_category_sort');
                         if($catSortTime < time() - 900) {
-                            $this->cache->set('latest_category_sort', time());
                             $results = $this->model_catalog_product->getProducts($filter_data);
-                            $this->cache->set('category_sort_results', serialize($results));
+                            $data['alphabet_list'] = array();
+                            $data['products_asorted'] = array();
+                            $data['products_tagsorted'] = array();
+                            $data['products_catsorted'] = array();
                         } else {
-                            $results = unserialize($this->cache->get('category_sort_results'));
+                            $data['alphabet_list'] = unserialize($this->cache->get('category_alphabet_list'));
+                            $data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
+                            $data['products_tagsorted'] = unserialize($this->cache->get('category_products_tagsorted'));
+                            $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
                         }
                         
-                        $data['alphabet_list'] = array();
-                        $data['products_asorted'] = array();
-                        $data['products_tagsorted'] = array();
-                        $data['products_catsorted'] = array();
-                        
-			foreach ($results as $result) {
+                        if($catSortTime < time() - 900) foreach($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -299,7 +299,7 @@ class ControllerProductCategory extends Controller {
                         natsort($data['alphabet_list']);
                         
                         // Сортировка по категориям
-                        foreach($data['categories'] as $category)
+                        if($catSortTime < time() - 900) foreach($data['categories'] as $category)
                         {
                             $subcat_filter_data = $filter_data;
                             $subcat_filter_data['filter_category_id'] = $category['id'];
@@ -373,6 +373,14 @@ class ControllerProductCategory extends Controller {
                                 
                                 $data['products_catsorted'][$category['id']][] = $arProducts;
                             }
+                        }
+                        
+                        if($catSortTime < time() - 900) {
+                            $this->cache->set('latest_category_sort', time());
+                            $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));
+                            $this->cache->set('category_products_asorted', serialize($data['products_asorted']));
+                            $this->cache->set('category_products_tagsorted', serialize($data['products_tagsorted']));
+                            $this->cache->set('category_products_catsorted', serialize($data['products_catsorted']));
                         }
                         
 			$url = '';
