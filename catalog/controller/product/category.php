@@ -192,7 +192,8 @@ class ControllerProductCategory extends Controller {
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
                         $catSortTime = $this->cache->get('latest_category_sort');
-                        if($catSortTime < time() - 900) {
+                        if(!$catSortTime || $catSortTime < time() - 900) {
+                            $catSortTime = 0;
                             $results = $this->model_catalog_product->getProducts($filter_data);
                             $data['alphabet_list'] = array();
                             $data['products_asorted'] = array();
