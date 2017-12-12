@@ -179,6 +179,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['products'] = array();
 
+                        $limit = 0;
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
