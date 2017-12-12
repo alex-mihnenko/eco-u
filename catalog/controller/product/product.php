@@ -4,7 +4,7 @@ class ControllerProductProduct extends Controller {
 
 	public function index() {
 		$this->load->language('product/product');
-
+                $this->load->model('account/user');
                 if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
                 {
                     $data['is_admin'] = true;
