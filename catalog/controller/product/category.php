@@ -291,10 +291,6 @@ class ControllerProductCategory extends Controller {
 			}
                         natsort($data['alphabet_list']);
                         
-                        if($_SERVER['REMOTE_ADDR'] == '185.19.22.89') {
-                            var_dump($filter_data);
-                        }
-                        
                         // Сортировка по категориям
                         foreach($data['categories'] as $category)
                         {
