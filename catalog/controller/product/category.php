@@ -366,7 +366,7 @@ class ControllerProductCategory extends Controller {
                                     unset($discount_sticker);
                                 }
                                 if($data['is_admin']) {
-                                        $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
+                                        $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
                                 }
                                 if($result['composite_price'] !== false) {
                                         $arProducts['composite_price'] = json_encode($result['composite_price']);       
