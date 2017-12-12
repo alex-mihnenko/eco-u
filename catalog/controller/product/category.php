@@ -290,6 +290,10 @@ class ControllerProductCategory extends Controller {
 			}
                         natsort($data['alphabet_list']);
                         
+                        if(isset($this->request->get['test'])) {
+                            var_dump($data['products_asorted']);
+                        }
+                        
                         // Сортировка по категориям
                         foreach($data['categories'] as $category)
                         {
