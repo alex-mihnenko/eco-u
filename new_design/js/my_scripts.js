@@ -1116,15 +1116,22 @@
         });
         function LoadCart() {
             $.get('/?route=ajax/index/ajaxGetCart', {}, function(msg){
-                console.log(msg);
                 var totalPrice = 0;
                 var totalPositions = 0;
                 $('.cart-container').html('');
                 msg.products.forEach(function(product, i, arr){
+                    if(product.weight_variants != '') {
+                        var weightVariants = product.weight_variants.split(',');
+                        var weightVariant = weightVariants[product.weightVariant];
+                        var wwLabel = '('+weightVariants[product.weightVariant]+')';
+                    } else {
+                        wwLabel = '';
+                        var weightVariant = 1;
+                    }
                     var productHTML = '<div class="basket-product clearfix">'+
                         '<div class="b-p_close" data-href="'+product.link_remove+'"></div>' +
-                        '<a href="#" class="b-p_link">'+product.name+'</a>'+
-                        '<div class="b-p_amount">'+product.quantity+'</div>'+
+                        '<a href="#" class="b-p_link">'+product.name+' '+wwLabel+'</a>'+
+                        '<div class="b-p_amount">'+Math.round(product.quantity/weightVariant)+'</div>'+
                         '<div class="b-p_quantity">x '+product.price+'</div>'+
                     '</div>';
                     $('.cart-container').append(productHTML);
