@@ -191,8 +191,15 @@ class ControllerProductCategory extends Controller {
 
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
-			$results = $this->model_catalog_product->getProducts($filter_data);
-
+                        $catSortTime = $this->cache->get('latest_category_sort');
+                        if($catSortTime < time() - 900) {
+                            $this->cache->set('latest_category_sort', time());
+                            $results = $this->model_catalog_product->getProducts($filter_data);
+                            $this->cache->set('category_sort_results', serialize($results));
+                        } else {
+                            $results = unserialize($this->cache->get('category_sort_results'));
+                        }
+                        
                         $data['alphabet_list'] = array();
                         $data['products_asorted'] = array();
                         $data['products_tagsorted'] = array();
