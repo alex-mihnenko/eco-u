@@ -1116,6 +1116,7 @@
         });
         function LoadCart() {
             $.get('/?route=ajax/index/ajaxGetCart', {}, function(msg){
+                console.log(msg);
                 var totalPrice = 0;
                 var totalPositions = 0;
                 $('.cart-container').html('');
