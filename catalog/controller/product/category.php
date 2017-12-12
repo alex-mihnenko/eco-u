@@ -192,7 +192,7 @@ class ControllerProductCategory extends Controller {
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
                         $catSortTime = $this->cache->get('latest_category_sort');
-                        if(!$catSortTime || $catSortTime < time() - 900) {
+                        if(!$catSortTime || $catSortTime < time() - 15) {
                             $catSortTime = 0;
                             $results = $this->model_catalog_product->getProducts($filter_data);
                             $data['alphabet_list'] = array();
@@ -206,7 +206,7 @@ class ControllerProductCategory extends Controller {
                             $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
                         }
                         
-                        if($catSortTime < time() - 900) foreach($results as $result) {
+                        if($catSortTime < time() - 15) foreach($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -300,7 +300,7 @@ class ControllerProductCategory extends Controller {
                         natsort($data['alphabet_list']);
                         
                         // Сортировка по категориям
-                        if($catSortTime < time() - 900) foreach($data['categories'] as $category)
+                        if($catSortTime < time() - 15) foreach($data['categories'] as $category)
                         {
                             $subcat_filter_data = $filter_data;
                             $subcat_filter_data['filter_category_id'] = $category['id'];
@@ -376,7 +376,7 @@ class ControllerProductCategory extends Controller {
                             }
                         }
                         
-                        if($catSortTime < time() - 900) {
+                        if($catSortTime < time() - 15) {
                             $this->cache->set('latest_category_sort', time());
                             $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));
                             $this->cache->set('category_products_asorted', serialize($data['products_asorted']));
