@@ -478,6 +478,7 @@ header {
 	margin: 7px 0 0 0;
 }
 .b-p_amount {
+        overflow:hidden;
 	float: left;
 	width: 37px;
 	height: 27px;
