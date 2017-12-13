@@ -8,8 +8,8 @@
 								<img src="/new_design/img/logo_2.png" alt="">
 							</a>
 							<ul class="menu-foot">
-								<li><a href="#">Блог Eco-u</a></li>
-								<li><a href="#">O проекте</a></li>
+								<!--li><a href="#">Блог Eco-u</a></li-->
+								<li><a href="/about/">O проекте</a></li>
 							</ul>
 						</div>
 					</div>
