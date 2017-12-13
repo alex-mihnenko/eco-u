@@ -1,5 +1,5 @@
 <?php foreach($products as $product) { 
-    if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+    if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue;
 ?>
 <div class="modal-product">
     <div class="clearfix">
@@ -50,7 +50,11 @@
                                 <div class="m-product_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                             <?php } ?>
                     </div>
+                    <?php if($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
+                    <a href="#" class="m-product_submit navl" rel="tooltip" title="<?php echo $product['available_in_time']; ?>">Ожидаем поставку</a>
+                    <?php } else { ?>
                     <a href="#" class="m-product_submit">Добавить в корзину</a>
+                    <?php } ?>
             </div>
     </div>
 </div>

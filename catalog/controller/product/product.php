@@ -286,6 +286,9 @@ class ControllerProductProduct extends Controller {
                         $data['weight_variants'] = $product_info['weight_variants'];
                         $data['weight_class'] = $product_info['weight_class'];
                         $data['composite_price'] = json_encode($product_info['composite_price']);
+                        $data['quantity'] = $product_info['quantity'];
+                        $data['stock_status_id'] = $product_info['stock_status_id'];
+                        $data['available_in_time'] = $product_info['available_in_time'];
                         
                         if($product_info['special']) {
                             if($product_info['price'] != 0) $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
@@ -433,6 +436,7 @@ class ControllerProductProduct extends Controller {
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
 			foreach ($results as $result) {
+                                if($data['product_id'] == $result['product_id'] || ($result['quantity'] <= 0 && $result['stock_status_id'] == 5)) continue;
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -471,6 +475,7 @@ class ControllerProductProduct extends Controller {
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
                                         'status'      => $result['status'],
+                                        'available_in_time' => $result['available_in_time'],
                                         'quantity'    => $result['quantity'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
@@ -525,14 +530,13 @@ class ControllerProductProduct extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
-
-                        if($product_info['quantity'] < 0 && $product_info['stock_status_id'] == 5) {
-                            $this->response->redirect($this->url->link('product/category', 'path='.$category_id));
-                        }
                         
 			$this->response->setOutput($this->load->view('product/product', $data));
 		} else {
-			$url = '';
+                        $this->response->addHeader("Location: http://{$_SERVER['SERVER_NAME']}");
+                        $data = Array();
+                        $this->response->setOutput($this->load->view('error/not_found', $data));
+			/*$url = '';
 
 			if (isset($this->request->get['path'])) {
 				$url .= '&path=' . $this->request->get['path'];
@@ -606,7 +610,7 @@ class ControllerProductProduct extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-			$this->response->setOutput($this->load->view('error/not_found', $data));
+			$this->response->setOutput($this->load->view('error/not_found', $data));*/
 		}
 	}
 

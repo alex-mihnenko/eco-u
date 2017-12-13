@@ -91,7 +91,13 @@
                                             <div class="c-p_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                                         <?php } ?>
                                 </div>
-                                <a href="#" class="c-p_submit">Добавить в корзину</a>
+                                <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
+                                    <a href="#" class="c-p_submit">Добавить в корзину</a>
+                                <?php } elseif($quantity <= 0 && $stock_status_id == 6) { ?>
+                                    <a href="#" class="c-p_submit navl">Ожидаем поставку<?php if(!empty($available_in_time)) { ?> через <?php echo $available_in_time; } ?></a>
+                                <?php } elseif($quantity <= 0 && $stock_status_id == 5) { ?>
+                                    <a href="#" class="c-p_submit sold">Нет в наличии</a>
+                                <?php } ?>
                         </div>
                 </div>
         </div>
@@ -104,7 +110,7 @@
                 <div class="p-o_title"><?php echo $text_related; ?></div>
                 <div class="slider-profitable_offer">
                     <?php foreach ($products as $product) { 
-                        if($product['stock_status_id'] == 5 && $product['quantity'] < 0) continue;
+                        if($product['stock_status_id'] == 5 && $product['quantity'] <= 0) continue;
                     ?> 
                         <div>
                                 <div class="box-p_o">
@@ -152,7 +158,7 @@
                                                              <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                              <input type="submit" value="" class="p-o_submit">
                                                      </div>
-                                                     <?php } elseif($product['quantity'] < 0 && $product['stock_status_id'] == 6) { ?>
+                                                     <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
                                                      <div class="not-available clearfix">
                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                             <?php if(empty($product['weight_variants'])) { ?>
@@ -164,7 +170,7 @@
                                                             <?php } ?>
                                                             <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
                                                             <div class="n-a_text">Скоро будет</div>
-                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
+                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                                     </div>
                                                      <?php } ?>
                                              </div>

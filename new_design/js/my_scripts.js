@@ -1091,6 +1091,7 @@
         // Добавление в корзину на странице товара
         $('.c-p_submit').click(function(e){
             e.preventDefault();
+            if($(this).hasClass('sold')) return false;
                     var pElement = $(this).parents('.c-p_right');
                     var product_id = pElement.find('input[name="product_id"]').val();
                     var quantity = parseFloat(pElement.find('.selectric .label').html());

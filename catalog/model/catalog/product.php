@@ -55,6 +55,7 @@ class ModelCatalogProduct extends Model {
                 if ($query->num_rows) {
 			return array(
 				'product_id'       => $query->row['product_id'],
+                                'available_in_time' => $query->row['available_in_time'],
 				'name'             => $query->row['name'],
 				'description'      => $query->row['description'],
                                 'available'        => $query->row['available'],

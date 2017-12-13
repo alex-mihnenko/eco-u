@@ -192,7 +192,8 @@ class ControllerProductCategory extends Controller {
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
                         $catSortTime = $this->cache->get('latest_category_sort');
-                        if(!$catSortTime || $catSortTime < time() - 15) {
+                        $cacheInterval = 5;
+                        if(!$catSortTime || $catSortTime < time() - $cacheInterval) {
                             $catSortTime = 0;
                             $results = $this->model_catalog_product->getProducts($filter_data);
                             $data['alphabet_list'] = array();
@@ -206,7 +207,10 @@ class ControllerProductCategory extends Controller {
                             $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
                         }
                         
-                        if($catSortTime < time() - 15) foreach($results as $result) {
+                        if($catSortTime < time() - $cacheInterval) foreach($results as $result) {
+                                if(($result['quantity'] <= 0 && $result['stock_status_id'] == 5) || $result['status'] != 1) {
+                                    continue;
+                                }
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -248,6 +252,7 @@ class ControllerProductCategory extends Controller {
                                 }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
+                                        'available_in_time' => $result['available_in_time'],
                                         'status'      => $result['status'],
                                         'quantity'    => $result['quantity'],
 					'thumb'       => $image,
@@ -300,12 +305,16 @@ class ControllerProductCategory extends Controller {
                         natsort($data['alphabet_list']);
                         
                         // Сортировка по категориям
-                        if($catSortTime < time() - 15) foreach($data['categories'] as $category)
+                        if($catSortTime < time() - $cacheInterval) foreach($data['categories'] as $category)
                         {
                             $subcat_filter_data = $filter_data;
                             $subcat_filter_data['filter_category_id'] = $category['id'];
                             $subcat_results = $this->model_catalog_product->getProducts($subcat_filter_data);
                             foreach ($subcat_results as $result) {
+                                if(($result['quantity'] <= 0 && $result['stock_status_id'] == 5) || $result['status'] != 1) {
+                                    continue;
+                                }
+                                
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -343,7 +352,9 @@ class ControllerProductCategory extends Controller {
                                 }
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
+                                        'available_in_time' => $result['available_in_time'],
                                         'quantity'    => $result['quantity'],
+                                        'status'      => $result['status'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
                                         'description_short' => $result['description_short'],
@@ -376,7 +387,7 @@ class ControllerProductCategory extends Controller {
                             }
                         }
                         
-                        if($catSortTime < time() - 15) {
+                        if($catSortTime < time() - $cacheInterval) {
                             $this->cache->set('latest_category_sort', time());
                             $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));
                             $this->cache->set('category_products_asorted', serialize($data['products_asorted']));

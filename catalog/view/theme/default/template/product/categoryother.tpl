@@ -131,23 +131,31 @@
 							<div class="container">
                                                                 <?php 
                                                                 foreach($categories as $category) { 
-                                                                    if(!isset($products_catsorted[$category['id']])) continue;
+                                                                    if(!isset($products_catsorted[$category['id']])) {
+                                                                        continue;
+                                                                    }
                                                                     $lCount = count($products_catsorted[$category['id']]);
                                                                     ?>
                                                                     <div id="l-p_<?php echo $category['id'] ?>" class="rel">
 									<div class="big-thumb"><img src="img/icon_3.png" alt=""></div>
 									<div class="l-p_title"><?php echo $category['name']; ?></div>
 									<ul class="list-letter">
-                                                                                <?php foreach($products_catsorted[$category['id']] as $key => $product) { ?>
+                                                                                <?php foreach($products_catsorted[$category['id']] as $key => $product) {
+                                                                                    if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
+                                                                                        $lCount--;
+                                                                                        continue;
+                                                                                    }
+                                                                                ?>
                                                                                 <li class="<?php if($key >= 5) echo 'hidden'; ?>">
                                                                                     <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
                                                                                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
                                                                                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
-                                                                                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
+                                                                                                       <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
+                                                                                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
                                                                                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
                                                                                                             <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
                                                                                                             <div class="p-o_link">
@@ -157,12 +165,7 @@
                                                                                                             </div>
                                                                                                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                                                                                             <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
-                                                                                                                    <?php if(isset($cart_products[(int)$product['product_id']])) { ?>
-                                                                                                                    <div class="not-available clearfix">
-                                                                                                                            <div class="n-a_text"><?php echo $cart_products[$product['product_id']]; ?> <?php if(!empty($product['weight_variants'])) echo $product['weight_class']; else echo 'шт.'; ?> в корзине</div>
-                                                                                                                            <input type="submit" value="" class="p-o_submit2">
-                                                                                                                    </div>
-                                                                                                                    <?php } elseif($product['stock_status_id'] == 7) { ?>
+                                                                                                                    <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
                                                                                                                     <div class="p-o_select">
                                                                                                                         <?php if(empty($product['weight_variants'])) { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -174,7 +177,7 @@
                                                                                                                             <select name="tech" class="tech">
                                                                                                                                     <?php 
                                                                                                                                     $arVariants = explode(',', $product['weight_variants']);
-                                                                                                                                    foreach($arVariants as $variant) { ?>
+                                                                                                                                    foreach($arVariants as $i => $variant) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
                                                                                                                                     <? } ?>
                                                                                                                             </select> 
@@ -191,7 +194,7 @@
                                                                                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                                                                                             <input type="submit" value="" class="p-o_submit">
                                                                                                                     </div>
-                                                                                                                    <?php } else { ?>
+                                                                                                                    <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
                                                                                                                     <div class="not-available clearfix">
                                                                                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                                                                                             <?php if(empty($product['weight_variants'])) { ?>
@@ -203,7 +206,7 @@
                                                                                                                             <?php } ?>
                                                                                                                             <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
                                                                                                                             <div class="n-a_text">Скоро будет</div>
-                                                                                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
+                                                                                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                                                                                                     </div>
                                                                                                                     <?php } ?>
                                                                                                             </div>

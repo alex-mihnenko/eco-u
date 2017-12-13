@@ -152,6 +152,9 @@ class ControllerAccountAccount extends Controller {
                 $results = $this->model_catalog_product->getProductsPreferable();
                 $data['pref_products'] = Array();
                 foreach ($results as $result) {
+                        if(($result['quantity'] <= 0 && $result['stock_status_id'] == 5) || $result['status'] != 1) {
+                            continue;
+                        }
                         if ($result['image']) {
                                 $image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
                         } else {
@@ -207,6 +210,7 @@ class ControllerAccountAccount extends Controller {
                         }
                         $arProducts = array(
                                 'product_id'  => $result['product_id'],
+                                'available_in_time' => $result['available_in_time'],
                                 'status'      => $result['status'],
                                 'quantity'    => $result['quantity'],
                                 'thumb'       => $image,

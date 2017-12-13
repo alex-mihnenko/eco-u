@@ -37,6 +37,7 @@ class ControllerExtensionModuleFeatured extends Controller {
 				$product_info = $this->model_catalog_product->getProduct($product_id);
 
 				if ($product_info) {
+                                        if($product_info['stock_status_id'] <> 7 && $product_info['quantity'] <= 0) continue;
 					if ($product_info['image']) {
 						$image = $this->model_tool_image->resize($product_info['image'], $setting['width'], $setting['height']);
 					} else {
@@ -73,6 +74,7 @@ class ControllerExtensionModuleFeatured extends Controller {
                                         }
                                         $arProducts = array(
                                                 'product_id'  => $product_info['product_id'],
+                                                'available_in_time' => $product_info['available_in_time'],
                                                 'quantity'    => $product_info['quantity'],
                                                 'thumb'       => $image,
                                                 'name'        => $product_info['name'],
@@ -97,7 +99,7 @@ class ControllerExtensionModuleFeatured extends Controller {
                                             unset($discount_sticker);
                                         }
                                         if($data['is_admin']) {
-                                                $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product_info['product_id'];
+                                                $arProducts['edit_link'] = '/admin/?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product_info['product_id'];
                                         }
                                         if($product_info['composite_price'] !== false) {
                                                 $arProducts['composite_price'] = json_encode($product_info['composite_price']);       

@@ -1943,6 +1943,15 @@ footer {
 	background: transparent;
 	transition: 0.3s ease-in-out all;
 }
+.m-product_submit.navl {
+    background-color:#f17e46;
+    border-color:#f17e46;
+}
+.m-product_submit.navl:hover {
+    background-color:#fff;
+    color:#f17e46;
+    border-color:#f17e46;
+}
 .m-product_submit.m-product_submit2 {
 	border: 2px solid #5D9E32;
 	color: #5D9E32;
@@ -2319,6 +2328,23 @@ footer {
 .c-p_submit:hover {
 	background-color: #58772F;
 	transition: 0.3s ease-in-out all;
+}
+.c-p_submit.navl {
+    background-color:#f17e46;
+    border-color:#f17e46;
+}
+.c-p_submit.navl:hover {
+    background-color:#fff;
+    color:#f17e46;
+    border-color:#f17e46;
+}
+.c-p_submit.sold {
+    background-color:transparent;
+    color:#749D3E;
+}
+.c-p_submit.sold:hover {
+    background-color:#fff;
+    color:#749D3E;
 }
 .list-composition {
 	width: 100%;

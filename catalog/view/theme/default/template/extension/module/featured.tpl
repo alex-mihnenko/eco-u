@@ -3,7 +3,7 @@
                 <h2 class="p-o_title"><?php echo $heading_title; ?></h2>
                 <div class="slider-profitable_offer">
                         <?php foreach($products as $key => $product) { 
-                            if($product['quantity'] < 0 && $product['stock_status_id'] == 5) continue;
+                            if($product['quantity'] <= 0 && $product['stock_status_id'] <> 7) continue;
                         ?>
                         <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                             <meta itemprop="position" content="<?php echo $key; ?>" />
@@ -52,10 +52,10 @@
                                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                                             <input type="submit" value="" class="p-o_submit">
                                                     </div>
-                                                    <?php } elseif($product['quantity'] < 0 && $product['stock_status_id'] == 6) { ?>
+                                                    <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
                                                     <div class="not-available clearfix">
                                                             <div class="n-a_text">Скоро будет</div>
-                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['stock_status']; ?>"></div>
+                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                                     </div>
                                                     <?php } ?>
                                             </div>
