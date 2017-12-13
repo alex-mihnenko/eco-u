@@ -179,6 +179,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['products'] = array();
 
+                        $limit = 10000;
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
@@ -190,14 +191,22 @@ class ControllerProductCategory extends Controller {
 
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
-			$results = $this->model_catalog_product->getProducts($filter_data);
-
-                        $data['alphabet_list'] = array();
-                        $data['products_asorted'] = array();
-                        $data['products_tagsorted'] = array();
-                        $data['products_catsorted'] = array();
+                        $catSortTime = $this->cache->get('latest_category_sort');
+                        if(!$catSortTime || $catSortTime < time() - 15) {
+                            $catSortTime = 0;
+                            $results = $this->model_catalog_product->getProducts($filter_data);
+                            $data['alphabet_list'] = array();
+                            $data['products_asorted'] = array();
+                            $data['products_tagsorted'] = array();
+                            $data['products_catsorted'] = array();
+                        } else {
+                            $data['alphabet_list'] = unserialize($this->cache->get('category_alphabet_list'));
+                            $data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
+                            $data['products_tagsorted'] = unserialize($this->cache->get('category_products_tagsorted'));
+                            $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
+                        }
                         
-			foreach ($results as $result) {
+                        if($catSortTime < time() - 15) foreach($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
@@ -291,7 +300,7 @@ class ControllerProductCategory extends Controller {
                         natsort($data['alphabet_list']);
                         
                         // Сортировка по категориям
-                        foreach($data['categories'] as $category)
+                        if($catSortTime < time() - 15) foreach($data['categories'] as $category)
                         {
                             $subcat_filter_data = $filter_data;
                             $subcat_filter_data['filter_category_id'] = $category['id'];
@@ -357,7 +366,7 @@ class ControllerProductCategory extends Controller {
                                     unset($discount_sticker);
                                 }
                                 if($data['is_admin']) {
-                                        $arProducts['edit_link'] = 'route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
+                                        $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
                                 }
                                 if($result['composite_price'] !== false) {
                                         $arProducts['composite_price'] = json_encode($result['composite_price']);       
@@ -365,6 +374,14 @@ class ControllerProductCategory extends Controller {
                                 
                                 $data['products_catsorted'][$category['id']][] = $arProducts;
                             }
+                        }
+                        
+                        if($catSortTime < time() - 15) {
+                            $this->cache->set('latest_category_sort', time());
+                            $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));
+                            $this->cache->set('category_products_asorted', serialize($data['products_asorted']));
+                            $this->cache->set('category_products_tagsorted', serialize($data['products_tagsorted']));
+                            $this->cache->set('category_products_catsorted', serialize($data['products_catsorted']));
                         }
                         
 			$url = '';

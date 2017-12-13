@@ -1120,11 +1120,19 @@
                 var totalPositions = 0;
                 $('.cart-container').html('');
                 msg.products.forEach(function(product, i, arr){
+                    if(product.weight_variants != '') {
+                        var weightVariants = product.weight_variants.split(',');
+                        var weightVariant = weightVariants[product.weight_variant];
+                        var wwLabel = '('+weightVariants[product.weight_variant]+' '+product.weight_class+')';
+                    } else {
+                        wwLabel = '';
+                        var weightVariant = 1;
+                    }
                     var productHTML = '<div class="basket-product clearfix">'+
                         '<div class="b-p_close" data-href="'+product.link_remove+'"></div>' +
-                        '<a href="#" class="b-p_link">'+product.name+'</a>'+
-                        '<div class="b-p_amount">'+product.quantity+'</div>'+
-                        '<div class="b-p_quantity">x '+product.price+'</div>'+
+                        '<a href="#" class="b-p_link" title="'+product.name+' '+wwLabel+'">'+product.name+' '+wwLabel+'</a>'+
+                        '<div class="b-p_amount">'+Math.round(product.quantity/weightVariant)+' шт</div>'+
+                        '<div class="b-p_quantity">'+product.price+'р</div>'+
                     '</div>';
                     $('.cart-container').append(productHTML);
                     totalPrice += product.total;

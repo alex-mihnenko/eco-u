@@ -235,10 +235,10 @@ class Cart {
 					$recurring = false;
 				}
 
-                                if($product_query->row['composite_price'] == 1 && !empty($cart_query->row['weight_variant'])) {
+                                if($product_query->row['composite_price'] == 1) {
                                     $cPrice = $this->config->get('config_composite_price');
                                     $wVariants = explode(',', $product_query->row['weight_variants']);
-                                    $wKey = $cart_query->row['weight_variant'];
+                                    $wKey = $cart['weight_variant'];
                                     if(isset($cPrice[$wVariants[$wKey]])) {
                                         $price = $price * $cPrice[$wVariants[$wKey]];
                                     }
