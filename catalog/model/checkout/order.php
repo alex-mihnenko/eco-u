@@ -815,14 +815,42 @@ class ModelCheckoutOrder extends Model {
             $order_data['payment_method'] = $data['payment_method'];
             $order_data['delivery_time'] = $data['delivery_time'];
             $order_data['delivery_interval'] = $data['delivery_interval'];
-            if(($data['mkad'] != 'IN_MKAD') || ($data['mkad'] == 'IN_MKAD' && $order_data['total'] < 4000)) {
-                $order_data['total'] += $data['delivery_price'];
-                @$this->editOrder($order_id, $order_data);
-                $this->addOrderHistory($order_id, 1);
-            } elseif($data['mkad'] == 'IN_MKAD' && $order_data['total'] >= 4000) {
-                @$this->editOrder($order_id, $order_data);
-                $this->addOrderHistory($order_id, 1);
+            
+            if($data['mkad'] == 'IN_MKAD') {
+                if($order_data['total'] >= 4000) {
+                    $delivery_type = 'free';
+                } else {
+                    $delivery_type = 'flat';
+                }
+            } else {
+                $delivery_type = 'mkadout';
             }
+            
+            $this->load->model('extension/extension');
+
+            $extResults = $this->model_extension_extension->getExtensions('shipping');
+
+            foreach ($extResults as $result) {
+                    if ($result['code'] == $delivery_type && $this->config->get($result['code'] . '_status')) {
+                            $this->load->model('extension/shipping/' . $result['code']);
+                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote($data['address']);
+                            
+                            $order_data['shipping_code'] = $quote['quote'][$delivery_type]['code'];
+                            $order_data['shipping_method'] = $quote['quote'][$delivery_type]['title'];
+                            $order_data['shipping_address_1'] = $data['address'];
+                            
+                            @$this->editOrder($order_id, $order_data);
+                            $this->addOrderHistory($order_id, 1);
+                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$quote['quote'][$delivery_type]['title']}', '{$quote['quote'][$delivery_type]['cost']}', '{$quote['sort_order']}')");
+                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data['total']}', '1')");
+                            $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
+                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '9')");
+                            
+                            break;
+                    }
+            }
+            
+                
             return true;
         }
         

@@ -13,12 +13,12 @@ class ModelExtensionShippingFree extends Model {
 			$status = false;
 		}
 
-		if ($this->cart->getSubTotal() < $this->config->get('free_total')) {
+		/*if ($this->cart->getSubTotal() < $this->config->get('free_total')) {
 			$status = false;
-		}
+		}*/
 
 		$method_data = array();
-
+                
 		if ($status) {
 			$quote_data = array();
 

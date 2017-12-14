@@ -422,6 +422,7 @@ class ControllerAjaxIndex extends Controller {
           $delivery_price = 600;
       }
       
+      
       $data = Array(
           'address' => $address,
           'comment' => $comment,

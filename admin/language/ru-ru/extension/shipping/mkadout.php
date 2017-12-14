@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    = 'Доставка в пределах МКАД';
+$_['heading_title']    = 'Доставка за МКАД';
 
 // Text
 $_['text_extension']	 = 'Расширения';
