@@ -161,9 +161,9 @@ class ControllerProductCategory extends Controller {
 
 			$data['categories'] = array();
 
-			$results = $this->model_catalog_category->getCategories($category_id);
-
-			foreach ($results as $result) {
+			$categories_level2 = $this->model_catalog_category->getCategories($category_id);
+                        
+			foreach ($categories_level2 as $result) {
 				$filter_data = array(
 					'filter_category_id'  => $result['category_id'],
 					'filter_sub_category' => true
@@ -175,6 +175,21 @@ class ControllerProductCategory extends Controller {
 					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url),
                                         'image' => $result['image']
 				);
+                                
+                                $categories_level3 = $this->model_catalog_category->getCategories($result['category_id']);
+                                foreach ($categories_level3 as $result) {
+                                    $filter_data = array(
+                                            'filter_category_id'  => $result['category_id'],
+                                            'filter_sub_category' => true
+                                    );
+
+                                    $data['categories'][] = array(
+                                            'id' => $result['category_id'],
+                                            'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
+                                            'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url),
+                                            'image' => $result['image']
+                                    );
+                                }
 			}
 
 			$data['products'] = array();
@@ -212,8 +227,7 @@ class ControllerProductCategory extends Controller {
                                     continue;
                                 }
 				if ($result['image']) {
-                                    $image = '/image/'.$result['image'];
-                                    //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+                                        $image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
 					$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				}
@@ -317,8 +331,7 @@ class ControllerProductCategory extends Controller {
                                 }
                                 
 				if ($result['image']) {
-                                    $image = '/image/'.$result['image'];
-                                    //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+                                        $image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
 					$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				}

@@ -299,6 +299,7 @@ class ControllerProductProduct extends Controller {
                         
                         $data['sticker_name'] = $product_info['sticker']['name'];
                         $data['sticker_class'] = $product_info['sticker']['class'];
+                        $data['location'] = $product_info['location'];
                         
 			if ($product_info['quantity'] <= 0) {
 				$data['stock'] = $product_info['stock_status'];

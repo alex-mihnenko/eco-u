@@ -1536,6 +1536,9 @@
                     $.get('/?route=ajax/index/ajaxSearchProducts', {
                         search: search
                     }, function(msg){
+                        $('html, body').stop().animate({
+                            scrollTop: $('.fond-catalog').offset().top - $('header.sticker').height()
+                        });
                         $('#contentcontainer3 div.container').html(msg);
                         if(!$('.tabs__catalog').find('li:nth-child(4)').hasClass('active')) window.saved_active_block = $('ul.tabs__catalog').find('li.active');
                         InitClamp('.p-o_link a, .p-o_short-descr');
