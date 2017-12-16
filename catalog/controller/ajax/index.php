@@ -216,6 +216,16 @@ class ControllerAjaxIndex extends Controller {
         
         // Основные данные заказа
         $data['products'] = $this->cart->getProducts();
+        foreach($data['products'] as $i => $product) {
+            if(empty($product['weight_variants'])) {
+                $data['products'][$i]['amount'] = round($product['quantity']);
+                $data['products'][$i]['variant'] = 1;
+            } else {
+                $arWeightVariants = explode(',', $product['weight_variants']);
+                $data['products'][$i]['amount'] = round($product['quantity']/$arWeightVariants[$product['weight_variant']]);
+                $data['products'][$i]['variant'] = $arWeightVariants[$product['weight_variant']];
+            }
+        }
         $data['total'] = $this->cart->getTotal();
         $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
         $data['store_id'] = $this->config->get('config_store_id');
