@@ -63,6 +63,7 @@
 										<a href="/cart" class="h-b_buy">Купить (<span class="cart-price-total">0</span> руб)</a>
 									</div>
 								</div>
+                                                                <a href="/cart"><div style="width:40px;height:40px;position:absolute;top:0px;right:93px;"></div></a>
 							</div>
 						</div>
 						<?php if(!$customer_id) { ?>
