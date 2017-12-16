@@ -53,6 +53,17 @@ class ModelCatalogProduct extends Model {
                 }
                     
                 if ($query->num_rows) {
+                    
+                        // Автоматическое присвоение/снятие стикера "Новинка"
+                    
+                        $dateAdded = strtotime($query->row['date_added']);
+                        if($dateAdded > time() - 432000) {
+                            $sticker = Array(
+                                'class' => 20,
+                                'name' => "Новинка"
+                            );
+                        }
+                    
 			return array(
 				'product_id'       => $query->row['product_id'],
                                 'available_in_time' => $query->row['available_in_time'],

@@ -645,6 +645,10 @@ class ControllerAjaxIndex extends Controller {
             } else {
                     $image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
             }
+            if(!empty($result['sticker']['class'])) {
+                $data['products'][$i]['sticker_class'] = $result['sticker']['class'];
+                $data['products'][$i]['sticker_name'] = $result['sticker']['name'];
+            }
             $data['products'][$i]['thumb'] = $image;
       }
       $this->response->setOutput($this->load->view('product/search', $data));

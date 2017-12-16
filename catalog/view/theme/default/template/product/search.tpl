@@ -29,7 +29,7 @@
                                             <?php if(empty($product['weight_variants'])) { ?>
                                                 <select name="tech" class="tech">
                                                         <?php for($i=1; $i<=5; $i++) { ?>
-                                                            <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                                            <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
                                                         <? } ?>
                                                 </select> 
                                             <?php } else { ?>

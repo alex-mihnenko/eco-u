@@ -4,14 +4,14 @@
 <div class="modal-product">
     <div class="clearfix">
             <input type="hidden" class="product_id" value="<?php echo $product['product_id']; ?>">
-            <a href="<?php echo $product['href']; ?>" class="m-product_thumb">
+            <a href="<?php echo $product['href']; ?>" class="m-product_thumb" target="_blank">
                 <img src="/image/<?php if(!empty($product['image'])) echo $product['image']; else echo 'eco_logo.jpg'; ?>" alt="">
                 <?php if(isset($product['discount_sticker'])) { ?><div class="m-product_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
                 <?php } elseif($product['sticker_class']) { ?><div class="m-product_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
             </a>
             <div class="m-product_right">
                     <div class="m-product_link">
-                        <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+                        <a href="<?php echo $product['href']; ?>" target="_blank"><?php echo $product['name']; ?></a>
                     </div>
                     <div class="m-product_city"><?php echo $product['description_short']; ?></div>
                     <?php if(!empty($product['attribute_groups'])) { ?>
@@ -30,7 +30,7 @@
                                 <?php if(empty($product['weight_variants'])) { ?>
                                     <select name="tech" class="tech">
                                             <?php for($i=1; $i<=5; $i++) { ?>
-                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
                                             <? } ?>
                                     </select> 
                                 <?php } else { ?>
