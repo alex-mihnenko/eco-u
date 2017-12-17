@@ -3392,18 +3392,19 @@ footer {
 }
 .b-discount .personal-coupon  {
     display:none;
-    padding:6px 10px 6px 10px;
+    padding:26px 10px 6px 10px;
     line-height:20px;
-    font-size:12px;
+    font-size:16px;
+    font-weight: 900;
     height:18px;
-    color:#287233;
+    color:#739d3d;
     text-align:center;
 }
 .b-d_coupon {
-	font-size: 16px;
+	font-size: 12px;
 	text-align: center;
-	font-weight: 900;
-	color: #749D3E;
+	font-weight: normal;
+	color: #777777;
 	letter-spacing: 3px;
 	cursor: pointer;
 }
