@@ -48,7 +48,7 @@ var AlphabeticScrollerProto = function() {
                 initAlphabeticHeight: function() {
                     var res = false;
                     var $fcTop = $('.f-c_top');
-                    var h = $fcTop.height() + 97;
+                    var h = $fcTop.height() + 67;
                     var screenHeight = $(window).height();
                     h = screenHeight - h - 100 + 15 - bottomMargin;
                     letterCount = Math.ceil(h / letterHeight);
@@ -131,7 +131,7 @@ var CatalogScrollerProto = function() {
                 initCatalogHeight: function() {
                     var res = false;
                     var $fcTop = $('.f-c_top');
-                    var h = $fcTop.height() + 97;
+                    var h = $fcTop.height() + 67;
                     var screenHeight = $(window).height();
                     h = screenHeight - h - 100 + 15 - bottomMargin;
                     letterCount = Math.ceil(h / letterHeight);
