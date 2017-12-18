@@ -2214,8 +2214,8 @@ footer {
 .c-p_thumb img {
 	width: 100%;
 	height: auto;
-        max-width: 500px;
-        max-height: 500px;
+        max-width: 536px;
+        max-height: 536px;
         display: block;
         margin: auto;
 	-webkit-border-radius: 4px;
@@ -2226,7 +2226,7 @@ footer {
 	font-weight: 500;
 	font-size: 36px;
 	color: #374047;
-	margin: 26px 0 58px 0;
+	margin: 0px 0 12px 0;
 }
 .c-p_city {
 	font-size: 18px;
