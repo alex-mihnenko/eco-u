@@ -161,9 +161,14 @@ header {
 	background: #222326;
 }
 .sticky-wrapper.is-sticky header .b-logo {
-	margin: 15px 0 0 0;
+	margin: 8px 0 0 0;
 	transition: 0.3s ease-out all;
 }
+
+.sticky-wrapper.is-sticky header .b-logo img {
+    height: 40px
+}
+
 .h-menu {
 	margin: 15px 0 0 27px;
 	/*width: 82px;*/
