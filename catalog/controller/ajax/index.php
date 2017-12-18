@@ -378,7 +378,6 @@ class ControllerAjaxIndex extends Controller {
                 $this->model_checkout_order->editOrder($order_id, $data);
                 $this->model_checkout_order->addOrderHistory($order_id, 1);
               }
-            $this->cart->clear();
             $json = Array('status' => 'success', 'orderId' => $order_id);
         } else {
             $json = Array('status' => 'error');
@@ -446,7 +445,9 @@ class ControllerAjaxIndex extends Controller {
       $this->load->model('checkout/order');
       if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data)) {
           // Добавление адреса доставки в список адресов клиента
-          if($address_new) $this->customer->setAddress(0, $address);
+          if($address_new == 'true') $this->customer->setAddress(0, $address);
+          // Очистка корзины
+          $this->cart->clear();
           // Отправка sms        
             $this->load->model('sms/confirmation');
             $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));

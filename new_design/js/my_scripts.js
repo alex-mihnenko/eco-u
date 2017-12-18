@@ -847,6 +847,13 @@
             if($(this).val() == 0) {
                 $(this).parents('.selectric-wrapper').remove();
                 $('.delivery-address').html('<input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">');
+                $('input#delivery_address').keydown(function(){
+                    $('.block-delivery-price').hide();
+                    $('.shipping-amount').hide();
+                    $('.payment-title').hide();
+                    $('.demo-rebrand-1').hide();
+                    $('.c-m_submit').html('Расчитать стоимость доставки');
+                });
             }
         });
         
