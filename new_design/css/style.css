@@ -2347,6 +2347,12 @@ footer {
     background-color:#fff;
     color:#749D3E;
 }
+
+.c-p_submit.c-p_submit_submit2 {
+    border: 2px solid #5D9E32;
+    color: #5D9E32;
+    background: transparent;
+
 .list-composition {
 	width: 100%;
 	display: block;

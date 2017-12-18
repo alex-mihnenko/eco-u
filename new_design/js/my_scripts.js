@@ -660,6 +660,18 @@
 			el.val("Добавлено в корзину");
         }
 	});
+
+    $('.c-p_submit').on( 'click', function(){
+        var el = $(this);
+        if(el.hasClass("c-p_submit_submit2")) {
+            el.removeClass('c-p_submit_submit2');
+            el.val("Добавить в корзину");
+        } else {
+            el.addClass('c-p_submit_submit2');
+            el.val("Добавлено в корзину");
+        }
+    });
+
 	/*  */
 	/** dynamic input **/
 	$('.f-p_plus').click(function() {
