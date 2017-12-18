@@ -300,6 +300,7 @@ class ControllerProductProduct extends Controller {
                         $data['sticker_name'] = $product_info['sticker']['name'];
                         $data['sticker_class'] = $product_info['sticker']['class'];
                         $data['location'] = $product_info['location'];
+                        $data['shelf_life'] = $product_info['shelf_life'];
                         
 			if ($product_info['quantity'] <= 0) {
 				$data['stock'] = $product_info['stock_status'];
@@ -473,6 +474,8 @@ class ControllerProductProduct extends Controller {
                                     else $discount_sticker = 0;
                                     $price = $special;
                                 }
+                                if(isset($this->request->get['path'])) $category_path = 'path=' . $this->request->get['path'];
+                                else $category_path = '';
 				$arProducts = array(
 					'product_id'  => $result['product_id'],
                                         'status'      => $result['status'],
@@ -487,7 +490,7 @@ class ControllerProductProduct extends Controller {
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],
-					'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url),
+					'href'        => $this->url->link('product/product', $category_path . '&product_id=' . $result['product_id'] . $url),
                                         'stock_status'      => $result['stock_status'],
                                         'stock_status_id'   => $result['stock_status_id'],
                                         'weight_variants'   => $result['weight_variants'],

@@ -54,9 +54,33 @@
                                                 <input type="submit" value="" class="p-o_submit">
                                         </div>
                                         <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
-                                        <div class="not-available clearfix">
-                                                <div class="n-a_text">Скоро будет</div>
-                                                <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
+                                        <div class="p-o_select">
+                                            <?php if(empty($product['weight_variants'])) { ?>
+                                                <select name="tech" class="tech">
+                                                        <?php for($i=1; $i<=5; $i++) { ?>
+                                                            <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
+                                                        <? } ?>
+                                                </select> 
+                                            <?php } else { ?>
+                                                <select name="tech" class="tech">
+                                                        <?php 
+                                                        $arVariants = explode(',', $product['weight_variants']);
+                                                        foreach($arVariants as $i => $variant) { ?>
+                                                            <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                        <? } ?>
+                                                </select> 
+                                            <?php } ?>
+                                        </div>
+                                        <div class="p-o_right">
+                                                <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                                <meta itemprop="priceCurrency" content="RUB" />
+                                                <?php if(empty($product['weight_variants'])) { ?>
+                                                    <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                <?php } else { ?>
+                                                    <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                                                <?php } ?>
+                                                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                <div class="p-o_submit n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                         </div>
                                         <?php } ?>
                                 </div>

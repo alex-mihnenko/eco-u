@@ -52,11 +52,9 @@
                                 <?php if(isset($composite_price)) { ?><input type="hidden" class="composite_price" value='<?php echo $composite_price;?>'><? } ?>
                                 <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
                                 <div class="c-p_city"><?php echo $description_short; ?></div>
-                                <div class="c-p_txt">Страна производства:</div>
-                                <div class="c-p_city"><?php echo $location; ?></div>
-                                <div class="c-p_txt">
-                                    О продукте:
-                                </div>
+                                <div class="c-p_txt">Происхождение: <span style="font-weight:400;"><?php echo $location; ?></span></div>
+                                <div class="c-p_txt">Срок хранения: <span style="font-weight:400;"><?php echo $shelf_life; ?></span></div>
+                                <div class="c-p_txt">О продукте:</div>
                                 <ul class="c-p_list" itemprop="description">
                                         <?php foreach($props3 as $prop) { 
                                             if(!empty($prop)) { ?>

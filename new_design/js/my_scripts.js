@@ -1059,33 +1059,6 @@
                     if(location.pathname == '/cart') location.href = '/cart';
                 }, "json");
             });
-            block.find('.n-a_time').click(function(e){
-                e.preventDefault();
-                var pElement = $(this).parents('.p-o_block');
-                var product_id = pElement.find('input[name="product_id"]').val();
-                var quantity = parseFloat(pElement.find('input[name="quantity"]').val());
-                var weight_class = pElement.find('input[name="weight_class"]').val();
-                var weight_variant = 0;
-                var special_price = false;
-                if(location.pathname == '/cart') {
-                    special_price = true;
-                }
-                $.post('/?route=checkout/cart/add', {
-                    product_id: product_id,
-                    quantity: quantity,
-                    weight_variant: weight_variant,
-                    special_price: special_price
-                }, function(msg){
-                    pElement.find('.not-available.clearfix').hide();
-                    pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
-                    LoadCart();
-                    setTimeout(function(){
-                        pElement.find('.basket-added').remove();
-                        pElement.find('.not-available.clearfix').show();
-                    }, 3000, pElement);
-                    if(location.pathname == '/cart') location.href = '/cart';
-                }, "json");
-            });
         }
         BindAddToCartEvents($('body'));
         // Добавление в корзину на странице товара
@@ -1539,12 +1512,14 @@
                         $('html, body').stop().animate({
                             scrollTop: $('.fond-catalog').offset().top - $('header.sticker').height()
                         });
+                       
                         $('#contentcontainer3 div.container').html(msg);
-                        if(!$('.tabs__catalog').find('li:nth-child(4)').hasClass('active')) window.saved_active_block = $('ul.tabs__catalog').find('li.active');
+                        if(!$('.tabs__catalog').find('#search-content').hasClass('active')) window.saved_active_block = $('ul.tabs__catalog').find('li.active');
                         InitClamp('.p-o_link a, .p-o_short-descr');
                         $('.tabs__catalog').find('li:nth-child(4)').click();
                         initDropDown();
-                        BindAddToCartEvents($('.tabs__block:nth-child(4)'));
+                        console.log($('#search-content').html());
+                        BindAddToCartEvents($('#search-content'));
                     });
                 }
             }, 500);

@@ -114,7 +114,8 @@ class ModelCatalogProduct extends Model {
 				'viewed'           => $query->row['viewed'],
                                 'sticker'          => $sticker,
                                 'customer_props3'  => $query->row['customer_props3'],
-                                'composite_price'  => $compPrice
+                                'composite_price'  => $compPrice,
+                                'shelf_life'       => $query->row['shelf_life']
 			);
 		} else {
 			return false;

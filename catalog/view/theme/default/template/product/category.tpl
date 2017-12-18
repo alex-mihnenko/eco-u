@@ -50,14 +50,15 @@
 			</div>
 			<div class="remodal modal-tabs2" data-remodal-id="modal9">
 				<ul class="list-tabs2">
-                                        <li>
+                                        <!--<li>
                                                 <a href="#l-p_1">
                                                         <div class="l-p_icon l-p_i1"></div>
                                                         <span>Все</span>
                                                 </a>
-                                        </li>
+                                        </li>-->
                                         <?php foreach($categories as $i => $category) { 
-                                            if(!isset($products_catsorted[$category['id']])) continue;
+                                            if(empty($category['sub'])) continue;
+                                            if(empty($products_catsorted[$category['id']]['sub'])) continue;
                                         ?>
                                         <li>
                                                 <a href="#l-p_<?php echo $category['id']; ?>">
@@ -106,7 +107,8 @@
 									</a>
 								</li>-->
                                                                 <?php foreach($categories as $i => $category) { 
-                                                                    if(!isset($products_catsorted[$category['id']])) continue;
+                                                                    if(empty($category['sub'])) continue;
+                                                                    if(empty($products_catsorted[$category['id']]['sub'])) continue;
                                                                 ?>
 								<li>
                                                                         <a href="#l-p_<?php echo $category['id']; ?>">
@@ -191,18 +193,33 @@
                                                                                                                             <input type="submit" value="" class="p-o_submit">
                                                                                                                     </div>
                                                                                                                     <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
-                                                                                                                    <div class="not-available clearfix">
-                                                                                                                            <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                                                                                    <div class="p-o_select">
+                                                                                                                        <?php if(empty($product['weight_variants'])) { ?>
+                                                                                                                            <select name="tech" class="tech">
+                                                                                                                                    <?php for($i=1; $i<=5; $i++) { ?>
+                                                                                                                                        <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
+                                                                                                                                    <? } ?>
+                                                                                                                            </select> 
+                                                                                                                        <?php } else { ?>
+                                                                                                                            <select name="tech" class="tech">
+                                                                                                                                    <?php 
+                                                                                                                                    $arVariants = explode(',', $product['weight_variants']);
+                                                                                                                                    foreach($arVariants as $i => $variant) { ?>
+                                                                                                                                        <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                                                                                                    <? } ?>
+                                                                                                                            </select> 
+                                                                                                                        <?php } ?>
+                                                                                                                    </div>
+                                                                                                                    <div class="p-o_right">
+                                                                                                                            <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                                                                                                            <meta itemprop="priceCurrency" content="RUB" />
                                                                                                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                                                                                               <input type="hidden" name="quantity" value="1">
-                                                                                                                            <?php } else {
-                                                                                                                               $arVariants = explode(',', $product['weight_variants']); 
-                                                                                                                               $quantity = $arVariants[0]; ?>
-                                                                                                                                   <input type="hidden" name="quantity" value="<?php echo $quantity; ?>">
+                                                                                                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                                                                                            <?php } else { ?>
+                                                                                                                                <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                                                                                                                             <?php } ?>
-                                                                                                                            <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
-                                                                                                                            <div class="n-a_text">Скоро будет</div>
-                                                                                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
+                                                                                                                            <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                                                                                            <div class="p-o_submit n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                                                                                                     </div>
                                                                                                                     <?php } ?>
                                                                                                             </div>
@@ -224,18 +241,17 @@
 					<div class="clearfix rel"> 
 						<div id="contentcontainer2">
 							<div class="container">
-                                                                <?php 
-                                                                foreach($categories as $category) { 
-                                                                    if(!isset($products_catsorted[$category['id']])) {
-                                                                        continue;
-                                                                    }
-                                                                    $lCount = count($products_catsorted[$category['id']]);
+                                                            <?php
+                                                            foreach($categories as $category) { 
+                                                                foreach($category['sub'] as $subcategory) {
+                                                                    if(!isset($products_catsorted[$category['id']]['sub'][$subcategory['id']])) continue;
+                                                                    $lCount = count($products_catsorted[$category['id']]['sub'][$subcategory['id']]);
                                                                     ?>
                                                                     <div id="l-p_<?php echo $category['id'] ?>" class="rel">
 									<div class="big-thumb"><img src="img/icon_3.png" alt=""></div>
-									<div class="l-p_title"><?php echo $category['name']; ?></div>
+									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter">
-                                                                                <?php foreach($products_catsorted[$category['id']] as $key => $product) {
+                                                                                <?php foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
                                                                                     if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
                                                                                         $lCount--;
                                                                                         continue;
@@ -290,18 +306,33 @@
                                                                                                                             <input type="submit" value="" class="p-o_submit">
                                                                                                                     </div>
                                                                                                                     <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
-                                                                                                                    <div class="not-available clearfix">
-                                                                                                                            <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                                                                                    <div class="p-o_select">
+                                                                                                                        <?php if(empty($product['weight_variants'])) { ?>
+                                                                                                                            <select name="tech" class="tech">
+                                                                                                                                    <?php for($i=1; $i<=5; $i++) { ?>
+                                                                                                                                        <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
+                                                                                                                                    <? } ?>
+                                                                                                                            </select> 
+                                                                                                                        <?php } else { ?>
+                                                                                                                            <select name="tech" class="tech">
+                                                                                                                                    <?php 
+                                                                                                                                    $arVariants = explode(',', $product['weight_variants']);
+                                                                                                                                    foreach($arVariants as $i => $variant) { ?>
+                                                                                                                                        <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                                                                                                    <? } ?>
+                                                                                                                            </select> 
+                                                                                                                        <?php } ?>
+                                                                                                                    </div>
+                                                                                                                    <div class="p-o_right">
+                                                                                                                            <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                                                                                                            <meta itemprop="priceCurrency" content="RUB" />
                                                                                                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                                                                                               <input type="hidden" name="quantity" value="1">
-                                                                                                                            <?php } else {
-                                                                                                                               $arVariants = explode(',', $product['weight_variants']); 
-                                                                                                                               $quantity = $arVariants[0]; ?>
-                                                                                                                                   <input type="hidden" name="quantity" value="<?php echo $quantity; ?>">
+                                                                                                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                                                                                            <?php } else { ?>
+                                                                                                                                <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
                                                                                                                             <?php } ?>
-                                                                                                                            <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
-                                                                                                                            <div class="n-a_text">Скоро будет</div>
-                                                                                                                            <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
+                                                                                                                            <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                                                                                            <div class="p-o_submit n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
                                                                                                                     </div>
                                                                                                                     <?php } ?>
                                                                                                             </div>
@@ -313,7 +344,7 @@
 									</ul>
 									<div class="show-more" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
 								</div>
-                                                                <?php } ?>
+                                                                <?php }} ?>
 							</div>
 						</div>
 					</div>
@@ -339,7 +370,7 @@
 						<!-- END modal -->
 					</div>
 				</div>
-                                <div class="tabs__block">
+                                <div class="tabs__block" id="search-content">
 					<div class="clearfix rel"> 
 						<div id="contentcontainer3">
                                                     <div class="container">
