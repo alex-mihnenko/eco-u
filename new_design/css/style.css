@@ -4911,7 +4911,7 @@ footer {
 	.b-seach {
 		width: 116px;
 		height: 20px;
-		font-size: 0;
+		font-size: 8px;
 		margin: 6px 10px 0 0;
 	}
 	.b-seach_text {

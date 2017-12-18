@@ -66,8 +66,8 @@
 			$item.addClass('dd-ready');
 			$item.selectric();
                         var currencyStr = ' руб';
-                        $item.parents('.p-o_select').find('.selectric-items').find('li').click(function(e){
-                            var quantity = parseFloat($(this).html());
+                        $item.parents('.p-o_select').find('select').change(function(e){
+                            var quantity = parseFloat($(this).parents('.p-o_block').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
                             var compPrice = $(this).parents('.p-o_block').find('.composite_price').val();
                             var mtpl = 1;
@@ -1525,7 +1525,6 @@
                         InitClamp('.p-o_link a, .p-o_short-descr');
                         $('.tabs__catalog').find('li:nth-child(4)').click();
                         initDropDown();
-                        console.log($('#search-content').html());
                         BindAddToCartEvents($('#search-content'));
                     });
                 }
