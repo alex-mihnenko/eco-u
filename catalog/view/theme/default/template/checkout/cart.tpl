@@ -101,7 +101,8 @@
                                                                                             <?php if(!isset($customer_coupon)) { ?>
                                                                                                 Увеличить скидку (ввести купон)
                                                                                             <?php } else { 
-                                                                                                echo $customer_coupon['code'];
+                                                                                                //echo $customer_coupon['code'];
+                                                                                                echo "Увеличить скидку (ввести купон)";
                                                                                             } ?>
                                                                                         </div>
 					    						<div class="b-d_hidden">
