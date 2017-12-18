@@ -669,7 +669,7 @@
             el.text("Добавлено в корзину");
             setInterval(function () {
                 el.removeClass('c-p_submit_submit2');
-                el.val("Добавить в корзину");
+                el.text("Добавить в корзину");
             }, 2000); // 1000 м.сек
         }
     });
