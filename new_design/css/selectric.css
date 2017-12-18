@@ -439,8 +439,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: normal;
     box-sizing: border-box;
     padding: 0 15px 0 14px;
     color: #b2b2b2;
