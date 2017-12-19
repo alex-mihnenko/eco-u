@@ -346,8 +346,9 @@ class ControllerCheckoutCart extends Controller {
                         $data['spec_products'] = Array();
 			foreach ($results as $result) {
                                 if($result['stock_status_id'] <> 7 && $result['quantity'] <= 0) continue;
-				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+				if ($result['image_preview']) {
+                                        $image = '/image/'.$result['image_preview'];
+					//$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				} else {
 					$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 				}

@@ -87,6 +87,7 @@ class ModelCatalogProduct extends Model {
 				'stock_status'     => $query->row['stock_status'],
                                 'stock_status_id'  => $query->row['stock_status_id'],
 				'image'            => $query->row['image'],
+                                'image_preview'    => $query->row['image_preview'],
 				'manufacturer_id'  => $query->row['manufacturer_id'],
 				'manufacturer'     => $query->row['manufacturer'],
 				'price'            => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
