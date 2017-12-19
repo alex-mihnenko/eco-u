@@ -7,7 +7,8 @@
 <!-- Container -->
 <section class="fond-white">
         <div class="width-1194 pd-29">
-                <ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
+                <div style="height:70px"></div>
+                <!--<ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
                         <?php foreach($breadcrumbs as $i => $item) { 
                             if($i < count($breadcrumbs) - 1) { ?>
                                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
@@ -21,7 +22,7 @@
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                </ul>
+                </ul>-->
                 <div class="card-product clearfix" itemscope itemtype="http://schema.org/Product">
                         <div class="c-p_left">
                                 <div class="c-p_thumb">
