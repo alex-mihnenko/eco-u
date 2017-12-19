@@ -130,7 +130,7 @@ html {
 	position: relative;
 }
 header {
-	min-height: 97px;
+	min-height: 67px;
 }
 .size-0 {
 	width: 100%;
@@ -161,11 +161,16 @@ header {
 	background: #222326;
 }
 .sticky-wrapper.is-sticky header .b-logo {
-	margin: 15px 0 0 0;
+	margin: 8px 0 0 0;
 	transition: 0.3s ease-out all;
 }
+
+.sticky-wrapper.is-sticky header .b-logo img {
+    height: 40px
+}
+
 .h-menu {
-	margin: 30px 0 0 27px;
+	margin: 15px 0 0 27px;
 	/*width: 82px;*/
         display:inline-block;
 	height: 38px;
@@ -272,7 +277,7 @@ header {
 	cursor: pointer;
 	box-sizing: border-box;
 	padding: 0 47px 0 0;
-	margin: 39px 36px 0 0;
+	margin: 25px 36px 0 0;
 	position: relative;
 	transition: 0.3s ease all;
 }
@@ -294,7 +299,7 @@ header {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
-	margin: 28px 41px 0 0;
+	margin: 14px 41px 0 0;
 	cursor: pointer;
 }
 .b-basket {
@@ -2214,8 +2219,8 @@ footer {
 .c-p_thumb img {
 	width: 100%;
 	height: auto;
-        max-width: 500px;
-        max-height: 500px;
+        max-width: 536px;
+        max-height: 536px;
         display: block;
         margin: auto;
 	-webkit-border-radius: 4px;
@@ -2226,7 +2231,7 @@ footer {
 	font-weight: 500;
 	font-size: 36px;
 	color: #374047;
-	margin: 26px 0 58px 0;
+	margin: 0px 0 12px 0;
 }
 .c-p_city {
 	font-size: 18px;
@@ -2347,6 +2352,13 @@ footer {
     background-color:#fff;
     color:#749D3E;
 }
+
+.c-p_submit.c-p_submit_submit2 {
+    border: 2px solid #5D9E32;
+    color: #5D9E32;
+    background: transparent;
+}
+
 .list-composition {
 	width: 100%;
 	display: block;
@@ -4181,8 +4193,8 @@ footer {
 	border: none;
 	resize: none;
 	color: #b2b2b2;
-	font-size: 12px;
-	font-weight: 700;
+	font-size: 14px;
+	font-weight: normal;
 	text-align: center;
 	box-sizing: border-box;
     padding: 10px;

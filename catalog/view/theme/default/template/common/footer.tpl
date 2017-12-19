@@ -19,9 +19,9 @@
 							<a href="mailto:mail@eco-u.ru" class="f-mail">mail@eco-u.ru</a>
 						</div>
 						<div class="social-networks">
-							<a href="#" class="s-n_icon s-n_1"></a>
-							<a href="#" class="s-n_icon s-n_2"></a>
-							<a href="#" class="s-n_icon s-n_3"></a>
+							<a href="https://vk.com/eco_u" target="_blank" class="s-n_icon s-n_1"></a>
+							<a href="https://www.instagram.com/ecou_shop/" target="_blank" class="s-n_icon s-n_2"></a>
+							<a href="https://www.facebook.com/ecoushop" target="_blank" class="s-n_icon s-n_3"></a>
 						</div>
 					</div>
 				</div>

@@ -41,7 +41,7 @@
 		topSpacing: 0
 	});
 	$(".f-c_top").sticky({
-		topSpacing: 97,
+		topSpacing: 67,
 		className: 'is-sticky2',
 	});
 	/*** tabs profile ***/
@@ -660,6 +660,20 @@
 			el.val("Добавлено в корзину");
         }
 	});
+
+    $('.c-p_submit').on( 'click', function(){
+        var el = $(this);
+        if(el.hasClass("c-p_submit_submit2")) {
+        } else {
+            el.addClass('c-p_submit_submit2');
+            el.text("Добавлено в корзину");
+            setInterval(function () {
+                el.removeClass('c-p_submit_submit2');
+                el.text("Добавить в корзину");
+            }, 2000); // 1000 м.сек
+        }
+    });
+
 	/*  */
 	/** dynamic input **/
 	$('.f-p_plus').click(function() {

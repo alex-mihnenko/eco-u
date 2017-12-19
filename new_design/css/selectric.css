@@ -15,9 +15,9 @@
 	-webkit-border-radius: 16px / 17px;
 	border-radius: 16px / 17px;
 	background-color: #fff;
-	-moz-box-shadow: 0 5px 10px rgba(6,21,38,.17);
-	-webkit-box-shadow: 0 5px 10px rgba(6,21,38,.17);
-	box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	-moz-box-shadow: -2px 1px 7px rgba(0,0,0,.11);
+	-webkit-box-shadow: -2px 1px 7px rgba(0,0,0,.11);
+	box-shadow: -2px 1px 7px rgba(0,0,0,.11);
 	position: relative;
 }
 .selectric .label {
@@ -439,8 +439,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: normal;
     box-sizing: border-box;
     padding: 0 15px 0 14px;
     color: #b2b2b2;
