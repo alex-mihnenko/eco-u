@@ -258,7 +258,7 @@ class ControllerCommonFileManager extends Controller {
 						'gif',
 						'png'
 					);
-	
+                                       
 					if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
 						$json['error'] = $this->language->get('error_filetype');
 					}

@@ -866,8 +866,14 @@
                     $('.shipping-amount').hide();
                     $('.payment-title').hide();
                     $('.demo-rebrand-1').hide();
-                    $('.c-m_submit').html('Расчитать стоимость доставки');
+                    $('.c-m_submit').html('Рассчитать стоимость доставки');
                 });
+            } else {
+                $('.block-delivery-price').hide();
+                $('.shipping-amount').hide();
+                $('.payment-title').hide();
+                $('.demo-rebrand-1').hide();
+                $('.c-m_submit').html('Рассчитать стоимость доставки');
             }
         });
         
