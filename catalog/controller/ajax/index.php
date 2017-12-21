@@ -373,7 +373,21 @@ class ControllerAjaxIndex extends Controller {
                     'title' => "#{$order_id} ({$coupon['code']})"
                 );
                 $data['total'] = $total_price;
-
+                
+                if(!$this->customer->getCouponDiscount()) {
+                    $data['discount'] = $this->cart->getOrderDiscount();
+                } else {
+                    if(isset($this->session->data['personal_discount'])) $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                    else $personalDiscount = 0;
+                    $coupon = $this->customer->getCouponDiscount();
+                    $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+                    if($couponDiscount > $personalDiscount) {
+                        $data['coupon_discount'] = $couponDiscount;
+                    } else {
+                        $data['discount'] = $personalDiscount;
+                    }
+                }
+                
                 $this->model_extension_total_coupon->confirm($order_info, $order_total);
                 $this->model_checkout_order->editOrder($order_id, $data);
                 $this->model_checkout_order->addOrderHistory($order_id, 1);
@@ -441,6 +455,19 @@ class ControllerAjaxIndex extends Controller {
           'payment_method' => $payment_method,
           'mkad' => $bwhit
       );
+      if(!$this->customer->getCouponDiscount()) {
+            $data['discount'] = $this->cart->getOrderDiscount();
+        } else {
+            if(isset($this->session->data['personal_discount'])) $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+            else $personalDiscount = 0;
+            $coupon = $this->customer->getCouponDiscount();
+            $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+            if($couponDiscount > $personalDiscount) {
+                $data['coupon_discount'] = $couponDiscount;
+            } else {
+                $data['discount'] = $personalDiscount;
+            }
+        }
       
       $this->load->model('checkout/order');
       if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data)) {
@@ -641,6 +668,9 @@ class ControllerAjaxIndex extends Controller {
       
       $data['products'] = $this->model_catalog_product->searchProducts($search);
       foreach($data['products'] as $i => $result) {
+            if(isset($result['composite_price'])) {
+                $data['products'][$i]['composite_price'] = json_encode($result['composite_price']);
+            }
             if ($result['image_preview']) {
                     $image = '/image/'.$result['image_preview'];
                     //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));

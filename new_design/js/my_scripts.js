@@ -73,50 +73,49 @@
                             var mtpl = 1;
                             if(typeof(compPrice) != 'undefined') {
                                 var cpFormat = JSON.parse(compPrice);
-                                if(cpFormat[parseFloat($(this).html())]) {
-                                    mtpl = cpFormat[parseFloat($(this).html())];
+                                if(cpFormat[quantity]) {
+                                    mtpl = cpFormat[quantity];
                                 }
                             }
                             var totalPrice = Math.round(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.p-o_select').find('.selectric-items').find('li:first-child').click();
+                        $item.parents('.p-o_select').find('select').change();
                         
-                        $item.parents('.m-product_select').find('.selectric-items').find('li').click(function(e){
-                            var quantity = parseFloat($(this).html());
+                        $item.parents('.m-product_select').find('select').change(function(e){
+                            var quantity = parseFloat($(this).parents('.size-0').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.size-0').find('input.product_price').val());
                             var compPrice = $(this).parents('.size-0').find('.composite_price').val();
                             var mtpl = 1;
                             if(typeof(compPrice) != 'undefined') {
                                 var cpFormat = JSON.parse(compPrice);
-                                if(cpFormat[parseFloat($(this).html())]) {
-                                    mtpl = cpFormat[parseFloat($(this).html())];
+                                if(cpFormat[quantity]) {
+                                    mtpl = cpFormat[quantity];
                                 }
                             }
                             var totalPrice = Math.round(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.size-0').find('.m-product_price').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.m-product_select').find('.selectric-items').find('li:first-child').click();
+                        $item.parents('.m-product_select').find('select').change();
                         
-                        $item.parents('.c-p_select').find('.selectric-items').find('li').click(function(e){
-                            var quantity = parseFloat($(this).html());
+                        $item.parents('.c-p_select').find('select').change(function(e){
+                            var quantity = parseFloat($(this).parents('.c-p_right').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.c-p_right').find('meta[itemprop="price"]').attr('content'));
                             var compPrice = $(this).parents('.c-p_right').find('.composite_price').val();
                             
                             var mtpl = 1;
                             if(typeof(compPrice) != 'undefined') {
                                 var cpFormat = JSON.parse(compPrice);
-                                if(cpFormat[parseFloat($(this).html())]) {
-                                    mtpl = cpFormat[parseFloat($(this).html())];
+                                if(cpFormat[quantity]) {
+                                    mtpl = cpFormat[quantity];
                                 }
                             }
                             var totalPrice = Math.round(mtpl * quantity * price);
-                            console.log($(this).parents('.c-p_right').find('.c-p_price'), totalPrice);
                             $(this).parents('.c-p_right').find('.c-p_price').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.c-p_select').find('.selectric-items').find('li:first-child').click();
+                        $item.parents('.c-p_select').find('select').change();
 		});
 		setTimeout(function() {
 				initDropDown();

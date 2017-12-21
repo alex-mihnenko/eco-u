@@ -79,6 +79,7 @@
 					    					<div class="o-i_price"><?php echo $order_price; ?> руб</div>
 					    					<div class="o-i_txt2">(без учета стоимости доставки)</div>
                                                                                 <div class="b-discount">
+                                                                                        <input type="hidden" id="order_discount" value="0">
                                                                                         <div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px;">
                                                                                         <?php if(isset($customer_discount)) { ?>
                                                                                             Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;"><?php echo (-1*(int)$customer_discount); ?>%</span>                                                                                          
@@ -91,10 +92,12 @@
                                                                                                 $cDcnt = (int)$totals[0]['text']*((int)$customer_coupon['discount']/100);
                                                                                             ?>
                                                                                                 Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;"><?php echo (-1*(int)$customer_coupon['discount']); ?>%</span>     
-                                                                                            <?php } elseif($customer_coupon['type'] == 'F') { ?>
+                                                                                            <?php } elseif($customer_coupon['type'] == 'F') { 
+                                                                                                $cDcnt = (int)$customer_coupon['discount'];
+                                                                                                ?>
                                                                                                 Ваша скидка <span class="c-d_amount"><?php echo (int)$customer_coupon['discount']; ?></span> руб
                                                                                             <?php } ?>
-                                                                                            <input type="hidden" id="customer_coupon" data-type="<?php echo $customer_coupon['type']; ?>" value="<?php echo (int)$customer_coupon; ?>">
+                                                                                            <input type="hidden" id="customer_coupon" data-type="<?php echo $customer_coupon['type']; ?>" value="<?php echo (int)$customer_coupon['discount']; ?>">
                                                                                         <?php } ?>
                                                                                         </div>
                                                                                         <div class="b-d_coupon">

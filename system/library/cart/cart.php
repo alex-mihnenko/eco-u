@@ -442,9 +442,9 @@ class Cart {
             if(isset($coupon['type'])) { 
                 if($coupon['type'] == 'P') {
                     $coupon_discount = 1 - ($coupon['discount']/100);
-                    $total2 = $basePrice * $coupon_discount;
+                    $total2 = ceil($basePrice * $coupon_discount);
                 } elseif($coupon['type'] == 'F') {
-                    $total2 = $basePrice - $coupon['discount'];
+                    $total2 = ceil($basePrice - $coupon['discount']);
                 }
             }
             
@@ -453,5 +453,11 @@ class Cart {
             } else {
                 return $total2;
             }
+        }
+        
+        public function getOrderDiscount() {
+            $basePrice = $this->getTotal();
+            $newPrice = $this->getOrderPrice();
+            return ceil($basePrice - $newPrice);
         }
 }
