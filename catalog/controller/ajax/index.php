@@ -694,4 +694,14 @@ class ControllerAjaxIndex extends Controller {
       $response['discount'] = (int)$this->cart->getTotal() - $response['price'];
       $this->response->setOutput(json_encode($response));
   }
+  
+  public function ajaxRemoveAddress() {
+      $address_id = $this->request->get['address_id'];
+      $this->load->model('account/customer');
+      $this->model_account_customer->deleteAddress($address_id);
+      $response = Array(
+            'status' => 'success'
+      );
+      $this->response->setOutput(json_encode($response));
+  }
 }

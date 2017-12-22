@@ -37,6 +37,16 @@
             }
         });
     });
+    
+    $('.f-p_address_remove').click(function(){
+        var tElement = $(this).data('target');
+        $.get('/?route=ajax/index/ajaxRemoveAddress', {address_id: tElement}, function(msg){
+            if(msg.status == 'success') {
+                $('.f-p_address_container[data-index="'+tElement+'"]').remove();
+            }
+        }, 'json');
+    });
+    
     $(".sticker").sticky({
 		topSpacing: 0
 	});

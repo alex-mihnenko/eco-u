@@ -185,4 +185,9 @@ class ModelAccountCustomer extends Model {
 	public function deleteLoginAttempts($email) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE email = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 	}
+        
+        public function deleteAddress($address_id) {
+            $customer_id = $this->session->data['customer_id'];
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "address` WHERE customer_id = ".(int)$customer_id." AND address_id = ".(int)$address_id);
+        } 
 }
