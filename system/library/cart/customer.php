@@ -254,9 +254,7 @@ class Customer {
             }
         }
         public function setEmail($email) {
-            if(!empty($email)) {
-                $this->db->query("UPDATE ".DB_PREFIX."customer SET email = '".$this->db->escape($email)."' WHERE customer_id = ".(int)$this->customer_id);
-            }
+            $this->db->query("UPDATE ".DB_PREFIX."customer SET email = '".$this->db->escape($email)."' WHERE customer_id = ".(int)$this->customer_id);
         }
         public function getPersonalDiscount($customer_id, $orders) {
             $totalCustomerOutcome = 0;
