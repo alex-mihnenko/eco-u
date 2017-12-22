@@ -860,7 +860,7 @@ class ModelCheckoutOrder extends Model {
         }
         
         public function getPersonalOrders($customer_id) {
-            $sql = "SELECT *, (SELECT `name` FROM `".DB_PREFIX."order_status` st WHERE st.order_status_id = rd.order_status_id) AS `status_text` FROM `".DB_PREFIX."order` rd WHERE `customer_id` = ".(int)$customer_id." AND order_status_id <> 0 ORDER BY order_id DESC LIMIT 30";
+            $sql = "SELECT *, (SELECT `name` FROM `".DB_PREFIX."order_status` st WHERE st.order_status_id = rd.order_status_id) AS `status_text`, (SELECT value FROM ".DB_PREFIX."order_total ot WHERE ot.order_id = rd.order_id AND ot.code = 'total') AS order_total FROM `".DB_PREFIX."order` rd WHERE `customer_id` = ".(int)$customer_id." AND order_status_id <> 0 ORDER BY order_id DESC LIMIT 30";
 
             $query = $this->db->query($sql);
             if($query->rows) {
