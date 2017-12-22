@@ -3393,7 +3393,7 @@ footer {
 .b-discount {
 	background: #EFF1F4;
 	margin: 0 0 32px 0;
-	padding: 1px 0 33px 0;
+	padding: 32px 0 33px 0;
 }
 .b-discount .personal-discount  {
     padding:6px 10px 6px 10px;
@@ -3414,13 +3414,33 @@ footer {
     text-align:center;
 }
 .b-d_coupon {
-	font-size: 12px;
+	font-size: 16px;
 	text-align: center;
-	font-weight: normal;
-	color: #777777;
+	font-weight: 900;
+	color: #749D3E;
 	letter-spacing: 3px;
 	cursor: pointer;
 }
+
+.b-d_coupon_discount{
+	font-size: 12px;
+	text-align: center;
+	font-weight: normal;
+	color: #999;
+	cursor: pointer;
+}
+
+.b-d_coupon_circle{
+	position:relative;
+	top:0;
+	left:10px;
+	display:inline-block;
+	width:50px;
+	height:50px;
+	line-height:50px;
+	font-size:16px;
+}
+
 .b-d_coupon:hover {
 	text-decoration: underline;
 }

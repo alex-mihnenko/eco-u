@@ -839,6 +839,10 @@
 		$(this).slideUp();
 		$(this).next().slideDown();
 	});
+    $('.b-d_coupon_discount').click(function() {
+        $(this).slideUp();
+        $(this).next().slideDown();
+    });
 	/* END discount */
 	/* active checked */
 	function check_agreement(){
