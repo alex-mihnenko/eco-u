@@ -182,7 +182,8 @@ header {
 }
 
 .sticky-wrapper.is-sticky header .b-logo img {
-    height: 40px
+    height: 40px;
+	width: 86px;
 }
 
 .h-menu {
@@ -2055,7 +2056,7 @@ footer {
 }
 .page_2 .b-logo_3 {
 	display: inline-block;
-    margin: 16px 0 0 0;
+    margin: 8px 0 0 0;
     transition: 0.3s ease-out all;
 }
 .page_2 .b-logo {
@@ -4802,8 +4803,15 @@ footer {
 	    height: 28px;
 	}
 	.b-logo img {
-	    width: 100%;
+		height:26px;
+		width:100%
 	}
+
+	.sticky-wrapper.is-sticky header .b-logo img {
+		height: 26px;
+		width:100%
+	}
+
 	.b-profile:after {
 		width: 17px;
 		height: 18px;
