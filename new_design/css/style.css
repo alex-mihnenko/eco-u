@@ -14,6 +14,22 @@
     color:#374047;
     height:500px;
 }
+.f-p_address_remove {
+    position:absolute;
+    top:0;
+    left:0;
+    height:45px;
+    width:45px;
+    background-color:#f17e46;
+    font-size:30px;
+    line-height:45px;
+    color:#fff;
+    text-align:center;
+    cursor:pointer;
+}
+.f-p_address_container {
+    position:relative;
+}
 a img {
 	border: none;
 }

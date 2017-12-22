@@ -117,7 +117,7 @@ class ControllerAccountAccount extends Controller {
                                 'date' => $date->format('d.m.Y'),
                                 'status' => $order['status_text'],
                                 'status_id' => $order['order_status_id'],
-                                'total' => $order['total']
+                                'total' => $order['order_total']
                             );
                         }
                     }

@@ -37,6 +37,16 @@
             }
         });
     });
+    
+    $('.f-p_address_remove').click(function(){
+        var tElement = $(this).data('target');
+        $.get('/?route=ajax/index/ajaxRemoveAddress', {address_id: tElement}, function(msg){
+            if(msg.status == 'success') {
+                $('.f-p_address_container[data-index="'+tElement+'"]').remove();
+            }
+        }, 'json');
+    });
+    
     $(".sticker").sticky({
 		topSpacing: 0
 	});
@@ -1336,11 +1346,14 @@
                     value: $(item).val(),
                     address_id: address_id
                 }
-                
             });
             var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
             var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
             var email = $('input[data-name="customer_email"].f-p_input').val();
+            if($('#myId1').prop('checked') && !email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) {
+                $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
+                return false;
+            } 
             $.post('/?route=ajax/index/ajaxSetCustomerData', {
                 addresses: addresses,
                 firstname: firstname,
@@ -1351,6 +1364,7 @@
                     msg.dadata.forEach(function(item, i, arr){
                         $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
                     });
+                    $('.f-p_input').removeClass('input-error_2');
                     $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
                     setTimeout(function(){
                         $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
