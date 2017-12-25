@@ -4856,11 +4856,11 @@ footer {
 	}
 	.h-menu {
 	    margin: 15px 0 0 10px;
-	    width: 41px;
+	    /*width: 120px;*/
 	    height:	19px;
 	    font-size: 9px;
 		line-height: 19px;
-		padding: 0 12px 0 8px;
+		padding: 0 17px 0 8px;
 	}
 	.h-menu:after {
 		width: 5px;
@@ -4870,7 +4870,7 @@ footer {
 		right: 7px;
 	}
 	.hidden-menu {
-		top: 25px;
+		top: 45px;
 		left: 13px;
 		width: 78px;
 	}
@@ -6113,7 +6113,7 @@ footer {
 		width: 100%;
 	}
 	.p-o_thumb {
-		height: 130px;
+		height: 173px;
 	}
 	.b-accordion_title:after {
 		width: 100%;
@@ -6144,6 +6144,9 @@ footer {
 	}
 }
 @media screen and (max-width: 374px) { 
+        .p-o_thumb {
+		height: 156px;
+	}
 	.social-networks {
 	    margin: 15px 10px 0 0;
 	    float: none;

@@ -44,13 +44,21 @@ class ControllerCheckoutCart extends Controller {
                     '11' => 'ноября',
                     '12' => 'декабря'
                 );
-                $date->add(new DateInterval('P1D'));
+                
+                $order_time = explode(':',$this->config->get('config_order_time'));
+                
+                
                 $data['delivery_date'] = Array();
-                $data['delivery_date'][] = Array(
-                    'format' => $date->format('d.m.Y'),
-                    'text' => 'Завтра '.$date->format('d')
-                );
-                $date->add(new DateInterval('P1D'));
+                if(((int)$date->format('H') < $order_time[0]) || ((int)$date->format('H') == $order_time[0] && (int)$date->format('i') < $order_time[1])) {                
+                    $date->add(new DateInterval('P1D'));
+                    $data['delivery_date'][] = Array(
+                        'format' => $date->format('d.m.Y'),
+                        'text' => 'Завтра '.$date->format('d')
+                    );
+                    $date->add(new DateInterval('P1D'));
+                } else {
+                    $date->add(new DateInterval('P2D'));
+                }
                 $data['delivery_date'][] = Array(
                     'format' => $date->format('d.m.Y'),
                     'text' => 'Послезавтра '.$date->format('d')
@@ -67,6 +75,13 @@ class ControllerCheckoutCart extends Controller {
                     'phone' => $this->customer->getTelephone(),
                     'first_name' => $this->customer->getFirstName()
                 );
+                
+                $intervals = $this->config->get('config_delivery_intervals');
+                if(!empty($intervals)) {
+                    $data['delivery_intervals'] = explode(',',$intervals);
+                } else {
+                    $data['delivery_intervals'] = array();
+                }
                 
 		if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
 			$data['heading_title'] = $this->language->get('heading_title');

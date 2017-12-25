@@ -264,15 +264,15 @@
 
 		$('.list-products').ddscrollSpy({
 			highlightclass: "selected2",
-			scrolltopoffset: -185,
+			scrolltopoffset: -160,
 		});
 		$('.list-alphabetic').ddscrollSpy({
 			highlightclass: "selected",
-			scrolltopoffset: -200,
+			scrolltopoffset: -160,
 		}); 
 		$('.list-tabs2').ddscrollSpy({
 			highlightclass: "selected3",
-			scrolltopoffset: -200,
+			scrolltopoffset: -160,
 		});
 	});
 	/*** ***/
@@ -305,11 +305,10 @@
 	
 	
 	$('.tabs__catalog li.modal-hide').on( 'click', function(){
-		
+		var distanceTop = $('.fond-catalog').offset().top;
 		setTimeout(function() {
-			var distanceTop = $('.fond-catalog').offset().top;
 			$(window).scrollTop(distanceTop);
-		}, 50);
+		}, 50, distanceTop);
 	});
 
 	

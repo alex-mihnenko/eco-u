@@ -76,6 +76,9 @@ class ControllerSettingSetting extends Controller {
                 $data['entry_sms_order_new_text'] = $this->language->get('entry_sms_order_new_text');
                 $data['entry_sms_password_new_text'] = $this->language->get('entry_sms_password_new_text');
                 $data['entry_composite_price'] = $this->language->get('entry_composite_price');
+                $data['entry_min_order_total'] = $this->language->get('entry_min_order_total');
+                $data['entry_delivery_intervals'] = $this->language->get('entry_delivery_intervals');
+                $data['entry_order_time'] = $this->language->get('entry_order_time');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
@@ -412,6 +415,24 @@ class ControllerSettingSetting extends Controller {
 			$data['config_composite_price'] = $this->request->post['config_composite_price'];
 		} else {
 			$data['config_composite_price'] = htmlentities(json_encode($this->config->get('config_composite_price')));
+		}
+                
+                if (isset($this->request->post['config_min_order_total'])) {
+			$data['config_min_order_total'] = $this->request->post['config_min_order_total'];
+		} else {
+			$data['config_min_order_total'] = $this->config->get('config_min_order_total');
+		}
+                
+                if (isset($this->request->post['config_delivery_intervals'])) {
+			$data['config_delivery_intervals'] = $this->request->post['config_delivery_intervals'];
+		} else {
+			$data['config_delivery_intervals'] = $this->config->get('config_delivery_intervals');
+		}
+                
+                if (isset($this->request->post['config_order_time'])) {
+			$data['config_order_time'] = $this->request->post['config_order_time'];
+		} else {
+			$data['config_order_time'] = $this->config->get('config_order_time');
 		}
                 
 		if (isset($this->request->post['config_meta_title'])) {
