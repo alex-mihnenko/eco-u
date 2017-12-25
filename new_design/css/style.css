@@ -4192,8 +4192,9 @@ footer {
 }
 
 .sticker_23 span{
+	font-size: 1em;
 	display: block;
-	line-height: 1em;
+	line-height: 1.2em;
 	padding-top: 1.5em;
 }
 
@@ -4917,7 +4918,7 @@ footer {
 		top: -38px;
     	right: 8px;
     	line-height: 41px;
-    	font-size: 10px;
+    	font-size: 1em;
 	}
 	.p-o_link {
 	    padding: 0px 0px 0 0px;
@@ -6087,6 +6088,9 @@ footer {
         .sticker_20 {
             font-size:8px !important;
         }
+	.sticker_23 span{
+		font-size: 0.7em;
+	}
 	.h-box_right,
 	.h-box_left {
 		width: 35%;
