@@ -87,7 +87,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.round(mtpl * quantity * price);
+                            var totalPrice = Math.floor(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
                         });
@@ -104,7 +104,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.round(mtpl * quantity * price);
+                            var totalPrice = Math.floor(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.size-0').find('.m-product_price').html(totalPrice + currencyStr);
                         });
@@ -122,7 +122,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.round(mtpl * quantity * price);
+                            var totalPrice = Math.floor(mtpl * quantity * price);
                             $(this).parents('.c-p_right').find('.c-p_price').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').change();
@@ -671,17 +671,25 @@
 	});
 
     $('.c-p_submit').on( 'click', function(){
+        var sTxt = $(this).html();
         var el = $(this);
         if(el.hasClass("c-p_submit_submit2")) {
         } else {
             el.addClass('c-p_submit_submit2');
             el.text("Добавлено в корзину");
-            setInterval(function () {
+            setTimeout(function () {
                 el.removeClass('c-p_submit_submit2');
-                el.text("Добавить в корзину");
-            }, 2000); // 1000 м.сек
+                el.text(sTxt);
+            }, 2000, sTxt); // 1000 м.сек
         }
     });
+    
+    var slIcons = document.getElementsByClassName('category-icon-active');
+    for(i=0;i<slIcons.length;i++) {
+        slIcons[i].onload = function(){
+            this.contentDocument.getElementsByTagName('path')[0].setAttribute('fill', '#ffffff');
+        }
+    }
 
 	/*  */
 	/** dynamic input **/
@@ -1146,12 +1154,13 @@
                         '<div class="b-p_close" data-href="'+product.link_remove+'"></div>' +
                         '<a href="#" class="b-p_link" title="'+product.name+' '+wwLabel+'">'+product.name+' '+wwLabel+'</a>'+
                         '<div class="b-p_amount">'+Math.round(product.quantity/weightVariant)+' шт</div>'+
-                        '<div class="b-p_quantity">'+product.price+'р</div>'+
+                        '<div class="b-p_quantity">'+Math.floor(product.price)+'р</div>'+
                     '</div>';
                     $('.cart-container').append(productHTML);
                     totalPrice += product.total;
                     totalPositions++;
                 });
+                totalPrice = Math.floor(totalPrice);
                 $('.cart-price-total').html(totalPrice);
                 if(totalPrice == 0) {
                     $('.b-basket, .b-basket_mobile').find('.b-b_price').html('');
@@ -1202,8 +1211,7 @@
             var variant = parseFloat(variantField.html());
             if(value > 1) {
                 targetField.val(value-1);
-                console.log(value, variant, parseInt($(this).parents('tr').find('.table-b_price2').html()));
-                var productTotal = (value-1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
+                var productTotal = Math.floor((value-1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
                 $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
                 if(window.quantityTimer) clearTimeout(quantityTimer);
                 window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
@@ -1215,7 +1223,7 @@
             var value = parseInt(targetField.val());
             var variant = parseFloat(variantField.html());
             targetField.val(value+1);
-            var productTotal = (value+1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
+            var productTotal = Math.floor((value+1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
             window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
@@ -1225,7 +1233,7 @@
             var variantField = $('#'+$(this).data('variant'));
             var variant = parseFloat(variantField.html());
             var cart_id = $(this).data('cart-id');
-            var productTotal = quantity * variant * parseInt($(this).parents('tr').find('.table-b_price2').html());
+            var productTotal = Math.floor(quantity * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
             window.quantityTimer = setTimeout(ChangeCartQuantity, 500, cart_id, quantity * variant);

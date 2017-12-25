@@ -2375,6 +2375,11 @@ footer {
     color: #5D9E32;
     background: transparent;
 }
+.c-p_submit.navl.c-p_submit_submit2 {
+    border: 2px solid #f17e46;
+    color: #f17e46;
+    background: transparent;
+}
 
 .list-composition {
 	width: 100%;
@@ -4213,6 +4218,15 @@ footer {
     background-repeat:no-repeat;
     position:relative;
 }
+.category-icon-active {
+    width:27px;
+    height:27px;
+    display:none;
+    cursor:pointer;
+}
+.selected2 .category-icon-active {
+    display:block;
+}
 
 .b-delivery.b-delivery2 {
 	max-width: 500px;
@@ -5616,8 +5630,8 @@ footer {
 	    line-height: 16px;
 	}
 	.table-b_quantity {
-	    font-size: 8px;
-    	padding: 5px 3px 0 0;
+	    font-size: 0px;
+            padding: 0px;
 	}
 	.table-b_input {
 	    width: 29px;
@@ -5631,7 +5645,7 @@ footer {
 	    padding: 0 2px;
 	}
 	.table-basket {
-		width: 96%;
+		width: calc(100% - 40px);
 		margin: 0px 0 0 40px;
 	}
 	.table-basket tr td.table-b_width1 {
@@ -6063,6 +6077,9 @@ footer {
 	}
 }
 @media screen and (max-width: 479px) { 
+        .sticker_20 {
+            font-size:8px !important;
+        }
 	.h-box_right,
 	.h-box_left {
 		width: 35%;
@@ -6096,7 +6113,7 @@ footer {
 		width: 100%;
 	}
 	.p-o_thumb {
-		height: 156px;
+		height: 130px;
 	}
 	.b-accordion_title:after {
 		width: 100%;
@@ -6140,7 +6157,8 @@ footer {
 	    padding: 0 8px;
 	}
 	.table-basket {
-		width: 320px;
+		/*width: 320px;*/
+                width:calc(100% - 20px);
 	}
 	.hidden-basket {
     	right: 0%;

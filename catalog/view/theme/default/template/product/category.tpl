@@ -112,7 +112,9 @@
                                                                 ?>
 								<li>
                                                                         <a href="#l-p_<?php echo $category['id']; ?>">
-										<div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?> ');"></div>
+										<div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
+                                                                                     <?php if(!empty($category['image'])) { ?><object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                                                                </div>
 										<span><?php echo $category['name']; ?></span>
 									</a>
 								</li>
@@ -248,7 +250,7 @@
                                                                     $lCount = count($products_catsorted[$category['id']]['sub'][$subcategory['id']]);
                                                                     ?>
                                                                     <div id="l-p_<?php echo $category['id'] ?>" class="rel">
-									<div class="big-thumb"><img src="img/icon_3.png" alt=""></div>
+                                                                        <?php if(!empty($subcategory['image'])) { ?><div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div><?php } ?>
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter">
                                                                                 <?php foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
