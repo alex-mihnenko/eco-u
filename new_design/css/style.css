@@ -1180,7 +1180,7 @@ footer {
 	border-radius: 50%;
 	position: absolute;
 	bottom: 7px;
-	right: 7px;
+	right: -140px;
 	text-align: center;
 	line-height: 62px;
 	color: #ffffff;
@@ -4217,8 +4217,8 @@ footer {
     padding: 0.1em 0.15em;
 }
 .category-icon {
-    width:27px;
-    height:27px;
+    width:34px;
+    height:34px;
     background-size:contain;
     background-position:center;
     z-index:7;
@@ -4227,8 +4227,8 @@ footer {
     position:relative;
 }
 .category-icon-active {
-    width:27px;
-    height:27px;
+    width:34px;
+    height:34px;
     display:none;
     cursor:pointer;
 }
