@@ -7,7 +7,7 @@
             <a href="<?php echo $product['href']; ?>" class="m-product_thumb" target="_blank">
                 <img src="/image/<?php if(!empty($product['image'])) echo $product['image']; else echo 'eco_logo.jpg'; ?>" alt="">
                 <?php if(isset($product['discount_sticker'])) { ?><div class="m-product_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
-                <?php } elseif($product['sticker_class']) { ?><div class="m-product_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
+                <?php } elseif($product['sticker_class']) { ?><div class="m-product_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
             </a>
             <div class="m-product_right">
                     <div class="m-product_link">

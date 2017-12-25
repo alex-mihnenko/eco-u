@@ -17,7 +17,7 @@
                         <div class="p-o_block">
                                 <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
                                 <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
-                                <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><?php echo $product['sticker_name']; ?></div><?php } ?>
+                            <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                                 <div class="p-o_link">
                                         <meta itemprop="name" content="<?php echo $product['name']; ?>">
                                         <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a> 

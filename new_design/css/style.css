@@ -4185,6 +4185,13 @@ footer {
     font-family: Roboto;
     font-weight: bold;
 }
+
+.sticker_23 span{
+	display: block;
+	line-height: 1em;
+	padding-top: 1.5em;
+}
+
 .sticker_16, .sticker_17, .sticker_18, .sticker_19 .sticker_21,{
     font-size:11px;
     text-transform: uppercase;
