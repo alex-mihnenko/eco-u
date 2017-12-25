@@ -172,7 +172,7 @@
                   <input type="text" name="location" value="<?php echo $location; ?>" placeholder="<?php echo $entry_location; ?>" id="input-location" class="form-control" />
                 </div>
               </div>
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_available; ?></label>
                 <div class="col-sm-10">
                     <div class="checkbox">
@@ -181,8 +181,8 @@
                       </label>
                     </div>
                 </div>
-              </div>
-              <div class="form-group">
+              </div>-->
+              <!--<div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_profitable_offer; ?></label>
                 <div class="col-sm-10">
                     <div class="checkbox">
@@ -191,7 +191,7 @@
                       </label>
                     </div>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_is_weighted; ?></label>
                 <div class="col-sm-10">
@@ -243,7 +243,7 @@
                 </div>
               </div>
                 
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label class="col-sm-2 control-label" for="input-tax-class"><?php echo $entry_tax_class; ?></label>
                 <div class="col-sm-10">
                   <select name="tax_class_id" id="input-tax-class" class="form-control">
@@ -257,7 +257,7 @@
                     <?php } ?>
                   </select>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-quantity"><?php echo $entry_quantity; ?></label>
                 <div class="col-sm-10">
@@ -340,7 +340,7 @@
                     </span></div>
                 </div>
               </div>
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label class="col-sm-2 control-label" for="input-length"><?php echo $entry_dimension; ?></label>
                 <div class="col-sm-10">
                   <div class="row">
@@ -355,8 +355,8 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
+              </div>-->
+              <!--<div class="form-group">
                 <label class="col-sm-2 control-label" for="input-length-class"><?php echo $entry_length_class; ?></label>
                 <div class="col-sm-10">
                   <select name="length_class_id" id="input-length-class" class="form-control">
@@ -369,7 +369,7 @@
                     <?php } ?>
                   </select>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-weight"><?php echo $entry_weight; ?></label>
                 <div class="col-sm-10">

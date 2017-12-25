@@ -207,6 +207,24 @@
                   <input type="text" name="config_composite_price" value="<?php echo $config_composite_price; ?>" placeholder="<?php echo $entry_composite_price; ?>" id="input-composite-price" class="form-control" />
                 </div>
               </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-min-order-total"><?php echo $entry_min_order_total; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_min_order_total" value="<?php echo $config_min_order_total; ?>" placeholder="<?php echo $entry_min_order_total; ?>" id="input-min-order-total" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-delivery-intervals"><?php echo $entry_delivery_intervals; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_delivery_intervals" value="<?php echo $config_delivery_intervals; ?>" placeholder="<?php echo $entry_delivery_intervals; ?>" id="input-delivery-intervals" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-time"><?php echo $entry_order_time; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_order_time" value="<?php echo $config_order_time; ?>" placeholder="<?php echo $entry_order_time; ?>" id="input-order-time" class="form-control" />
+                </div>
+              </div>
             </div>
             <div class="tab-pane" id="tab-local">
               <div class="form-group">

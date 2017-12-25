@@ -814,7 +814,7 @@ class ModelCheckoutOrder extends Model {
         public function setDelivery($order_id, $customer_id, $data) {
             $order_data = $this->getOrder($order_id);
             $order_data['payment_address_1'] = $data['address'];
-            $order_data['comment'] = $data['delivery_time'].$data['comment'];
+            $order_data['comment'] = $data['comment'];
             $order_data['payment_method'] = $data['payment_method'];
             $order_data['delivery_time'] = $data['delivery_time'];
             $order_data['delivery_interval'] = $data['delivery_interval'];

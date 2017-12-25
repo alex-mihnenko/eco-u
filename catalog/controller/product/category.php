@@ -194,6 +194,7 @@ class ControllerProductCategory extends Controller {
                                         'sub' => $subcategories
 				);
 			}
+                        //var_dump($data['categories'][0]);
 
 			$data['products'] = array();
 

@@ -57,7 +57,7 @@
                                                                                                         <?php } ?>
 					    							</td>
 					    							<td>
-					    								<div class="table-b_price"><?php echo ((int)$product['price'] * (float)$product['quantity']); ?> руб.</div>
+					    								<div class="table-b_price"><?php echo floor((int)$product['price'] * (float)$product['quantity']); ?> руб.</div>
 					    								<div class="table-b_price2"><?php echo $product['price']; ?> за 1 <?php echo $product['weight_class']; ?></div>
 					    							</td>
 					    						</tr>
@@ -186,8 +186,9 @@
 										</div>
 										<div class="days-select time-select">
 											<select id="delivery_time" name="tech" class="tech">
-												<option value="09:00-14:00">09:00 - 14:00</option>
-												<option value="14:00-22:00">14:00 - 22:00</option>
+                                                                                                <?php foreach($delivery_intervals as $interval) { ?>
+                                                                                                <option value="<?php echo $interval; ?>"><?php echo $interval; ?></option>
+                                                                                                <?php } ?>
 											</select> 
 										</div>
 									</div>
