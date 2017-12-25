@@ -1180,7 +1180,7 @@ footer {
 	border-radius: 50%;
 	position: absolute;
 	bottom: 7px;
-	right: -140px;
+	right: 47px;
 	text-align: center;
 	line-height: 62px;
 	color: #ffffff;
@@ -5613,7 +5613,7 @@ footer {
 	}
 	.table-b_link {
 	    font-size: 8px;
-	    margin: 0 0 4px 0;
+	    margin: 0 0 4px 5px;
 	}
 	.table-b_text {
 	    font-size: 7px;
@@ -5676,6 +5676,7 @@ footer {
 	}
 	.table-basket tr td.table-b_width2 {
 	    width: auto;
+		min-width: 80px !important;
 	}
 	.mobile-center {
 		text-align: center;
