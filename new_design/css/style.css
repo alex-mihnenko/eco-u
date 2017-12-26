@@ -2640,6 +2640,9 @@ footer {
 	box-sizing: border-box;
 	padding: 15px 21px 15px 21px;
 }
+.f-p_input[data-name="customer_address"] {
+    color:#333;
+}
 .f-p_input.input-error_2 {
 	background: #d00;
 	color: #ffffff;

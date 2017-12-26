@@ -349,10 +349,7 @@ class ControllerCheckoutCart extends Controller {
                                 );
                             }
                         } else {
-                            $arAddress[] = Array(
-                                'address_id' => 0,
-                                'value' => ''
-                            );
+                            $arAddress = Array();
                         }
                         $data['delivery_address'] = $arAddress;
 			

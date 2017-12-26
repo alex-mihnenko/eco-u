@@ -167,7 +167,7 @@
 					    		<div class="b-delivery b-delivery2">
 									<div class="c-m_title">Доставка</div>
 									<div class="delivery-address mobile-pd-30">
-                                                                            <?php if(!empty($delivery_address)) { ?>
+                                                                            <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
 									    <select id="delivery_address" name="tech" class="tech">
                                                                                     <?php foreach($delivery_address as $address) { ?>
                                                                                     <option value="<?php echo $address['address_id']; ?>"><?php echo $address['value']; ?></option>
