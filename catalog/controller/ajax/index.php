@@ -30,16 +30,25 @@ class ControllerAjaxIndex extends Controller {
   }
   
   public function ajaxShowMore() {
-        $mode = $this->request->get['mode'];
-        $target = $this->request->get['target'];
+        $mode = $this->request->post['mode'];
+        $target = $this->request->post['target'];
+        $nInclude = $this->request->post['not_include'];
         $this->load->model('catalog/product');
+        $this->load->model('account/user');
+        $result = array();
         if($mode == 'asort') {
-            $result = $this->model_catalog_product->getAsortProducts($target);
+            $data['products'] = $this->model_catalog_product->getAsortProducts($target, $nInclude);
         } elseif($mode == 'catsort') {
-            $result = $this->model_catalog_product->getCatsortProducts($target);
+            $data['products'] = $this->model_catalog_product->getCatsortProducts($target, $nInclude);
         }
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($result));
+        
+        if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id'])) {
+            $data['is_admin'] = true;
+        }
+        else {
+            $data['is_admin'] = false;
+        }
+        $this->response->setOutput($this->load->view('product/dynamic', $data));
   }
   
   // Получить товары по тэгу

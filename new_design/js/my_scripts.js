@@ -1071,12 +1071,20 @@
             }
         });
         $('.show-more').click(function(e){
-            $(this).hide();
-            $.get('/?route=ajax/index/ajaxShowMore', {
+            $(this).css('visibility', 'hidden');
+            var pElement = $(this).parent().find('.list-letter');
+            var nInclude = [];
+            pElement.find('li[data-product]').each(function(i, item, arr){
+                nInclude[nInclude.length] = $(item).data('product');
+            });
+            $.post('/?route=ajax/index/ajaxShowMore', {
                 mode: $(this).data('mode'),
-                target: $(this).data('target')
-            }, function(msg){
-                console.log(msg);
+                target: $(this).data('target'),
+                not_include: nInclude
+            }, function(products){
+                pElement.append(products);
+                InitClamp('.p-o_link a, .p-o_short-descr');
+                initDropDown();
             });
         });
         function BindAddToCartEvents(block) {

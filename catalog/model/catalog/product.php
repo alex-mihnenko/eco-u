@@ -321,9 +321,10 @@ class ModelCatalogProduct extends Model {
             }
         }
         
-        public function getAsortProducts($letter) {
+        public function getAsortProducts($letter, $not_include) {
             if(!empty($letter)) {
-                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_description` WHERE `name` LIKE '{$letter}%'";
+                $nInclude = implode(', ', $not_include);
+                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_description` WHERE `name` LIKE '{$letter}%' AND `product_id` NOT IN (".$nInclude.") LIMIT 0, 10000";
                 $query = $this->db->query($sql);
                 foreach($query->rows as $i => $row) {
                     $product = $this->getProduct($row['product_id']);
@@ -332,8 +333,18 @@ class ModelCatalogProduct extends Model {
                     $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
                     $product['sticker_name'] = $product['sticker']['name'];
                     $product['sticker_class'] = $product['sticker']['class'];
+                    $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
+                    if ($product['image_preview']) {
+                        $product['thumb'] = '/image/'.$product['image_preview'];
+                    } else {
+                        $this->load->model('tool/image');
+                        $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+                    }
                     if($product['special']) {
                         $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+                    if(!$product['composite_price']) {
+                        unset($product['composite_price']);
                     }
                     $products[] = $product;
                 }
@@ -343,20 +354,30 @@ class ModelCatalogProduct extends Model {
             }
         }
         
-        public function getCatsortProducts($category_id) {
+        public function getCatsortProducts($category_id, $not_include) {
             if(!empty($category_id)) {
-                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '".(int)$category_id;
+                $nInclude = implode(', ', $not_include);
+                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_to_category` WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") LIMIT 0, 10000";
                 $query = $this->db->query($sql);
                 foreach($query->rows as $i => $row) {
-                    if($row['stock_status_id'] == 5)
                     $product = $this->getProduct($row['product_id']);
                     $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
                     $product['href'] = $this->url->link('product/product', '&product_id=' . $row['product_id']);
                     $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
                     $product['sticker_name'] = $product['sticker']['name'];
                     $product['sticker_class'] = $product['sticker']['class'];
+                    $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
+                    if ($product['image_preview']) {
+                        $product['thumb'] = '/image/'.$product['image_preview'];
+                    } else {
+                        $this->load->model('tool/image');
+                        $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+                    }
                     if($product['special']) {
                         $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+                    if(!$product['composite_price']) {
+                        unset($product['composite_price']);
                     }
                     $products[] = $product;
                 }

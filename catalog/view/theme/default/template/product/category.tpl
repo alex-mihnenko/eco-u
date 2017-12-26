@@ -152,7 +152,7 @@
                                                                                     if($iCount > 4) break;
                                                                                     $iCount++;
                                                                                 ?>
-                                                                                <li>
+                                                                                <li data-product="<?php echo $product['product_id']; ?>">
                                                                                     <div id="asorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
@@ -260,15 +260,16 @@
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter">
                                                                                 <?php 
-                                                                                $i = 0;
+                                                                                $iCount = 0;
                                                                                 foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
                                                                                     if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
                                                                                         $lCount--;
                                                                                         continue;
                                                                                     }
-                                                                                    if($i++ == 5) break;
+                                                                                    if($iCount > 4) break;
+                                                                                    $iCount++;
                                                                                 ?>
-                                                                                <li>
+                                                                                <li data-product="<?php echo $product['product_id']; ?>">
                                                                                     <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
@@ -353,7 +354,7 @@
                                                                                 </li>
                                                                                 <? } ?>
 									</ul>
-                                                                        <div class="show-more" data-mode="catsort" data-target="<php echo $subcategory['id']; ?>" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
 								</div>
                                                                 <?php }} ?>
 							</div>
