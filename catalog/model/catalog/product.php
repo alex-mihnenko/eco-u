@@ -324,7 +324,7 @@ class ModelCatalogProduct extends Model {
         public function getAsortProducts($letter, $not_include) {
             if(!empty($letter)) {
                 $nInclude = implode(', ', $not_include);
-                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_description` WHERE `name` LIKE '{$letter}%' AND `product_id` NOT IN (".$nInclude.") AND status != 0 AND (stock_status_id != 5 || quantity > 0) LIMIT 0, 10000";
+                $sql = "SELECT `product_id` FROM " . DB_PREFIX . "product_description pc WHERE `name` LIKE '{$letter}%' AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) LIMIT 0, 10000";
                 $query = $this->db->query($sql);
                 foreach($query->rows as $i => $row) {
                     $product = $this->getProduct($row['product_id']);
@@ -357,7 +357,7 @@ class ModelCatalogProduct extends Model {
         public function getCatsortProducts($category_id, $not_include) {
             if(!empty($category_id)) {
                 $nInclude = implode(', ', $not_include);
-                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_to_category` WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") AND status != 0 AND (stock_status_id != 5 || quantity > 0) LIMIT 0, 10000";
+                $sql = "SELECT `product_id` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) LIMIT 0, 10000";
                 $query = $this->db->query($sql);
                 foreach($query->rows as $i => $row) {
                     $product = $this->getProduct($row['product_id']);
