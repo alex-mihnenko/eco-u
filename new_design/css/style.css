@@ -1180,7 +1180,7 @@ footer {
 	border-radius: 50%;
 	position: absolute;
 	bottom: 7px;
-	right: 7px;
+	right: 47px;
 	text-align: center;
 	line-height: 62px;
 	color: #ffffff;
@@ -4190,6 +4190,14 @@ footer {
     font-family: Roboto;
     font-weight: bold;
 }
+
+.sticker_23 span{
+	font-size: 1em;
+	display: block;
+	line-height: 1.2em;
+	padding-top: 1.5em;
+}
+
 .sticker_16, .sticker_17, .sticker_18, .sticker_19 .sticker_21,{
     font-size:11px;
     text-transform: uppercase;
@@ -4209,8 +4217,8 @@ footer {
     padding: 0.1em 0.15em;
 }
 .category-icon {
-    width:27px;
-    height:27px;
+    width:34px;
+    height:34px;
     background-size:contain;
     background-position:center;
     z-index:7;
@@ -4219,8 +4227,8 @@ footer {
     position:relative;
 }
 .category-icon-active {
-    width:27px;
-    height:27px;
+    width:34px;
+    height:34px;
     display:none;
     cursor:pointer;
 }
@@ -4910,7 +4918,7 @@ footer {
 		top: -38px;
     	right: 8px;
     	line-height: 41px;
-    	font-size: 10px;
+    	font-size: 1em;
 	}
 	.p-o_link {
 	    padding: 0px 0px 0 0px;
@@ -5605,7 +5613,7 @@ footer {
 	}
 	.table-b_link {
 	    font-size: 8px;
-	    margin: 0 0 4px 0;
+	    margin: 0 0 4px 5px;
 	}
 	.table-b_text {
 	    font-size: 7px;
@@ -5668,6 +5676,7 @@ footer {
 	}
 	.table-basket tr td.table-b_width2 {
 	    width: auto;
+		min-width: 80px !important;
 	}
 	.mobile-center {
 		text-align: center;
@@ -6080,6 +6089,9 @@ footer {
         .sticker_20 {
             font-size:8px !important;
         }
+	.sticker_23 span{
+		font-size: 0.7em;
+	}
 	.h-box_right,
 	.h-box_left {
 		width: 35%;
