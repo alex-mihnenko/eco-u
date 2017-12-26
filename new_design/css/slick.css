@@ -407,7 +407,9 @@
     .slider-profitable_offer .slick-prev,
     .slider-profitable_offer .slick-next,
     .slider-favorite-products .slick-prev,
-    .slider-favorite-products .slick-next {
+    .slider-favorite-products .slick-next,
+    .slider-preferable-products .slick-prev,
+    .slider-preferable-products .slick-next {
         top: -20px;
         margin: 0;
         width: 25px;
@@ -419,18 +421,22 @@
     .slider-profitable_offer .slick-prev:before, 
     .slider-profitable_offer  .slick-next:before,
     .slider-favorite-products .slick-prev:before, 
-    .slider-favorite-products .slick-next:before {
+    .slider-favorite-products .slick-next:before,
+    .slider-preferable-products .slick-prev:before,
+    .slider-preferable-products .slick-next:before {
         width: 6px;
         height: 9px;
         background-size: 6px 9px;
     }
     .slider-profitable_offer .slick-prev:before,
-    .slider-favorite-products .slick-prev:before {
+    .slider-favorite-products .slick-prev:before,
+    .slider-preferable-products .slick-prev:before {
         top: 9px;
         left: 9px;
     }
     .slider-profitable_offer .slick-next:before,
-    .slider-favorite-products .slick-next:before {
+    .slider-favorite-products .slick-next:before,
+    .slider-preferable-products .slick-next:before {
         top: 9px;
         left: 11px;
     }

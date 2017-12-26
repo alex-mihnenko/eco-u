@@ -5830,16 +5830,16 @@ footer {
 	.b-acc_width {
 	    padding: 0 10px;
 	}
-	.list-favorite-products li {
+	.list-favorite-products li, .slider-preferable-products li {
 		width: 50%;
 	}
 	.list-favorite-products li .box-p_o {
 		width: 257px;
 	}
-	.slider-favorite-products .box-p_o {
+	.slider-favorite-products .box-p_o, .slider-preferable-products .box-p_o {
 		width: 100%;
 	}
-	.slider-favorite-products .slick-slide {
+	.slider-favorite-products .slick-slide, .slider-preferable-products .slick-slide {
 		box-sizing: border-box;
 		padding: 0 10px;
 	}
@@ -5916,7 +5916,7 @@ footer {
 	.list-composition li {
 	    width: 100%;
 	}
-	.slider-favorite-products {
+	.slider-favorite-products, .slider-preferable-products, .slider-profitable_offer {
 	    padding: 0;
 	    margin: 20px 0 0 0;
 	}

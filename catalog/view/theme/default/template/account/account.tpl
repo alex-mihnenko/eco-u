@@ -30,37 +30,6 @@
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
-                                                        <!--<tr>
-                                                                <td class="t-h_number">№ 723847329492</td>
-                                                                <td class="t-h_width">26.11.2017</td>
-                                                                <td class="t-h_width">
-                                                                        <div class="t-h_pay">Оплачен</div>
-                                                                </td>
-                                                                <td>
-                                                                        <div class="t-h_price">149.00 руб.</div>
-                                                                        <a href="#" class="t-h_submit">Оплатить</a>
-                                                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                                <td>№ 723847329492</td>
-                                                                <td>26.11.2017</td>
-                                                                <td>
-                                                                        <div class="t-h_pay">Оплачен</div>
-                                                                </td>
-                                                                <td>
-                                                                        <div class="t-h_price">149.00 руб.</div>
-                                                                </td>
-                                                        </tr>
-                                                        <tr>
-                                                                <td>№ 723847329492</td>
-                                                                <td>26.11.2017</td>
-                                                                <td>
-                                                                        <div class="t-h_canceled">Отменен</div>
-                                                                </td>
-                                                                <td>
-                                                                        <div class="t-h_price">149.00 руб.</div>
-                                                                </td>
-                                                        </tr>-->
                                                 </table>
                                         </div>
                         </div>
@@ -114,7 +83,6 @@
 <section class="fond-f-p">
         <div class="width-1418 clearfix">
                 <div class="f-p_title">Любимые продукты</div>
-                <!--<div class="f-p_all">Смотреть все</div>-->
         </div>
         <div class="width-1660">
                 <div class="slider-preferable-products">
