@@ -4235,7 +4235,7 @@ footer {
     display:none;
     cursor:pointer;
 }
-.selected2 .category-icon-active {
+.selected2 .category-icon-active, .selected3 .category-icon-active {
     display:block;
 }
 

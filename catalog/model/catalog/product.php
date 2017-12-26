@@ -321,6 +321,52 @@ class ModelCatalogProduct extends Model {
             }
         }
         
+        public function getAsortProducts($letter) {
+            if(!empty($letter)) {
+                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_description` WHERE `name` LIKE '{$letter}%'";
+                $query = $this->db->query($sql);
+                foreach($query->rows as $i => $row) {
+                    $product = $this->getProduct($row['product_id']);
+                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+                    $product['href'] = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                    $product['sticker_name'] = $product['sticker']['name'];
+                    $product['sticker_class'] = $product['sticker']['class'];
+                    if($product['special']) {
+                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+                    $products[] = $product;
+                }
+                return $products;
+            } else {
+                return false;
+            }
+        }
+        
+        public function getCatsortProducts($category_id) {
+            if(!empty($category_id)) {
+                $sql = "SELECT `product_id` FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '".(int)$category_id;
+                $query = $this->db->query($sql);
+                foreach($query->rows as $i => $row) {
+                    if($row['stock_status_id'] == 5)
+                    $product = $this->getProduct($row['product_id']);
+                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+                    $product['href'] = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                    $product['sticker_name'] = $product['sticker']['name'];
+                    $product['sticker_class'] = $product['sticker']['class'];
+                    if($product['special']) {
+                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+                    $products[] = $product;
+                }
+                return $products;
+            } else {
+                return false;
+            }
+        }
+        
+        
 	public function getProductSpecials($data = array()) {
 		$sql = "SELECT DISTINCT ps.product_id, (SELECT AVG(rating) FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) GROUP BY ps.product_id";
 

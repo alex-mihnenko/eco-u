@@ -686,7 +686,9 @@
     var slIcons = document.getElementsByClassName('category-icon-active');
     for(i=0;i<slIcons.length;i++) {
         slIcons[i].onload = function(){
-            this.contentDocument.getElementsByTagName('path')[0].setAttribute('fill', '#ffffff');
+            for(j=0;typeof(this.contentDocument.getElementsByTagName('path')[j]) != 'undefined';j++) {
+                this.contentDocument.getElementsByTagName('path')[j].setAttribute('fill', '#ffffff');
+            }
         }
     }
 
@@ -1069,8 +1071,13 @@
             }
         });
         $('.show-more').click(function(e){
-            $(this).parent().find('.list-letter>li.hidden').removeClass('hidden');
-            $(this).css('visibility', 'hidden');
+            $(this).hide();
+            $.get('/?route=ajax/index/ajaxShowMore', {
+                mode: $(this).data('mode'),
+                target: $(this).data('target')
+            }, function(msg){
+                console.log(msg);
+            });
         });
         function BindAddToCartEvents(block) {
             block.find('.p-o_submit').click(function(e){

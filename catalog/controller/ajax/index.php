@@ -29,6 +29,19 @@ class ControllerAjaxIndex extends Controller {
     }
   }
   
+  public function ajaxShowMore() {
+        $mode = $this->request->get['mode'];
+        $target = $this->request->get['target'];
+        $this->load->model('catalog/product');
+        if($mode == 'asort') {
+            $result = $this->model_catalog_product->getAsortProducts($target);
+        } elseif($mode == 'catsort') {
+            $result = $this->model_catalog_product->getCatsortProducts($target);
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($result));
+  }
+  
   // Получить товары по тэгу
   public function ajaxGetProductsByTag() {
       $arRequest = $this->request->get;

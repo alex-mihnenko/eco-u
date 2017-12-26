@@ -62,7 +62,9 @@
                                         ?>
                                         <li>
                                                 <a href="#l-p_<?php echo $category['id']; ?>">
-                                                        <div class="l-p_icon l-p_i2"></div>
+                                                        <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
+                                                            <?php if(!empty($category['image'])) { ?><object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                                        </div>
                                                         <span><?php echo $category['name']; ?></span>
                                                 </a>
                                         </li>
@@ -140,13 +142,17 @@
                                                                 <div id="letter_<?php echo $lCode; ?>" class="rel">
 									<div class="big-letter"><?php echo $letter; ?></div>
 									<ul class="list-letter">
-										<?php foreach($products_asorted[$letter] as $key => $product) {
+										<?php 
+                                                                                $iCount = 0;
+                                                                                foreach($products_asorted[$letter] as $key => $product) {
                                                                                     if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
                                                                                         $lCount--;    
                                                                                         continue;
                                                                                     }
+                                                                                    if($iCount > 4) break;
+                                                                                    $iCount++;
                                                                                 ?>
-                                                                                <li class="<?php if($key >= 5) echo 'hidden'; ?>">
+                                                                                <li>
                                                                                     <div id="asorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
@@ -231,7 +237,7 @@
                                                                                 </li>
                                                                                 <? } ?>
 									</ul>
-									<div class="show-more" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
 								</div>
                                                             <?php } ?>
                                                         </div>
@@ -253,13 +259,16 @@
                                                                         <?php if(!empty($subcategory['image'])) { ?><div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div><?php } ?>
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter">
-                                                                                <?php foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
+                                                                                <?php 
+                                                                                $i = 0;
+                                                                                foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
                                                                                     if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
                                                                                         $lCount--;
                                                                                         continue;
                                                                                     }
+                                                                                    if($i++ == 5) break;
                                                                                 ?>
-                                                                                <li class="<?php if($key >= 5) echo 'hidden'; ?>">
+                                                                                <li>
                                                                                     <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                                                                                             <meta itemprop="position" content="<?php echo $key; ?>" />
                                                                                             <div class="box-p_o">
@@ -344,7 +353,7 @@
                                                                                 </li>
                                                                                 <? } ?>
 									</ul>
-									<div class="show-more" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more" data-mode="catsort" data-target="<php echo $subcategory['id']; ?>" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
 								</div>
                                                                 <?php }} ?>
 							</div>
