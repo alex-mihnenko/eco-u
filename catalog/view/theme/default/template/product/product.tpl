@@ -87,9 +87,9 @@
                                                 <?php } ?>
                                         </div>
                                         <?php if(empty($product['weight_variants'])) { ?>
-                                            <div class="c-p_price"><?php if($special !== false) echo $special; else echo $price; ?></div>
+                                    <div class="c-p_price"><div class="c-p_price_shadow"><?php if($special !== false) echo $special; else echo $price; ?></div></div>
                                         <?php } else { ?>
-                                            <div class="c-p_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                            <div class="c-p_price"><div class="c-p_price_shadow"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div></div>
                                         <?php } ?>
                                 </div>
                                 <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>

@@ -123,7 +123,7 @@
                                 }
                             }
                             var totalPrice = Math.floor(mtpl * quantity * price);
-                            $(this).parents('.c-p_right').find('.c-p_price').html(totalPrice + currencyStr);
+                            $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').change();
 		});

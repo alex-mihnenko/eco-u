@@ -2314,6 +2314,19 @@ footer {
     text-align: center;
     line-height: 48px;
 }
+
+.c-p_price_shadow {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #fff;
+	-moz-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	-webkit-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	position: relative;
+}
+
+
 .c-p_select {
     width: 224px;
     height: 48px;
