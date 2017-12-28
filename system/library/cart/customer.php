@@ -72,10 +72,13 @@ class Customer {
 		}
 	}
         
-        public function loginByPhone($phone, $password) {
-
+        public function loginByPhone($phone, $password, $override = false) {
                 $phone = str_replace(Array('(', ')', '+', ' ', '-'), '', $phone);
-		$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
+		if($override) {
+                    $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND status = '1' AND approved = '1'");
+                } else {
+                    $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
+                }
                 if ($customer_query->num_rows) {
 			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
 
@@ -89,8 +92,12 @@ class Customer {
 			$this->newsletter = $customer_query->row['newsletter'];
 			$this->address_id = $customer_query->row['address_id'];
 
-			$this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
-
+			if(!$override) {
+                            $this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+                        }
+                        
+                        $sid = $this->session->session_id;
+                        $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
 			return true;
 		} else {
 			return false;

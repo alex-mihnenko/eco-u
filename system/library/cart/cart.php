@@ -434,7 +434,7 @@ class Cart {
             $basePrice = $this->getTotal();
             $total1 = $basePrice;
             $total2 = $basePrice;
-            if($this->customer->isLogged()) {
+            if($this->customer->isLogged() && isset($this->session->data['personal_discount'])) {
                 $personal_discount = 1 - ($this->session->data['personal_discount']/100);
                 $total1 = $basePrice * $personal_discount;
             }

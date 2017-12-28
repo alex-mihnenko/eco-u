@@ -689,6 +689,9 @@
             for(j=0;typeof(this.contentDocument.getElementsByTagName('path')[j]) != 'undefined';j++) {
                 this.contentDocument.getElementsByTagName('path')[j].setAttribute('fill', '#ffffff');
             }
+            for(j=0;typeof(this.contentDocument.getElementsByTagName('polygon')[j]) != 'undefined';j++) {
+                this.contentDocument.getElementsByTagName('polygon')[j].setAttribute('fill', '#ffffff');
+            }
         }
     }
 
@@ -1429,10 +1432,22 @@
                             }
                         );
                     } else {
-                        $('.customer-exists-error').show();
-                        setTimeout(function(){
-                            $('.b-profile').click();
-                        }, 1500);
+                        $.post('/?route=ajax/index/ajaxAddNoAuthOrder', {
+                            telephone: $('#phone2').val()
+                        }, 
+                            function(msg) {
+                                if(msg.status == 'success') {
+                                    $('.field_order_id').html(msg.orderId);
+                                    $('table.table-basket').html('');
+                                    //LoadCart();
+                                    $('.all-b_basket').hide();
+                                    $('.can-toggle.demo-rebrand-1, .payment-title').hide();
+                                    $('.liTabs_2').find('li:nth-child(1) a').css('pointer-events', 'none');
+                                    $('.liTabs_2').find('li:nth-child(2) a').css('pointer-events', 'auto');
+                                    $('.liTabs_2').find('li:nth-child(2) a').click();
+                                }
+                            }
+                        );
                     }
                 }, "json");
             } else {

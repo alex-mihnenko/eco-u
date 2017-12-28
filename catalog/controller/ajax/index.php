@@ -446,8 +446,15 @@ class ControllerAjaxIndex extends Controller {
       $payment_method = $this->request->post['payment_method'];
       $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
       $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
-      $customer_id = $this->customer->getId();
+      $customer_id = (int)$this->customer->getId();
       $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
+      
+      $is_guest = false;
+      if($customer_id == 0) {
+          $is_guest = true;
+          $this->customer->loginByPhone($telephone, false, true);
+          $customer_id = (int)$this->customer->getId();
+      }
       
       $this->load->model('dadata/index');
       
@@ -492,10 +499,13 @@ class ControllerAjaxIndex extends Controller {
         }
       
       $this->load->model('checkout/order');
+      
       if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data)) {
           // Добавление адреса доставки в список адресов клиента
           if($address_new == 'true') $this->customer->setAddress(0, $address);
           // Очистка корзины
+          $this->cart->clear();
+          if($is_guest) $this->customer->logout();
           $this->cart->clear();
           // Отправка sms        
             $this->load->model('sms/confirmation');
@@ -503,6 +513,7 @@ class ControllerAjaxIndex extends Controller {
             $this->model_sms_confirmation->sendSMS($telephone, $message);
           echo json_encode(Array('status' => 'success'));
       } else {
+          if($is_guest) $this->customer->logout();
           echo json_encode(Array('status' => 'error'));
       }
   }
@@ -543,6 +554,14 @@ class ControllerAjaxIndex extends Controller {
       } else {
           $this->response->setOutput(json_encode(Array('status' => 'error')));
       }
+  }
+  
+  // Заказ без авторизации
+  public function ajaxAddNoAuthOrder() {
+      $arRequest = $this->request->post;
+      $this->customer->loginByPhone($arRequest['telephone'], false, true);
+      $this->ajaxAddOrder();
+      $this->customer->logout();
   }
   
   // Получить новый пароль по sms
