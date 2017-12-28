@@ -519,6 +519,16 @@
     padding: 8px 5px 8px 14px;
 }
 
+.m-product_select .selectric {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.m-product_select .selectric .label{
+    line-height: 36px;
+    height: 36px;
+}
 
 @media screen and (max-width: 767px) {
 	.selectric-wrapper {
@@ -666,8 +676,5 @@
 		background-size: 11px 6px !important;
 		right: 6px;
 	}
-	
-	
-	
 
 }
