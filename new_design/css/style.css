@@ -4007,9 +4007,10 @@ footer {
 .list-tabs2 li:nth-child(4n) {
 	border-right: 0;
 }
-.list-tabs2 li:nth-child(-n+4) {
+.list-tabs2 li:nth-child(-n+16) {
 	border-bottom: 1px solid #E1E2E4;
 }
+
 .list-tabs2 li a {
 	display: block;
 	width: 100%;
