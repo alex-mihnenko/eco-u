@@ -699,6 +699,7 @@
 	$('.f-p_plus').click(function() {
                 $('.f-p_address_remove').removeClass('last');
 		$('<input type="text" data-name="customer_address" data-target-id="0" class="f-p_input" name="dynamic[]" placeholder="Адрес Доставки" />').fadeIn('slow').appendTo('.f-p_box2');
+                InitSuggestions();
 	});
 	/** END dynamic input **/
 	/** **/
@@ -1641,4 +1642,16 @@
                 });
             }, 500, target);
         }
+        function InitSuggestions() {
+            $('.f-p_input[data-name="customer_address"]').not('.suggestions-input').suggestions({
+                token: "a4ad0e938bf22c2ffbf205a4935ef651fc92ed52",
+                type: "ADDRESS",
+                count: 5,
+                /* Вызывается, когда пользователь выбирает одну из подсказок */
+                onSelect: function(suggestion) {
+                    console.log(suggestion);
+                }
+            });
+        }
+        InitSuggestions();
 });

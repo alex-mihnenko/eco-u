@@ -29,6 +29,9 @@
 .f-p_address_remove.last {
     right:45px;
 }
+.suggestions-wrapper {
+    font-size:12px !important;
+}
 .f-p_address_container {
     position:relative;
 }
