@@ -887,6 +887,7 @@
             if($(this).val() == 0) {
                 $(this).parents('.selectric-wrapper').remove();
                 $('.delivery-address').html('<input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">');
+                InitSuggestions();
                 $('input#delivery_address').keydown(function(){
                     $('.block-delivery-price').hide();
                     $('.shipping-amount').hide();
@@ -1643,7 +1644,7 @@
             }, 500, target);
         }
         function InitSuggestions() {
-            $('.f-p_input[data-name="customer_address"]').not('.suggestions-input').suggestions({
+            $('.f-p_input[data-name="customer_address"],input#delivery_address[type="text"]').not('.suggestions-input').suggestions({
                 token: "a4ad0e938bf22c2ffbf205a4935ef651fc92ed52",
                 type: "ADDRESS",
                 count: 5,
