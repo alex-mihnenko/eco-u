@@ -30,7 +30,16 @@
                         quantity: quantity,
                         weight_variant: weight_variant
                     }, function(msg){
-                        pElement.find('.m-product_submit').html('Добавлено в корзину');
+                    	var bSubmit = pElement.find('.m-product_submit');
+                        if(bSubmit.hasClass("m-product_submit2")) {
+                        } else {
+                            bSubmit.addClass('m-product_submit2');
+                            bSubmit.text("Добавлено в корзину");
+                            setTimeout(function () {
+                                bSubmit.removeClass('m-product_submit2');
+                                bSubmit.text("Добавить в корзину");
+                            }, 2000, bSubmit); // 1000 м.сек
+                        }
                         LoadCart();
                     }, "json");
                 });
@@ -107,7 +116,7 @@
                             }
                             var totalPrice = Math.floor(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
-                            $(this).parents('.size-0').find('.m-product_price').html(totalPrice + currencyStr);
+                            $(this).parents('.size-0').find('.m-product_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.m-product_select').find('select').change();
                         
@@ -124,7 +133,7 @@
                                 }
                             }
                             var totalPrice = Math.floor(mtpl * quantity * price);
-                            $(this).parents('.c-p_right').find('.c-p_price').html(totalPrice + currencyStr);
+                            $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').change();
 		});
@@ -659,17 +668,6 @@
 			});
 	});
 	/*** **/
-	$('.m-product_submit').on( 'click', function(){
-		var el = $(this);
-            if(el.hasClass("m-product_submit2")) {
-                el.removeClass('m-product_submit2');
-				el.val("Добавить в корзину");
-            } else {
-			el.addClass('m-product_submit2');
-			el.val("Добавлено в корзину");
-        }
-	});
-
     $('.c-p_submit').on( 'click', function(){
         var sTxt = $(this).html();
         var el = $(this);

@@ -1947,11 +1947,11 @@ footer {
 	box-sizing: border-box;
 	cursor: pointer;
 	outline: none;
-	border: 2px solid #8cc049;
+	border: 2px solid #739d3d;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-	background-color: #8cc049;
+	background-color: #739d3d;
 	-moz-box-shadow: 0 4px 7px rgba(0,0,0,.3);
 	-webkit-box-shadow: 0 4px 7px rgba(0,0,0,.3);
 	box-shadow: 0 4px 7px rgba(0,0,0,.3);
@@ -1965,10 +1965,16 @@ footer {
 	box-sizing: border-box;
 	padding: 16px 0;
 }
+
+.m-product_submit.m-product_submit2 {
+	border: 2px solid #5D9E32 !important;
+	color: #5D9E32 !important;
+	background: transparent !important;
+}
+
 .m-product_submit:hover {
-	border: 2px solid #5D9E32;
-	color: #5D9E32;
-	background: transparent;
+	background-color: #58772F;
+	border-color:#58772F;
 	transition: 0.3s ease-in-out all;
 }
 .m-product_submit.navl {
@@ -1980,11 +1986,7 @@ footer {
     color:#f17e46;
     border-color:#f17e46;
 }
-.m-product_submit.m-product_submit2 {
-	border: 2px solid #5D9E32;
-	color: #5D9E32;
-	background: transparent;
-}
+
 .m-product_select {
 	width: 142px;
 	height: 37px;
@@ -1994,10 +1996,10 @@ footer {
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-	/*background-color: #fff;*/
-	/*-moz-box-shadow: -2px 1px 7px rgba(0,0,0,.11);*/
-	/*-webkit-box-shadow: -2px 1px 7px rgba(0,0,0,.11);*/
-	/*box-shadow: -2px 1px 7px rgba(0,0,0,.11);*/
+	background-color: #fff;
+	-moz-box-shadow: -2px 1px 7px rgba(0,0,0,.11);
+	-webkit-box-shadow: -2px 1px 7px rgba(0,0,0,.11);
+	box-shadow: -2px 1px 7px rgba(0,0,0,.11);
 }
 .m-product_select.modal-select
 {
@@ -2028,6 +2030,13 @@ footer {
 	text-align: center;
 	line-height: 37px;
 }
+
+.m-product_price_shadow {
+	-moz-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	-webkit-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	box-shadow: 0 5px 10px rgba(6,21,38,.17);
+}
+
 /** END no-pictures **/ 
 /** page_2 **/ 
 .page_2 header {
@@ -2316,6 +2325,19 @@ footer {
     text-align: center;
     line-height: 48px;
 }
+
+.c-p_price_shadow {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #fff;
+	-moz-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	-webkit-box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	box-shadow: 0 5px 10px rgba(6,21,38,.17);
+	position: relative;
+}
+
+
 .c-p_select {
     width: 224px;
     height: 48px;
@@ -3987,9 +4009,10 @@ footer {
 .list-tabs2 li:nth-child(4n) {
 	border-right: 0;
 }
-.list-tabs2 li:nth-child(-n+4) {
+.list-tabs2 li:nth-child(-n+16) {
 	border-bottom: 1px solid #E1E2E4;
 }
+
 .list-tabs2 li a {
 	display: block;
 	width: 100%;

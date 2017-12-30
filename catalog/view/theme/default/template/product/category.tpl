@@ -56,7 +56,9 @@
                                                         <span>Все</span>
                                                 </a>
                                         </li>-->
-                                        <?php foreach($categories as $i => $category) { 
+                                        <?php
+                                        $cell_num=0;
+                                        foreach($categories as $i => $category) {
                                             if(empty($category['sub'])) continue;
                                             if(empty($products_catsorted[$category['id']]['sub'])) continue;
                                         ?>
@@ -68,7 +70,18 @@
                                                         <span><?php echo $category['name']; ?></span>
                                                 </a>
                                         </li>
-                                        <? } ?>
+                                        <?
+                                        $cell_num++;
+                                        echo $cell_num."!!!";
+                                        }
+                                        $addon_cell=$cell_num%4;
+                                        echo $addon_cell;
+                                        while($addon_cell<4){
+                                            echo "<li></li>";
+                                            $addon_cell++;
+                                        }
+
+                                        ?>
 				</ul>
 			</div>
 			<!--         -->

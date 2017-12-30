@@ -45,9 +45,9 @@
                             </div>
                             <input type="hidden" class="product_price" value="<?php if(!empty($product['special'])) echo (int)$product['special']; else echo (int)$product['price']; ?>">
                             <?php if(empty($product['weight_variants'])) { ?>
-                                <div class="m-product_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo (int)$product['price']; ?> руб</div>
+                        <div class="m-product_price"><div class="m-product_price_shadow"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo (int)$product['price']; ?> руб</div></div>
                             <?php } else { ?>
-                                <div class="m-product_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                        <div class="m-product_price"><div class="m-product_price_shadow"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div></div>
                             <?php } ?>
                     </div>
                     <?php if($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
