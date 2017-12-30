@@ -153,6 +153,10 @@ class Customer {
 	public function getNewsletter() {
 		return $this->newsletter;
 	}
+        
+        public function setNewsletter($newsletter) {
+		return $this->db->query("UPDATE ".DB_PREFIX."customer SET newsletter = ".(int)$newsletter." WHERE customer_id = ".(int)$this->customer_id);
+	}
 
 	public function getAddressId() {
 		return $this->address_id;

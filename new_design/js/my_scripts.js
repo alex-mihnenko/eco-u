@@ -1381,11 +1381,13 @@
                 $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
                 return false;
             } 
+            var newsletter = $('#myId1').prop('checked') ? 1 : 0;
             $.post('/?route=ajax/index/ajaxSetCustomerData', {
                 addresses: addresses,
                 firstname: firstname,
                 telephone: telephone,
-                email: email
+                email: email,
+                newsletter: newsletter
             }, function(msg){
                 if(msg.status == 'success') {
                     msg.dadata.forEach(function(item, i, arr){

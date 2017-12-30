@@ -63,7 +63,7 @@
                                                                 <div class="f-p_plus"></div>
                                                         </div>
                                                         <div class="f-p_chek">
-                                                                <input type="checkbox" id="myId1" name="myName1" checked="">
+                                                            <input type="checkbox" id="myId1" name="myName1" <?php if($newsletter) { ?>checked=""<?php } ?>>
                                                             <label for="myId1">
                                                                 <span class="pseudo-checkbox"></span>
                                                                 <span class="label-text">Я согласен получать информацию о специальных предложениях</span>

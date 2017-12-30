@@ -106,6 +106,11 @@ class ControllerAccountAccount extends Controller {
                 $customer_id = $this->session->data['customer_id'];
                 $data['orders'] = Array();
                 $data['customer'] = Array();
+                if($this->customer->getNewsletter() == 1) {
+                    $data['newsletter'] = true;
+                } else {
+                    $data['newsletter'] = false;
+                }
                 if(!empty($customer_id)) {
                     $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
                     

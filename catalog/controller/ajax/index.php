@@ -697,7 +697,7 @@ class ControllerAjaxIndex extends Controller {
       $this->customer->setFirstName($arRequest['firstname']);
       $this->customer->setTelephone($arRequest['telephone']);
       $this->customer->setEmail($arRequest['email']);
-      
+      if(isset($arRequest['newsletter'])) $this->customer->setNewsletter($arRequest['newsletter']);
       $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
   }
   
