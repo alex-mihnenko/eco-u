@@ -43,6 +43,7 @@
         $.get('/?route=ajax/index/ajaxRemoveAddress', {address_id: tElement}, function(msg){
             if(msg.status == 'success') {
                 $('.f-p_address_container[data-index="'+tElement+'"]').remove();
+                $('.f-p_address_remove').eq($('.f-p_address_remove').length-1).addClass('last');
             }
         }, 'json');
     });
@@ -698,6 +699,7 @@
 	/*  */
 	/** dynamic input **/
 	$('.f-p_plus').click(function() {
+                $('.f-p_address_remove').removeClass('last');
 		$('<input type="text" data-name="customer_address" data-target-id="0" class="f-p_input" name="dynamic[]" placeholder="Адрес Доставки" />').fadeIn('slow').appendTo('.f-p_box2');
 	});
 	/** END dynamic input **/

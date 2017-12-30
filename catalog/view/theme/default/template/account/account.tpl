@@ -53,10 +53,11 @@
                                                                 <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
                                                         </div>
                                                         <div class="f-p_box2">
-                                                                <?php foreach($customer['addresses'] as $address) { ?>
+                                                                <?php $lastAddress = count($customer['addresses'])-1;
+                                                                foreach($customer['addresses'] as $i => $address) { ?>
                                                                 <div class="f-p_address_container" data-index="<?php echo $address['address_id']; ?>">
-                                                                    <div class="f-p_address_remove" data-target="<?php echo $address['address_id']; ?>">&times;</div>
-                                                                    <input type="text" name="dynamic[]" data-name="customer_address" data-target-id="<?php echo $address['address_id']; ?>" placeholder="Адрес Доставки" value="<?php echo $address['value']; ?>" class="f-p_input" style="padding-left:55px;">
+                                                                    <div class="f-p_address_remove <?php if($i == $lastAddress) { ?>last<?php } ?>" data-target="<?php echo $address['address_id']; ?>">&times;</div>
+                                                                    <input type="text" name="dynamic[]" data-name="customer_address" data-target-id="<?php echo $address['address_id']; ?>" placeholder="Адрес Доставки" value="<?php echo $address['value']; ?>" class="f-p_input">
                                                                 </div>
                                                                 <?php } ?>
                                                                 <div class="f-p_plus"></div>

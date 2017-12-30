@@ -17,15 +17,17 @@
 .f-p_address_remove {
     position:absolute;
     top:0;
-    left:0;
+    right:0;
     height:45px;
     width:45px;
-    background-color:#f17e46;
     font-size:30px;
     line-height:45px;
-    color:#fff;
+    color:#aaa;
     text-align:center;
     cursor:pointer;
+}
+.f-p_address_remove.last {
+    right:45px;
 }
 .f-p_address_container {
     position:relative;
