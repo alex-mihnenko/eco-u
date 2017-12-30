@@ -50,7 +50,15 @@
                                                                 <input type="text" data-name="customer_telephone" placeholder="Телефон" value="<?php echo $customer['telephone']; ?>" class="f-p_input" id="phone">
                                                         </div>
                                                         <div class="f-p_box">
-                                                                <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
+                                                                <?php
+                                                                $re = '/[0-9]+@eco-u.ru/';
+                                                                if(1 === preg_match_all($re, $customer['email'], $matches, PREG_SET_ORDER, 0)) {
+                                                                ?>
+                                                                    <input type="hidden" data-name="customer_email_virtual" value="<?php echo $customer['email']; ?>" class="f-p_input">
+                                                                    <input type="text" data-name="customer_email" placeholder="EMAIL" value="" class="f-p_input">
+                                                                <? } else { ?>
+                                                                    <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
+                                                                <? } ?>
                                                         </div>
                                                         <div class="f-p_box2">
                                                                 <?php $lastAddress = count($customer['addresses'])-1;

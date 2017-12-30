@@ -1377,10 +1377,15 @@
             var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
             var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
             var email = $('input[data-name="customer_email"].f-p_input').val();
-            if($('#myId1').prop('checked') && !email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) {
+            var email_hidden = $('input[data-name="customer_email_virtual"].f-p_input').val();
+            if($('#myId1').prop('checked') && (!email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) || email.match(/^[0-9]+\@eco\-u\.ru/i)) {
                 $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
                 return false;
             } 
+            if(email_hidden && email == '') {
+                email = email_hidden;
+                console.log(email);
+            }
             var newsletter = $('#myId1').prop('checked') ? 1 : 0;
             $.post('/?route=ajax/index/ajaxSetCustomerData', {
                 addresses: addresses,
