@@ -1384,7 +1384,6 @@
             } 
             if(email_hidden && email == '') {
                 email = email_hidden;
-                console.log(email);
             }
             var newsletter = $('#myId1').prop('checked') ? 1 : 0;
             $.post('/?route=ajax/index/ajaxSetCustomerData', {

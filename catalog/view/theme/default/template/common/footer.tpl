@@ -51,5 +51,6 @@
                 <script src="/new_design/js/clamp.min.js"></script>
                 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/js/jquery.suggestions.min.js"></script>
 		<script src="/new_design/js/my_scripts.js"></script>
+                <script src="/new_design/js/jquery.cookie.js"></script>
 	</body>
 </html>
