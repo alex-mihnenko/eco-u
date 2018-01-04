@@ -1662,11 +1662,11 @@
         
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
             var yPos = $.cookie('cYpos');
-            if($.cookie('cYblk')) $('.'+$.cookie('cYblk')).click(function(){
-                setTimeout(function(){
+            if($.cookie('cYblk')) {
+                $('.'+$.cookie('cYblk')).click(function(){
                     $(document).scrollTop(yPos);
-                }, 500, yPos);
-            });
+                });
+            }
             $('.'+$.cookie('cYblk')).click();
         }
         
