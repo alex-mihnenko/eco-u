@@ -1661,7 +1661,7 @@
         InitSuggestions();
         
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
-            if($.cookie('cYblk')) $($.cookie('cYblk')).click();
+            if($.cookie('cYblk')) $('.'+$.cookie('cYblk')).click();
             $(document).scrollTop($.cookie('cYpos'));
         }
         
