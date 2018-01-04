@@ -1665,7 +1665,6 @@
             if($.cookie('cYblk')) {
                 $(document).scrollTop(yPos);
             }
-            $('.'+$.cookie('cYblk')).click();
         }
         
         setTimeout(function(){
