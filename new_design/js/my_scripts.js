@@ -1660,7 +1660,7 @@
         }
         InitSuggestions();
         
-        $(window).unload(function() {
+        $(window).scroll(function() {
             $.cookie('cYpos', $(document).scrollTop(), { expires: 1 });
             $.cookie('cYloc', location.pathname, { expires: 1 });
         });
