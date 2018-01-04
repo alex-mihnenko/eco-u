@@ -1661,10 +1661,11 @@
         InitSuggestions();
         
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
+            var yPos = $.cookie('cYpos');
             if($.cookie('cYblk')) $('.'+$.cookie('cYblk')).click(function(){
                 setTimeout(function(){
-                    $(document).scrollTop($.cookie('cYpos'));
-                }, 500);
+                    $(document).scrollTop(yPos);
+                }, 500, yPos);
             });
             $('.'+$.cookie('cYblk')).click();
         }
