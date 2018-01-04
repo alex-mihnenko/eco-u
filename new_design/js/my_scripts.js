@@ -1659,4 +1659,13 @@
             });
         }
         InitSuggestions();
+        
+        $(window).unload(function() {
+            $.cookie('cYpos', $(document).scrollTop(), { expires: 1 });
+            $.cookie('cYloc', location.pathname, { expires: 1 });
+        });
+        
+        if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
+            $(document).scrollTop($.cookie('cYpos'));
+        }
 });
