@@ -358,6 +358,7 @@ class ModelCatalogProduct extends Model {
             if(!empty($category_id)) {
                 $nInclude = implode(', ', $not_include);
                 $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY pn.name LIMIT 0, 10000";
+                echo $sql;
                 $query = $this->db->query($sql);
                 foreach($query->rows as $i => $row) {
                     $product = $this->getProduct($row['product_id']);
