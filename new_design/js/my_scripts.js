@@ -1663,8 +1663,10 @@
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
             var yPos = $.cookie('cYpos');
             if($.cookie('cYblk')) {
-                $('.'+$.cookie('cYblk')).click(function(){
-                    $(document).scrollTop(yPos);
+                $('.'+$.cookie('cYblk')).click(function(e){
+                    setTimeout(function(){
+                        $(document).scrollTop(yPos);
+                    }, 500);
                 });
             }
             $('.'+$.cookie('cYblk')).click();
