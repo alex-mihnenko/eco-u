@@ -1660,14 +1660,14 @@
         }
         InitSuggestions();
         
+        if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
+            if($.cookie('cYblk')) $($.cookie('cYblk')).click();
+            $(document).scrollTop($.cookie('cYpos'));
+        }
+        
         $(window).scroll(function() {
             $.cookie('cYpos', $(document).scrollTop(), { expires: 1 });
             $.cookie('cYloc', location.pathname, { expires: 1 });
             $.cookie('cYblc', $('.tabs__catalog li.active')[0].classList[0], { expires: 1 });
         });
-        
-        if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
-            if($.cookie('cYblk')) $($.cookie('cYblk')).click();
-            $(document).scrollTop($.cookie('cYpos'));
-        }
 });
