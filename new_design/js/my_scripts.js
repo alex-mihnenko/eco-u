@@ -1663,11 +1663,7 @@
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
             var yPos = $.cookie('cYpos');
             if($.cookie('cYblk')) {
-                $('.'+$.cookie('cYblk')).on("click", function(e){
-                    setTimeout(function(){
-                        $(document).scrollTop(yPos);
-                    }, 500);
-                });
+                $(document).scrollTop(yPos);
             }
             $('.'+$.cookie('cYblk')).click();
         }
