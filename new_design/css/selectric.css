@@ -541,8 +541,8 @@
 		border-radius: 8px;
 	}
 	.selectric .label {
-		height: 16px;
-		line-height: 16px;
+		height: 16px !important;
+		line-height: 16px !important;
 		font-size: 8px;
 		padding: 0 8px 0 7px;
 	}
