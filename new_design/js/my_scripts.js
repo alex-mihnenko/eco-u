@@ -1666,15 +1666,19 @@
                 yBlk = $.cookie('cYblk'),
                 yLnk = $.cookie('cYlnk');
             if(yPos && yLnk && yBlk) { 
+                if(yLnk != 0) {
+                    $('.qwe2').hide();
+                }
+                if(yLnk == 1)
+                    $('.all-l_a2')show();
+                }
                 $('.tabs__catalog li').removeClass('active');
                 $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
 
                 $('.tabs__catalog li').eq(yLnk).addClass('active');
                 $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
 
-                $('.tabs__block.active').animate({opacity:'1'}, function(){
-                    $('.tabs__block.active').click();
-                });
+                $('.tabs__block.active').animate({opacity:'1'});
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
                 $(document).scrollTop(yPos);
