@@ -1680,7 +1680,9 @@
 
                 $('.tabs__block.active').animate({opacity:'1'}, function(){
                     $(document).scrollTop(yPos);
-                    $(window).scroll();
+                    setTimeout(function(){
+                        $(window).scroll();
+                    }, 100);
                 });
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
