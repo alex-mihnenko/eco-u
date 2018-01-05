@@ -1666,10 +1666,10 @@
                 yBlk = $.cookie('cYblk'),
                 yLnk = $.cookie('cYlnk');
             $('.tabs__catalog li').removeClass('active');
-            $('section.fond-catalog div.tabs__block').removeClass('active');
+            $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
             
             $('.tabs__catalog li').eq(yLnk).addClass('active');
-            $('section.fond-catalog div.tabs__block').eq(yBlk).addClass('active').css('opacity', '1');
+            $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
             if($.cookie('cYblk')) {
                 $(document).scrollTop(yPos);
             }
