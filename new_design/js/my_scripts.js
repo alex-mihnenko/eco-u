@@ -1669,7 +1669,7 @@
                 if(yLnk != 0) {
                     $('.qwe2').hide();
                 }
-                if(yLnk == 1)
+                if(yLnk == 1) {
                     $('.all-l_a2')show();
                 }
                 $('.tabs__catalog li').removeClass('active');
