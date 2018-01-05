@@ -1678,11 +1678,12 @@
                 $('.tabs__catalog li').eq(yLnk).addClass('active');
                 $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
 
-                $('.tabs__block.active').animate({opacity:'1'});
+                $('.tabs__block.active').animate({opacity:'1'}, function(){
+                    $(document).scrollTop(yPos);
+                    $(window).scroll();
+                });
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
-                $(document).scrollTop(yPos);
-                $(window).scroll();
             }
         }
         
