@@ -1682,7 +1682,7 @@
                     $(document).scrollTop(yPos);
                     setTimeout(function(){
                         $(window).scroll();
-                    }, 100);
+                    }, 500);
                 });
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
