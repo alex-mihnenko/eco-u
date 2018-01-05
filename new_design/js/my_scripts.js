@@ -1672,6 +1672,9 @@
                 if(yLnk == 1) {
                     $('.all-l_a2').show();
                 }
+                if(yLnk == 2) {
+                    checkWidth0();
+                }
                 $('.tabs__catalog li').removeClass('active');
                 $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
 
@@ -1682,7 +1685,6 @@
                     $(document).scrollTop(yPos);
                 });
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
-                
             }
         }
         
