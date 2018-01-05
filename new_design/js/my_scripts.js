@@ -1665,12 +1665,16 @@
             var yPos = $.cookie('cYpos'),
                 yBlk = $.cookie('cYblk'),
                 yLnk = $.cookie('cYlnk');
-            $('.tabs__catalog li').removeClass('active');
-            $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
-            
-            $('.tabs__catalog li').eq(yLnk).addClass('active');
-            $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
-            if($.cookie('cYblk')) {
+            if(yPos && yLnk && yBlk) { 
+                $('.tabs__catalog li').removeClass('active');
+                $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
+
+                $('.tabs__catalog li').eq(yLnk).addClass('active');
+                $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
+
+                $('.tabs__block.active').animate({opacity:'1'});
+                $('.tabs__block:not(.active)').animate({opacity:'0'});
+                
                 $(document).scrollTop(yPos);
             }
         }
