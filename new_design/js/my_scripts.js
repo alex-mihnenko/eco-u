@@ -1667,11 +1667,7 @@
                 yLnk = $.cookie('cYlnk');
             if(yPos && yLnk && yBlk) { 
                 if(yLnk != 0) {
-                    $('.qwe2').hide();
                     $('.tabs__catalog li').eq(yLnk).click();
-                }
-                if(yLnk == 1) {
-                    $('.all-l_a2').show();
                 }
                 
                 $('.tabs__catalog li').removeClass('active');
