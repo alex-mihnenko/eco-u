@@ -1670,7 +1670,7 @@
                     $('.qwe2').hide();
                 }
                 if(yLnk == 1) {
-                    $('.all-l_a2')show();
+                    $('.all-l_a2').show();
                 }
                 $('.tabs__catalog li').removeClass('active');
                 $('section.fond-catalog div.tabs__block').css('opacity', '0').removeClass('active');
