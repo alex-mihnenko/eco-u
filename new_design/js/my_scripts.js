@@ -1662,7 +1662,14 @@
         InitSuggestions();
         
         if($.cookie('cYloc') == location.pathname && $.cookie('cYpos')) {
-            var yPos = $.cookie('cYpos');
+            var yPos = $.cookie('cYpos'),
+                yBlk = $.cookie('cYblk'),
+                yLnk = $.cookie('cYlnk');
+            $('.tabs__catalog li').removeClass('active');
+            $('section.fond-catalog div.tabs__block').removeClass('active');
+            
+            $('.tabs__catalog li').eq(yLnk).addClass('active');
+            $('section.fond-catalog div.tabs__block').eq(yBlk).addClass('active');
             if($.cookie('cYblk')) {
                 $(document).scrollTop(yPos);
             }
@@ -1672,7 +1679,8 @@
             $(window).scroll(function() {
                 $.cookie('cYpos', $(document).scrollTop(), { expires: 1 });
                 $.cookie('cYloc', location.pathname, { expires: 1 });
-                $.cookie('cYblk', $('.tabs__catalog li.active')[0].classList[0], { expires: 1 });
+                $.cookie('cYlnk', $('.tabs__catalog li.active').index(), { expires: 1 });
+                $.cookie('cYblk', $('section.fond-catalog div.tabs__block.active').index('.tabs__block'), { expires: 1 });
             });
         }, 500);
 });
