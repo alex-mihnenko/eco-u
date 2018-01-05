@@ -1672,7 +1672,9 @@
                 $('.tabs__catalog li').eq(yLnk).addClass('active');
                 $('section.fond-catalog div.tabs__block').eq(yBlk).css('opacity', '1').addClass('active');
 
-                $('.tabs__block.active').animate({opacity:'1'});
+                $('.tabs__block.active').animate({opacity:'1'}, function(){
+                    $('.tabs__block.active').click();
+                });
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
                 $(document).scrollTop(yPos);
