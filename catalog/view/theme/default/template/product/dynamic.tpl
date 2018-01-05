@@ -1,7 +1,7 @@
 <?php foreach($products as $key => $product) { 
     if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue;
 ?>
-<li>
+<li data-type="dynamic">
     <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
             <meta itemprop="position" content="<?php echo $key; ?>" />
             <div class="box-p_o">
