@@ -1682,6 +1682,7 @@
                 $('.tabs__block:not(.active)').animate({opacity:'0'});
                 
                 $(document).scrollTop(yPos);
+                $(window).scroll();
             }
         }
         
