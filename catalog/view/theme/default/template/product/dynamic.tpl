@@ -6,7 +6,7 @@
             <meta itemprop="position" content="<?php echo $key; ?>" />
             <div class="box-p_o">
                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
-                   <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
+                   <a href="<?php echo $product['href']; ?>" class="p-o_thumb" target="_blank">
                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                     </a>
                     <div class="p-o_block">
@@ -15,7 +15,7 @@
                         <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                             <div class="p-o_link">
                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                    <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a> 
+                                    <a href="<?php echo $product['href']; ?>" itemprop="url" target="_blank"><?php echo $product['name']; ?></a> 
                                     <?php if($is_admin) {?><a target="_blank" href="<?php echo $product['edit_link']; ?>" class="btn btn-default admin-product-edit"><i class="fa fa-edit"></i></a><?php } ?>
                             </div>
                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
