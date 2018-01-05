@@ -1669,7 +1669,7 @@
             $('section.fond-catalog div.tabs__block').removeClass('active');
             
             $('.tabs__catalog li').eq(yLnk).addClass('active');
-            $('section.fond-catalog div.tabs__block').eq(yBlk).addClass('active');
+            $('section.fond-catalog div.tabs__block').eq(yBlk).addClass('active').css('opacity', '1');
             if($.cookie('cYblk')) {
                 $(document).scrollTop(yPos);
             }
