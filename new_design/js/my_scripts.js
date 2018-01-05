@@ -1090,6 +1090,7 @@
                 pElement.append(products);
                 InitClamp('.p-o_link a, .p-o_short-descr');
                 initDropDown();
+                BindAddToCartEvents(pElement);
             });
         });
         function BindAddToCartEvents(block) {
