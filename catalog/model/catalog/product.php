@@ -597,7 +597,7 @@ class ModelCatalogProduct extends Model {
 	}
 
         public function getTotalCategoryProducts($category_id) {
-            $slq = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id = (SELECT pc.product_id FROM ".DB_PREFIX."product_to_category pc WHERE pc.category_id = ".(int)$category_id.")";
+            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id = (SELECT pc.product_id FROM ".DB_PREFIX."product_to_category pc WHERE pc.category_id = ".(int)$category_id.")";
             $query = $this->db->query($sql);
             if(isset($query->row['total'])) {
                 return (int)$query->row['total'];
@@ -607,7 +607,7 @@ class ModelCatalogProduct extends Model {
         }
         
         public function getTotalLiteralProducts($literal) {
-            $slq = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id = (SELECT pc.product_id FROM ".DB_PREFIX."product_description pc WHERE pc.name LIKE '".$this->db->escape($literal)."%')";
+            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id = (SELECT pc.product_id FROM ".DB_PREFIX."product_description pc WHERE pc.name LIKE '".$this->db->escape($literal)."%')";
             $query = $this->db->query($sql);
             if(isset($query->row['total'])) {
                 return (int)$query->row['total'];
