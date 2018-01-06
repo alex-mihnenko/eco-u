@@ -267,8 +267,7 @@ class ControllerProductCategory extends Controller {
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
                                 if(!isset($data['alphabetCount'][$alphabetSort])) {
-                                    $data['alphabetCount'][$alphabetSort] = getTotalLiteralProducts($alphabetSort);
-                                    var_dump($data['alphabetCount'][$alphabetSort]);
+                                    $data['alphabetCount'][$alphabetSort] = $this->model_catalog_product->getTotalLiteralProducts($alphabetSort);
                                 }
                                 
                                 if($special) {
