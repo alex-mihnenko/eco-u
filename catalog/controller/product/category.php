@@ -21,7 +21,6 @@ class ControllerProductCategory extends Controller {
                 }
                 
                 $data['alphabetCount'] = array();
-                var_dump($data);
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
 		} else {
@@ -267,7 +266,10 @@ class ControllerProductCategory extends Controller {
                                 // Сортировка по алфавиту
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
-                                if(!isset($data['alphabetCount'][$alphabetSort])) $data['alphabetCount'][$alphabetSort] = getTotalLiteralProducts($alphabetSort);
+                                if(!isset($data['alphabetCount'][$alphabetSort])) {
+                                    $data['alphabetCount'][$alphabetSort] = getTotalLiteralProducts($alphabetSort);
+                                    var_dump($data['alphabetCount'][$alphabetSort]);
+                                }
                                 
                                 if($special) {
                                     if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
