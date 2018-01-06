@@ -200,7 +200,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['products'] = array();
 
-                        $limit = 10000;
+                        $limit = 5;
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
