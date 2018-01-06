@@ -200,7 +200,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['products'] = array();
 
-                        $limit = 5;
+                        $limit = 10000;
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
@@ -229,6 +229,14 @@ class ControllerProductCategory extends Controller {
                         }
                         
                         if($catSortTime < time() - $cacheInterval) foreach($results as $result) {
+                                // Сортировка по алфавиту
+                                $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
+                                if(count($data['alphabetCount'][$alphabetSort]) >= 5) continue;
+                                if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
+                                if(!isset($data['alphabetCount'][$alphabetSort])) {
+                                    $data['alphabetCount'][$alphabetSort] = $this->model_catalog_product->getTotalLiteralProducts($alphabetSort);
+                                }
+                            
                                 if(($result['quantity'] <= 0 && $result['stock_status_id'] == 5) || $result['status'] != 1) {
                                     continue;
                                 }
@@ -262,13 +270,6 @@ class ControllerProductCategory extends Controller {
 				} else {
 					$rating = false;
 				}
-                                
-                                // Сортировка по алфавиту
-                                $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
-                                if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
-                                if(!isset($data['alphabetCount'][$alphabetSort])) {
-                                    $data['alphabetCount'][$alphabetSort] = $this->model_catalog_product->getTotalLiteralProducts($alphabetSort);
-                                }
                                 
                                 if($special) {
                                     if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
@@ -342,6 +343,7 @@ class ControllerProductCategory extends Controller {
                             
                             foreach($category_middle['sub'] as $category) {
                                 $subcat_filter_data = $filter_data;
+                                $subcat_filter_data['limit'] = 5;
                                 $subcat_filter_data['filter_category_id'] = $category['id'];
                                 $subcat_results = $this->model_catalog_product->getProducts($subcat_filter_data);
                                 foreach ($subcat_results as $result) {
