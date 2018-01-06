@@ -1,7 +1,6 @@
 <?php
 class ControllerProductCategory extends Controller {
 	public function index() {
-            error_reporting(E_ALL);
 		$this->load->language('product/category');
 
 		$this->load->model('catalog/category');
@@ -328,7 +327,7 @@ class ControllerProductCategory extends Controller {
                                 $data['products'][] = $arProducts;
 			}
                         natsort($data['alphabet_list']);
-                        
+                        var_dump($data['alphabetCount']);
                         // Сортировка по категориям
                         $iCount = 0;
                         if($catSortTime < time() - $cacheInterval) foreach($data['categories'] as $category_middle)
