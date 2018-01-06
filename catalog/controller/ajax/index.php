@@ -489,11 +489,11 @@ class ControllerAjaxIndex extends Controller {
         } else {
             if(isset($this->session->data['personal_discount'])) {
                 $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
-                $personalPercentage = (int)$this->session->data['personal_discount'];
+                if($this->session->data['personal_discount'] <= 10) $personalPercentage = (int)$this->session->data['personal_discount'];
             } else $personalDiscount = 0;
             $coupon = $this->customer->getCouponDiscount();
             $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
-            $couponPercentage = $coupon['discount'];
+            if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
             if($couponDiscount > $personalDiscount) {
                 $data['coupon_discount'] = $couponDiscount;
                 $data['discount_percentage'] = $couponPercentage;
