@@ -250,7 +250,7 @@
                                                                                 </li>
                                                                                 <? } ?>
 									</ul>
-                                                                        <div class="show-more" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($alphabetCount[$letter]-5); ?> продуктов</div>
 								</div>
                                                             <?php } ?>
                                                         </div>
@@ -266,7 +266,7 @@
                                                             foreach($categories as $category) { 
                                                                 foreach($category['sub'] as $subcategory) {
                                                                     if(!isset($products_catsorted[$category['id']]['sub'][$subcategory['id']])) continue;
-                                                                    $lCount = count($products_catsorted[$category['id']]['sub'][$subcategory['id']]);
+                                                                    $lCount = (int)$subcategory['total'];
                                                                     ?>
                                                                     <div id="l-p_<?php echo $category['id'] ?>" class="rel">
                                                                         <?php if(!empty($subcategory['image'])) { ?><div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div><?php } ?>

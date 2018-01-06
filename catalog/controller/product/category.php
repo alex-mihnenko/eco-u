@@ -20,6 +20,8 @@ class ControllerProductCategory extends Controller {
                     $data['is_admin'] = false;
                 }
                 
+                $data['alphabetCount'] = array();
+                
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
 		} else {
@@ -177,7 +179,8 @@ class ControllerProductCategory extends Controller {
                                             'id' => $result3['category_id'],
                                             'name' => $result3['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
                                             'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result3['category_id'] . $url),
-                                            'image' => $result3['image']
+                                            'image' => $result3['image'],
+                                            'total' => $this->model_catalog_product->getTotalCategoryProducts($result3['category_id'])
                                     );
                                 }
                                 
@@ -264,7 +267,8 @@ class ControllerProductCategory extends Controller {
                                 // Сортировка по алфавиту
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
-                               
+                                if(!isset($data['alphabetCount'][$alphabetSort])) $data['alphabetCount'][$alphabetSort] = getTotalLiteralProducts($alphabetSort);
+                                
                                 if($special) {
                                     if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
                                     else $discount_sticker = 0;
