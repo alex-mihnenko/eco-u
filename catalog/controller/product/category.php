@@ -231,7 +231,7 @@ class ControllerProductCategory extends Controller {
                         if($catSortTime < time() - $cacheInterval) foreach($results as $result) {
                                 // Сортировка по алфавиту
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
-                                if(isset($data['alphabetCount'][$alphabetSort]) && count($data['alphabetCount'][$alphabetSort]) >= 5) continue;
+                                //if(isset($data['alphabetCount'][$alphabetSort]) && count($data['alphabetCount'][$alphabetSort]) >= 5) continue;
                                 if(!in_array($alphabetSort, $data['alphabet_list'])) $data['alphabet_list'][] = $alphabetSort;
                                 if(!isset($data['alphabetCount'][$alphabetSort])) {
                                     $data['alphabetCount'][$alphabetSort] = $this->model_catalog_product->getTotalLiteralProducts($alphabetSort);
