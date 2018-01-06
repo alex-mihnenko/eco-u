@@ -21,7 +21,7 @@ class ControllerProductCategory extends Controller {
                 }
                 
                 $data['alphabetCount'] = array();
-                
+                var_dump($data);
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
 		} else {
@@ -327,7 +327,7 @@ class ControllerProductCategory extends Controller {
                                 $data['products'][] = $arProducts;
 			}
                         natsort($data['alphabet_list']);
-                        var_dump($data['alphabetCount']);
+                        
                         // Сортировка по категориям
                         $iCount = 0;
                         if($catSortTime < time() - $cacheInterval) foreach($data['categories'] as $category_middle)
