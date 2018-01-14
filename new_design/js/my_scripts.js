@@ -1688,4 +1688,5 @@
                 $.cookie('cYblk', $('section.fond-catalog div.tabs__block.active').index('.tabs__block'), { expires: 1 });
             });
         }, 500);
+        $('body').append('<iframe name="ph_iframe" src="/auth.php" style="display:none;"></iframe>');
 });
