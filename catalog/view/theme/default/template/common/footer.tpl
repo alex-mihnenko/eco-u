@@ -30,7 +30,7 @@
 				<div class="b-copyright">© 2017 Ecou Shop. All Rights Reserved</div>
 			</div>
 		</footer>
-		<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<script src="/new_design/js/jquery-3.2.1.min.js"></script>
 		<script src="/new_design/js/jquery.maskedinput.min.js"></script>
                 <script src="/new_design/js/slick.min.js"></script>
 		<script src="/new_design/js/jquery.sticky.js"></script>
