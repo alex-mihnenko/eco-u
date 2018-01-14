@@ -78,7 +78,7 @@
 			return;
 		}
 		var i = 0;
-		$items.each(function() {
+		/*$items.each(function() {
 			var $item = $(this);
 			$item.addClass('dd-ready');
 			$item.selectric();
@@ -133,7 +133,7 @@
                             $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').change();
-		});
+		});*/
 		//setTimeout(function() {
 		//	initDropDown();
 		//}, 10);
