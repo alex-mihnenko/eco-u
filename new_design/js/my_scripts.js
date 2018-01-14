@@ -79,9 +79,6 @@
 		}
 		var i = 0;
 		$items.each(function() {
-			if(i == 1) {
-				return false;
-			}
 			var $item = $(this);
 			$item.addClass('dd-ready');
 			$item.selectric();
@@ -137,9 +134,9 @@
                         });
                         $item.parents('.c-p_select').find('select').change();
 		});
-		setTimeout(function() {
-				initDropDown();
-			}, 10);
+		//setTimeout(function() {
+		//	initDropDown();
+		//}, 10);
 	}
 	initDropDown();
         
