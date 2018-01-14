@@ -101,7 +101,6 @@
 						</div>
 					</div>
 				</div>-->
-                                <iframe name="ph_iframe" src="/auth.php" style="display:none;"></iframe>
 				<div class="tabs__content active">
 					<div class="t-c_box">
 						<form class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
