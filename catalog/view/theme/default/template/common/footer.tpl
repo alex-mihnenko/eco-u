@@ -30,27 +30,5 @@
 				<div class="b-copyright">© 2017 Ecou Shop. All Rights Reserved</div>
 			</div>
 		</footer>
-		<script src="/new_design/js/jquery-3.2.1.min.js"></script>
-		<script src="/new_design/js/jquery.maskedinput.min.js"></script>
-                <script src="/new_design/js/slick.min.js"></script>
-		<script src="/new_design/js/jquery.sticky.js"></script>
-		<script src="/new_design/js/remodal.min.js"></script>
-		<!--<script src="js/jquery.dd.min.js"></script>-->
-		<script src="/new_design/js/ddscrollspy.js"></script>
-		<script src="/new_design/js/jquery.selectric.js"></script>
-		<script src="/new_design/js/jquery.columnizer.js"></script>
-		<script src="/new_design/js/jquery.liTabs.js"></script>
-		<script src="/new_design/js/jquery-ui.min.js"></script>
-		<script src="/new_design/js/datepicker-ru.js"></script>
-		<script src="/new_design/js/Sticky-kit.js"></script>
-		<!--<script src="js/sticky.min.js"></script>-->
-		<!--<script src="/new_design/js/masked-input.js"></script>-->
-		<script src="/new_design/js/placeholders.min.js"></script>
-		<script src="/new_design/js/dragend.min.js"></script>
-                <script src="/new_design/js/styling.js"></script>
-                <script src="/new_design/js/clamp.min.js"></script>
-                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/js/jquery.suggestions.min.js"></script>
-		<script src="/new_design/js/my_scripts.js"></script>
-                <script src="/new_design/js/jquery.cookie.js"></script>
 	</body>
 </html>
