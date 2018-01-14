@@ -78,7 +78,11 @@
 			return;
 		}
 		var i = 0;
-		/*$items.each(function() {
+		$items.each(function() {
+                        i++;
+                        if(i == 5) {
+                            return false;
+                        }
 			var $item = $(this);
 			$item.addClass('dd-ready');
 			$item.selectric();
@@ -133,10 +137,10 @@
                             $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').change();
-		});*/
-		//setTimeout(function() {
-		//	initDropDown();
-		//}, 10);
+		});
+		setTimeout(function() {
+			initDropDown();
+		}, 10);
 	}
 	initDropDown();
         
