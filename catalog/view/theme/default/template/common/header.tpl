@@ -17,28 +17,6 @@
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />
-        <script src="/new_design/js/jquery-3.2.1.min.js"></script>
-        <script src="/new_design/js/jquery.maskedinput.min.js"></script>
-        <script src="/new_design/js/slick.min.js"></script>
-        <script src="/new_design/js/jquery.sticky.js"></script>
-        <script src="/new_design/js/remodal.min.js"></script>
-        <!--<script src="js/jquery.dd.min.js"></script>-->
-        <script src="/new_design/js/ddscrollspy.js"></script>
-        <script src="/new_design/js/jquery.selectric.js"></script>
-        <script src="/new_design/js/jquery.columnizer.js"></script>
-        <script src="/new_design/js/jquery.liTabs.js"></script>
-        <script src="/new_design/js/jquery-ui.min.js"></script>
-        <script src="/new_design/js/datepicker-ru.js"></script>
-        <script src="/new_design/js/Sticky-kit.js"></script>
-        <!--<script src="js/sticky.min.js"></script>-->
-        <!--<script src="/new_design/js/masked-input.js"></script>-->
-        <script src="/new_design/js/placeholders.min.js"></script>
-        <script src="/new_design/js/dragend.min.js"></script>
-        <script src="/new_design/js/styling.js"></script>
-        <script src="/new_design/js/clamp.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/js/jquery.suggestions.min.js"></script>
-        <script src="/new_design/js/my_scripts.js"></script>
-        <script src="/new_design/js/jquery.cookie.js"></script>
     </head>
     <body>
         	<div class="wreaper">
