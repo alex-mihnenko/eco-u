@@ -2659,9 +2659,9 @@ footer {
 	background: #EEEEEE;
 	box-sizing: border-box;
 	font-family: 'Roboto', sans-serif;
-	font-size: 12px;
-	font-weight: 500;
-	color: #B2B2B2;
+	font-size: 14px;
+	font-weight: normal;
+	color: #666;
 	border: none;
 	outline: none;
 	box-sizing: border-box;
@@ -4199,9 +4199,9 @@ footer {
     outline: none;
     border: none;
     resize: none;
-    color: #b2b2b2;
-    font-size: 12px;
-    font-weight: 700;
+    color: #666;
+    font-size: 14px;
+    font-weight: normal;
     text-align: center;
     box-sizing: border-box;
     padding: 10px;
@@ -4285,7 +4285,7 @@ footer {
 	outline: none;
 	border: none;
 	resize: none;
-	color: #b2b2b2;
+	color: #666;
 	font-size: 14px;
 	font-weight: normal;
 	text-align: center;
