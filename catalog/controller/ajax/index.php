@@ -253,7 +253,11 @@ class ControllerAjaxIndex extends Controller {
         $data['store_id'] = $this->config->get('config_store_id');
         $data['store_name'] = $this->config->get('config_name');
         $data['store_url'] = $this->config->get('config_url');
-        $data['customer_id'] = $this->session->data['customer_id'];
+        if(isset($this->session->data['customer_id'])) {
+            $data['customer_id'] = $this->session->data['customer_id'];
+        } else {
+            $data['customer_id'] = null;
+        }
         $data['customer_group_id'] = $this->customer->getGroupId();
         $data['firstname'] = $this->customer->getFirstName();
         $data['lastname'] = $this->customer->getLastName();
