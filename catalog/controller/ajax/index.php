@@ -256,7 +256,7 @@ class ControllerAjaxIndex extends Controller {
         if(isset($this->session->data['customer_id'])) {
             $data['customer_id'] = $this->session->data['customer_id'];
         } else {
-            $data['customer_id'] = null;
+            $data['customer_id'] = $this->customer->getId();
         }
         $data['customer_group_id'] = $this->customer->getGroupId();
         $data['firstname'] = $this->customer->getFirstName();
