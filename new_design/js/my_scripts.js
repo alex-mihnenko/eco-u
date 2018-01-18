@@ -281,10 +281,10 @@
 			highlightclass: "selected",
 			scrolltopoffset: -160,
 		}); 
-		$('.list-tabs2').ddscrollSpy({
-			highlightclass: "selected3",
-			scrolltopoffset: -160,
-		});
+//		$('.list-tabs2').ddscrollSpy({
+//			highlightclass: "selected3",
+//			scrolltopoffset: -160,
+//		});
 	});
 	/*** ***/
 	$('.tabs__catalog li.modal8').on( 'click', function(){
@@ -321,16 +321,16 @@
 			$(window).scrollTop(distanceTop);
 		}, 50, distanceTop);
 	});
-
+        
 	
-	$('.list-products').ddscrollSpy({
-		highlightclass: "selected2",
-		scrolltopoffset: -185,
-	});
-	$('.list-alphabetic').ddscrollSpy({
-		highlightclass: "selected",
-		scrolltopoffset: -200,
-	}); 
+//	$('.list-products').ddscrollSpy({
+//		highlightclass: "selected2",
+//		scrolltopoffset: -185,
+//	});
+//	$('.list-alphabetic').ddscrollSpy({
+//		highlightclass: "selected",
+//		scrolltopoffset: -200,
+//	}); 
 	var $window2 = $(window);
     var checkWidthTabs = function() {
         var windowsize = $window2.width();
@@ -1163,7 +1163,7 @@
                 var totalPositions = 0;
                 $('.cart-container').html('');
                 msg.products.forEach(function(product, i, arr){
-                    if(product.weight_variants != '') {
+                    if(product.weight_variants !== '') {
                         var weightVariants = product.weight_variants.split(',');
                         var weightVariant = weightVariants[product.weight_variant];
                         var wwLabel = '('+weightVariants[product.weight_variant]+' '+product.weight_class+')';
@@ -1175,7 +1175,7 @@
                         '<div class="b-p_close" data-href="'+product.link_remove+'"></div>' +
                         '<a href="#" class="b-p_link" title="'+product.name+' '+wwLabel+'">'+product.name+' '+wwLabel+'</a>'+
                         '<div class="b-p_amount">'+Math.round(product.quantity/weightVariant)+' шт</div>'+
-                        '<div class="b-p_quantity">'+Math.floor(product.price)+'р</div>'+
+                        '<div class="b-p_quantity">'+Math.floor(product.price * weightVariant)+'р</div>'+
                     '</div>';
                     $('.cart-container').append(productHTML);
                     totalPrice += product.total;

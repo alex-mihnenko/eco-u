@@ -18,30 +18,37 @@ class Customer {
 		$this->session = $registry->get('session');
 
 		if (isset($this->session->data['customer_id'])) {
-			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND status = '1'");
-
-			if ($customer_query->num_rows) {
-				$this->customer_id = $customer_query->row['customer_id'];
-				$this->firstname = $customer_query->row['firstname'];
-				$this->lastname = $customer_query->row['lastname'];
-				$this->customer_group_id = $customer_query->row['customer_group_id'];
-				$this->email = $customer_query->row['email'];
-				$this->telephone = $customer_query->row['telephone'];
-				$this->fax = $customer_query->row['fax'];
-				$this->newsletter = $customer_query->row['newsletter'];
-				$this->address_id = $customer_query->row['address_id'];
-
-				$this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
-
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
-
-				if (!$query->num_rows) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "customer_ip SET customer_id = '" . (int)$this->session->data['customer_id'] . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
-				}
-			} else {
-				$this->logout();
-			}
+                        $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND status = '1'");
+                } elseif (!empty($this->request->cookie['cid']) && !empty($this->request->cookie['cto'])) {
+                        $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer "
+                                . "WHERE customer_id = '" . (int)$this->request->cookie['cid'] . "' "
+                                . "AND MD5(CONCAT(customer_id, `password`)) = '" . $this->db->escape($this->request->cookie['cto']) . "' "
+                                . "AND status = '1'");
 		}
+
+                if (isset($customer_query) && $customer_query->num_rows) {
+                        $this->customer_id = $customer_query->row['customer_id'];
+                        $this->firstname = $customer_query->row['firstname'];
+                        $this->lastname = $customer_query->row['lastname'];
+                        $this->customer_group_id = $customer_query->row['customer_group_id'];
+                        $this->email = $customer_query->row['email'];
+                        $this->telephone = $customer_query->row['telephone'];
+                        $this->fax = $customer_query->row['fax'];
+                        $this->newsletter = $customer_query->row['newsletter'];
+                        $this->address_id = $customer_query->row['address_id'];
+                        
+                        $this->session->data['customer_id'] = $this->customer_id;
+
+                        $this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+
+                        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
+
+                        if (!$query->num_rows) {
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_ip SET customer_id = '" . (int)$this->session->data['customer_id'] . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
+                        }
+                } elseif(isset($customer_query)) {
+                        $this->logout();
+                }
 	}
 
 	public function login($email, $password, $override = false) {
@@ -65,6 +72,8 @@ class Customer {
 			$this->address_id = $customer_query->row['address_id'];
 
 			$this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+                        
+                        $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
 
 			return true;
 		} else {
@@ -98,6 +107,8 @@ class Customer {
                         
                         $sid = $this->session->session_id;
                         $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
+                        
+                        $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
 			return true;
 		} else {
 			return false;
@@ -116,7 +127,20 @@ class Customer {
 		$this->fax = '';
 		$this->newsletter = '';
 		$this->address_id = '';
+                
+                $this->setLoginCookies(0, '');
 	}
+        
+        private function setLoginCookies($customer_id, $password) {
+                $token = '';
+                if($customer_id && $password) {
+                        $token = md5($customer_id . $password);
+                } else {
+                        $customer_id = '';
+                }
+                setcookie('cid', $customer_id, time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST']);
+                setcookie('cto', $token, time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST']);
+        }
 
 	public function isLogged() {
 		return $this->customer_id;

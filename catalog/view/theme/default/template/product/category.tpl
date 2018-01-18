@@ -264,11 +264,12 @@
 							<div class="container">
                                                             <?php
                                                             foreach($categories as $category) { 
-                                                                foreach($category['sub'] as $subcategory) {
+                                                                ?><div id="l-p_<?php echo $category['id'] ?>"><?php
+                                                                foreach($category['sub'] as $sub_index => $subcategory) {
                                                                     if(!isset($products_catsorted[$category['id']]['sub'][$subcategory['id']])) continue;
                                                                     $lCount = (int)$subcategory['total'];
                                                                     ?>
-                                                                    <div id="l-p_<?php echo $category['id'] ?>" class="rel">
+                                                                    <div id="l-p_<?php echo $category['id'] . ('_' . $sub_index) ?>" class="rel">
                                                                         <?php if(!empty($subcategory['image'])) { ?><div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div><?php } ?>
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter">
@@ -369,7 +370,7 @@
 									</ul>
                                                                         <div class="show-more" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
 								</div>
-                                                                <?php }} ?>
+                                                                <?php } ?></div><?php } ?>
 							</div>
 						</div>
 					</div>

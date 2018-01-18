@@ -320,7 +320,28 @@ if (!Array.prototype.filter){
 					if (cantscrollpastindex == -1 && offsetbottom > (spyscrollheight - spyheight)){ // determine index of first target which can't be scrolled past
 						cantscrollpastindex = i
 					}
-					targets.push( {$menuitem: $item, $des: $target, offsettop: targetoffset, height: targetheight, $progress: $progress, index: i} )
+					targets.push( {
+                                            $menuitem: $item, 
+                                            $des: $target, 
+                                            get offsettop() {
+                                                var val = (o.spytarget == window)? this.$des.offset().top : (this.$des.get(0).offsetParent == o.spytarget)? this.$des.get(0).offsetTop : this.$des.get(0).offsetTop - o.spytarget.offsetTop
+                                                val += o.scrolltopoffset;
+                                                return val;
+                                            }, 
+                                            get height() {
+                                                var targetheight = ( parseInt(this.$des.data('spyrange')) > 0 )? parseInt(this.$des.data('spyrange')) : ( this.$des.outerHeight() || o.mincontentheight);
+                                                return targetheight;
+                                            }, 
+                                            $progress: $progress, 
+                                            index: i} )
+//					var targetoffset = (o.spytarget == window)? $target.offset().top : (target.offsetParent == o.spytarget)? target.offsetTop : target.offsetTop - o.spytarget.offsetTop
+//					targetoffset +=  o.scrolltopoffset
+//					var targetheight = ( parseInt($target.data('spyrange')) > 0 )? parseInt($target.data('spyrange')) : ( $target.outerHeight() || o.mincontentheight)
+//					var offsetbottom = targetoffset + targetheight
+//					if (cantscrollpastindex == -1 && offsetbottom > (spyscrollheight - spyheight)){ // determine index of first target which can't be scrolled past
+//						cantscrollpastindex = i
+//					}
+//					targets.push( {$menuitem: $item, $des: $target, offsettop: targetoffset, height: targetheight, $progress: $progress, index: i} )
 				})
 				if (targets.length > 0)
 					totaltargetsheight = targets[targets.length-1].offsettop + targets[targets.length-1].height
@@ -365,6 +386,7 @@ if (!Array.prototype.filter){
 						if (!elem_click_z24 && $('.all-l_a2 ul li a.selected2').length) {
 							$magicLine3 = $(".magic-line3");
 							$el7 = $('.all-l_a2 ul li a.selected2');//curtarget.$menuitem;
+//                                                        console.log($el7);
 							leftPos3 = $el7.position().top;
 							newWidth3 = $el7.parent().width();
 							$magicLine3
