@@ -1,8 +1,9 @@
 .htaccess
+robots.txt
 /config.php
 admin/config.php
 
 download/
 image/
-system/cache/
-system/logs/
+system/storage/cache/
+system/storage/logs/
