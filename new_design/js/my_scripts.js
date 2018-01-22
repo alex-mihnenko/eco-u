@@ -273,14 +273,14 @@
 		checkWidth0();
 		$(window).resize(checkWidth0);
 
-		$('.list-products').ddscrollSpy({
-			highlightclass: "selected2",
-			scrolltopoffset: -160,
-		});
-		$('.list-alphabetic').ddscrollSpy({
-			highlightclass: "selected",
-			scrolltopoffset: -160,
-		}); 
+//		$('.list-products').ddscrollSpy({
+//			highlightclass: "selected2",
+//			scrolltopoffset: -160,
+//		});
+//		$('.list-alphabetic').ddscrollSpy({
+//			highlightclass: "selected",
+//			scrolltopoffset: -160,
+//		}); 
 //		$('.list-tabs2').ddscrollSpy({
 //			highlightclass: "selected3",
 //			scrolltopoffset: -160,
@@ -291,7 +291,9 @@
 		
 		if(!$(this).hasClass('active')) {
 			setTimeout(function() {
-				$('.list-alphabetic li:first-child a').trigger('click');
+                                var $element = $('.list-alphabetic li a.selected').length ? $('.list-alphabetic li a.selected') : $('.list-alphabetic li:first-child a');
+				$element.trigger('click');
+//				$('.list-alphabetic li:first-child a').trigger('click');
 			}, 100);
 			
 		} else {
@@ -303,7 +305,9 @@
 
 		if(!$(this).hasClass('active')) {
 			setTimeout(function() {
-			$('.list-products li:first-child a').trigger('click');
+                                var $element = $('.list-products li a.selected2').length ? $('.list-products li a.selected2') : $('.list-products li:first-child a');
+				$element.trigger('click');
+//			$('.list-products li:first-child a').trigger('click');
 			}, 100);
 			
 		} else {
@@ -323,14 +327,14 @@
 	});
         
 	
-//	$('.list-products').ddscrollSpy({
-//		highlightclass: "selected2",
-//		scrolltopoffset: -185,
-//	});
-//	$('.list-alphabetic').ddscrollSpy({
-//		highlightclass: "selected",
-//		scrolltopoffset: -200,
-//	}); 
+	$('.list-products').ddscrollSpy({
+		highlightclass: "selected2",
+		scrolltopoffset: -185,
+	});
+	$('.list-alphabetic').ddscrollSpy({
+		highlightclass: "selected",
+		scrolltopoffset: -200,
+	}); 
 	var $window2 = $(window);
     var checkWidthTabs = function() {
         var windowsize = $window2.width();
@@ -834,7 +838,7 @@
 				if ($magicLine5.length) {
 					$magicLine5
 						.width($("li .cur").width())
-						.css("left", $("li a").position().left)
+						.css("left", $("li a.cur").position().left)
 						.data("origLeft", $magicLine5.position().left)
 						.data("origWidth", $magicLine5.width());
 					$(".t_wrap_2 li").find("a").click(function() {
@@ -1175,7 +1179,7 @@
                         '<div class="b-p_close" data-href="'+product.link_remove+'"></div>' +
                         '<a href="#" class="b-p_link" title="'+product.name+' '+wwLabel+'">'+product.name+' '+wwLabel+'</a>'+
                         '<div class="b-p_amount">'+Math.round(product.quantity/weightVariant)+' шт</div>'+
-                        '<div class="b-p_quantity">'+Math.floor(product.price * weightVariant)+'р</div>'+
+                        '<div class="b-p_quantity">'+Math.floor(product.total)+'р</div>'+
                     '</div>';
                     $('.cart-container').append(productHTML);
                     totalPrice += product.total;
@@ -1304,10 +1308,12 @@
             var delivery_price = 0;
             var order_id = parseInt($('.field_order_id').html());
             var payment_method = '';
+            var payment_method_online = 0;
             if($('#d').prop('checked')) {
                 payment_method = 'Оплата при получении';
             } else {
                 payment_method = 'Оплата на сайте';
+                payment_method_online = 1;
             }
             if($('.block-delivery-price').css('display') == 'none') {
                 // Вывод стоимости доставки
@@ -1349,14 +1355,19 @@
                         date: date,
                         time: time,
                         payment_method: payment_method,
+                        payment_method_online: payment_method_online,
                         telephone: $('#phone2').val()
                     }, function(msg){
                         btn.find('.ajax-loader').hide();
                         btn.css('font-size', '');
-                        if(msg.status == 'success') {
+                        if(msg.redirect !== undefined) {
+                            document.location = msg.redirect;
+                        } else if(msg.status == 'success') {
                             $('.liTabs_2').find('li:nth-child(2) a').css('pointer-events', 'none');
                             $('.liTabs_2').find('li:nth-child(3) a').css('pointer-events', 'auto');
                             $('.liTabs_2').find('li:nth-child(3) a').click();
+                        } else if(msg.error !== undefined) {
+                            alert(msg.error);
                         }
                     }, "json");
                 }

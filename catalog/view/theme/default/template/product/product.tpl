@@ -8,6 +8,7 @@
 <section class="fond-white">
         <div class="width-1194 pd-29">
                 <div style="height:70px"></div>
+                <a class="btn-close-tab" onclick="window.close()"></a>
                 <!--<ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
                         <?php foreach($breadcrumbs as $i => $item) { 
                             if($i < count($breadcrumbs) - 1) { ?>

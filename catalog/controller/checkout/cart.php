@@ -16,6 +16,15 @@ class ControllerCheckoutCart extends Controller {
                 {
                     $data['is_admin'] = false;
                 }
+                
+                if(!empty($this->session->data['success_order_id'])) {
+                        $success_order_id = $this->session->data['success_order_id'];
+                        unset($this->session->data['success_order_id']);
+                } else {
+                        $success_order_id = 0;
+                }
+                
+                $data['success_order_id'] = $success_order_id;
 
 		$data['breadcrumbs'] = array();
 

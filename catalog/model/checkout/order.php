@@ -811,7 +811,7 @@ class ModelCheckoutOrder extends Model {
 		}
 	}
         
-        public function setDelivery($order_id, $customer_id, $data) {
+        public function setDelivery($order_id, $customer_id, $data, $new_order_status = 1) {
             $order_data = $this->getOrder($order_id);
             $order_data['payment_address_1'] = $data['address'];
             $order_data['comment'] = $data['comment'];
@@ -843,7 +843,7 @@ class ModelCheckoutOrder extends Model {
                             $order_data['shipping_address_1'] = $data['address'];
                             
                             @$this->editOrder($order_id, $order_data);
-                            $this->addOrderHistory($order_id, 1);
+                            $this->addOrderHistory($order_id, $new_order_status);
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$quote['quote'][$delivery_type]['title']}', '{$quote['quote'][$delivery_type]['cost']}', '{$quote['sort_order']}')");
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data['total']}', '1')");
                             $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];

@@ -448,6 +448,7 @@ class ControllerAjaxIndex extends Controller {
       $comment = $this->request->post['comment'];
       $order_id = $this->request->post['order_id'];
       $payment_method = $this->request->post['payment_method'];
+      $payment_method_online = $this->request->post['payment_method_online'];
       $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
       $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
       $customer_id = (int)$this->customer->getId();
@@ -513,18 +514,23 @@ class ControllerAjaxIndex extends Controller {
       
       $this->load->model('checkout/order');
       
-      if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data)) {
+      if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
           // Добавление адреса доставки в список адресов клиента
           if($address_new == 'true') $this->customer->setAddress(0, $address);
           // Очистка корзины
           $this->cart->clear();
           if($is_guest) $this->customer->logout();
           $this->cart->clear();
+          if($payment_method_online) {
+              $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
+              echo json_encode($results);
+          } else {
           // Отправка sms        
             $this->load->model('sms/confirmation');
             $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
             $this->model_sms_confirmation->sendSMS($telephone, $message);
-          echo json_encode(Array('status' => 'success'));
+            echo json_encode(Array('status' => 'success'));
+          }
       } else {
           if($is_guest) $this->customer->logout();
           echo json_encode(Array('status' => 'error'));

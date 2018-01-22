@@ -7,7 +7,7 @@
 				<div class=""> 
 					<ul class="liTabs_2 t_wrap t_wrap_2">
 						<li class="t_item t_item_2">
-					    	<a class="t_link t_link_2 cur" href="#">
+					    	<a class="t_link t_link_2 <?php if(!$success_order_id) { ?>cur<?php } ?>" href="#">
 					    		<span class="t-l_round"></span>
 					    		<span class="t-l_txt">Корзина</span>
 					    	</a>
@@ -223,7 +223,7 @@
 					    	</div>
 					    </li>
 					    <li class="t_item t_item_2">
-					    	<a class="t_link t_link_2" href="#">
+					    	<a class="t_link t_link_2 <?php if($success_order_id) { ?>cur<?php } ?>" href="#">
 					    		<span class="t-l_round"></span>
 					    		<span class="t-l_txt">Заказ <br>принят</span>
 					    	</a>
@@ -338,4 +338,11 @@
 				</div>
 			</section>
 			<!-- Favorite Products -->
+<?php if($success_order_id) { ?>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        $('.field_order_id').html(<?php echo $success_order_id; ?>);
+    });
+</script>
+<?php } ?>
 <?php echo $footer; ?>

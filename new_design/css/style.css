@@ -3038,6 +3038,9 @@ footer {
 	margin-top: -14px;
 	left: 0;
 }
+.o-a_text.chackout_failure:before {
+	background: none;
+}
 .o-a_number {
 	display: inline-block;
 	font-size: 24px;
@@ -3794,16 +3797,24 @@ footer {
 	font-weight: 500;
 	color: #B6BBC5;
 }
+a.btn-close-tab, 
 .table-b_close {
 	width: 24px;
 	height: 24px;
 	background: url(../img/img_close_3.png) no-repeat;
 	position: absolute;
+	cursor: pointer;
+}
+div.table-b_close {
 	top: 50%;
 	margin-top: -12px;
 	left: -49px;
-	cursor: pointer;
 }
+a.btn-close-tab {
+	top: 24px;
+	right: 48px;
+}
+a.btn-close-tab:hover,
 .table-b_close:hover {
 	background-position: 0 -24px;
 }
