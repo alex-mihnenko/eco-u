@@ -78,32 +78,57 @@ class ControllerExtensionPaymentRbs extends Controller {
             die('Illegal Access');
         }
 
+        $log_file = DIR_CACHE . 'rbs.txt';
+        if(file_exists($log_file)) {
+            unlink($log_file);
+        }
+        $this->logRbs("Start");
+        
         $this->load->model('checkout/order');
         $order_number = 0;
+        $this->logRbs("1");
         if(isset($this->session->data['payment_order_id'])) {
             $order_number = $this->session->data['payment_order_id'];
+            $this->logRbs("2");
         }
+        $this->logRbs("3");
         $order_info = $this->model_checkout_order->getOrder($order_number);
-
+        $this->logRbs("4");
+        $this->logRbs(print_r($order_info, true));
         if ($order_info) {
+            $this->logRbs("5");
             $this->initializeRbs();
-
+            $this->logRbs("6");
+            
             $response = $this->rbs->get_order_status($orderId);
+            $this->logRbs("7");
+            $this->logRbs(print_r($response, true));
             if(($response['errorCode'] == 0) && (($response['orderStatus'] == 1) || ($response['orderStatus'] == 2))) {
 //                $this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_order_status_id'));
+                $this->logRbs("8");
                 $this->model_checkout_order->addOrderHistory($order_number, 1);
-
+                $this->logRbs("9");
+                
                 $this->load->model('sms/confirmation');
                 $message = str_replace('[REPLACE]', $order_number, $this->config->get('config_sms_order_new_text'));
                 $this->model_sms_confirmation->sendSMS($$order_info['telephone'], $message);
+                $this->logRbs("10");
                 
 //                $this->response->redirect($this->url->link('checkout/success', '', true));
                 $this->session->data['success_order_id'] = $order_number;
+                $this->logRbs("11");
                 $this->response->redirect($this->url->link('checkout/cart', '', true));
             } else {
+                $this->logRbs("12");
                 $this->response->redirect($this->url->link('checkout/failure', '', true));
             }
         }
+        $this->logRbs("Finish");
+    }
+    
+    function logRbs($text) {
+        $log_file = DIR_CACHE . 'rbs.txt';
+        file_put_contents($log_file, $text . "\n", FILE_APPEND);
     }
 
     /**
