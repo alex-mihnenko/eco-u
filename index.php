@@ -1,13 +1,6 @@
 <?php
 // Version
 define('VERSION', '2.3.0.2');
-ini_set("error_reporting",E_ALL & ~E_NOTICE);
-ini_set("display_errors",1);
-ini_set("error_log","");
-function errPrint(){
-    print_r(error_get_last());
-}
-register_shutdown_function("errPrint");
 
 if(in_array($_SERVER['REQUEST_URI'], Array('/', '/index.php'))) 
 {
