@@ -4372,6 +4372,60 @@ a.btn-close-tab:hover,
     overflow:hidden;
     text-overflow: ellipsis;
 }
+
+.article_bg{
+	background-color: #1DC116;
+	background-image: url('../img/fruits_art_bg.jpg');
+}
+.article{
+	margin-left: 15%;
+	margin-right: 15%;
+	padding: 150px 5% 100px 5%;
+	font-size: 16px;
+	line-height: 24px;
+	color: #333;
+	background-color: #fff;
+}
+
+.article h1 {
+	font-weight: 500;
+	font-size: 36px;
+	color: #374047;
+	text-align: center;
+	padding-bottom: 30px;
+}
+
+.article h2 {
+	font-weight: 500;
+	font-size: 24px;
+	color: #374047;
+	padding-bottom: 30px;
+}
+
+.article h3 {
+	font-weight: 500;
+	font-size: 18px;
+	color: #374047;
+	padding-bottom: 30px;
+}
+
+.article p {
+	box-sizing: border-box;
+	text-align: left;
+	padding-bottom: 30px;
+}
+
+.article ul {
+	padding-bottom: 30px;
+	padding: 0 10% 0 10%
+}
+
+.article ul li {
+	list-style: disc;
+}
+
+
+
 @media screen and (max-width: 1919px) {
 	/* 1680 */
 }
