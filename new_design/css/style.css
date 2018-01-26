@@ -4375,11 +4375,12 @@ a.btn-close-tab:hover,
 
 .article_bg{
 	background-image: url('../img/fruits_art_bg.jpg');
+    padding: 0 0 100px 0;
 }
 .article{
 	margin-left: 15%;
 	margin-right: 15%;
-	padding: 150px 5% 100px 5%;
+	padding: 150px 5% 40px 5%;
 	font-size: 16px;
 	line-height: 24px;
 	color: #333;
