@@ -891,7 +891,7 @@
         $('select#delivery_address').change(function(){
             if($(this).val() == 0) {
                 $(this).parents('.selectric-wrapper').remove();
-                $('.delivery-address').html('<input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">');
+                //$('.delivery-address').html('<input type="text" id="delivery_address" value="" placeholder="Новый адрес доставки">');
                 InitSuggestions();
                 $('input#delivery_address').keydown(function(){
                     $('.block-delivery-price').hide();
