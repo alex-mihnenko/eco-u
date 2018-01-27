@@ -91,6 +91,7 @@ class ControllerExtensionPaymentRbs extends Controller {
             if(($response['errorCode'] == 0) && (($response['orderStatus'] == 1) || ($response['orderStatus'] == 2))) {
 //                $this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_order_status_id'));
                 $this->model_checkout_order->addOrderHistory($order_number, 1);
+                $this->model_checkout_order->setPayment($order_number, 'bank-card');
                 
                 $this->load->model('sms/confirmation');
                 $message = str_replace('[REPLACE]', $order_number, $this->config->get('config_sms_order_new_text'));

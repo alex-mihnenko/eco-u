@@ -46,6 +46,10 @@ class ModelCheckoutOrder extends Model {
 		return $order_id;
 	}
 
+        public function setPayment($order_id, $code) {
+            $query = $this->db->query("UPDATE ".DB_PREFIX."order SET payment_code = '".$this->db->escape($code)."' WHERE order_id = '".(int)$oder_id."'");
+        }
+        
 	public function editOrder($order_id, $data) {
 		// Void the order first
 		$this->addOrderHistory($order_id, 0);
