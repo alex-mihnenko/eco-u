@@ -382,7 +382,7 @@
                                                         <?php 
                                                             $letter = '';
                                                             foreach($products_tagsorted as $tag) { 
-                                                                $new_letter = mb_strtoupper(mb_substr($tag, 0, 1);
+                                                                $new_letter = mb_strtoupper(mb_substr($tag, 0, 1));
                                                                 if($new_letter != $letter) {
                                                         ?>
                                                             </div><div class="no-pictures">
