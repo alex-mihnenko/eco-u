@@ -1308,6 +1308,7 @@
             var delivery_price = 0;
             var order_id = parseInt($('.field_order_id').html());
             var payment_method = '';
+            var payment_code = '';
             var payment_method_online = 0;
             if($('#d').prop('checked')) {
                 payment_method = 'Оплата при получении';
