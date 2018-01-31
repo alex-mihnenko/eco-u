@@ -6,6 +6,9 @@
 
 // Aug 1st, 14': Updated to v1.2, which supports showing a progress bar inside each menu item (except in iOS devices). Other minor improvements.
 
+var DDScrollAnimation = 'linear';//'swing';
+var DDScrollAnimationTime = 250;//500;
+
 $('.qwe').on('DOMMouseScroll mousewheel', function(ev) {
     var $this = $(this),
         scrollTop = this.scrollTop,
@@ -74,17 +77,17 @@ var AlphabeticScrollerProto = function() {
                         currentLetter = $('.list-alphabetic a.selected').parent().index();
                     }
                     if(currentLetter <= midLetter) {
-                        $scroller.stop().animate({scrollTop:0}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:0}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     } else if(currentLetter >= (letterTotal - midLetter)) {
                         var scrollHeight = letterHeight * (letterTotal - midLetter);
-                        $scroller.stop().animate({scrollTop:scrollHeight}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:scrollHeight}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     } else {
                         var scrollHeight = letterHeight * (currentLetter - midLetter);
-                        $scroller.stop().animate({scrollTop:scrollHeight}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:scrollHeight}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     }
@@ -157,17 +160,17 @@ var CatalogScrollerProto = function() {
                         currentLetter = $('.list-products a.selected2').parent().index();
                     }
                     if(currentLetter <= midLetter) {
-                        $scroller.stop().animate({scrollTop:0}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:0}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     } else if(currentLetter >= (letterTotal - midLetter)) {
                         var scrollHeight = letterHeight * (letterTotal - midLetter);
-                        $scroller.stop().animate({scrollTop:scrollHeight}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:scrollHeight}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     } else {
                         var scrollHeight = letterHeight * (currentLetter - midLetter);
-                        $scroller.stop().animate({scrollTop:scrollHeight}, 500, 'swing', function() { 
+                        $scroller.stop().animate({scrollTop:scrollHeight}, DDScrollAnimationTime, DDScrollAnimation, function() { 
 
                         });
                     }
@@ -237,7 +240,7 @@ if (!Array.prototype.filter){
 		spytarget: window,
 		scrolltopoffset: 115,
 		scrollbehavior: 'smooth',
-		scrollduration: 500,
+		scrollduration: DDScrollAnimationTime,
 		highlightclass: 'selected',
 		enableprogress: '',
 		mincontentheight: 40

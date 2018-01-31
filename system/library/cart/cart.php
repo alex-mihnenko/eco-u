@@ -251,6 +251,7 @@ class Cart {
 					'model'           => $product_query->row['model'],
 					'shipping'        => $product_query->row['shipping'],
 					'image'           => $product_query->row['image'],
+					'image_preview'   => $product_query->row['image_preview'],
 					'option'          => $option_data,
 					'download'        => $download_data,
 					'quantity'        => $cart['quantity'],

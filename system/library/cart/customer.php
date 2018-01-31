@@ -81,10 +81,12 @@ class Customer {
 		}
 	}
         
-        public function loginByPhone($phone, $password, $override = false) {
+        public function loginByPhone($phone, $password, $override = false, &$ban_to = false) {
                 $phone = str_replace(Array('(', ')', '+', ' ', '-'), '', $phone);
 		if($override) {
                     $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND status = '1' AND approved = '1'");
+                } elseif($ban_to = $this->isBan()) {
+                        return false;
                 } else {
                     $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
                 }
@@ -104,16 +106,55 @@ class Customer {
 			if(!$override) {
                             $this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
                         }
-                        
-                        $sid = $this->session->session_id;
-                        $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
+                        $this->clearBan();
+//                        $sid = $this->session->session_id;
+//                        $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
                         
                         $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
 			return true;
 		} else {
+                        $this->doBan();
 			return false;
 		}
 	}
+        
+        private function isBan() {
+                $ip = $this->request->server['REMOTE_ADDR'];
+                
+                $query = $this->db->query("SELECT date_locked, NOW() AS date_current FROM `" . DB_PREFIX . "ban` "
+                        . "WHERE `ip` = '" . $this->db->escape($ip) . "' AND date_locked > NOW()");
+                if($query->num_rows) {
+                    $now = strtotime($query->row['date_current']);
+                    $to = strtotime($query->row['date_locked']);
+                    $diff = $to - $now;
+                    $diff /= 60;
+                    $left = ceil($diff);
+                } else {
+                    $left = 0;
+                }
+                return  $left;
+        }
+
+        private function doBan() {
+                $ip = $this->request->server['REMOTE_ADDR'];
+                
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "ban` "
+                        . "WHERE `ip` = '" . $this->db->escape($ip) . "' AND date_locked < NOW() AND try_count >= 5");
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "ban` "
+                        . "SET `ip` = '" . $this->db->escape($ip) . "', try_count = 1 "
+                        . "ON DUPLICATE KEY "
+                        . "UPDATE try_count = try_count + 1");
+                $this->db->query("UPDATE `" . DB_PREFIX . "ban` "
+                        . "SET date_locked = DATE_ADD(NOW(), INTERVAL 15 MINUTE) "
+                        . "WHERE `ip` = '" . $this->db->escape($ip) . "' "
+                        . "AND try_count >= 5");
+        }
+        
+        private function clearBan() {
+                $ip = $this->request->server['REMOTE_ADDR'];
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "ban` "
+                        . "WHERE `ip` = '" . $this->db->escape($ip) . "'");
+        }
 
 	public function logout() {
 		unset($this->session->data['customer_id']);

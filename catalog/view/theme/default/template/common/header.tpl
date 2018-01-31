@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="/new_design/css/selectric.css">
         <link rel="stylesheet" href="/new_design/css/slick.css">
         <link rel="stylesheet" href="/new_design/css/jquery-ui.css">
+        <link rel="stylesheet" href="/new_design/css/jquery.jscrollpane.css">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />
@@ -28,7 +29,7 @@
 							<div class="hidden-menu">
                                                                 <?php foreach($categories as $category) { ?>
                                                                     <a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a>
-                                                                <? } ?>
+                                                                <?php } ?>
 							</div>
 						</div>
 					</div>
@@ -43,17 +44,19 @@
 					<div class="h-box_right">
                                            
 						<div class="all-b_basket">
+							<!--
 							<a href="/cart" class="b-basket_mobile"> 
 								<div class="b-b_price"></span></div>
 								<div class="b-b_quantity">0</div>
 							</a>
-							
-                                                        <a href="/cart">
-                                                            <div class="b-basket">
-                                                                <div class="b-b_price"></div>
-                                                                <div class="b-b_quantity">0</div>
-                                                            </div>
-                                                        </a>
+							-->
+                            
+                            <div class="b-basket" data-remodal-target="modal-basket">
+                                <div class="b-b_price"></div>
+                                <div class="b-b_quantity">0</div> 
+                            </div>
+                                                        <?php echo $cart; ?>
+                            <!--
 							<div class="hidden-basket">
 								<div class="h-b_box">
 									<div class="h-b_title">Корзина</div>
@@ -64,13 +67,15 @@
 										<a href="/cart" class="h-b_buy">Купить (<span class="cart-price-total">0</span> руб)</a>
 									</div>
 								</div>
-                                                                <a href="/cart"><div style="width:40px;height:40px;position:absolute;top:0px;right:93px;"></div></a>
+                                <a href="/cart"><div style="width:40px;height:40px;position:absolute;top:0px;right:93px;"></div></a>
 							</div>
+							-->
+
 						</div>
 						<?php if(!$customer_id) { ?>
                                                     <div class="b-profile" data-remodal-target="modal">Войти</div>
                                                 <?php } else { ?>
-                                                    <a href="/my-account"><div class="b-profile"><?php if(!empty($customer_firstname)) echo $customer_firstname; else { ?> Личный кабинет <? } ?></div></a>
+                                                    <a href="/my-account"><div class="b-profile"><?php if(!empty($customer_firstname)) echo $customer_firstname; else { ?> Личный кабинет <?php } ?></div></a>
                                                 <?php } ?>
 					</div>
 				</div>
@@ -113,7 +118,7 @@
 								<input id="password3" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" class="input i-2">
 								<span class="underline"></span>
 							</div>
-                                                        <div class="login-wrong" style="padding-bottom:1em;">Неверный телефон или пароль.</div>
+                                                        <div class="login-wrong" data-wrong-text="Неверный телефон или пароль." style="padding-bottom:1em;">Неверный телефон или пароль.</div>
 							<input type="submit" value="Войти" class="m-p_entrance">
 							<div>
 								<div class="m-p_forgot">Напомнить пароль?</div>

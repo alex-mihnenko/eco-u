@@ -13,7 +13,7 @@
                                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                     </a>
                                     <div class="p-o_block">
-                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
+                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><?php } ?>
                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
                                         <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                                             <div class="p-o_link">
@@ -29,7 +29,7 @@
                                                             <select name="tech" class="tech">
                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                    <? } ?>
+                                                                    <?php } ?>
                                                             </select> 
                                                         <?php } else { ?>
                                                             <select name="tech" class="tech">
@@ -37,7 +37,7 @@
                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                    <? } ?>
+                                                                    <?php } ?>
                                                             </select> 
                                                         <?php } ?>
                                                     </div>
@@ -58,7 +58,7 @@
                                                             <select name="tech" class="tech">
                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                    <? } ?>
+                                                                    <?php } ?>
                                                             </select> 
                                                         <?php } else { ?>
                                                             <select name="tech" class="tech">
@@ -66,7 +66,7 @@
                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                    <? } ?>
+                                                                    <?php } ?>
                                                             </select> 
                                                         <?php } ?>
                                                     </div>
@@ -86,7 +86,7 @@
                                     </div>
                             </div>
                     </div>
-                        <? } ?>
+                        <?php } ?>
                 </div>
         </div>
 </section>

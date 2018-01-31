@@ -214,8 +214,17 @@
   font-size: 12px;
   line-height: 20px;
   min-height: 20px;
+  max-height: 100px;
 }
-
+.list-letter.list-modal .selectric-items ul {
+  max-height: 70px;
+}
+.list-letter.list-modal .selectric .label {
+	font-size: 14px;
+	padding: 0 15px 0 10px;
+	height: 31px;
+	line-height: 31px;
+}
 .selectric-items li {
   display: block;
   font-size: 15px;
@@ -226,7 +235,10 @@
   width: 100%;
   box-sizing: border-box;
 }
-
+.list-letter.list-modal .selectric-items li {
+    font-size: 13px;
+    padding: 0px 5px 0px 14px;
+}
 .selectric-items li.selected {
   background: #D5D5D5;
   color: #858585;

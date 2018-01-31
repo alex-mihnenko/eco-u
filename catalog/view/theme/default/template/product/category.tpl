@@ -70,7 +70,7 @@
                                                         <span><?php echo $category['name']; ?></span>
                                                 </a>
                                         </li>
-                                        <?
+                                        <?php
                                         $cell_num++;
                                         echo $cell_num."!!!";
                                         }
@@ -133,7 +133,7 @@
 										<span><?php echo $category['name']; ?></span>
 									</a>
 								</li>
-                                                                <? } ?>
+                                                                <?php } ?>
                                                                 <li class="magic-line3"></li>
 							</ul>
 						</div>
@@ -154,7 +154,7 @@
                                                             ?>
                                                                 <div id="letter_<?php echo $lCode; ?>" class="rel">
 									<div class="big-letter"><?php echo $letter; ?></div>
-									<ul class="list-letter">
+									<ul class="list-letter ll-open">
 										<?php 
                                                                                 $iCount = 0;
                                                                                 foreach($products_asorted[$letter] as $key => $product) {
@@ -174,7 +174,7 @@
                                                                                                             <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
-                                                                                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
+                                                                                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><?php } ?>
                                                                                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
                                                                                                         <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                                                                                                             <div class="p-o_link">
@@ -190,7 +190,7 @@
                                                                                                                             <select name="tech" class="tech">
                                                                                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } else { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -198,7 +198,7 @@
                                                                                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } ?>
                                                                                                                     </div>
@@ -219,7 +219,7 @@
                                                                                                                             <select name="tech" class="tech">
                                                                                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } else { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -227,7 +227,7 @@
                                                                                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } ?>
                                                                                                                     </div>
@@ -248,9 +248,12 @@
                                                                                             </div>
                                                                                     </div>
                                                                                 </li>
-                                                                                <? } ?>
+                                                                                <?php } ?>
 									</ul>
-                                                                        <div class="show-more" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($alphabetCount[$letter]-5); ?> продуктов</div>
+                                                                        <div class="show-more sm-lg" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($alphabetCount[$letter]-5); ?> продуктов</div>
+                                                                        <div class="show-more sm-md" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 4) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($alphabetCount[$letter]-4); ?> продуктов</div>
+                                                                        <div class="show-more sm-sm" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 3) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($alphabetCount[$letter]-3); ?> продуктов</div>
+                                                                        <div class="show-more sm-xs" data-mode="asort" data-target="<?php echo $letter; ?>"  style="<?php if($lCount <= 2) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($alphabetCount[$letter]-2); ?> продуктов</div>
 								</div>
                                                             <?php } ?>
                                                         </div>
@@ -272,7 +275,7 @@
                                                                     <div id="l-p_<?php echo $category['id'] . ('_' . $sub_index) ?>" class="rel">
                                                                         <?php if(!empty($subcategory['image'])) { ?><div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div><?php } ?>
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
-									<ul class="list-letter">
+									<ul class="list-letter ll-open">
                                                                                 <?php 
                                                                                 $iCount = 0;
                                                                                 foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
@@ -292,7 +295,7 @@
                                                                                                        <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
-                                                                                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
+                                                                                                            <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><?php } ?>
                                                                                                             <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>    
                                                                                                         <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                                                                                                             <div class="p-o_link">
@@ -308,7 +311,7 @@
                                                                                                                             <select name="tech" class="tech">
                                                                                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } else { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -316,7 +319,7 @@
                                                                                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } ?>
                                                                                                                     </div>
@@ -337,7 +340,7 @@
                                                                                                                             <select name="tech" class="tech">
                                                                                                                                     <?php for($i=1; $i<=5; $i++) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } else { ?>
                                                                                                                             <select name="tech" class="tech">
@@ -345,7 +348,7 @@
                                                                                                                                     $arVariants = explode(',', $product['weight_variants']);
                                                                                                                                     foreach($arVariants as $i => $variant) { ?>
                                                                                                                                         <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                                                                                    <? } ?>
+                                                                                                                                    <?php } ?>
                                                                                                                             </select> 
                                                                                                                         <?php } ?>
                                                                                                                     </div>
@@ -366,9 +369,13 @@
                                                                                             </div>
                                                                                     </div>
                                                                                 </li>
-                                                                                <? } ?>
+                                                                                <?php } ?>
 									</ul>
-                                                                        <div class="show-more" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" style="<?php if($lCount <= 5) { ?>visibility:hidden;<? } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more sm-lg" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                                                        <div class="show-more sm-md" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 4) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-4); ?> продуктов</div>
+                                                                        <div class="show-more sm-sm" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 3) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-3); ?> продуктов</div>
+                                                                        <div class="show-more sm-xs" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 2) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-2); ?> продуктов</div>
+
 								</div>
                                                                 <?php } ?></div><?php } ?>
 							</div>
@@ -382,7 +389,7 @@
                                                             <div class="no-pictures">
                                                                 <div class="n-p_title"><?php echo $letter; ?></div>
                                                                 <?php foreach($arTagProducts as $tag => $product) { ?>
-                                                                <div class="n-p_list" data-remodal-target="modal5" data-tag="<?php echo $tag; ?>"><? echo $tag; ?></div>
+                                                                <div class="n-p_list" data-remodal-target="modal5" data-tag="<?php echo $tag; ?>"><?php echo $tag; ?></div>
                                                                 <?php } ?>
                                                             </div>
                                                         <?php } ?>
@@ -407,4 +414,4 @@
                                 </div>
 			</section>
 			<!-- END catalog -->
-<? echo $footer; ?>
+<?php echo $footer; ?>

@@ -301,6 +301,26 @@ html.remodal-is-locked {
 .list-modal .remodal-close:before {
 	display: none;
 }
+
+
+.modal-basket .remodal-close {
+    width: 17px;
+    height: 17px;
+    background: url(../img/img_close_2.png) no-repeat;
+    top: 23px;
+    right: 23px;
+    left: inherit;
+}
+.modal-basket .remodal-close:before {
+  display: none;
+}
+.modal-basket .remodal-close:hover {
+    background-position: 0 -17px;
+}
+
+
+
+
 @media only screen and (min-width: 641px) {
 	.remodal {
 		max-width: 606px;
@@ -321,6 +341,16 @@ html.remodal-is-locked {
 	.remodal.modal-alphabetic {
 		padding: 25px;
 	}
+  .remodal.modal-basket {
+    max-width: 1050px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #fff;
+    -moz-box-shadow: 0 5px 18px rgba(0,0,0,.14);
+    -webkit-box-shadow: 0 5px 18px rgba(0,0,0,.14);
+    box-shadow: 0 5px 18px rgba(0,0,0,.14); 
+  }
 }
 @media only screen and (max-width: 979px) {
 	.remodal.modal-alphabetic {
@@ -336,6 +366,11 @@ html.remodal-is-locked {
 	.remodal.modal-alphabetic {
 		padding: 0;
 	}
+}
+@media only screen and (max-width: 479px) {
+  .modal-basket .remodal-close {
+    top: 13px;
+  }
 }
 .remodal.modal-alphabetic {
 	max-width: 979px;

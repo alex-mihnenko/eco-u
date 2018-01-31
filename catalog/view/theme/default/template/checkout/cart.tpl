@@ -87,7 +87,7 @@
                                                                                             <input type="hidden" id="customer_discount" data-type="P" value="<?php echo (int)$customer_discount; ?>">
 																							</div>
                                                                                         <?php } ?>
-
+                                                                                    
                                                                                         <div class="personal-coupon" style="height:50px;  margin-top: -32px">
                                                                                         <?php if(isset($customer_coupon)) { ?>
                                                                                             <?php if($customer_coupon['type'] == 'P') { 
@@ -112,7 +112,6 @@
                                                                                             </div>
 																							<?
                                                                                             } ?>
-
 					    						<div class="b-d_hidden">
 					    							<div class="b-d_coupon2">Применить скидку</div>
 					    							<input type="text" value="" class="b-dis_input">

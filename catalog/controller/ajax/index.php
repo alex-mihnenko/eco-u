@@ -67,17 +67,23 @@ class ControllerAjaxIndex extends Controller {
   
   // Получить корзину
   public function ajaxGetCart() {
-        $this->load->language('checkout/cart');
-        
+      
+        $data['success'] = true;
+        $data['html'] = $this->load->controller('common/cart');
+      
         $data['products'] = Array();
+        $total = 0;
+        $totalCount = 0;
         if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
                 $products = $this->cart->getProducts();
-                foreach($products as $i => $product)
-                {
-                    $products[$i]['link_remove'] = '/?route=ajax/index/ajaxRemoveCartProduct&cart_id='.$product['cart_id'];
+                $totalCount = count($products);
+                foreach($products as $product) {
+                        $total += $product['total'];
                 }
-                $data['products'] = $products;
         }
+        $data['total'] = floor($total);
+        $data['count'] = $totalCount;
+        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
   }
@@ -217,12 +223,25 @@ class ControllerAjaxIndex extends Controller {
       $password = $arUser['password'];
       if(!empty($password)) {
           $response = Array('status' => 'success');
-          if($this->customer->loginByPhone($phone, $password)) {
+          $locked = '';
+          if($this->customer->loginByPhone($phone, $password, false, $locked)) {
               echo json_encode($response);
           }
           else
           {
-              echo json_encode(Array('status' => 'error'));
+              if($locked) {
+                  if($locked == 1) {
+                      $m = 'минуту';
+                  } elseif($locked < 5) {
+                      $m = 'минуты';
+                  } else {
+                      $m = 'минут';
+                  }
+                  $locked = 'Ваш IP заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
+              } else {
+                  $locked = '';
+              }
+              echo json_encode(Array('status' => 'error', 'locked' => $locked));
           }
       }
   }
@@ -655,12 +674,58 @@ class ControllerAjaxIndex extends Controller {
         }
 
         array_multisort($sort_order, SORT_ASC, $totals);  
-          
-          
+        
+        
         foreach($totals as $total) {
             if($total['code'] == 'total') {
                 $total_price = ceil($total["value"]);
-                $this->response->setOutput(json_encode(Array('status' => 'success', 'total' => $total_price)));
+                
+                if(isset($this->session->data['coupon_id'])) {
+                    $customer_coupon = $this->customer->getCouponDiscount();
+                }
+                $html = '<div>'; // root
+                if($customer_id = $this->customer->isLogged()) {
+                    $this->load->model('checkout/order');
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                    $customer_discount = $this->customer->getPersonalDiscount($customer_id, $orders);
+                    $html .= '<div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px; margin-top: -32px;display: none;">';
+                    $html .= 'Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;">' . -1 * (int)$customer_discount . '%</span>';
+                    $html .= '<input type="hidden" id="customer_discount" data-type="P" value="' . (int)$customer_discount . '">';
+                    $html .= '</div>';
+                }
+
+                $html .= '<div class="personal-coupon" style="height:50px;  margin-top: -32px; display: none;">';
+                if(isset($customer_coupon)) {
+                    if($customer_coupon['type'] == 'P') {
+                        $cDcnt = (int)$totals[0]['value']*((int)$customer_coupon['discount']/100);
+                        $html .= 'Текущая скидка <span class="p-o_discount sticker_discount b-d_coupon_circle">' . -1*(int)$customer_coupon['discount'] . '%</span>';
+                    } elseif($customer_coupon['type'] == 'F') {
+                        $cDcnt = (int)$customer_coupon['discount'];
+                        $html .= 'Ваша скидка <span class="c-d_amount">' . (int)$customer_coupon['discount'] . '</span> руб';
+                    }
+                    $html .= '<input type="hidden" id="customer_coupon" data-type="' . $customer_coupon['type'] . '" value="' . (int)$customer_coupon['discount'] . '">';
+                }
+                $html .= '</div>';
+                if(!isset($customer_coupon) && !isset($customer_discount)) {
+                        $html .= '<div class="b-d_coupon" style="display: none;">';
+                        $html .= 'Есть купон на скидку?';
+                        $html .= '</div>';
+                } else {
+                        $html .= '<div class="b-d_coupon_discount" style="display: none;">';
+                        $html .= 'Увеличить скидку';
+                        $html .= '</div>';
+                }
+                $html .= '</div>'; // root
+
+                $response = Array(
+                    'status' => 'success',
+                    'total' => (int)$this->cart->getOrderPrice(),
+                    'html' => $html
+                );
+                $response['discountValue'] = (int)$this->cart->getTotal() - $response['total'];
+
+                
+                $this->response->setOutput(json_encode($response));
                 break;
             }
         }

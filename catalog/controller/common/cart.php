@@ -1,6 +1,53 @@
 <?php
 class ControllerCommonCart extends Controller {
-	public function index() {
+        public function index() {
+                $this->load->language('checkout/cart');
+
+                $totalPrice = 0;
+                $totalPositions = 0;
+                
+                $data['products'] = Array();
+                if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
+                        $this->load->model('tool/image');
+                        $products = $this->cart->getProducts();
+                        foreach($products as $i => $product) {
+                            
+                            if($product['weight_variants'] !== '') {
+                                $weightVariants = explode(',', $product['weight_variants']);
+                                $weightVariant = $weightVariants[$product['weight_variant']];
+                                $wwLabel = '(' . $weightVariants[$product['weight_variant']] . ' ' . $product['weight_class'] . ')';
+                                $product['name'] = $product['name'] . ' ' . $wwLabel;
+                            } else {
+                                $weightVariant = 1;
+                            }
+                            $totalPrice += $product['total'];
+                            
+                            $product['total'] = floor($product['total']);
+                            $product['weightVariant'] = $weightVariant;
+                            
+                            $product['quantity'] = round($product['quantity']/$weightVariant);
+                            
+                            
+                            if ($product['image_preview']) {
+                                    $image = '/image/' . $product['image_preview'];
+                            } else {
+                                    $image = $this->model_tool_image->resize('eco_logo.png', 257, 240);
+                            }
+
+                            $product['image'] = $image;
+                            
+                            $product['link_remove'] = '/?route=ajax/index/ajaxRemoveCartProduct&cart_id='.$product['cart_id'];
+                            $data['products'][] = $product;
+                        }
+                        
+                        $data['total'] = floor($totalPrice);
+                        
+                }
+            
+                return $this->load->view('common/cart', $data);
+        }
+        
+	public function index_bak() {
 		$this->load->language('common/cart');
 
 		// Totals
