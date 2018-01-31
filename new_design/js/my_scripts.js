@@ -1464,11 +1464,14 @@
             var delivery_price = 0;
             var order_id = parseInt($('.field_order_id').html());
             var payment_method = '';
+            var payment_code = '';
             var payment_method_online = 0;
             if($('#d').prop('checked')) {
                 payment_method = 'Оплата при получении';
+                payment_code = '';
             } else {
                 payment_method = 'Оплата на сайте';
+                payment_code = 'bank-card';
                 payment_method_online = 1;
             }
             if($('.block-delivery-price').css('display') == 'none') {
@@ -1512,6 +1515,7 @@
                         time: time,
                         payment_method: payment_method,
                         payment_method_online: payment_method_online,
+                        payment_code: payment_code,
                         telephone: $('#phone2').val()
                     }, function(msg){
                         btn.find('.ajax-loader').hide();

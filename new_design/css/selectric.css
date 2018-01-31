@@ -472,7 +472,7 @@
 	/*background-color: #eee;*/
 }
 .delivery-address .selectric-items li:first-child {
-	display: none;
+	/*display: none;*/
 }
 .days-select {
 	float: left;
@@ -602,6 +602,9 @@
 		-moz-border-radius: 2px;
 		-webkit-border-radius: 2px;
 		border-radius: 2px;
+        padding-top: 4px;
+        height: 20px;
+
 	}
 	.c-p_select .selectric .label {
 		font-size: 9px;

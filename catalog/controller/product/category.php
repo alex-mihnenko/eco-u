@@ -308,7 +308,7 @@ class ControllerProductCategory extends Controller {
                                 if($result['composite_price'] !== false) {
                                         $arProducts['composite_price'] = json_encode($result['composite_price']);
                                 }
-                                $arTags = explode(',', $result['tag']);
+                                /*$arTags = explode(',', $result['tag']);
                                 foreach($arTags as $tag)
                                 {
                                     $tag = trim($tag);
@@ -323,12 +323,16 @@ class ControllerProductCategory extends Controller {
                                             $data['products_tagsorted'][$tagLetter][$tagFormat][] = $arProducts;
                                         }
                                     }
-                                }
+                                }*/
                                 
                                 $data['products_asorted'][$alphabetSort][] = $arProducts;
                                 $data['products'][] = $arProducts;
 			}
                         natsort($data['alphabet_list']);
+                        
+                        // тэги
+                        $data['products_tagsorted'] = $this->model_catalog_product->getTags();
+                        natsort($data['products_tagsorted']);
                         
                         // Сортировка по категориям
                         $iCount = 0;

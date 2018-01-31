@@ -3926,7 +3926,7 @@ a.btn-close-tab:hover,
 .b-accordion_title {
 	max-width: 900px;
 	margin: 0 auto;
-	font-size: 40px;
+	font-size: 32px;
 	color: #ffffff;
 	text-align: center;
 	box-sizing: border-box;
@@ -4524,6 +4524,57 @@ a.btn-close-tab:hover,
 
 
 
+
+.article_bg{
+	background-image: url('../img/fruits_art_bg.jpg');
+    padding: 0 0 100px 0;
+}
+.article{
+	margin-left: 15%;
+	margin-right: 15%;
+	padding: 150px 5% 40px 5%;
+	font-size: 16px;
+	line-height: 24px;
+	color: #333;
+	background-color: #fff;
+}
+
+.article h1 {
+	font-weight: 500;
+	font-size: 36px;
+	color: #374047;
+	text-align: center;
+	padding-bottom: 30px;
+}
+
+.article h2 {
+	font-weight: 500;
+	font-size: 24px;
+	color: #374047;
+	padding-bottom: 30px;
+}
+
+.article h3 {
+	font-weight: 500;
+	font-size: 18px;
+	color: #374047;
+	padding-bottom: 30px;
+}
+
+.article p {
+	box-sizing: border-box;
+	text-align: left;
+	padding-bottom: 30px;
+}
+
+.article ul {
+	padding-bottom: 30px;
+	padding: 0 10% 0 10%
+}
+
+.article ul li {
+	list-style: disc;
+}
 
 
 

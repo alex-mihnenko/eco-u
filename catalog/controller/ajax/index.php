@@ -467,6 +467,7 @@ class ControllerAjaxIndex extends Controller {
       $comment = $this->request->post['comment'];
       $order_id = $this->request->post['order_id'];
       $payment_method = $this->request->post['payment_method'];
+      $payment_code = $this->request->post['payment_code'];
       $payment_method_online = $this->request->post['payment_method_online'];
       $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
       $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
@@ -532,6 +533,8 @@ class ControllerAjaxIndex extends Controller {
         }
       
       $this->load->model('checkout/order');
+      
+      $this->model_checkout_order->setPayment($order_id, $payment_code);
       
       if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
           // Добавление адреса доставки в список адресов клиента

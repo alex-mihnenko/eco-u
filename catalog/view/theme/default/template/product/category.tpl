@@ -385,14 +385,21 @@
 				<div class="tabs__block">
 					<div class="width-1418">
 						<div class="auto-columnizer clearfix">
-                                                        <?php foreach($products_tagsorted as $letter => $arTagProducts) { ?>
-                                                            <div class="no-pictures">
-                                                                <div class="n-p_title"><?php echo $letter; ?></div>
-                                                                <?php foreach($arTagProducts as $tag => $product) { ?>
-                                                                <div class="n-p_list" data-remodal-target="modal5" data-tag="<?php echo $tag; ?>"><?php echo $tag; ?></div>
+                                                        <div class="no-pictures">
+                                                        <?php 
+                                                            $letter = '';
+                                                            foreach($products_tagsorted as $tag) { 
+                                                                $new_letter = mb_strtoupper(mb_substr($tag, 0, 1));
+                                                                if($new_letter != $letter) {
+                                                        ?>
+                                                            </div><div class="no-pictures">
+                                                                <div class="n-p_title"><?php echo $new_letter; ?></div>
                                                                 <?php } ?>
-                                                            </div>
-                                                        <?php } ?>
+                                                                    <div class="n-p_list" data-remodal-target="modal5" data-tag="<?php echo $tag; ?>"><?php echo $tag; ?></div>
+                                                            <?php
+                                                                $letter = $new_letter;
+                                                            } ?>
+                                                        </div>
 						</div>
 						<!-- Modal -->
 						<div class="remodal list-modal" data-remodal-id="modal5">
