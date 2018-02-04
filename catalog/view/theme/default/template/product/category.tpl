@@ -171,7 +171,7 @@
                                                                                             <div class="box-p_o">
                                                                                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
                                                                                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb" target="_blank">
-                                                                                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
+                                                                                                            <img class="b-lazy" src="/image/eco_logo.jpg" <?php if(!empty($product['thumb'])) echo 'data-src="'.$product['thumb'].'"'; ?> alt="">
                                                                                                     </a>
                                                                                                     <div class="p-o_block">
                                                                                                             <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><?php } ?>

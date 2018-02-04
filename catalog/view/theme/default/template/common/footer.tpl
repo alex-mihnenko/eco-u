@@ -51,6 +51,7 @@
                 <script src="/new_design/js/clamp.min.js"></script>
                 <script src="/new_design/js/jquery.suggestions.min.js"></script>
                 <script src="/new_design/js/jquery.jscrollpane.min.js"></script>
+                <script src="/new_design/js/blazy.min.js"></script>
                 <script src="/new_design/js/jquery.mousewheel.js"></script>
                 <script src="/new_design/js/my_scripts.js"></script>
                 <script src="/new_design/js/jquery.cookie.js"></script>
