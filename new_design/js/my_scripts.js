@@ -346,6 +346,7 @@
 			setTimeout(function() {
                                 var $element = $('.list-alphabetic li a.selected').length ? $('.list-alphabetic li a.selected') : $('.list-alphabetic li:first-child a');
 				$element.trigger('click');
+                                bLazyPluginInit();
 //				$('.list-alphabetic li:first-child a').trigger('click');
 			}, 100);
 			
@@ -360,6 +361,7 @@
 			setTimeout(function() {
                                 var $element = $('.list-products li a.selected2').length ? $('.list-products li a.selected2') : $('.list-products li:first-child a');
 				$element.trigger('click');
+                                bLazyPluginInit();
 //			$('.list-products li:first-child a').trigger('click');
 			}, 100);
 			
@@ -1868,12 +1870,16 @@
         $('body').append('<iframe name="ph_iframe" src="/auth.php" style="display:none;"></iframe>');
         
         // Images lazy load
-        var bLazy = new Blazy({
-            success: function(element){
-                setTimeout(function(){
-                    var parent = element.parentNode;
-                    parent.className = parent.className.replace(/\bloading\b/,'');
-                }, 200);
-            }
-       });
+        function bLazyPluginInit()
+        {
+            var bLazy = new Blazy({
+                success: function(element){
+                    setTimeout(function(){
+                        var parent = element.parentNode;
+                        parent.className = parent.className.replace(/\bloading\b/,'');
+                    }, 200);
+                }
+           });
+        }
+        bLazyPluginInit();
 });
