@@ -1190,7 +1190,7 @@
                     BindAddToCartEvents(pElement.find('li[data-type="dynamic"]'));
                     InitClamp('.p-o_link a, .p-o_short-descr');
                 }
-                bLazePluginInit();
+                bLazyPluginInit();
             });
         });
         function BindAddToCartEvents(block) {
