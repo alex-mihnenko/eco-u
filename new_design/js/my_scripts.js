@@ -20,7 +20,7 @@
 	        });
 	        setTimeout(function() {
 	                initDropDown();
-	            }, 10);
+	            }, 1);
 	    }
 	    initDropDown();
 	});
