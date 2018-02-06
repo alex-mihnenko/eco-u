@@ -1085,7 +1085,12 @@ footer {
 	padding: 0;
 	background: #EFF2F5;
         height: 757px;
-        overflow-y: hidden;
+        overflow-y: visible;
+        z-index: 100;
+        position: relative;
+}
+.fond-profitable_offer + section {
+    position: relative;
 }
 .width-1660 {
 	max-width: 1660px;
@@ -3869,7 +3874,6 @@ footer {
 	font-weight: 500;
 	color: #B6BBC5;
 }
-a.btn-close-tab, 
 .table-b_close {
 	width: 24px;
 	height: 24px;
@@ -3882,13 +3886,20 @@ div.table-b_close {
 	margin-top: -12px;
 	left: -49px;
 }
-a.btn-close-tab {
-	top: 24px;
-	right: 48px;
-}
-a.btn-close-tab:hover,
 .table-b_close:hover {
 	background-position: 0 -24px;
+}
+a.btn-close-tab {
+    width: 17px;
+    height: 17px;
+    top: 24px;
+    right: 48px;
+    background: url(../img/img_close_2.png) no-repeat;
+    position: absolute;
+    cursor: pointer;
+}
+a.btn-close-tab:hover {
+    background-position: 0 -17px;
 }
 .b-pagination {
 	float: right;
