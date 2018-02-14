@@ -98,7 +98,7 @@ class ControllerExtensionPaymentRbs extends Controller {
                 
 //                $this->response->redirect($this->url->link('checkout/success', '', true));
                 $this->session->data['success_order_id'] = $order_number;
-                $this->response->redirect($this->url->link('checkout/cart', '', true));
+                $this->response->redirect($this->url->link('common/home', '', true));
             } else {
                 $this->response->redirect($this->url->link('checkout/failure', '', true));
             }

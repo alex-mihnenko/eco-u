@@ -1,59 +1,29 @@
-<?php if($products) { ?>
+<?php if($page_cart) { ?>
 <div class="remodal modal-basket" data-remodal-id="modal-basket">
 <?php if(0) { ?>
         <button class="remodal-clear">Очистить корзину</button>
 <?php } ?>
         <button data-remodal-action="close" class="remodal-close"></button>
-        <div class="m-basket_border">
-                <div class="m-basket_title">Продуктов в корзине на <?php echo $total; ?> рублей</div>
-                <div class="m-basket_title-message">По каждому заказу мы вручную выбираем и упаковываем самые свежие продукты</div>
-        </div>
-        <div class="m-basket_padding">
-                <div class="scroll-pane">
-                        <ul class="list-letter list-modal">
-                                <?php foreach($products as $product) { ?>
-                                <li>
-                                        <div class="box-p_o">
-                                                <div class="list-modal_close" data-href="<?php echo $product['link_remove']; ?>"></div>
-                                                <div class="p-o_thumb">
-                                                    <img src="<?php echo $product['image']; ?>" alt="">
-                                                </div>
-                                                <div class="p-o_block">
-                                                        <div class="p-o_link">
-                                                                <a href="#"><?php echo $product['name']; ?></a>
-                                                        </div>
-                                                        <div class="clearfix">
-                                                                <div class="p-o_select">
-                                                                    <select data-cart-quantity="<?php echo (int)$product['quantity']; ?>" data-cart-id="<?php echo $product['cart_id']; ?>" data-cart-variant="<?php echo $product['weightVariant']; ?>" name="m_cart[<?php echo $product['cart_id']; ?>]" class="tech change-m-cart-quantity">
-                                                                        <?php 
-                                                                            $quantity = (int)$product['quantity']; 
-                                                                            $start = $quantity - 5;
-                                                                            $end = $quantity + 5;
-                                                                            if($start < 1) $start = 1;
-                                                                        ?>
-                                                                        <?php for($i = $start; $i <= $end; $i++) { ?>
-                                                                        <?php if($i == $quantity) { ?>
-                                                                                <option value="<?php echo $i; ?>" selected="selected"><?php echo $i; ?> шт.</option>
-                                                                        <?php } else { ?>
-                                                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
-                                                                        <?php } ?>
-                                                                        <?php } ?>
-                                                                        </select> 
-                                                                </div>
-                                                                <div class="p-o_right">
-                                                                        <div class="p-o_price"><?php echo $product['total']; ?> <span>руб</span></div>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </li>
-                                <?php } ?>
-                        </ul>
-                </div>
-        </div>
-        <div class="m_basket_link">
-                <a href="/cart">Перейти в корзину</a>
-        </div>
+        
+        <ul class="liTabs_cart t_wrap t_wrap_2">
+            <li class="t_item t_item_2 t_item_p1">
+                <a class="t_link t_link_2" href="#"></a>
+                <div class="t_content"><?php echo $page_cart; ?></div>
+            </li>
+            <li class="t_item t_item_2 t_item_p2">
+                <a class="t_link t_link_2" href="#"></a>
+                <div class="t_content"><?php echo $page_customer; ?></div>
+            </li>
+            <li class="t_item t_item_2 t_item_p3">
+                <a class="t_link t_link_2" href="#"></a>
+                <div class="t_content"><?php echo $page_payment; ?></div>
+            </li>
+            <li class="t_item t_item_2 t_item_p4">
+                <a class="t_link t_link_2" href="#"></a>
+                <div class="t_content"><?php echo $page_success; ?></div>
+            </li>
+        </ul>
+        
 </div>
 <?php } else { ?>
 <div class="remodal modal-basket" data-remodal-id="modal-basket">

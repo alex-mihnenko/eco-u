@@ -444,6 +444,300 @@ class ControllerAjaxIndex extends Controller {
         $this->response->setOutput(json_encode($json));
   }
   
+  // Создать заказ NEW
+  public function ajaxCreateOrder() {
+        $this->load->model('checkout/order');
+        
+        $post = $this->request->post;
+        
+        $do_logout = false;
+        $is_guest = false;
+        if(!$this->customer->isLogged()) {
+                $is_guest = true;
+                $this->customer->loginByPhone($post['telephone'], false, true);
+                $do_logout = true;
+        }
+      
+        // Основные данные заказа
+        $data['products'] = $this->cart->getProducts();
+        foreach($data['products'] as $i => $product) {
+            if(empty($product['weight_variants'])) {
+                $data['products'][$i]['amount'] = round($product['quantity']);
+                $data['products'][$i]['variant'] = 1;
+            } else {
+                $arWeightVariants = explode(',', $product['weight_variants']);
+                $data['products'][$i]['amount'] = round($product['quantity']/$arWeightVariants[$product['weight_variant']]);
+                $data['products'][$i]['variant'] = $arWeightVariants[$product['weight_variant']];
+            }
+        }
+        $data['total'] = $this->cart->getTotal();
+        $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
+        $data['store_id'] = $this->config->get('config_store_id');
+        $data['store_name'] = $this->config->get('config_name');
+        $data['store_url'] = $this->config->get('config_url');
+        if(isset($this->session->data['customer_id'])) {
+            $data['customer_id'] = $this->session->data['customer_id'];
+        } else {
+            $data['customer_id'] = $this->customer->getId();
+        }
+        $data['customer_group_id'] = $this->customer->getGroupId();
+        $data['firstname'] = $post['customer'];//$this->customer->getFirstName();
+        $data['lastname'] = $this->customer->getLastName();
+        $data['email'] = $this->customer->getEmail();
+        $data['telephone'] = $post['telephone'];
+        $data['fax'] = $this->customer->getFax();
+        
+        // Оплата
+        $data['payment_firstname'] = $post['customer'];//$this->customer->getFirstName();
+        $data['payment_lastname'] = $this->customer->getLastName();
+        $data['payment_company'] = '';
+        $data['payment_address_1'] = $post['address'];
+        $data['payment_address_2'] = '';
+        $data['payment_city'] = '';
+        $data['payment_postcode'] = '';
+        $data['payment_country'] = '';
+        $data['payment_country_id'] = '';
+        $data['payment_zone'] = '';
+        $data['payment_zone_id'] = '';
+        $data['payment_address_format'] = $post['address']; 
+        $data['payment_method'] = $post['payment_method_title'];
+        $data['payment_code'] = $post['payment_method_code'];
+        
+        // Доставка
+        $data['shipping_firstname'] = $post['customer'];//$this->customer->getFirstName();
+        $data['shipping_lastname'] = $this->customer->getLastName();
+        $data['shipping_company'] = '';
+        $data['shipping_address_1'] = $post['address'];
+        $data['shipping_address_2'] = '';
+        $data['shipping_city'] = '';
+        $data['shipping_postcode'] = '';
+        $data['shipping_country'] = '';
+        $data['shipping_country_id'] = '';
+        $data['shipping_zone'] = '';
+        $data['shipping_zone_id'] = '';
+        $data['shipping_address_format'] = $post['address'];
+        $data['shipping_method'] = '';
+        $data['shipping_code'] = '';
+        $data['custom_field'] = '';
+        $data['payment_custom_field'] = '';
+        $data['shipping_custom_field'] = '';
+        
+        // Прочее
+        $data['comment'] = $post['comment'];
+        $data['affiliate_id'] = '';
+        $data['commission'] = '';
+        $data['marketing_id'] = '';
+        $data['tracking'] = '';
+        $data['currency_id'] = $this->currency->getId($this->session->data['currency']);
+        $data['currency_code'] = $this->session->data['currency'];
+        $data['currency_value'] = $this->currency->getValue($this->session->data['currency']);
+        $data['ip'] = $this->request->server['REMOTE_ADDR'];
+        $data['user_agent'] = '';
+        $data['accept_language'] = '';
+        $data['language_id'] = $this->config->get('config_language_id');
+
+        if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
+                $data['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
+        } elseif (!empty($this->request->server['HTTP_CLIENT_IP'])) {
+                $data['forwarded_ip'] = $this->request->server['HTTP_CLIENT_IP'];
+        } else {
+                $data['forwarded_ip'] = '';
+        }
+
+        if (isset($this->request->server['HTTP_USER_AGENT'])) {
+                $data['user_agent'] = $this->request->server['HTTP_USER_AGENT'];
+        } else {
+                $data['user_agent'] = '';
+        }
+
+        if (isset($this->request->server['HTTP_ACCEPT_LANGUAGE'])) {
+                $data['accept_language'] = $this->request->server['HTTP_ACCEPT_LANGUAGE'];
+        } else {
+                $data['accept_language'] = '';
+        }
+        
+        $order_id = $this->model_checkout_order->addOrder($data);
+        
+        
+	if($order_id) {
+            // Подтверждение купона
+            if(isset($this->session->data['coupon'])) {
+                $this->load->model('extension/total/coupon');
+
+                $order_info = Array(
+                    'order_id' => $order_id,
+                    'customer_id' => $this->customer->getId()
+                );
+                $coupon = $this->model_extension_total_coupon->getCoupon($this->session->data['coupon']);
+
+                // Totals
+                  $this->load->model('extension/extension');
+
+                  $totals = array();
+                  $taxes = $this->cart->getTaxes();
+                  $total = 0;
+
+                  // Because __call can not keep var references so we put them into an array. 
+                  $total_data = array(
+                          'totals' => &$totals,
+                          'taxes'  => &$taxes,
+                          'total'  => &$total
+                  );
+
+                  $sort_order = array();
+
+                  $results = $this->model_extension_extension->getExtensions('total');
+
+                  foreach ($results as $key => $value) {
+                          $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+                  }
+
+                  array_multisort($sort_order, SORT_ASC, $results);
+
+                  foreach ($results as $result) {
+                          if ($this->config->get($result['code'] . '_status')) {
+                                  $this->load->model('extension/total/' . $result['code']);
+                                  $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
+                          }
+                  }
+
+                  $sort_order = array();
+
+                  foreach ($totals as $key => $value) {
+                          $sort_order[$key] = $value['sort_order'];
+                  }
+
+                  array_multisort($sort_order, SORT_ASC, $totals);
+
+                  foreach($totals as $total) {
+                      if($total['code'] == 'total') {
+                          $total_price = ceil($total["value"]);
+                          break;
+                      }
+                  }
+
+                $order_total = Array(
+                    'value' => $total_price,
+                    'title' => "#{$order_id} ({$coupon['code']})"
+                );
+                $data['total'] = $total_price;
+                
+                if(!$this->customer->getCouponDiscount()) {
+                    $data['discount'] = $this->cart->getOrderDiscount();
+                } else {
+                    if(isset($this->session->data['personal_discount'])) $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                    else $personalDiscount = 0;
+                    $coupon = $this->customer->getCouponDiscount();
+                    $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+                    if($couponDiscount > $personalDiscount) {
+                        $data['coupon_discount'] = $couponDiscount;
+                    } else {
+                        $data['discount'] = $personalDiscount;
+                    }
+                }
+                
+                $this->model_extension_total_coupon->confirm($order_info, $order_total);
+                $this->model_checkout_order->editOrder($order_id, $data);
+                $this->model_checkout_order->addOrderHistory($order_id, 1);
+            }
+        }
+        
+        $strDateTime = 'Дата и время доставки: ' . $post['date'] . ' ' . $post['time'] . PHP_EOL;
+        $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
+        $customer_id = (int)$this->customer->getId();
+        $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $post['telephone']);
+      
+        $customer_id = (int)$this->customer->getId();
+      
+        $this->load->model('dadata/index');
+      
+        $structure = array("ADDRESS");
+        $record = array($post['address']);
+        $result = $this->model_dadata_index->cleanRecord($structure, $record);
+      
+        if(isset($result['data'][0][0]['beltway_hit'])) {
+            $bwhit = $result['data'][0][0]['beltway_hit'];
+            if($result['data'][0][0]['beltway_hit'] == 'IN_MKAD') {
+                $delivery_price = 250;
+            } else {
+                $delivery_price = 600;
+            }
+        } else {
+            $bwhit = 'NOT_IN_MKAD';
+            $delivery_price = 600;
+        }
+      
+        $data2 = Array(
+            'address' => $post['address'],
+            'comment' => $post['comment'],
+            'delivery_price' => $delivery_price,
+            'delivery_time' => $strDateTime,
+            'delivery_interval' => $strDeliveryInterval,
+            'payment_method' => $post['payment_method_code'],
+            'mkad' => $bwhit
+        );
+        if(!$this->customer->getCouponDiscount()) {
+            $data2['discount'] = $this->cart->getOrderDiscount();
+            if(isset($this->session->data['personal_discount'])) {
+                    $personalPercentage = (int)$this->session->data['personal_discount'];
+                    $data2['discount_percentage'] = $personalPercentage;
+            }
+        } else {
+            if(isset($this->session->data['personal_discount'])) {
+                $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                if($this->session->data['personal_discount'] <= 10) {
+                    $personalPercentage = (int)$this->session->data['personal_discount'];
+                }
+            } else {
+                $personalDiscount = 0;
+            }
+            $coupon = $this->customer->getCouponDiscount();
+            $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+            if($coupon['discount'] <= 100) {
+                $couponPercentage = $coupon['discount'];
+            }
+            if($couponDiscount > $personalDiscount) {
+                $data2['coupon_discount'] = $couponDiscount;
+                $data2['discount_percentage'] = $couponPercentage;
+            } else {
+                $data2['discount'] = $personalDiscount;
+                $data2['discount_percentage'] = $personalPercentage;
+            }
+        }
+        $payment_method_online = $post['payment_method_code'] == 'cod' ? false : true;
+        if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data2, ($payment_method_online ? 16 : 1))) {
+            // Добавление адреса доставки в список адресов клиента
+            if($post['address_new'] && $this->customer->isLogged()) {
+                $this->customer->setAddress(0, $post['address']);
+            }
+            // Очистка корзины
+            $this->cart->clear();
+            if($is_guest) {
+                $this->customer->logout();
+            }
+            $this->cart->clear();
+            if($payment_method_online) {
+                $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
+                $json = $results;
+            } else {
+                // Отправка sms        
+                $this->load->model('sms/confirmation');
+                $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
+                $this->model_sms_confirmation->sendSMS($telephone, $message);
+                $json = Array('status' => 'success', 'order_id' => $order_id);
+            }
+        } else {
+            if($is_guest) {
+                $this->customer->logout();
+            }
+            $json = Array('status' => 'error');
+        }
+        
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+  }
+  
   public function ajaxGetDeliveryPrice() {
       $address = $this->request->post['address'];
       

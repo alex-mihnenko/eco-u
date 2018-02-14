@@ -73,7 +73,9 @@ class Customer {
 
 			$this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
                         
-                        $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
+                        if(!$override) {
+                                $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
+                        }
 
 			return true;
 		} else {
@@ -109,8 +111,9 @@ class Customer {
                         $this->clearBan();
 //                        $sid = $this->session->session_id;
 //                        $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
-                        
-                        $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
+                        if(!$override) {
+                                $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
+                        }
 			return true;
 		} else {
                         $this->doBan();
