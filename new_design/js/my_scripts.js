@@ -1022,9 +1022,9 @@
                             if(price >= 4000 && msg.mkad == 'IN_MKAD') {
                                 delivery_price = 0;
                             } else if(price < 4000 && msg.mkad == 'IN_MKAD') {
-                                delivery_price = 250;
+                                delivery_price = 290;
                             } else if(msg.mkad != 'IN_MKAD') {
-                                delivery_price = 600;
+                                delivery_price = 490;
                             }
                             $('input#delivery_address_m').val(msg.result.data[0][0].result);
                             $('.block-delivery-price .c-d_price').html(delivery_price+' руб');
