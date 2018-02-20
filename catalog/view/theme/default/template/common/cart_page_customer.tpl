@@ -1,4 +1,4 @@
-<div id="form-customer" class="cart-380">
+<div id="form-customer" class="cart-380-">
     <div class="cart-top-line"></div>
     <div class="hidden o-i_price"></div>
     <div class="o-i_txt4">Доставка</div>
@@ -8,7 +8,7 @@
 
         <input type="tel" placeholder="Номер телефона" class="ca-i_input ca-i_input-dark ta-center field_phone" id="phone2_m" value="<?php echo $customer['phone']; ?>">
 
-        <div class="delivery-address-m mobile-pd-30">
+        <div class="delivery-address-m">
             <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
             <select id="delivery_address_m" name="tech" class="tech ca-i_input ta-center">
                 <?php foreach($delivery_address as $address) { ?>
@@ -51,8 +51,13 @@
         <div class="sh-a_price">250 руб</div>
     </div>
 
-    <div class="pad-md">
-        <span class="c-m_submit">Рассчитать стоимость доставки</span>
+    <div class="btn-block">
+        <div class="pad-md">
+            <span class="c-m_submit">Рассчитать стоимость доставки</span>
+        </div>
+        <div class="pad-md">
+            <span class="c-m_submit2" data-go-to="1">Назад</span>
+        </div>
     </div>
 
 </div>

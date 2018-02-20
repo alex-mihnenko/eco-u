@@ -3259,6 +3259,26 @@ footer {
 	background-color: #628535;
     transition: 0.3s ease-in-out all;
 }
+.btn-block:after,
+.btn-block:before {
+    display: block;
+    content: '';
+}
+.btn-block:after {
+    clear: both;
+}
+.btn-block > div {
+    float: left;
+    width: 50%;
+    box-sizing: border-box;
+}
+.btn-block > div:first-child {
+    float: right;
+}
+.delivery-address-m > .selectric-wrapper {
+    height: 41px;
+    margin-bottom: 11px;
+}
 .can-toggle {
   position: relative;
   margin: 51px auto 0 auto;
@@ -4653,14 +4673,14 @@ a.m_button:hover,
     background: #749D3E;
 }
 .cart-380 {
-    max-width: 380px;
-    margin: 0 auto;
+    /*max-width: 380px;*/
+    /*margin: 0 auto;*/
 }
 .modal-basket {
     transition: all .3s;
 }
 .modal-basket.modal-basket-380 {
-    max-width: 380px !important;
+    /*max-width: 380px !important;*/
 }
 .modal-basket .hidden {
     display: none !important;
@@ -4770,11 +4790,6 @@ select.ca-i_input.input-error_3 {
 .ca-i_input:-ms-input-placeholder      {color:#8C969E;}
 .ca-i_input.ca-i_input-dark::placeholder {
     color:#b2b2b2;
-}
-.cart-380 .c-m_submit2,
-.cart-380 .c-m_submit {
-    width: 100%;
-    margin: 11px auto;
 }
 .fill-div {
     height: 60px;
@@ -6329,6 +6344,12 @@ select.ca-i_input.input-error_3 {
 	    width: 100%;
 	    margin: 60px auto 60px auto;
 	}
+        .btn-block > div {
+            width: 100%;
+        }
+        .btn-block > div:first-child {
+            float: left;
+        }
 	.can-toggle label .can-toggle__switch {
 	    height: 26px;
 	    -moz-border-radius: 26px / 27px;

@@ -256,7 +256,10 @@ class ControllerCommonCart extends Controller {
                         
                         $data['error_total'] = floor($totalPrice) < 1000;
                         
-                        $data['total'] = floor($this->cart->getOrderPrice());
+                        $data['islogged'] = $this->customer->isLogged();
+                        $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
+//                        $data['total'] = floor($this->cart->getOrderPrice());
+                        $data['discount'] = number_format(floor($totalPrice) - floor($this->cart->getOrderPrice()), 0, '.', ' ');
                         
                 } else {
                         return false;

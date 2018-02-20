@@ -1,4 +1,4 @@
-<div class="cart-380">
+<div class="cart-380-">
     <div class="cart-top-line"></div>
     <div class="o-i_txt4">Спасибо за заказ</div>
     

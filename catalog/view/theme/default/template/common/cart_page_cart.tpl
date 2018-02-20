@@ -1,6 +1,6 @@
 <div class="m-basket_border">
         <div class="m-basket_title">Сумма заказа <?php echo $total; ?> рублей</div>
-        <div class="m-basket_title-message">Скидка 0 рублей. <a href="#" data-ecomodal-target="m-basket-coupon">Введите купон</a> или <a href="#" id="btn-cart-auth">авторизируйтесь</a>, что бы получить дополнительную скидку</div>
+        <div class="m-basket_title-message">Скидка <?php echo $discount; ?> рублей. <a href="#" data-ecomodal-target="m-basket-coupon">Введите купон</a><?php if(!$islogged) { ?> или <a href="#" id="btn-cart-auth">авторизируйтесь</a><?php } ?>, что бы получить дополнительную скидку</div>
         <?php if($error_total) { ?>
         <div class="total-price-error" style="display: block">Сумма заказа меньше 1000 рублей.</div>
         <?php } ?>

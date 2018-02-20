@@ -1,4 +1,4 @@
-<div id="form-payment" class="cart-380">
+<div id="form-payment" class="cart-380-">
     <div class="cart-top-line"></div>
     <div class="o-i_txt4">Как вы хотите оплатить заказ?</div>
     <div class="fill-div"></div>
@@ -20,4 +20,7 @@
         <?php } ?>
     </div>
     <div class="fill-div"></div>
+    <div class="pad-md">
+        <span class="c-m_submit2" data-go-to="2">Назад</span>
+    </div>
 </div>
