@@ -140,6 +140,9 @@
 			$item.selectric();
                         var currencyStr = ' руб';
                         $item.parents('.p-o_select').find('select').on('change', function(e){
+                            console.log($(this));
+                            console.log($(this).parents('.p-o_block'));
+                            console.log($(this).parents('.p-o_block').find('meta[itemprop="price"]'));
                             if(!$(this).parents('.p-o_block').find('meta[itemprop="price"]').length) return;
                             var quantity = parseFloat($(this).parents('.p-o_block').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
