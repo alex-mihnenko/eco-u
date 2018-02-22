@@ -139,7 +139,7 @@
 			$item.addClass('dd-ready');
 			$item.selectric();
                         var currencyStr = ' руб';
-                        $item.parents('.p-o_select').find('select').change(function(e){
+                        $item.parents('.p-o_select').find('select').on('change', function(e){
                             if(!$(this).parents('.p-o_block').find('meta[itemprop="price"]').length) return;
                             var quantity = parseFloat($(this).parents('.p-o_block').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
@@ -155,9 +155,9 @@
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.p-o_select').find('select').change();
+                        $item.parents('.p-o_select').find('select').trigger('change');;
                         
-                        $item.parents('.m-product_select').find('select').change(function(e){
+                        $item.parents('.m-product_select').find('select').on('change', function(e){
                             var quantity = parseFloat($(this).parents('.size-0').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.size-0').find('input.product_price').val());
                             var compPrice = $(this).parents('.size-0').find('.composite_price').val();
@@ -172,9 +172,9 @@
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.size-0').find('.m-product_price_shadow').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.m-product_select').find('select').change();
+                        $item.parents('.m-product_select').find('select').trigger('change');;
                         
-                        $item.parents('.c-p_select').find('select').change(function(e){
+                        $item.parents('.c-p_select').find('select').on('change', function(e){
                             var quantity = parseFloat($(this).parents('.c-p_right').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.c-p_right').find('meta[itemprop="price"]').attr('content'));
                             var compPrice = $(this).parents('.c-p_right').find('.composite_price').val();
@@ -189,7 +189,7 @@
                             var totalPrice = Math.floor(mtpl * quantity * price);
                             $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
-                        $item.parents('.c-p_select').find('select').change();
+                        $item.parents('.c-p_select').find('select').trigger('change');;
 		});
 		setTimeout(function() {
 			initDropDown();
