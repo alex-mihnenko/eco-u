@@ -868,6 +868,11 @@ header {
 	min-height: 298px;
 	border-bottom: 1px solid #CACED2;
 }
+.fond-advantage a.btn-close-tab {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
 .list-advantage {
 	width: 100%;
 	display: table;

@@ -593,6 +593,8 @@ class ControllerProductCategory extends Controller {
                             $data['cart_products'][(int)$product['product_id']] = $product['quantity'];
                         }
                         
+                        $data['hide_advantage'] = !empty($this->request->cookie['hide_advantage']);
+                        
                         if($category_info['name'] == 'Еда') {
         			$this->response->setOutput($this->load->view('product/category', $data));
                         } else {

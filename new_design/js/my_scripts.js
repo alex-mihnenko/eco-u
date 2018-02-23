@@ -50,6 +50,22 @@
 	    initDropDown3();
 	});
 	/*** end basket **/
+    $('#b-close_advantage').click(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $parent = $this.parent().parent();
+        $parent.css({ minHeight: 0 });
+        $parent.slideUp('slow');
+        
+        var d = new Date();
+        var exdays = 30;
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = "hide_advantage=1;" + expires + ";path=/";
+    
+        return false;
+    });
+        
     $(".n-p_list").click(function(e){
         var tag = $(this).data('tag');
         var modalElement = $('.remodal[data-remodal-id="modal5"]');
