@@ -237,7 +237,7 @@ class ControllerAjaxIndex extends Controller {
                   } else {
                       $m = 'минут';
                   }
-                  $locked = 'Ваш IP заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
+                  $locked = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
               } else {
                   $locked = '';
               }
