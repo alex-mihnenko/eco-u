@@ -2,8 +2,8 @@
 	/*** start basket ***/
 	$(document).on('opening', '.modal-basket', function () {
 		$('.scroll-pane').jScrollPane();
-	    var initDropDown = function() {
-	        var $items = $('.tech:not(.dd-ready)');
+	    var initDropDown2 = function() {
+	        var $items = $('.modal-basket .tech:not(.dd-ready)');
 	        if(!$items.length) {
 	            return;
 	        }
@@ -19,16 +19,16 @@
 	            i++;
 	        });
 	        setTimeout(function() {
-	                initDropDown();
+	                initDropDown2();
 	            }, 10);
 	    }
-	    initDropDown();
+	    initDropDown2();
 	});
 	$(document).on('opened', '.modal-basket', function () {
 		$('.scroll-pane').jScrollPane();
 			/* select */
-	    var initDropDown = function() {
-	        var $items = $('.tech:not(.dd-ready)');
+	    var initDropDown3 = function() {
+	        var $items = $('.modal-basket .tech:not(.dd-ready)');
 	        if(!$items.length) {
 	            return;
 	        }
@@ -44,10 +44,10 @@
 	            i++;
 	        });
 	        setTimeout(function() {
-	                initDropDown();
+	                initDropDown3();
 	            }, 10);
 	    }
-	    initDropDown();
+	    initDropDown3();
 	});
 	/*** end basket **/
     $(".n-p_list").click(function(e){
@@ -135,14 +135,15 @@
                             return false;
                         }
 			var $item = $(this);
+			if($item.parents('.modal-basket').length) return true;
 			if($item.hasClass('dd-ready')) return true;
 			$item.addClass('dd-ready');
 			$item.selectric();
                         var currencyStr = ' руб';
                         $item.parents('.p-o_select').find('select').on('change', function(e){
-                            console.log($(this));
-                            console.log($(this).parents('.p-o_block'));
-                            console.log($(this).parents('.p-o_block').find('meta[itemprop="price"]'));
+//                            console.log($(this));
+//                            console.log($(this).parents('.p-o_block'));
+//                            console.log($(this).parents('.p-o_block').find('meta[itemprop="price"]'));
                             if(!$(this).parents('.p-o_block').find('meta[itemprop="price"]').length) return;
                             var quantity = parseFloat($(this).parents('.p-o_block').find('.selectric .label').html());
                             var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
@@ -197,7 +198,7 @@
 		setTimeout(function() {
 			initDropDown();
 		}, 10);
-	}
+	};
 	initDropDown();
         
 	/* END select2 */
@@ -1474,7 +1475,7 @@
                     return false;
                 });
                 
-                var $items = $('.tech:not(.dd-ready)');
+                var $items = $('.modal-basket .tech:not(.dd-ready)');
 	        if($items.length) {
                     $items.each(function() {
                         var $item = $(this);
