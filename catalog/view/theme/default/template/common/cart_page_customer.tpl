@@ -4,6 +4,7 @@
     <div class="o-i_txt4">Доставка</div>
     
     <div class="pad-md">
+        <input type="hidden" id="checkout-order-id" value="0">
         <input type="text" placeholder="Имя" value="<?php echo $customer['first_name']; ?>" class="ca-i_input ta-center" id="customer-name">
 
         <input type="tel" placeholder="Номер телефона" class="ca-i_input ca-i_input-dark ta-center field_phone" id="phone2_m" value="<?php echo $customer['phone']; ?>">

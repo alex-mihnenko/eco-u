@@ -5,8 +5,8 @@
 			</div>
 			<!-- Our advantages -->
                         <section class="fond-advantage" <?php if($hide_advantage) { echo 'style="display: none"'; } ?>>
+                                <a class="btn-close-tab" id="b-close_advantage"></a>
 				<div class="width-1418">
-                                        <a class="btn-close-tab" id="b-close_advantage"></a>
 					<ul class="list-advantage">
 						<li>
 							<div class="l-a_thumb">

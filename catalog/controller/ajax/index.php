@@ -252,7 +252,7 @@ class ControllerAjaxIndex extends Controller {
   }
   
   // Создать заказ
-  public function ajaxAddOrder() {
+  public function ajaxAddOrder($return = false) {
         $this->load->model('checkout/order');
         
         // Основные данные заказа
@@ -267,6 +267,12 @@ class ControllerAjaxIndex extends Controller {
                 $data['products'][$i]['variant'] = $arWeightVariants[$product['weight_variant']];
             }
         }
+        $is_guest = false;
+        if($this->customer->isLogged()) {
+            $this->customer->loginByPhone($this->request->post['telephone'], false, true);
+            $is_guest = true;
+        }
+        
         $data['total'] = $this->cart->getTotal();
         $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
         $data['store_id'] = $this->config->get('config_store_id');
@@ -278,14 +284,14 @@ class ControllerAjaxIndex extends Controller {
             $data['customer_id'] = $this->customer->getId();
         }
         $data['customer_group_id'] = $this->customer->getGroupId();
-        $data['firstname'] = $this->customer->getFirstName();
+        $data['firstname'] =  isset($this->request->post['firstname']) ? $this->request->post['firstname'] :$this->customer->getFirstName();
         $data['lastname'] = $this->customer->getLastName();
         $data['email'] = $this->customer->getEmail();
-        $data['telephone'] = $this->customer->getTelephone();
+        $data['telephone'] = isset($this->request->post['telephone']) ? $this->clearTelephone($this->request->post['telephone']) : $this->customer->getTelephone();
         $data['fax'] = $this->customer->getFax();
         
         // Оплата
-        $data['payment_firstname'] = $this->customer->getFirstName();
+        $data['payment_firstname'] = isset($this->request->post['firstname']) ? $this->request->post['firstname'] : $this->customer->getFirstName();
         $data['payment_lastname'] = $this->customer->getLastName();
         $data['payment_company'] = '';
         $data['payment_address_1'] = '';
@@ -301,7 +307,7 @@ class ControllerAjaxIndex extends Controller {
         $data['payment_code'] = '';
         
         // Доставка
-        $data['shipping_firstname'] = $this->customer->getFirstName();
+        $data['shipping_firstname'] = isset($this->request->post['firstname']) ? $this->request->post['firstname'] : $this->customer->getFirstName();
         $data['shipping_lastname'] = $this->customer->getLastName();
         $data['shipping_company'] = '';
         $data['shipping_address_1'] = '';
@@ -441,6 +447,15 @@ class ControllerAjaxIndex extends Controller {
         } else {
             $json = Array('status' => 'error');
         }
+        
+        if($is_guest) {
+            $this->customer->logout();
+        }
+        
+        if($return) {
+                return $order_id;
+        }
+        
         $this->response->setOutput(json_encode($json));
   }
   
@@ -740,6 +755,14 @@ class ControllerAjaxIndex extends Controller {
   
   public function ajaxGetDeliveryPrice() {
       $address = $this->request->post['address'];
+      $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
+      if($order_id !== false && !$order_id) {
+//          if($this->customer->isLogged()) {
+                $order_id = (int)$this->ajaxAddOrder(true);
+//          } else {
+//                $order_id = (int)$this->ajaxAddNoAuthOrder(true);
+//          }
+      }
       
       $this->load->model('dadata/index');
       
@@ -751,7 +774,114 @@ class ControllerAjaxIndex extends Controller {
       } else {
           $bwhit = 'IN_MKAD';
       }
-      echo json_encode(Array('status' => 'success', 'result' => $result, 'mkad' => $bwhit));
+      echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit));
+  }
+  
+  public function ajaxConfirmOrder() {
+        $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+        if(!$order_id) {
+            echo json_encode(Array('status' => 'error', 'error' => 'Заказ не найден'));
+            return;
+        }
+        $address = $this->request->post['address'];
+        $address_new = $this->request->post['address_new'];
+        $comment = $this->request->post['comment'];
+        
+//                customer: $('#customer-name').val(),
+      $payment_method = $this->request->post['payment_method_title'];
+      $payment_code = $this->request->post['payment_method_code'];
+
+//      $payment_method_online = $this->request->post['payment_method_online'];
+      $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
+      $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
+      $customer_id = (int)$this->customer->getId();
+      $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
+      
+      $is_guest = false;
+      if($customer_id == 0) {
+          $is_guest = true;
+          $this->customer->loginByPhone($telephone, false, true);
+          $customer_id = (int)$this->customer->getId();
+      }
+      
+      $this->load->model('dadata/index');
+      
+      $structure = array("ADDRESS");
+      $record = array($address);
+      $result = $this->model_dadata_index->cleanRecord($structure, $record);
+      
+      if(isset($result['data'][0][0]['beltway_hit'])) {
+          $bwhit = $result['data'][0][0]['beltway_hit'];
+          if($result['data'][0][0]['beltway_hit'] == 'IN_MKAD') {
+              $delivery_price = 250;
+          } else {
+              $delivery_price = 600;
+          }
+      } else {
+          $bwhit = 'NOT_IN_MKAD';
+          $delivery_price = 600;
+      }
+      
+      
+      $data = Array(
+          'address' => $address,
+          'comment' => $comment,
+          'delivery_price' => $delivery_price,
+          'delivery_time' => $strDateTime,
+          'delivery_interval' => $strDeliveryInterval,
+          'payment_method' => $payment_method,
+          'mkad' => $bwhit
+      );
+      
+      if(!$this->customer->getCouponDiscount()) {
+            $data['discount'] = $this->cart->getOrderDiscount();
+			if(isset($this->session->data['personal_discount'])) {
+				$personalPercentage = (int)$this->session->data['personal_discount'];
+				$data['discount_percentage'] = $personalPercentage;
+			}
+        } else {
+            if(isset($this->session->data['personal_discount'])) {
+                $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                if($this->session->data['personal_discount'] <= 10) $personalPercentage = (int)$this->session->data['personal_discount'];
+            } else $personalDiscount = 0;
+            $coupon = $this->customer->getCouponDiscount();
+            $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+            if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
+            if($couponDiscount > $personalDiscount) {
+                $data['coupon_discount'] = $couponDiscount;
+                $data['discount_percentage'] = $couponPercentage;
+            } else {
+                $data['discount'] = $personalDiscount;
+                $data['discount_percentage'] = $personalPercentage;
+            }
+        }
+      
+      $this->load->model('checkout/order');
+      
+      $this->model_checkout_order->setPayment($order_id, $payment_code);
+      
+      $payment_method_online = $this->request->post['payment_method_code'] == 'cod' ? false : true;
+      if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
+          // Добавление адреса доставки в список адресов клиента
+          if($address_new == 'true') $this->customer->setAddress(0, $address);
+          // Очистка корзины
+          $this->cart->clear();
+          if($is_guest) $this->customer->logout();
+          $this->cart->clear();
+          if($payment_method_online) {
+              $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
+              echo json_encode($results);
+          } else {
+          // Отправка sms        
+            $this->load->model('sms/confirmation');
+            $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
+            $this->model_sms_confirmation->sendSMS($telephone, $message);
+            echo json_encode(Array('status' => 'success'));
+          }
+      } else {
+          if($is_guest) $this->customer->logout();
+          echo json_encode(Array('status' => 'error'));
+      }
   }
   
   // Оформление доставки
@@ -1080,6 +1210,10 @@ class ControllerAjaxIndex extends Controller {
       $this->customer->setEmail($arRequest['email']);
       if(isset($arRequest['newsletter'])) $this->customer->setNewsletter($arRequest['newsletter']);
       $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
+  }
+  
+  private function clearTelephone($telephone) {
+      return str_replace(Array('(', ')', '+', '-', ' '), '', $telephone);
   }
   
   public function ajaxSearchProducts() {

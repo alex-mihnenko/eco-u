@@ -962,6 +962,9 @@
                     count: 5,
                     /* Вызывается, когда пользователь выбирает одну из подсказок */
                     onSelect: function(suggestion) {
+                        $('.block-delivery-price').hide();
+                        $('.shipping-amount').hide();
+                        $('.c-m_submit').html('Рассчитать стоимость доставки');
                         console.log(suggestion);
                     }
                 });
@@ -1041,9 +1044,15 @@
                 // Вывод стоимости доставки
                 if(address != '') {
                     $.post('/?route=ajax/index/ajaxGetDeliveryPrice', {
-                        address: address
+                        address: address,
+                        telephone: $('#phone2_m').val(),
+                        firstname: $('#customer-name').val(),
+                        order_id: $('#checkout-order-id').val()
                     }, function(msg){
                         if(msg.status == 'success') {
+                            if((msg.order_id !== undefined) && (msg.order_id > 0)) {
+                                $('#checkout-order-id').val(msg.order_id);
+                            }
                             if(price >= 4000 && msg.mkad == 'IN_MKAD') {
                                 delivery_price = 0;
                             } else if(price < 4000 && msg.mkad == 'IN_MKAD') {
@@ -1092,10 +1101,11 @@
                 date: $('#delivery_date_m').val(),
                 time: $('#delivery_time_m').val(),
                 address: address,
-                address_new: addressNew
+                address_new: addressNew,
+                order_id: $('#checkout-order-id').val()
             };
             $.ajax({
-                url: '/?route=ajax/index/ajaxCreateOrder',
+                url: '/?route=ajax/index/ajaxConfirmOrder',
                 type: 'post',
                 data: data,
                 dataType: 'json',
@@ -1501,12 +1511,20 @@
                     });
 	        }
                 $('#phone2_m').mask("+7 (h99) 999-99-99");
+                $('input#delivery_address_m').keydown(function(){
+                    $('.block-delivery-price').hide();
+                    $('.shipping-amount').hide();
+                    $('.c-m_submit').html('Рассчитать стоимость доставки');
+                });
                 $('input#delivery_address_m[type="text"]').not('.suggestions-input').suggestions({
                     token: "a4ad0e938bf22c2ffbf205a4935ef651fc92ed52",
                     type: "ADDRESS",
                     count: 5,
                     /* Вызывается, когда пользователь выбирает одну из подсказок */
                     onSelect: function(suggestion) {
+                        $('.block-delivery-price').hide();
+                        $('.shipping-amount').hide();
+                        $('.c-m_submit').html('Рассчитать стоимость доставки');
                         console.log(suggestion);
                     }
                 });
