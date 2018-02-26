@@ -239,7 +239,7 @@ class Cart {
                                     $cPrice = $this->config->get('config_composite_price');
                                     $wVariants = explode(',', $product_query->row['weight_variants']);
                                     $wKey = $cart['weight_variant'];
-                                    if(isset($cPrice[$wVariants[$wKey]])) {
+                                    if(isset($wVariants[$wKey]) && isset($cPrice[$wVariants[$wKey]])) {
                                         $price = $price * $cPrice[$wVariants[$wKey]];
                                     }
                                 }
