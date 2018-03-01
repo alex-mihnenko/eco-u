@@ -873,6 +873,7 @@ header {
     position: absolute;
     top: 15px;
     right: 10px;
+    z-index: 1;
 }
 .list-advantage {
 	width: 100%;
