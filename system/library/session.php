@@ -32,8 +32,6 @@ class Session {
                                 ini_set('session.save_path', $_SESSION_SAVE_PATH);
                         }
                         
-                        phpInfo();exit;
-		
 			if (isset($_COOKIE[session_name()]) && !preg_match('/^[a-zA-Z0-9,\-]{22,52}$/', $_COOKIE[session_name()])) {
 				exit('Error: Invalid session ID!');
 			}
