@@ -1768,53 +1768,6 @@
             }
         })
         
-        $('.f-p_submit').click(function(){
-            var addresses = [];
-            $('input[data-name="customer_address"].f-p_input').each(function(i, item, arr){
-                var address_id = $(item).attr('data-target-id');
-                console.log(address_id);
-                if(parseInt(address_id) <= 0) {
-                    address_id = 0;
-                }
-                addresses[addresses.length] = {
-                    value: $(item).val(),
-                    address_id: address_id
-                }
-            });
-            var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
-            var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
-            var email = $('input[data-name="customer_email"].f-p_input').val();
-            var email_hidden = $('input[data-name="customer_email_virtual"].f-p_input').val();
-            if($('#myId1').prop('checked') && (!email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) || email.match(/^[0-9]+\@eco\-u\.ru/i)) {
-                $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
-                return false;
-            } 
-            if(email_hidden && email == '') {
-                email = email_hidden;
-            }
-            var newsletter = $('#myId1').prop('checked') ? 1 : 0;
-            $.post('/?route=ajax/index/ajaxSetCustomerData', {
-                addresses: addresses,
-                firstname: firstname,
-                telephone: telephone,
-                email: email,
-                newsletter: newsletter
-            }, function(msg){
-                if(msg.status == 'success') {
-                    msg.dadata.forEach(function(item, i, arr){
-                        $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
-                    });
-                    $('.f-p_input').removeClass('input-error_2');
-                    $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
-                    setTimeout(function(){
-                        $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
-                    }, 3000);
-                } else {
-                    
-                }
-            }, "json");
-        });
-        
         $('#form1.order-information').find('.o-i_submit').click(function(){
             var policy = $(this).parents('#form1').find('#myId1').prop('checked');
             var firstname = $(this).parents('#form1').find('.field_firstname').val();
@@ -1885,6 +1838,56 @@
             }
         });
     */
+        $('.f-p_submit').click(function(){
+            var addresses = [];
+            $('input[data-name="customer_address"].f-p_input').each(function(i, item, arr){
+                var address_id = $(item).attr('data-target-id');
+                console.log(address_id);
+                if(parseInt(address_id) <= 0) {
+                    address_id = 0;
+                }
+                addresses[addresses.length] = {
+                    value: $(item).val(),
+                    address_id: address_id
+                }
+            });
+            var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
+            var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
+            var email = $('input[data-name="customer_email"].f-p_input').val();
+            var email_hidden = $('input[data-name="customer_email_virtual"].f-p_input').val();
+            if($('#myId1').prop('checked') && (!email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) || email.match(/^[0-9]+\@eco\-u\.ru/i)) {
+                $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
+                $('html, body').animate({
+                    scrollTop: '0px'
+                }, 'fast');
+                return false;
+            } 
+            if(email_hidden && email == '') {
+                email = email_hidden;
+            }
+            var newsletter = $('#myId1').prop('checked') ? 1 : 0;
+            $.post('/?route=ajax/index/ajaxSetCustomerData', {
+                addresses: addresses,
+                firstname: firstname,
+                telephone: telephone,
+                email: email,
+                newsletter: newsletter
+            }, function(msg){
+                if(msg.status == 'success') {
+                    msg.dadata.forEach(function(item, i, arr){
+                        $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
+                    });
+                    $('.f-p_input').removeClass('input-error_2');
+                    $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
+                    setTimeout(function(){
+                        $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
+                    }, 3000);
+                } else {
+                    
+                }
+            }, "json");
+        });
+        
         $('.slider-favorite-products').slick({
                 autoplay: true,
                 autoplaySpeed: 2000000,
