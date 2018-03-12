@@ -1,4 +1,4 @@
-<?php if($page_cart) { ?>
+<?php if($page_cart || $has_success) { ?>
 <div class="remodal modal-basket" data-remodal-id="modal-basket">
 <?php if(0) { ?>
         <button class="remodal-clear">Очистить корзину</button>

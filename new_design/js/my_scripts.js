@@ -987,11 +987,13 @@
         $('.modal-basket').delegate('.c-m_submit', 'click', function(){
             var hasError = false;
             var address = '';
+            var address_new = 'false';
             if($('select#delivery_address_m').length > 0) {
                 var addrIndex = $('select#delivery_address_m').val();
                 address = $('select#delivery_address_m').find('option[value="'+addrIndex+'"]').html();
             } else if($('input#delivery_address_m').length > 0) {
                 address = $('input#delivery_address_m').val();
+                address_new = 'true';
             }
             var phone = $('#phone2_m').val().trim();
             $next = $('#phone2_m').next();
@@ -1045,6 +1047,7 @@
                 if(address != '') {
                     $.post('/?route=ajax/index/ajaxGetDeliveryPrice', {
                         address: address,
+                        address_new: address_new,
                         telephone: $('#phone2_m').val(),
                         firstname: $('#customer-name').val(),
                         order_id: $('#checkout-order-id').val()

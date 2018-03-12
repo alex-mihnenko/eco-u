@@ -268,7 +268,7 @@ class ControllerAjaxIndex extends Controller {
             }
         }
         $is_guest = false;
-        if($this->customer->isLogged()) {
+        if(!$this->customer->isLogged()) {
             $this->customer->loginByPhone($this->request->post['telephone'], false, true);
             $is_guest = true;
         }
@@ -755,6 +755,7 @@ class ControllerAjaxIndex extends Controller {
   
   public function ajaxGetDeliveryPrice() {
       $address = $this->request->post['address'];
+      $address_new = $this->request->post['address_new'];
       $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
       if($order_id !== false && !$order_id) {
 //          if($this->customer->isLogged()) {
@@ -774,6 +775,7 @@ class ControllerAjaxIndex extends Controller {
       } else {
           $bwhit = 'IN_MKAD';
       }
+      if($address_new == 'true') $this->customer->setAddress(0, $address);
       echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit));
   }
   
@@ -876,7 +878,7 @@ class ControllerAjaxIndex extends Controller {
             $this->load->model('sms/confirmation');
             $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
             $this->model_sms_confirmation->sendSMS($telephone, $message);
-            echo json_encode(Array('status' => 'success'));
+            echo json_encode(Array('status' => 'success', 'order_id' => $order_id));
           }
       } else {
           if($is_guest) $this->customer->logout();

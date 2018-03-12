@@ -4,6 +4,7 @@ class ControllerCommonCart extends Controller {
         public function index($options = array()) {
                 $this->load->language('checkout/cart');
             
+                $data['has_success'] = !empty($this->session->data['success_order_id']);
                 if(empty($options['empty'])) {
                     $data['page_cart'] = $this->cart();
                     $data['page_customer'] = $this->customer();
