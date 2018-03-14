@@ -53,7 +53,7 @@
     $('#b-close_advantage').click(function(e) {
         e.preventDefault();
         var $this = $(this);
-        var $parent = $this.parent().parent();
+        var $parent = $this.parent();
         $parent.css({ minHeight: 0 });
         $parent.slideUp('slow');
         
