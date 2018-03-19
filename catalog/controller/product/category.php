@@ -225,8 +225,9 @@ class ControllerProductCategory extends Controller {
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
                         $catSortTime = $this->cache->get('latest_category_sort');
                         
-                        $cacheInterval = 5;
-                        if(!$catSortTime || $catSortTime < time() - $cacheInterval) {
+                        //$cacheInterval = 5;
+                        $cacheRequired = $this->model_catalog_product->isCacheRequired();
+                        if(!$catSortTime || !$cacheRequired) {
                             $catSortTime = 0;
                             $results = $this->model_catalog_product->getProducts($filter_data);
                             $data['alphabet_list'] = array();
@@ -244,7 +245,7 @@ class ControllerProductCategory extends Controller {
                         
                         
                         
-                        if($catSortTime < time() - $cacheInterval) foreach($results as $result) {
+                        if(!$cacheRequired) foreach($results as $result) {
                                 // Сортировка по алфавиту
                                 $alphabetSort = mb_strtoupper(mb_substr($result['name'], 0, 1));
                                 //if(isset($data['alphabetCount'][$alphabetSort]) && count($data['alphabetCount'][$alphabetSort]) >= 5) continue;
@@ -359,7 +360,7 @@ class ControllerProductCategory extends Controller {
                         
                         // Сортировка по категориям
                         $iCount = 0;
-                        if($catSortTime < time() - $cacheInterval) foreach($data['categories'] as $category_middle)
+                        if(!$cacheRequired) foreach($data['categories'] as $category_middle)
                         {
                             $data['products_catsorted'][$category_middle['id']] = array(
                                 'id' => $category_middle['id'],
@@ -454,7 +455,7 @@ class ControllerProductCategory extends Controller {
                         
                         
                         
-                        if($catSortTime < time() - $cacheInterval) {
+                        if(!$cacheRequired) {
                             $this->cache->set('latest_category_sort', time());
                             $this->cache->set('alphabetCount', serialize($data['alphabetCount']));
                             $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));

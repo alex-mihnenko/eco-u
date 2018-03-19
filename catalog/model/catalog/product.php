@@ -4,6 +4,23 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+        public function isCacheRequired() {
+            $sql = "SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP) AS time, UNIX_TIMESTAMP(MAX(date_modified)) AS modified FROM `oc_product` WHERE 1";
+            $query = $this->db->query($sql);
+            if(isset($query->row)) {
+                $currentTime = $query->row['time'];
+                $productTime = $query->row['modified'];
+                $cachedTime  = $this->cache->get('latest_category_sort');
+                
+                if($cachedTime < $currentTime - 21600) return false;
+                elseif($productTime >= $cachedTime) return false;
+                else return true;
+            }
+            else {
+                return false;
+            }
+        }
+        
         public function getProductsAttributes($str_product_id) {
                 
                 $sql = "SELECT pa.product_id AS product_id, a.attribute_id AS attribute_id, a.sort_order AS sort, ad.name AS name FROM oc_attribute a JOIN oc_attribute_description ad ON a.attribute_id = ad.attribute_id JOIN oc_product_attribute pa ON pa.attribute_id = a.attribute_id WHERE a.attribute_group_id = 8 ORDER BY pa.product_id";
