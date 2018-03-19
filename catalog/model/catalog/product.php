@@ -308,7 +308,7 @@ class ModelCatalogProduct extends Model {
                         $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
 		}
 
-                var_dump($product_data);
+                echo '<script>console.log('.json_enocode($product_data[1273]).');</script>';
                 
                 echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                 
