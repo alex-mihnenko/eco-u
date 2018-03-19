@@ -6748,12 +6748,64 @@ select.ca-i_input.input-error_3 {
 	}
 }
 @media screen and (max-width: 479px) { 
-        .sticker_20 {
-            font-size:8px !important;
-        }
+ 	/* выгодное предложение */
+	.sticker_16 span{
+		font-size: 8px !important;
+	}
+
+	/* organic */
+	.sticker_17 span{
+		font-size: 8px !important;
+	}
+
+	/* без ГМО */
+	.sticker_18 span{
+		font-size: 8px !important;
+	}
+
+	/* редкость */
+	.sticker_19 span{
+		font-size: 8px !important;
+	}
+
+	/* новинка */
+	.sticker_20 span{
+		font-size: 8px !important;
+	}
+
+	/* новинка */
+	.sticker_21 span{
+
+	}
+
+	/* сезон */
+	.sticker_22 span{
+		font-size: 0.7em;
+	}
+
+	/* конец сезона */
 	.sticker_23 span{
 		font-size: 0.7em;
 	}
+
+	/* raw */
+	.sticker_24 span{
+		font-size: 12px !important;
+	}
+
+	/* vegan */
+	.sticker_25 span{
+		font-size: 10px !important;
+	}
+
+	/* наше производство */
+	.sticker_26 span{
+		font-size: 10px !important;
+	}
+
+	/* сезон */
+	/* скидка */
+
 	.h-box_right,
 	.h-box_left {
 		width: 35%;
