@@ -9,7 +9,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 10) {
+	            if(i == 100) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -34,7 +34,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 10) {
+	            if(i == 100) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -147,7 +147,7 @@
 		var i = 0;
 		$items.each(function() {
                         i++;
-                        if(i == 5) {
+                        if(i == 100) {
                             return false;
                         }
 			var $item = $(this);
