@@ -233,11 +233,13 @@ class ControllerProductCategory extends Controller {
                             $data['products_asorted'] = array();
                             $data['products_tagsorted'] = array();
                             $data['products_catsorted'] = array();
+                            $data['alphabetCount'] = array();
                         } else {
                             $data['alphabet_list'] = unserialize($this->cache->get('category_alphabet_list'));
                             $data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
                             $data['products_tagsorted'] = unserialize($this->cache->get('category_products_tagsorted'));
                             $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
+                            $data['alphabetCount'] = unserialize($this->cache->get('alphabetCount'));
                         }
                         
                         
@@ -454,6 +456,7 @@ class ControllerProductCategory extends Controller {
                         
                         if($catSortTime < time() - $cacheInterval) {
                             $this->cache->set('latest_category_sort', time());
+                            $this->cache->set('alphabetCount', serialize($data['alphabetCount']));
                             $this->cache->set('category_alphabet_list', serialize($data['alphabet_list']));
                             $this->cache->set('category_products_asorted', serialize($data['products_asorted']));
                             $this->cache->set('category_products_tagsorted', serialize($data['products_tagsorted']));
