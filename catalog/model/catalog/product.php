@@ -23,6 +23,8 @@ class ModelCatalogProduct extends Model {
                     16  // Выгодно
                 );
                 $stickers = Array();
+                var_dump($query);
+                die();
                 foreach($query as $row) {
                     if((!isset($stickers[$row['product_id']]) 
                             || $row['sort'] < $stickers[$row['product_id']]['sort']
