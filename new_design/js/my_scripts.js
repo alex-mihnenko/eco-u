@@ -27,11 +27,11 @@
 	                return false;
 	            }
 	            var $item = $(this);
-                    if(!CheckVisibility($item)) continue;
+                    i++;
+                    if(!CheckVisibility($item)) return false;
                     if($item.hasClass('dd-ready')) return true;
 	            $item.addClass('dd-ready');
 	            $item.selectric();
-	            i++;
 	        });
 	        setTimeout(function() {
 	                initDropDown2();
@@ -53,11 +53,11 @@
 	                return false;
 	            }
 	            var $item = $(this);
-                    if(!CheckVisibility($item)) continue;
+                    i++;
+                    if(!CheckVisibility($item)) return false;
                     if($item.hasClass('dd-ready')) return true;
 	            $item.addClass('dd-ready');
 	            $item.selectric();
-	            i++;
 	        });
 	        setTimeout(function() {
 	                initDropDown3();
@@ -167,7 +167,7 @@
                             return false;
                         }
 			var $item = $(this);
-                        if(!CheckVisibility($item)) continue;
+                        if(!CheckVisibility($item)) return false;
 			if($item.parents('.modal-basket').length) return true;
 			if($item.hasClass('dd-ready')) return true;
 			$item.addClass('dd-ready');
