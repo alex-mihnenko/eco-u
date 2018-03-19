@@ -6,7 +6,7 @@ class ModelCatalogProduct extends Model {
 
         public function getProductsAttributes($str_product_id) {
                 
-                $sql = "SELECT FROM " . DB_PREFIX . "product_attribute pa WHERE pa.attribute_id IN "
+                $sql = "SELECT * FROM " . DB_PREFIX . "product_attribute pa WHERE pa.attribute_id IN "
                      . "(SELECT attribute_id FROM " . DB_PREFIX ."attribute a WHERE attribute_group_id = 8)";
                     
                 var_dump($sql);
