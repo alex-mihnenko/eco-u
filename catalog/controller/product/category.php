@@ -177,14 +177,21 @@ class ControllerProductCategory extends Controller {
                         
 			foreach ($categories_level2 as $result) {
 				
+                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
+                            
                                 $subcategories = array();
                                 $categories_level3 = $this->model_catalog_category->getCategories($result['category_id']);
+                                
+                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
+                                
                                 foreach ($categories_level3 as $result3) {
                                     $filter_data = array(
                                             'filter_category_id'  => $result3['category_id'],
                                             'filter_sub_category' => true
                                     );
 
+                                    '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
+                                    
                                     $subcategories[] = array(
                                             'id' => $result3['category_id'],
                                             'name' => $result3['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
@@ -192,13 +199,19 @@ class ControllerProductCategory extends Controller {
                                             'image' => $result3['image'],
                                             'total' => $this->model_catalog_product->getTotalCategoryProducts($result3['category_id'])
                                     );
+                                    
+                                    '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                                 }
+                                
+                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                                 
                                 $filter_data = array(
 					'filter_category_id'  => $result['category_id'],
 					'filter_sub_category' => true
 				);
 
+                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
+                                
 				$data['categories'][] = array(
                                         'id' => $result['category_id'],
 					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
