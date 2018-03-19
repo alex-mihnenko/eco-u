@@ -408,6 +408,8 @@ class ModelCatalogProduct extends Model {
 
 		$query = $this->db->query($sql);
                 
+                var_dump(1);
+                die();
                 $arProductsID = Array();
                 foreach($query->rows as $result) {
                     $arProductsID[] = $result['product_id'];
