@@ -152,10 +152,11 @@
                             return false;
                         }
 			var $item = $(this);
-			if($item.parents('.modal-basket').length) return true;
+                        if($item.parents('.modal-basket').length) return true;
 			if($item.hasClass('dd-ready')) return true;
 			$item.addClass('dd-ready');
 			$item.selectric();
+                        console.log($item.parents('div.itemListElement').attr('id'));
                         var currencyStr = ' руб';
                         $item.parents('.p-o_select').find('select').on('change', function(e){
 //                            console.log($(this));
