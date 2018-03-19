@@ -129,7 +129,7 @@
 		topSpacing: 0
 	});
 	$(".f-c_top").sticky({
-		topSpacing: 67,
+		topSpacing: 0,
 		className: 'is-sticky2',
 	});
 	/*** tabs profile ***/
