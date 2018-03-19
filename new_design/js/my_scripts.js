@@ -1,17 +1,4 @@
 ﻿$(document).ready(function(){
-        /* Visibility check */
-        function CheckVisibility(elem) {
-            if($(document).scrollTop() + $(window).height() > elem.offset().top && $(document).scrollTop() - elem.offset().top < elem.height())
-            {
-                console.log(1);
-                return true;
-            }
-            else
-            {
-                console.log(2);
-                return false;
-            }
-        }
     
 	/*** start basket ***/
 	$(document).on('opening', '.modal-basket', function () {
@@ -28,7 +15,6 @@
 	            }
 	            var $item = $(this);
                     i++;
-                    if(!CheckVisibility($item)) return false;
                     if($item.hasClass('dd-ready')) return true;
 	            $item.addClass('dd-ready');
 	            $item.selectric();
@@ -54,7 +40,6 @@
 	            }
 	            var $item = $(this);
                     i++;
-                    if(!CheckVisibility($item)) return false;
                     if($item.hasClass('dd-ready')) return true;
 	            $item.addClass('dd-ready');
 	            $item.selectric();
@@ -167,7 +152,6 @@
                             return false;
                         }
 			var $item = $(this);
-                        if(!CheckVisibility($item)) return false;
 			if($item.parents('.modal-basket').length) return true;
 			if($item.hasClass('dd-ready')) return true;
 			$item.addClass('dd-ready');
