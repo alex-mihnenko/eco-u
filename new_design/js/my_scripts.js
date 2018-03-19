@@ -18,9 +18,9 @@
 	            $item.selectric();
 	            i++;
 	        });
-	        //setTimeout(function() {
+	        setTimeout(function() {
 	                initDropDown2();
-	        //}, 1);
+	        }, 10);
 	    }
 	    initDropDown2();
 	});
@@ -43,9 +43,9 @@
 	            $item.selectric();
 	            i++;
 	        });
-	        //setTimeout(function() {
+	        setTimeout(function() {
 	                initDropDown3();
-	        //    }, 1);
+	        }, 20);
 	    }
 	    initDropDown3();
 	});
@@ -211,9 +211,9 @@
                         });
                         $item.parents('.c-p_select').find('select').trigger('change');;
 		});
-		//setTimeout(function() {
+		setTimeout(function() {
 			initDropDown();
-		//}, 1);
+		}, 10);
 	};
 	initDropDown();
         
