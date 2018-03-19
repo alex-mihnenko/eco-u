@@ -2112,6 +2112,7 @@
         function bLazyPluginInit()
         {
             var bLazy = new Blazy({
+                offset: 1000,
                 success: function(element){
                     //setTimeout(function(){
                         //var parent = element.parentNode;
