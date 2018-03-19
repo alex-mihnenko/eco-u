@@ -176,13 +176,9 @@ class ControllerProductCategory extends Controller {
                         
                         
 			foreach ($categories_level2 as $result) {
-				
-                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                             
                                 $subcategories = array();
                                 $categories_level3 = $this->model_catalog_category->getCategories($result['category_id']);
-                                
-                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                                 
                                 foreach ($categories_level3 as $result3) {
                                     $filter_data = array(
@@ -190,8 +186,6 @@ class ControllerProductCategory extends Controller {
                                             'filter_sub_category' => true
                                     );
 
-                                    '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                                    
                                     $subcategories[] = array(
                                             'id' => $result3['category_id'],
                                             'name' => $result3['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
@@ -200,17 +194,11 @@ class ControllerProductCategory extends Controller {
                                             'total' => $this->model_catalog_product->getTotalCategoryProducts($result3['category_id'])
                                     );
                                     
-                                    '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                                 }
-                                
-                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                                
                                 $filter_data = array(
 					'filter_category_id'  => $result['category_id'],
 					'filter_sub_category' => true
 				);
-
-                                '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                                 
 				$data['categories'][] = array(
                                         'id' => $result['category_id'],
@@ -235,46 +223,21 @@ class ControllerProductCategory extends Controller {
 			);
 
 			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
-
-                        echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                        
                         $catSortTime = $this->cache->get('latest_category_sort');
-                        
-                        echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                         
                         $cacheInterval = 5;
                         if(!$catSortTime || $catSortTime < time() - $cacheInterval) {
                             $catSortTime = 0;
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $results = $this->model_catalog_product->getProducts($filter_data);
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $data['alphabet_list'] = array();
                             $data['products_asorted'] = array();
                             $data['products_tagsorted'] = array();
                             $data['products_catsorted'] = array();
                         } else {
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $data['alphabet_list'] = unserialize($this->cache->get('category_alphabet_list'));
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $data['products_tagsorted'] = unserialize($this->cache->get('category_products_tagsorted'));
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
-                            
                             $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
-                            
-                            echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                         }
                         
                         
