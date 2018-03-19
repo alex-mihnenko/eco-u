@@ -22,7 +22,7 @@
     </head>
     <body>
         	<div class="wreaper">
-			<header class="sticker">
+			<header class="sticker" style="position:absolute;left:0;right:0;top:0;z-index:333;">
 				<div class="size-0">
 					<div class="h-box_left">
 						<div class="rel">
