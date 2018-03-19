@@ -6,11 +6,9 @@ class ModelCatalogProduct extends Model {
 
         public function getProductsAttributes($str_product_id) {
                 
-                $sql = "SELECT * FROM " . DB_PREFIX . "product_attribute pa WHERE pa.attribute_id IN "
-                     . "(SELECT attribute_id FROM " . DB_PREFIX ."attribute a WHERE attribute_group_id = 8)";
-                    
-                var_dump($sql);
-                die();
+                $sql = "SELECT pa.product_id AS product_id, a.attribute_id AS attribute_id, a.sort_order AS sort, ad.name AS name FROM oc_attribute a JOIN oc_attribute_description ad ON a.attribute_id = ad.attribute_id JOIN oc_product_attribute pa ON pa.attribute_id = a.attribute_id WHERE a.attribute_group_id = 8 ORDER BY pa.product_id";
+                $query = $this->db->query($sql);
+                
                 $arStickers = Array(
                     26, // Наше
                     25, // Vegan
@@ -24,13 +22,17 @@ class ModelCatalogProduct extends Model {
                     17,  // Organic
                     16  // Выгодно
                 );
-                if((!$sort || $attribute['sort'] < $sort) && in_array($row['attribute_id'], $arStickers)) {
-                    $sticker = Array(
-                        'class' => $row['attribute_id'],
-                        'name' => $row['attribute_name']
-                    );
-                    $sort = $row['attribute_sort'];
+                $stickers = Array();
+                foreach($query as $row) {
+                    if((!isset($stickers[$row['product_id']]) || $row['sort'] < $stickers[$row['product_id']]['sort']) && in_array($row['attribute_id'], $arStickers)) {
+                        $stickers[$row['product_id']] = Array(
+                            'class' => $row['attribute_id'],
+                            'name' => $row['name'],
+                            'sort' => $row['sort']
+                        );
+                    }
                 }
+                return $stickers;
 	}
         
         public function getProductsByID($str_product_id) {
@@ -40,8 +42,8 @@ class ModelCatalogProduct extends Model {
             $products = Array();
             if($query->num_rows > 0) foreach($query->rows as $row) {
                 $product_id = $row['product_id'];
-                $sticker = false;
-                $sort = false;
+                if(isset($arProdAttributes[$row['product_id']])) $sticker = $arProdAttributes[$row['product_id']];
+                else $sticker = false;
 
                 $compPrice = false;
                 if($row['composite_price'] == 1) {
