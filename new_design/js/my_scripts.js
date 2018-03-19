@@ -1,5 +1,13 @@
 ﻿$(document).ready(function(){
     
+        $(".sticker").sticky({
+		topSpacing: 0
+	});
+	$(".f-c_top").sticky({
+		topSpacing: 67,
+		className: 'is-sticky2',
+	});
+    
 	/*** start basket ***/
 	$(document).on('opening', '.modal-basket', function () {
 		$('.scroll-pane').jScrollPane();
@@ -125,13 +133,6 @@
         }, 'json');
     });
     
-    $(".sticker").sticky({
-		topSpacing: 0
-	});
-	$(".f-c_top").sticky({
-		topSpacing: 67,
-		className: 'is-sticky2',
-	});
 	/*** tabs profile ***/
 	$('ul.tabs__caption').on('click', 'li:not(.active)', function() {
 		$(this)
