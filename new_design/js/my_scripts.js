@@ -9,7 +9,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 100) {
+	            if(i == 1) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -20,7 +20,7 @@
 	        });
 	        setTimeout(function() {
 	                initDropDown2();
-	            }, 10);
+	            }, 1);
 	    }
 	    initDropDown2();
 	});
@@ -34,7 +34,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 100) {
+	            if(i == 1) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -45,7 +45,7 @@
 	        });
 	        setTimeout(function() {
 	                initDropDown3();
-	            }, 10);
+	            }, 1);
 	    }
 	    initDropDown3();
 	});
@@ -147,7 +147,7 @@
 		var i = 0;
 		$items.each(function() {
                         i++;
-                        if(i == 100) {
+                        if(i == 1) {
                             return false;
                         }
 			var $item = $(this);
@@ -213,7 +213,7 @@
 		});
 		setTimeout(function() {
 			initDropDown();
-		}, 10);
+		}, 1);
 	};
 	initDropDown();
         
