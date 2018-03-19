@@ -142,9 +142,9 @@
 	/* select2 */
 	var initDropDown = function() {
 		var $items = $('.tech:not(.dd-ready):visible');
-		if(!$items.length) {
+		/*if(!$items.length) {
 			return;
-		}
+		}*/
 		var i = 0;
 		$items.each(function() {
                         i++;
