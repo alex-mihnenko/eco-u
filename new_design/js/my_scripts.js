@@ -9,7 +9,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 1) {
+	            if(i == 10) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -18,9 +18,9 @@
 	            $item.selectric();
 	            i++;
 	        });
-	        setTimeout(function() {
+	        //setTimeout(function() {
 	                initDropDown2();
-	            }, 1);
+	        //}, 1);
 	    }
 	    initDropDown2();
 	});
@@ -34,7 +34,7 @@
 	        }
 	        var i = 0;
 	        $items.each(function() {
-	            if(i == 1) {
+	            if(i == 10) {
 	                return false;
 	            }
 	            var $item = $(this);
@@ -43,9 +43,9 @@
 	            $item.selectric();
 	            i++;
 	        });
-	        setTimeout(function() {
+	        //setTimeout(function() {
 	                initDropDown3();
-	            }, 1);
+	        //    }, 1);
 	    }
 	    initDropDown3();
 	});
@@ -147,7 +147,7 @@
 		var i = 0;
 		$items.each(function() {
                         i++;
-                        if(i == 1) {
+                        if(i == 10) {
                             return false;
                         }
 			var $item = $(this);
@@ -211,9 +211,9 @@
                         });
                         $item.parents('.c-p_select').find('select').trigger('change');;
 		});
-		setTimeout(function() {
+		//setTimeout(function() {
 			initDropDown();
-		}, 1);
+		//}, 1);
 	};
 	initDropDown();
         
