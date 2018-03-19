@@ -1,7 +1,7 @@
 ﻿$(document).ready(function(){
         /* Visibility check */
         function CheckVisibility(elem) {
-            if(elem.is(':visible') && $(document).scrollTop() + $(window).height() > elem.offset().top && $(document).scrollTop() - elem.offset().top < elem.height())
+            if($(document).scrollTop() + $(window).height() > elem.offset().top && $(document).scrollTop() - elem.offset().top < elem.height())
             {
                 console.log(1);
                 return true;
@@ -156,7 +156,7 @@
 	/*** end ***/
 	/* select2 */
 	var initDropDown = function() {
-		var $items = $('.tech:not(.dd-ready)');
+		var $items = $('.tech:not(.dd-ready):visible');
 		if(!$items.length) {
 			return;
 		}
