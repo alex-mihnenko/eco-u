@@ -410,6 +410,7 @@ class ModelCatalogProduct extends Model {
                 foreach ($query->rows as $result) {
                     $arProductsID[] = $result['product_id'];
                 }
+                error_reporting(E_ALL);
                 $strProductsID = implode(',', $arProductsID);
                 
                 $arProductsAll = getProductsByID($strProductsID);
