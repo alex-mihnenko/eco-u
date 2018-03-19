@@ -303,11 +303,15 @@ class ModelCatalogProduct extends Model {
 
                 echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                 
+                var_dump($result);
+                
 		foreach ($query->rows as $result) {
 			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
                         $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
 		}
 
+                var_dump($product_data);
+                
                 echo '<script>console.log("'.__LINE__.': '.microtime(true).'");</script>';
                 
 		return $product_data;
