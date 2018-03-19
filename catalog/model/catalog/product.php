@@ -24,7 +24,9 @@ class ModelCatalogProduct extends Model {
                 );
                 $stickers = Array();
                 foreach($query as $row) {
-                    if((!isset($stickers[$row['product_id']]) || $row['sort'] < $stickers[$row['product_id']]['sort']) && in_array($row['attribute_id'], $arStickers)) {
+                    if((!isset($stickers[$row['product_id']]) 
+                            || $row['sort'] < $stickers[$row['product_id']]['sort']
+                        ) && in_array($row['attribute_id'], $arStickers)) {
                         $stickers[$row['product_id']] = Array(
                             'class' => $row['attribute_id'],
                             'name' => $row['name'],
