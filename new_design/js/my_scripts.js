@@ -1,7 +1,7 @@
 ﻿$(document).ready(function(){
         /* Visibility check */
         function CheckVisibility(elem) {
-            if($elem.is(':visible') && $(document).scrollTop() + $(window).height() > $(elem).offset().top && $(document).scrollTop() - $(elem).offset().top < $(elem).height())
+            if(elem.is(':visible') && $(document).scrollTop() + $(window).height() > elem.offset().top && $(document).scrollTop() - elem.offset().top < elem.height())
             {
                 console.log(1);
                 return true;
