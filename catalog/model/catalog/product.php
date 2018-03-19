@@ -4,8 +4,37 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+        public function getProductsAttributes($str_product_id) {
+		$product_attribute_group_data = array();
+
+		$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN " . DB_PREFIX . "attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id IN (" . $str_product_id . ") AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
+
+		foreach ($product_attribute_group_query->rows as $product_attribute_group) {
+			$product_attribute_data = array();
+
+			$product_attribute_query = $this->db->query("SELECT a.attribute_id, ad.name, pa.text, a.sort_order FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+
+			foreach ($product_attribute_query->rows as $product_attribute) {
+				$product_attribute_data[] = array(
+					'attribute_id' => $product_attribute['attribute_id'],
+					'name'         => $product_attribute['name'],
+					'text'         => $product_attribute['text'],
+                                        'sort'         => $product_attribute['sort_order']
+				);
+			}
+
+			$product_attribute_group_data[] = array(
+				'attribute_group_id' => $product_attribute_group['attribute_group_id'],
+				'name'               => $product_attribute_group['name'],
+				'attribute'          => $product_attribute_data
+			);
+		}
+
+		return $product_attribute_group_data;
+	}
+        
         public function getProductsByID($str_product_id) {
-            $query = $this->db->query("SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id IN (" . $str_product_id . ") AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+            $query = $this->db->query("SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, pa.name AS attribute_name, pa.sort AS attribute_sort (SELECT attribute_id FROM " . DB_PREFIX . "product_attribute pa WHERE pa.product_id = p.product_id) AS attribute_id, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id IN (" . $str_product_id . ") AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
             
                 $products = Array();
                 var_dump(microtime(true));
@@ -14,31 +43,26 @@ class ModelCatalogProduct extends Model {
                     $sticker = false;
                     $sort = false;
                     $attribute_groups = $this->getProductAttributes($product_id);
-                    foreach($attribute_groups as $group) {
-                        if($group['attribute_group_id'] == '8') {
-                            foreach($group['attribute'] as $attribute) {
-                                $arStickers = Array(
-                                    26, // Наше
-                                    25, // Vegan
-                                    24, // RAW
-                                    23, // Конец сезона
-                                    22, // Сезон
-                                    21, // Скидка
-                                    20, // Новинка
-                                    19, // Редкость
-                                    18,  // Без ГМО
-                                    17,  // Organic
-                                    16  // Выгодно
-                                );
-                                if((!$sort || $attribute['sort'] < $sort) && in_array($attribute['attribute_id'], $arStickers)) {
-                                    $sticker = Array(
-                                        'class' => $attribute['attribute_id'],
-                                        'name' => $attribute['name']
-                                    );
-                                    $sort = $attribute['sort'];
-                                } 
-                            }
-                        }
+                    
+                    $arStickers = Array(
+                        26, // Наше
+                        25, // Vegan
+                        24, // RAW
+                        23, // Конец сезона
+                        22, // Сезон
+                        21, // Скидка
+                        20, // Новинка
+                        19, // Редкость
+                        18,  // Без ГМО
+                        17,  // Organic
+                        16  // Выгодно
+                    );
+                    if((!$sort || $attribute['sort'] < $sort) && in_array($row['attribute_id'], $arStickers)) {
+                        $sticker = Array(
+                            'class' => $row['attribute_id'],
+                            'name' => $row['attribute_name']
+                        );
+                        $sort = $row['attribute_sort'];
                     }
                     
                     $compPrice = false;
@@ -121,7 +145,6 @@ class ModelCatalogProduct extends Model {
                             'shelf_life'       => $row['shelf_life']
                     );
                 }
-                var_dump(microtime(true));
             return $products;
         }
         
