@@ -415,7 +415,7 @@ class ModelCatalogProduct extends Model {
                 
                 $strProductsID = implode(',', $arProductsID);
                 
-                var_dump(1);
+                var_dump($strProductsID);
                 die();
                 
                 $arProductsAll = getProductsByID($strProductsID);
