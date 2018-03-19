@@ -254,7 +254,7 @@ class ControllerAjaxIndex extends Controller {
   // Создать заказ
   public function ajaxAddOrder($return = false) {
         $this->load->model('checkout/order');
-        
+        $this->cache->set('latest_category_sort', 0);
         // Основные данные заказа
         $data['products'] = $this->cart->getProducts();
         foreach($data['products'] as $i => $product) {
