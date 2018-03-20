@@ -1,5 +1,5 @@
 <div id="form-payment" class="cart-380-">
-    <div class="cart-top-line"></div>
+    <div class="cart-top-line" data-go-to="2"><div style="float: left"><img src="/new_design/img/left-arrow.svg" alt="назад" style="width: 20px; height: 20px; margin-top:-3px"></div> назад</div>
     <div class="o-i_txt4">Как вы хотите оплатить заказ?</div>
     <div class="fill-div"></div>
     
@@ -20,7 +20,7 @@
         <?php } ?>
     </div>
     <div class="fill-div"></div>
-    <div class="pad-md">
+    <!--div class="pad-md">
         <span class="c-m_submit2" data-go-to="2">Назад</span>
-    </div>
+    </div-->
 </div>

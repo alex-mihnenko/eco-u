@@ -982,11 +982,17 @@
                 $('.c-m_submit').html('Рассчитать стоимость доставки');
             }
         });
-        $('.modal-basket').delegate('.c-m_submit2', 'click', function(){
+     /*   $('.modal-basket').delegate('.c-m_submit2', 'click', function(){
             var $this = $(this);
             var gtStep =$this.data('go-to');
             $('.t_item_p' + gtStep + ' a').click();
         });
+      */
+    $('.modal-basket').delegate('.cart-top-line', 'click', function(){
+        var $this = $(this);
+        var gtStep =$this.data('go-to');
+        $('.t_item_p' + gtStep + ' a').click();
+    });
         $('.modal-basket').delegate('.c-m_submit', 'click', function(){
             var hasError = false;
             var address = '';

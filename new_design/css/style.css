@@ -3275,12 +3275,13 @@ footer {
     clear: both;
 }
 .btn-block > div {
-    float: left;
-    width: 50%;
+  /*  float: left;
+    width: 100%;
     box-sizing: border-box;
+  */
 }
 .btn-block > div:first-child {
-    float: right;
+   /* float: right; */
 }
 .delivery-address-m > .selectric-wrapper {
     height: 41px;
@@ -4582,7 +4583,7 @@ a.m_button,
     -moz-box-shadow: 0 2px 13px rgba(0,0,0,.19);
     -webkit-box-shadow: 0 2px 13px rgba(0,0,0,.19);
     box-shadow: 0 2px 13px rgba(0,0,0,.19);
-    font-weight: 900;
+    font-weight: 500;
     letter-spacing: 0.06em;
     cursor: pointer;
 }
@@ -4676,8 +4677,15 @@ a.m_button:hover,
     padding-bottom: 12px;
 }
 .cart-top-line {
-    height: 50px;
+    height: 30px;
     background: #749D3E;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 500;
+	text-align: left;
+	padding-left: 5px;
+	padding-top: 15px;
+	cursor: pointer;
 }
 .cart-380 {
     /*max-width: 380px;*/
@@ -4731,6 +4739,8 @@ a.m_button:hover,
 .pad-md {
     padding-left: 15px;
     padding-right: 15px;
+	max-width:400px;
+	margin: 0 auto;
 }
 .ta-center {
     text-align: center;
@@ -6352,7 +6362,7 @@ select.ca-i_input.input-error_3 {
 	    margin: 60px auto 60px auto;
 	}
         .btn-block > div {
-            width: 100%;
+            width: 90%;
         }
         .btn-block > div:first-child {
             float: left;
@@ -6901,12 +6911,21 @@ select.ca-i_input.input-error_3 {
 	    height: 30px;
 	    font-size: 16px;
 	    line-height: 30px;
+		padding-top:10px;
+		padding-bottom:10px;
 	}
 	.list-letter.list-modal .p-o_select {
 		width: 45px;
 	}
 	.m-basket_title-message {
-	    line-height: 14px;
+	    line-height: 10px;
+		font-size: 10px;
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	.m-basket_title-message a{
+		font-size: 10px;
 	}
 	.remodal-clear {
 	    top: 15px;
@@ -6914,6 +6933,11 @@ select.ca-i_input.input-error_3 {
 	.m-basket_title {
 	    font-size: 21px;
 	    padding: 40px 10px 5px 10px;
+	}
+
+	.total-price-error {
+		font-size:12px;
+		height: 1em;
 	}
 }
 @media screen and (max-width: 374px) { 
