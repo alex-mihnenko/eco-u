@@ -409,6 +409,18 @@ header {
 	position: relative;
 	transition: 0.3s ease all;
 }
+
+.b-b_phone {
+	background: url('../img/phone_ico.svg') no-repeat;
+	background-size: contain;
+	height: 34px;
+	width: 34px;
+	position: absolute;
+	top:17px;
+	left:140px;
+	cursor: pointer;
+}
+
 .b-b_price span {
 	color: #ffffff;
 	transition: 0.3s ease all;
@@ -767,6 +779,36 @@ header {
 	-webkit-box-shadow: 0 5px 49px rgba(0,0,0,.15);
 	box-shadow: 0 5px 49px rgba(0,0,0,.15);
 }
+
+.modal-phone {
+	-moz-border-radius: 4px / 6px;
+	-webkit-border-radius: 4px / 6px;
+	border-radius: 4px / 6px;
+	-moz-box-shadow: 0 5px 49px rgba(0,0,0,.15);
+	-webkit-box-shadow: 0 5px 49px rgba(0,0,0,.15);
+	box-shadow: 0 5px 49px rgba(0,0,0,.15);
+	min-height: 500px;
+}
+
+.modal-phone h2{
+	font-size: 30px;
+	font-weight: 500;
+	padding-top:40px;
+	padding-bottom:40px;
+}
+.modal-phone .mp-table_row {
+	padding-bottom:40px;
+	line-height:30px;
+}
+
+.modal-phone .mp-table_row span {
+	font-size: 22px;
+}
+
+.modal-phone .mp-table_row b {
+	font-weight: 500;
+}
+
 .t-c_title {
 	font-size: 28px;
 	font-weight: 500;
@@ -2144,6 +2186,8 @@ footer {
 .page_2 .b-profile:hover {
     color: #ffffff;
 }
+
+
 .page_2 .h-menu,
 .page_3 .h-menu  {
 	-moz-border-radius: 19px / 19px 19px 19px 19px;
@@ -6518,11 +6562,24 @@ select.ca-i_input.input-error_3 {
 	    width: 100%;
 	    height: auto;
 	}
+
 	.b-b_price {
 	    font-size: 9px;
 	    margin: 6px 0px 0 0;
 	    padding: 0 25px 0 0;
 	}
+
+	.b-b_phone {
+		background: url('../img/phone_ico.svg') no-repeat;
+		background-size: contain;
+		height: 20px;
+		width: 20px;
+		position: absolute;
+		top:14px;
+		left:60px;
+		cursor: pointer;
+	}
+
 	.list-m_a li:first-child a.selected {
 		-webkit-border-top-left-radius: 4px;
 		-moz-border-radius-topleft: 4px;

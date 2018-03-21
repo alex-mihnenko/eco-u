@@ -302,7 +302,6 @@ html.remodal-is-locked {
 	display: none;
 }
 
-
 .modal-basket .remodal-close {
     width: 17px;
     height: 17px;
@@ -315,6 +314,21 @@ html.remodal-is-locked {
   display: none;
 }
 .modal-basket .remodal-close:hover {
+    background-position: 0 -17px;
+}
+
+.modal-phone .remodal-close {
+    width: 17px;
+    height: 17px;
+    background: url(../img/img_close_2.png) no-repeat;
+    top: 23px;
+    right: 23px;
+    left: inherit;
+}
+.modal-phone .remodal-close:before {
+    display: none;
+}
+.modal-phone .remodal-close:hover {
     background-position: 0 -17px;
 }
 

@@ -32,6 +32,7 @@
                                                                     <a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a>
                                                                 <?php } ?>
 							</div>
+							<div class="b-b_phone" data-remodal-target="modal-phone"></div>
 						</div>
 					</div>
 					<div class="h-box_center">
@@ -82,6 +83,18 @@
 				</div>
 			</header>
 			<!-- modal <div class="b-profile" data-remodal-target="modal">Войти</div>  -->
+				<div class="remodal modal-phone" data-remodal-id="modal-phone">
+					<button data-remodal-action="close" class="remodal-close"></button>
+
+					<h2>Наши телефоны</h2>
+
+					<div class="mp-table_row"><span>Забота о клиентах</span></br> <b>+7 (495) 108-13-76</b></div>
+					<div class="mp-table_row"><span>Сотрудничество</span></br><b>+7 499 (404)-12-26</b></div>
+
+
+
+				</div>
+
 			<div class="remodal modal-profile" data-remodal-id="modal">
 				<ul class="tabs__caption clearfix">
 					<!--<li>Я новый покупатель</li>-->
