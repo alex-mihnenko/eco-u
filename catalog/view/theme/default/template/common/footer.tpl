@@ -15,7 +15,7 @@
 					</div>
 					<div class="clearfix">
 						<div class="f-left">
-							<a href="tel:84994041226" class="f-telephone">8(499) 404-12-26</a>
+							<a href="tel:84951081876" class="f-telephone">+7 (495) 108-18-76</a>
 							<a href="mailto:mail@eco-u.ru" class="f-mail">mail@eco-u.ru</a>
 						</div>
 						<div class="social-networks">

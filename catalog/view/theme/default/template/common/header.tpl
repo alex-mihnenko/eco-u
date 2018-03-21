@@ -88,7 +88,7 @@
 
 					<h2>Наши телефоны</h2>
 
-					<div class="mp-table_row"><span>Забота о клиентах</span></br> <b>+7 (495) 108-13-76</b></div>
+					<div class="mp-table_row"><span>Забота о клиентах</span></br> <b itemprop="telephone">+7 (495) 108-18-76</b></div>
 					<div class="mp-table_row"><span>Сотрудничество</span></br><b>+7 499 (404)-12-26</b></div>
 
 
