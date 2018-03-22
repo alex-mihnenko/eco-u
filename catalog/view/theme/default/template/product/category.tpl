@@ -18,7 +18,7 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_2"></div>
 							</div>
-							<div class="l-a_title"> Ешьте свежие и качественные продукты</div>
+							<div class="l-a_title"> Покупайте свежие и качественные продукты</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
@@ -30,7 +30,7 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_4"></div>
 							</div>
-							<div class="l-a_title">Оформите доставку по Москве за 290 рублей или бесплатно от 3900 рублей</div>
+							<div class="l-a_title">Оформите доставку по Москве за 330 рублей или бесплатно от 4 500 рублей</div>
 						</li>
 					</ul>
 				</div>
