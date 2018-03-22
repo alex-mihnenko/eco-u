@@ -6,7 +6,7 @@
         <?php } ?>
 </div>
 <div class="m-basket_padding">
-        <div class="scroll-pane">
+        <div class="scroll-pane-cart">
                 <ul class="list-letter list-modal">
                         <?php foreach($products as $product) { ?>
                         <li>

@@ -7131,3 +7131,12 @@ select.ca-i_input.input-error_3 {
         display: none;
     }
 }
+.scroll-pane-cart {
+    box-sizing: border-box;
+    height: auto !important;
+    max-height: calc(100vh - 260px) !important;
+    width: 100% !important;
+    outline: none;
+    overflow: hidden;
+    overflow-y: auto;
+}
