@@ -28,9 +28,9 @@
 						<div class="rel">
 							<div class="h-menu">еда</div>
 							<div class="hidden-menu">
-                                                                <?php foreach($categories as $category) { ?>
+                                                                <?php foreach($categories as $category) { if($category['name']!='Косметика') {?>
                                                                     <a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a>
-                                                                <?php } ?>
+                                                                <?php }} ?>
 							</div>
 							<div class="b-b_phone" data-remodal-target="modal-phone"></div>
 						</div>
