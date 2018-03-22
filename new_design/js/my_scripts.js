@@ -1065,10 +1065,10 @@
                             if((msg.order_id !== undefined) && (msg.order_id > 0)) {
                                 $('#checkout-order-id').val(msg.order_id);
                             }
-                            if(price >= 4000 && msg.mkad == 'IN_MKAD') {
+                            if(price >= 4500 && msg.mkad == 'IN_MKAD') {
                                 delivery_price = 0;
-                            } else if(price < 4000 && msg.mkad == 'IN_MKAD') {
-                                delivery_price = 290;
+                            } else if(price < 4500 && msg.mkad == 'IN_MKAD') {
+                                delivery_price = 330;
                             } else if(msg.mkad != 'IN_MKAD') {
                                 delivery_price = 490;
                             }

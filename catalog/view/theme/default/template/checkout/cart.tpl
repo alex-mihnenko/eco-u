@@ -198,7 +198,7 @@
 									</div>
                                                                         <div class="block-delivery-price">
                                                                             <div class="cost-delivery">Стоимость доставки</div>
-                                                                            <div class="c-d_price">250 руб</div>
+                                                                            <div class="c-d_price">330 руб</div>
                                                                         </div>
 								</div>
 								<div class="shipping-amount">
