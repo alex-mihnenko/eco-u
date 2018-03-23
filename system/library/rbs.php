@@ -7,7 +7,7 @@ class RBS {
     private $test_url = 'https://3dsec.sberbank.ru/payment/rest/';
 
     /** @var string $prod_url   Адрес боевого шлюза*/
-    private $prod_url = 'https://securepayments.sberbank.ru/payment/rest/';
+    private $prod_url = 'https://securepayments.sberbank.ru/mportal/';
 
     /** @var string $version    Версия плагина*/
     private $version = '1.0';
