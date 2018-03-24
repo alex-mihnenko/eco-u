@@ -453,7 +453,7 @@ class ControllerAjaxIndex extends Controller {
         }
         
         if($return) {
-                return $order_id;
+                return $data['total'];
         }
         
         $this->response->setOutput(json_encode($json));
