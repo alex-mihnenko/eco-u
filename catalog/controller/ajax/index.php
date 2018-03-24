@@ -443,7 +443,7 @@ class ControllerAjaxIndex extends Controller {
                 $this->model_checkout_order->editOrder($order_id, $data);
                 $this->model_checkout_order->addOrderHistory($order_id, 1);
               }
-            $json = Array('status' => 'success', 'orderId' => $order_id);
+            $json = Array('status' => 'success', 'orderId' => $order_id, 'total' => $data['total']);
         } else {
             $json = Array('status' => 'error');
         }
@@ -832,8 +832,7 @@ class ControllerAjaxIndex extends Controller {
           'delivery_time' => $strDateTime,
           'delivery_interval' => $strDeliveryInterval,
           'payment_method' => $payment_method,
-          'mkad' => $bwhit,
-          'total' => $this->cart->getTotal()
+          'mkad' => $bwhit
       );
       
       if(!$this->customer->getCouponDiscount()) {
