@@ -255,6 +255,7 @@ class ControllerAjaxIndex extends Controller {
   public function ajaxAddOrder($return = false) {
         $this->load->model('checkout/order');
         $this->cache->set('latest_category_sort', 0);
+        
         // Основные данные заказа
         $data['products'] = $this->cart->getProducts();
         foreach($data['products'] as $i => $product) {
@@ -273,7 +274,6 @@ class ControllerAjaxIndex extends Controller {
             $is_guest = true;
         }
         
-        $data['total'] = $this->cart->getTotal();
         $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
         $data['store_id'] = $this->config->get('config_store_id');
         $data['store_name'] = $this->config->get('config_name');
@@ -776,7 +776,7 @@ class ControllerAjaxIndex extends Controller {
           $bwhit = 'IN_MKAD';
       }
       if($address_new == 'true') $this->customer->setAddress(0, $address);
-      echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit));
+      echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit, 'total' => $this->cart->getTotal()));
   }
   
   public function ajaxConfirmOrder() {
@@ -1161,6 +1161,10 @@ class ControllerAjaxIndex extends Controller {
       } else {
           $this->response->setOutput(json_encode(Array('status' => 'error')));
       }
+  }
+  
+  public function ajaxGetTotals() {
+      echo $this->cart->getTotal();
   }
   
   public function ajaxGetPersonalOrders() {
