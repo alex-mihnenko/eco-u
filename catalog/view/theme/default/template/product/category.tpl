@@ -12,13 +12,13 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_1"></div>
 							</div>
-							<div class="l-a_title">Выбирайте из более 700 редких и полезных продуктов</div>
+							<div class="l-a_title">Выбирайте из&nbsp;более 700 редких и&nbsp;полезных продуктов</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_2"></div>
 							</div>
-							<div class="l-a_title"> Покупайте свежие и качественные продукты</div>
+							<div class="l-a_title">Покупайте свежие и&nbsp;качественные продукты</div>
 						</li>
 						<li>
 							<div class="l-a_thumb">
@@ -30,7 +30,7 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_4"></div>
 							</div>
-							<div class="l-a_title">Оформите доставку по Москве за 330 рублей или бесплатно от 4 500 рублей</div>
+							<div class="l-a_title">Доставка по&nbsp;Москве за&nbsp;330 рублей или бесплатно от&nbsp;4&nbsp;500 рублей</div>
 						</li>
 					</ul>
 				</div>
