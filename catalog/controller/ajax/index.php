@@ -957,6 +957,7 @@ class ControllerAjaxIndex extends Controller {
                 $data['discount_percentage'] = $personalPercentage;
             }
         }
+        $data['total'] = $this->cart->getTotal();
       
       $this->load->model('checkout/order');
       
