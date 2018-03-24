@@ -832,7 +832,8 @@ class ControllerAjaxIndex extends Controller {
           'delivery_time' => $strDateTime,
           'delivery_interval' => $strDeliveryInterval,
           'payment_method' => $payment_method,
-          'mkad' => $bwhit
+          'mkad' => $bwhit,
+          'total' => $this->cart->getTotal()
       );
       
       if(!$this->customer->getCouponDiscount()) {
@@ -957,7 +958,6 @@ class ControllerAjaxIndex extends Controller {
                 $data['discount_percentage'] = $personalPercentage;
             }
         }
-        $data['total'] = $this->cart->getTotal();
       
       $this->load->model('checkout/order');
       
