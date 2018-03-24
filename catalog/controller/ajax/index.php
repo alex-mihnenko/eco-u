@@ -1163,6 +1163,10 @@ class ControllerAjaxIndex extends Controller {
       }
   }
   
+  public function ajaxGetTotals() {
+      $this->cart->getTotal();
+  }
+  
   public function ajaxGetPersonalOrders() {
       $customer_id = $this->session->data['customer_id'];
       
