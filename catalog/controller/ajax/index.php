@@ -1164,7 +1164,7 @@ class ControllerAjaxIndex extends Controller {
   }
   
   public function ajaxGetTotals() {
-      $this->cart->getTotal();
+      echo $this->cart->getTotal();
   }
   
   public function ajaxGetPersonalOrders() {
