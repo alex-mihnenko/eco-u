@@ -359,6 +359,8 @@ class ControllerAjaxIndex extends Controller {
                 $data['accept_language'] = '';
         }
         
+        $data['total'] = $this->cart->getTotal();
+        
         $order_id = $this->model_checkout_order->addOrder($data);
         
         $this->response->addHeader('Content-Type: application/json');
@@ -776,7 +778,7 @@ class ControllerAjaxIndex extends Controller {
           $bwhit = 'IN_MKAD';
       }
       if($address_new == 'true') $this->customer->setAddress(0, $address);
-      echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit, 'total' => $this->cart->getTotal()));
+      echo json_encode(Array('status' => 'success', 'result' => $result, 'order_id' => $order_id, 'mkad' => $bwhit));
   }
   
   public function ajaxConfirmOrder() {
