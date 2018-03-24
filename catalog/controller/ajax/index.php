@@ -359,8 +359,6 @@ class ControllerAjaxIndex extends Controller {
                 $data['accept_language'] = '';
         }
         
-        $data['total'] = $this->cart->getTotal();
-        
         $order_id = $this->model_checkout_order->addOrder($data);
         
         $this->response->addHeader('Content-Type: application/json');
