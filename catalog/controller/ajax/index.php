@@ -443,7 +443,7 @@ class ControllerAjaxIndex extends Controller {
                 $this->model_checkout_order->editOrder($order_id, $data);
                 $this->model_checkout_order->addOrderHistory($order_id, 1);
               }
-            $json = Array('status' => 'success', 'orderId' => $order_id, 'total' => $data['total']);
+            $json = Array('status' => 'success', 'orderId' => $order_id);
         } else {
             $json = Array('status' => 'error');
         }
@@ -453,7 +453,7 @@ class ControllerAjaxIndex extends Controller {
         }
         
         if($return) {
-                return $data['total'];
+                return $order_id;
         }
         
         $this->response->setOutput(json_encode($json));
@@ -878,7 +878,7 @@ class ControllerAjaxIndex extends Controller {
             $this->load->model('sms/confirmation');
             $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
             $this->model_sms_confirmation->sendSMS($telephone, $message);
-            echo json_encode(Array('status' => 'success', 'order_id' => $order_id, 'total' => $data['total']));
+            echo json_encode(Array('status' => 'success', 'order_id' => $order_id));
           }
       } else {
           if($is_guest) $this->customer->logout();
