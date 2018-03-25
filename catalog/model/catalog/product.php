@@ -546,7 +546,8 @@ class ModelCatalogProduct extends Model {
                     $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
                     $product['sticker_name'] = $product['sticker']['name'];
                     $product['sticker_class'] = $product['sticker']['class'];
-                    $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
+                    if(isset($this->session->data['token'])) $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
+                    else $product['edit_link'] = '';
                     if ($product['image_preview']) {
                         $product['thumb'] = '/image/'.$product['image_preview'];
                     } else {
