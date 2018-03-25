@@ -278,6 +278,7 @@
 									<div class="l-p_title"><?php echo $subcategory['name']; ?></div>
 									<ul class="list-letter ll-open">
                                                                                 <?php 
+                                                                                if($subcategory['id'] && $_SERVER['REMOTE_ADDR'] == '5.228.255.57') var_dump($products_catsorted[$category['id']]['sub'][$subcategory['id']]);
                                                                                 $iCount = 0;
                                                                                 foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) {
                                                                                     if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) {
