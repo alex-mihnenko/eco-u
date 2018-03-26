@@ -805,8 +805,10 @@ header {
 	font-size: 22px;
 }
 
-.modal-phone .mp-table_row b {
+ a.phone_link {
 	font-weight: 500;
+	color: #000 !important;
+	text-decoration: none !important;
 }
 
 .t-c_title {
