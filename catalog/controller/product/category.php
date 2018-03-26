@@ -371,7 +371,7 @@ class ControllerProductCategory extends Controller {
                             
                             foreach($category_middle['sub'] as $category) {
                                 $subcat_filter_data = $filter_data;
-                                $subcat_filter_data['limit'] = 5;
+                                $subcat_filter_data['limit'] = 10;
                                 $subcat_filter_data['filter_category_id'] = $category['id'];
                                 $subcat_results = $this->model_catalog_product->getProducts($subcat_filter_data);
                                 foreach ($subcat_results as $result) {
