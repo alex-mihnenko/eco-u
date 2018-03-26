@@ -1,8 +1,8 @@
 <?php
 // Version
 define('VERSION', '2.3.0.2');
-
-if(in_array($_SERVER['REQUEST_URI'], Array('/', '/index.php'))) 
+$cur_url = explode('?',$_SERVER['REQUEST_URI']);
+if(in_array($cur_url[0], Array('/', '/index.php')))
 {
 	$_REQUEST['_route_'] = 'eda/';
 	$_GET['_route_'] = 'eda/';
