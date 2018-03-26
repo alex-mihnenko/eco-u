@@ -164,6 +164,7 @@ class ControllerAccountAccount extends Controller {
                                 $image = '/image/'.$result['image_preview'];
                                 //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
                         } else {
+                                $this->load->model('tool/image');
                                 $image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
                         }
 
