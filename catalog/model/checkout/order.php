@@ -203,6 +203,13 @@ class ModelCheckoutOrder extends Model {
 				$shipping_zone_code = '';
 			}
 
+                        // TOTAL FIX
+			$total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' AND code = 'total'");
+
+			if ($total_query->num_rows) {
+				$order_query->row['total'] = $total_query->row['value'];
+			}
+
 			$this->load->model('localisation/language');
 
 			$language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
