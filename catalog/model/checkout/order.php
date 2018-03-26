@@ -25,9 +25,9 @@ class ModelCheckoutOrder extends Model {
                 UPDATE `" . DB_PREFIX . "order` SET date_modified = NOW(), order_status_id = 1, 
                 `comment` = CONCAT('Брошенный заказ! ', `comment`) 
                 WHERE order_id IN (SELECT order_id FROM tmp_order)");
-            foreach($query_list as $query) {
-                    $this->db->query($query);
-            }
+//            foreach($query_list as $query) {
+//                    $this->db->query($query);
+//            }
         }
 
     
