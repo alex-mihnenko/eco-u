@@ -5343,6 +5343,10 @@ select.ca-i_input.input-error_3 {
 	    box-sizing: border-box;
 	    padding: 0 10px;
 	}
+	.b-p_title_newsite {
+		box-sizing: border-box;
+		padding: 0 10px;
+	}
 	.b-logo {
 		margin: 15px 0 0 0;
 	}
