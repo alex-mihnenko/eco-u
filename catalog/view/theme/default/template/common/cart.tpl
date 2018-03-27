@@ -30,7 +30,7 @@
         <button data-remodal-action="close" class="remodal-close"></button>
         <div class="m-basket_border">
                 <div class="m-basket_title">Ваша корзина пуста</div>
-                <div class="m-basket_title-message">По каждому заказу мы вручную выбираем и упаковываем самые свежие продукты</div>
+                <div class="m-basket_title-message">Добавьте сюда свежие и полезные продукты</div>
         </div>
         <div class="m-basket_padding">
         </div>
