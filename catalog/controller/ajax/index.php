@@ -803,6 +803,14 @@ class ControllerAjaxIndex extends Controller {
       $customer_id = (int)$this->customer->getId();
       $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
       
+      //  TODO 2018-03-27 Поскольку принудительно авторизируем пользователя по номеру телефона - 
+      //    теряется корзина. Поэтому сначала получим все данные, потом авторизируем
+      //    Персональная скидка будет проигнорирована!
+      //    Обдумать решение этого вопроса
+      $CouponDiscount = $this->customer->getCouponDiscount();
+      $OrderDiscount = $this->cart->getOrderDiscount();
+      $CartTotal = $this->cart->getTotal();
+      
       $is_guest = false;
       if($customer_id == 0) {
           $is_guest = true;
@@ -839,19 +847,19 @@ class ControllerAjaxIndex extends Controller {
           'mkad' => $bwhit
       );
       
-      if(!$this->customer->getCouponDiscount()) {
-            $data['discount'] = $this->cart->getOrderDiscount();
+      if(!$CouponDiscount) {
+            $data['discount'] = $OrderDiscount;
 			if(isset($this->session->data['personal_discount'])) {
 				$personalPercentage = (int)$this->session->data['personal_discount'];
 				$data['discount_percentage'] = $personalPercentage;
 			}
         } else {
             if(isset($this->session->data['personal_discount'])) {
-                $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                $personalDiscount = floor($this->session->data['personal_discount']/100*$CartTotal);
                 if($this->session->data['personal_discount'] <= 10) $personalPercentage = (int)$this->session->data['personal_discount'];
             } else $personalDiscount = 0;
-            $coupon = $this->customer->getCouponDiscount();
-            $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+            $coupon = $CouponDiscount;
+            $couponDiscount = floor($coupon['discount']/100*$CartTotal);
             if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
             if($couponDiscount > $personalDiscount) {
                 $data['coupon_discount'] = $couponDiscount;
