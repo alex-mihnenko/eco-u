@@ -883,7 +883,8 @@ class ModelCheckoutOrder extends Model {
             foreach ($extResults as $result) {
                     if ($result['code'] == $delivery_type && $this->config->get($result['code'] . '_status')) {
                             $this->load->model('extension/shipping/' . $result['code']);
-                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote($data['address']);
+                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote(array('zone_id' => 0, 'country_id' => 0));
+//                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote($data['address']);
                             
                             $order_data['shipping_code'] = $quote['quote'][$delivery_type]['code'];
                             $order_data['shipping_method'] = $quote['quote'][$delivery_type]['title'];
@@ -891,11 +892,12 @@ class ModelCheckoutOrder extends Model {
                             
                             $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
                             if(isset($data['discount'])) $total -= $data['discount'];
+                            $order_data_total = $order_data['total'];
                             $order_data['total'] = $total;
                             @$this->editOrder($order_id, $order_data);
                             $this->addOrderHistory($order_id, $new_order_status);
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$quote['quote'][$delivery_type]['title']}', '{$quote['quote'][$delivery_type]['cost']}', '{$quote['sort_order']}')");
-                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data['total']}', '1')");
+                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data_total}', '1')");
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '9')");
                             if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
                             if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");

@@ -304,7 +304,7 @@ class Customer {
         
         public function getAddresses() {
             $customer_id = $this->customer_id;
-            $sql = "SELECT * FROM ".DB_PREFIX."address WHERE `customer_id` = ".(int)$customer_id;
+            $sql = "SELECT * FROM ".DB_PREFIX."address WHERE `customer_id` = ".(int)$customer_id." AND customer_id > 0";
             $query = $this->db->query($sql);
             if($query->rows) {
                 return $query->rows;
@@ -314,6 +314,9 @@ class Customer {
         }
         
         public function setAddress($address_id, $address) {
+            if(!$this->isLogged()) {
+                    return;
+            }
             if(!empty($address)) { 
                 if($address_id != 0) {
                     $this->db->query("UPDATE ".DB_PREFIX."address SET address_1 = '".$this->db->escape($address)."' WHERE customer_id = ".(int)$this->customer_id." AND address_id = ".(int)$address_id);
