@@ -90,8 +90,8 @@
 				<div class="f-c_top">
 					<div class="width-1418 clearfix">
 						<ul class="tabs__catalog">
-							<li class="modal8 active"><span>от А до Я</span></li>
-							<li class="modal9"><span>Каталог продуктов</span></li>
+							<li class="modal8"><span>от А до Я</span></li>
+							<li class="modal9 active"><span>Каталог продуктов</span></li>
 							<li class="modal-hide"><span>Без картинок</span></li>
                                                         <li style="display:none;"><span>Без картинок</span></li>
 						</ul>
@@ -101,7 +101,7 @@
                                                         <div class="cancel-search">&times;</div>
 						</form>
 					</div>
-					<div class="qwe2">
+					<div class="qwe2" style="display: none">
 						<div class="qwe-bg"></div>
 						<div class="qwe vertical dragscroll">
 							<ul class="list-alphabetic">
@@ -112,7 +112,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="all-l_a2">
+					<div class="all-l_a2"  style="display: block">
 						<div class="qwe-bg"></div>
 						<div class="qwe vertical dragscroll">
 							<ul class="list-products">
@@ -143,7 +143,7 @@
 					
 					
 				</div>
-				<div class="tabs__block active">
+				<div class="tabs__block">
 					<div class="button-alphabetic button-alphabetic-shadow" data-remodal-target="modal8">А-Я</div>
 					<div class="clearfix rel"> 
 						
@@ -261,7 +261,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="tabs__block">
+				<div class="tabs__block active">
 					<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9"></div>
 					<div class="clearfix rel"> 
 						<div id="contentcontainer2">
