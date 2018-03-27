@@ -26,11 +26,17 @@
 				<div class="size-0">
 					<div class="h-box_left">
 						<div class="rel">
-							<div class="h-menu">еда</div>
+							<div class="h-menu">О нас</div>
 							<div class="hidden-menu">
-                                                                <?php foreach($categories as $category) { if($category['name']!='Косметика') {?>
-                                                                    <a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a>
+								<a href="/about/#delivery" target="_blank" class="h-m_link">Доставка</a>
+								<a href="/about/#payment" target="_blank" class="h-m_link">Оплата</a>
+								<a href="/about/#return" target="_blank" class="h-m_link">Возвраты</a>
+								<a href="/about/#contacts" target="_blank" class="h-m_link">Контакты</a>
+								<?php foreach($categories as $category) { if($category['name']!='Косметика') {?>
+                                                                    <!--a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a-->
                                                                 <?php }} ?>
+
+
 							</div>
 							<div class="b-b_phone" data-remodal-target="modal-phone"></div>
 						</div>
