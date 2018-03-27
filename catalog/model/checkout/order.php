@@ -895,6 +895,7 @@ class ModelCheckoutOrder extends Model {
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data['total']}', '1')");
                             $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
                             if(isset($data['discount'])) $total -= $data['discount'];
+                            $order_data['total'] = $total;
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '9')");
                             if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
                             if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
