@@ -1,8 +1,10 @@
 <?php echo $header; ?>
 
 			<div class="big-picture">
-				<div class="b-p_title">Полезные продукты от А до Я<br>с доставкой на дом</div>
-			</div>
+				<!--div class="b-p_title">Полезные продукты от А до Я<br>с доставкой на дом</div-->
+                <div class="b-p_title_newsite">Поздравляем у нас новый сайт<br><br><span>до 5 апреля скидка 10% всем покупателям<br>введите купон SITE при оформлении заказа</span></div>
+</div>
+
 			<!-- Our advantages -->
                         <section class="fond-advantage" <?php if($hide_advantage) { echo 'style="display: none"'; } ?>>
                                 <a class="btn-close-tab" id="b-close_advantage"></a>

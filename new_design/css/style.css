@@ -906,6 +906,20 @@ header {
 	position: relative;
 	top: 43.5%;
 }
+.b-p_title_newsite {
+	font-weight: 500;
+	color: #FFFFFF;
+	font-size: 52px;
+	text-align: center;
+	line-height: 30px;
+	position: relative;
+	top: 43.5%;
+}
+
+.b-p_title_newsite span{
+	font-size:30px;
+	line-height: 36px;
+}
 /*** **/
 /** advantage **/
 .fond-advantage {
@@ -5567,6 +5581,18 @@ select.ca-i_input.input-error_3 {
 	    font-size: 22px;
 	    line-height: 29px;
 	}
+	.b-p_title_newsite {
+		top: 40%;
+		font-size: 22px;
+		line-height: 20px;
+	}
+
+	.b-p_title_newsite span{
+		top: 40%;
+		font-size: 14px;
+		line-height: 16px;
+	}
+
 	.p-o_title {
 		font-size: 18px;
 		padding: 50px 10px 15px 10px;
