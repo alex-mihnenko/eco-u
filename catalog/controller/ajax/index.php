@@ -258,6 +258,7 @@ class ControllerAjaxIndex extends Controller {
         
         // Основные данные заказа
         $data['products'] = $this->cart->getProducts();
+        $total = 0;
         foreach($data['products'] as $i => $product) {
             if(empty($product['weight_variants'])) {
                 $data['products'][$i]['amount'] = round($product['quantity']);
@@ -267,7 +268,10 @@ class ControllerAjaxIndex extends Controller {
                 $data['products'][$i]['amount'] = round($product['quantity']/$arWeightVariants[$product['weight_variant']]);
                 $data['products'][$i]['variant'] = $arWeightVariants[$product['weight_variant']];
             }
+            $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
         }
+        $data['total'] = $total;
+        
         $is_guest = false;
         if(!$this->customer->isLogged()) {
             $this->customer->loginByPhone($this->request->post['telephone'], false, true);
