@@ -94,7 +94,7 @@ class ControllerExtensionPaymentRbs extends Controller {
                 
                 $this->load->model('sms/confirmation');
                 $message = str_replace('[REPLACE]', $order_number, $this->config->get('config_sms_order_new_text'));
-                $this->model_sms_confirmation->sendSMS($$order_info['telephone'], $message);
+                $this->model_sms_confirmation->sendSMS($order_info['telephone'], $message);
                 
 //                $this->response->redirect($this->url->link('checkout/success', '', true));
                 $this->session->data['success_order_id'] = $order_number;
