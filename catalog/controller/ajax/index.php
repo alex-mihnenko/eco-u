@@ -272,11 +272,15 @@ class ControllerAjaxIndex extends Controller {
         }
         $data['total'] = $total;
         
+      //    TODO 2018-03-27 Отключил принудительную авторизацию по причине смены корзины
+      //    Как результат $this->cart->getTotal() $this->cart->getProducts() и т.д.
+      //    возвращали чужую, в основном пустую корзину. В результате итоги (totals)
+      //    заказа были нулевые
         $is_guest = false;
-        if(!$this->customer->isLogged()) {
-            $this->customer->loginByPhone($this->request->post['telephone'], false, true);
-            $is_guest = true;
-        }
+//        if(!$this->customer->isLogged()) {
+//            $this->customer->loginByPhone($this->request->post['telephone'], false, true);
+//            $is_guest = true;
+//        }
         
         $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
         $data['store_id'] = $this->config->get('config_store_id');
@@ -803,20 +807,17 @@ class ControllerAjaxIndex extends Controller {
       $customer_id = (int)$this->customer->getId();
       $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
       
-      //  TODO 2018-03-27 Поскольку принудительно авторизируем пользователя по номеру телефона - 
-      //    теряется корзина. Поэтому сначала получим все данные, потом авторизируем
-      //    Персональная скидка будет проигнорирована!
-      //    Обдумать решение этого вопроса
-      $CouponDiscount = $this->customer->getCouponDiscount();
-      $OrderDiscount = $this->cart->getOrderDiscount();
-      $CartTotal = $this->cart->getTotal();
+      //    TODO 2018-03-27 Отключил принудительную авторизацию по причине смены корзины
+      //    Как результат $this->cart->getTotal() $this->cart->getProducts() и т.д.
+      //    возвращали чужую, в основном пустую корзину. В результате итоги (totals)
+      //    заказа были нулевые
       
       $is_guest = false;
-      if($customer_id == 0) {
-          $is_guest = true;
-          $this->customer->loginByPhone($telephone, false, true);
-          $customer_id = (int)$this->customer->getId();
-      }
+//      if($customer_id == 0) {
+//          $is_guest = true;
+//          $this->customer->loginByPhone($telephone, false, true);
+//          $customer_id = (int)$this->customer->getId();
+//      }
       
       $this->load->model('dadata/index');
       
@@ -847,19 +848,19 @@ class ControllerAjaxIndex extends Controller {
           'mkad' => $bwhit
       );
       
-      if(!$CouponDiscount) {
-            $data['discount'] = $OrderDiscount;
+      if(!$this->customer->getCouponDiscount()) {
+            $data['discount'] = $this->cart->getOrderDiscount();
 			if(isset($this->session->data['personal_discount'])) {
 				$personalPercentage = (int)$this->session->data['personal_discount'];
 				$data['discount_percentage'] = $personalPercentage;
 			}
         } else {
             if(isset($this->session->data['personal_discount'])) {
-                $personalDiscount = floor($this->session->data['personal_discount']/100*$CartTotal);
+                $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
                 if($this->session->data['personal_discount'] <= 10) $personalPercentage = (int)$this->session->data['personal_discount'];
             } else $personalDiscount = 0;
-            $coupon = $CouponDiscount;
-            $couponDiscount = floor($coupon['discount']/100*$CartTotal);
+            $coupon = $this->customer->getCouponDiscount();
+            $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
             if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
             if($couponDiscount > $personalDiscount) {
                 $data['coupon_discount'] = $couponDiscount;
@@ -912,12 +913,16 @@ class ControllerAjaxIndex extends Controller {
       $customer_id = (int)$this->customer->getId();
       $telephone = str_replace(Array('(', ')', '+', ' ', '-'), '', $this->request->post['telephone']);
       
+      //    TODO 2018-03-27 Отключил принудительную авторизацию по причине смены корзины
+      //    Как результат $this->cart->getTotal() $this->cart->getProducts() и т.д.
+      //    возвращали чужую, в основном пустую корзину. В результате итоги (totals)
+      //    заказа были нулевые
       $is_guest = false;
-      if($customer_id == 0) {
-          $is_guest = true;
-          $this->customer->loginByPhone($telephone, false, true);
-          $customer_id = (int)$this->customer->getId();
-      }
+//      if($customer_id == 0) {
+//          $is_guest = true;
+//          $this->customer->loginByPhone($telephone, false, true);
+//          $customer_id = (int)$this->customer->getId();
+//      }
       
       $this->load->model('dadata/index');
       
