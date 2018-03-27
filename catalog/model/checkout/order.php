@@ -889,13 +889,13 @@ class ModelCheckoutOrder extends Model {
                             $order_data['shipping_method'] = $quote['quote'][$delivery_type]['title'];
                             $order_data['shipping_address_1'] = $data['address'];
                             
+                            $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
+                            if(isset($data['discount'])) $total -= $data['discount'];
+                            $order_data['total'] = $total;
                             @$this->editOrder($order_id, $order_data);
                             $this->addOrderHistory($order_id, $new_order_status);
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$quote['quote'][$delivery_type]['title']}', '{$quote['quote'][$delivery_type]['cost']}', '{$quote['sort_order']}')");
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data['total']}', '1')");
-                            $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
-                            if(isset($data['discount'])) $total -= $data['discount'];
-                            $order_data['total'] = $total;
                             $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '9')");
                             if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
                             if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
