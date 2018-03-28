@@ -32,7 +32,7 @@
 								<a href="/about/#payment" target="_blank" class="h-m_link">Оплата</a>
 								<a href="/about/#return" target="_blank" class="h-m_link">Возвраты</a>
 								<a href="/about/#contacts" target="_blank" class="h-m_link">Контакты</a>
-								<?php foreach($categories as $category) { if($category['name']!='Косметика') {?>
+								<?php foreach($categories as $category) { if($category['name']!='Косметикаа') {?>
                                                                     <!--a href="<?=$category['href']?>" class="h-m_link"><?=$category['name']?></a-->
                                                                 <?php }} ?>
 
