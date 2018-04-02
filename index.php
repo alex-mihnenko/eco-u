@@ -8,6 +8,7 @@ if(in_array($cur_url[0], Array('/', '/index.php')))
 	$_GET['_route_'] = 'eda/';
 }
 
+// Push test
 // Configuration
 if (is_file('config.php')) {
 	require_once('config.php');
