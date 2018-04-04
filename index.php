@@ -1,6 +1,6 @@
 <?php
 // Version
-//dfdsfdf
+//Test 3
 define('VERSION', '2.3.0.2');
 $cur_url = explode('?',$_SERVER['REQUEST_URI']);
 if(in_array($cur_url[0], Array('/', '/index.php')))
