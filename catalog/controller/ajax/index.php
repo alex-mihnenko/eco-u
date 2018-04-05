@@ -734,11 +734,11 @@ class ControllerAjaxIndex extends Controller {
                 $this->customer->setAddress(0, $post['address']);
             }
             // Очистка корзины
-            $this->cart->clear();
+            // $this->cart->clear();
             if($is_guest) {
                 $this->customer->logout();
             }
-            $this->cart->clear();
+            // $this->cart->clear();
             if($payment_method_online) {
                 $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
                 $json = $results;
@@ -880,9 +880,9 @@ class ControllerAjaxIndex extends Controller {
           // Добавление адреса доставки в список адресов клиента
           if($address_new == 'true') $this->customer->setAddress(0, $address);
           // Очистка корзины
-          $this->cart->clear();
+          // $this->cart->clear();
           if($is_guest) $this->customer->logout();
-          $this->cart->clear();
+          // $this->cart->clear();
           if($payment_method_online) {
               $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
               echo json_encode($results);
@@ -983,9 +983,9 @@ class ControllerAjaxIndex extends Controller {
           // Добавление адреса доставки в список адресов клиента
           if($address_new == 'true') $this->customer->setAddress(0, $address);
           // Очистка корзины
-          $this->cart->clear();
+          // $this->cart->clear();
           if($is_guest) $this->customer->logout();
-          $this->cart->clear();
+          // $this->cart->clear();
           if($payment_method_online) {
               $results = $this->load->controller('extension/payment/rbs/payment', $order_id);
               echo json_encode($results);
