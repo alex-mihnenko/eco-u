@@ -43,19 +43,19 @@ RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
 
 RewriteCond %{REQUEST_URI} /index.php
 RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://test.eco-u.ru/? [R=301,L]
+RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 
 RewriteCond %{REQUEST_URI} /index.html
 RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://test.eco-u.ru/? [R=301,L]
+RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 
 RewriteCond %{REQUEST_URI} /index.html
 RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://test.eco-u.ru/? [R=301,L]
+RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 
 RewriteCond %{REQUEST_URI} /default.html
 RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://test.eco-u.ru/? [R=301,L]
+RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 
 ### Additional Settings that may need to be enabled for some servers
 ### Uncomment the commands by removing the # sign in front of it.
