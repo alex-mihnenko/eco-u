@@ -31,6 +31,16 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
 RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} ![^\/]$
+RewriteRule ^(.*)\/$ /$1 [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+
 RewriteCond %{REQUEST_URI} /index.php
 RewriteCond %{QUERY_STRING} ^\z
 RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
@@ -46,34 +56,6 @@ RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 RewriteCond %{REQUEST_URI} /default.html
 RewriteCond %{QUERY_STRING} ^\z
 RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
-
-RewriteCond %{REQUEST_URI} ^\/$
-RewriteCond %{HTTP_HOST} ^www\.(.*)$
-RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
-
-RewriteCond %{REQUEST_URI} !\?
-RewriteCond %{REQUEST_URI} !\&
-RewriteCond %{REQUEST_URI} !\=
-RewriteCond %{REQUEST_URI} !\.
-RewriteCond %{REQUEST_URI} \/$
-RewriteCond %{HTTP_HOST} ^www\.(.*)$
-RewriteRule ^(.*)\/$ http://%1/$1 [L,R=301]
-
-RewriteCond %{REQUEST_URI} !\?
-RewriteCond %{REQUEST_URI} !\&
-RewriteCond %{REQUEST_URI} !\=
-RewriteCond %{REQUEST_URI} !\.
-RewriteCond %{REQUEST_URI} !\/$
-RewriteCond %{HTTP_HOST} ^www\.(.*)$
-RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
-
-RewriteCond %{REQUEST_URI} !\?
-RewriteCond %{REQUEST_URI} !\&
-RewriteCond %{REQUEST_URI} !\=
-RewriteCond %{REQUEST_URI} !\.
-RewriteCond %{REQUEST_URI} \/$
-RewriteCond %{HTTP_HOST} ^([^www].*)$
-RewriteRule ^(.*)\/$ http://%1/$1 [L,R=301]
 
 ### Additional Settings that may need to be enabled for some servers
 ### Uncomment the commands by removing the # sign in front of it.

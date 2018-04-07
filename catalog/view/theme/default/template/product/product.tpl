@@ -9,7 +9,7 @@
         <div class="width-1194 pd-29">
                 <div style="height:70px"></div>
                 <a class="btn-close-tab" onclick="window.close()"></a>
-                <!--<ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
+                <ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
                         <?php foreach($breadcrumbs as $i => $item) { 
                             if($i < count($breadcrumbs) - 1) { ?>
                                 <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
@@ -23,7 +23,7 @@
                                 </li>
                             <?php } ?>
                         <?php } ?>
-                </ul>-->
+                </ul>
                 <div class="card-product clearfix" itemscope itemtype="http://schema.org/Product">
                         <div class="c-p_left">
                                 <div class="c-p_thumb">
