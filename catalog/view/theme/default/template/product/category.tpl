@@ -32,7 +32,7 @@
 							<div class="l-a_thumb">
 								<div class="l-a_icon l-a_4"></div>
 							</div>
-							<div class="l-a_title">Доставка по&nbsp;Москве за&nbsp;330 рублей или бесплатно от&nbsp;4&nbsp;500 рублей</div>
+							<div class="l-a_title">Доставка по&nbsp;Москве за&nbsp;330 рублей или бесплатно от&nbsp;3&nbsp;500 рублей</div>
 						</li>
 					</ul>
 				</div>
