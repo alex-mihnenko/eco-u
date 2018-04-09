@@ -6,3 +6,5 @@ download/
 image/
 system/storage/cache/
 system/storage/logs/
+
+.httaccess
