@@ -128,7 +128,7 @@
 						</div>
 					</div>
 				</div>-->
-				<!-- Test git 2 -->
+				<!-- Test git hooks -->
 				<div class="tabs__content active">
 					<div class="t-c_box">
 						<form class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
