@@ -1,8 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
-
 // Version
 define('VERSION', '2.3.0.2');
 $cur_url = explode('?',$_SERVER['REQUEST_URI']);
@@ -21,6 +17,12 @@ if (is_file('config.php')) {
 if (!defined('DIR_APPLICATION')) {
 	header('Location: install/index.php');
 	exit;
+}
+
+// Development
+if (!defined('DEVELOPMENT')) {
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
 }
 
 // Startup
