@@ -12,7 +12,7 @@ class Cart {
 		$this->weight = $registry->get('weight');
 
 		// Remove all the expired carts with no customer ID
-		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE (api_id > '0' OR customer_id = '0') AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
+		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE (api_id > '0' OR customer_id = '0') AND date_added < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
 
 		if ($this->customer->getId()) {
 			// We want to change the session ID on all the old items in the customers cart
@@ -258,8 +258,8 @@ class Cart {
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,
-					'price'           => ($cart['special_price'] == 0) ? ($price + $option_price) : (int)$product_query->row['special_price'],
-					'total'           => ($cart['special_price'] == 0) ? (($price + $option_price) * $cart['quantity']) : ((int)$product_query->row['special_price'] * $cart['quantity']),
+					'price'           => round( ($cart['special_price'] == 0) ? ($price + $option_price) : (int)$product_query->row['special_price']),
+					'total'           => round( ($cart['special_price'] == 0) ? (($price + $option_price) * $cart['quantity']) : ((int)$product_query->row['special_price'] * $cart['quantity'])),
 					'reward'          => $reward * $cart['quantity'],
 					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
 					'tax_class_id'    => $product_query->row['tax_class_id'],
@@ -314,7 +314,8 @@ class Cart {
 	}
 
 	public function clear() {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' OR session_id = '" . $this->db->escape($this->session->getId()) . "'");
 	}
 
 	public function getRecurringProducts() {
@@ -375,7 +376,7 @@ class Cart {
 		$total = 0;
 
 		foreach ($this->getProducts() as $product) {
-			$total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+			$total += round($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
 		}
 
 		return $total;
@@ -435,10 +436,12 @@ class Cart {
             $basePrice = $this->getTotal();
             $total1 = $basePrice;
             $total2 = $basePrice;
+
             if($this->customer->isLogged() && isset($this->session->data['personal_discount'])) {
                 $personal_discount = 1 - ($this->session->data['personal_discount']/100);
                 $total1 = $basePrice * $personal_discount;
             }
+            
             $coupon = $this->customer->getCouponDiscount();
             if(isset($coupon['type'])) { 
                 if($coupon['type'] == 'P') {

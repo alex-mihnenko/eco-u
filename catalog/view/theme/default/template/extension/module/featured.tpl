@@ -1,4 +1,4 @@
-<section class="fond-profitable_offer" itemscope="" itemtype="http://schema.org/ItemList"> 
+<section id="featured" class="fond-profitable_offer products-grid" itemscope="" itemtype="http://schema.org/ItemList"> 
         <div class="width-1660">
                 <h2 class="p-o_title"><?php echo $heading_title; ?></h2>
                 <div class="slider-profitable_offer">
@@ -10,7 +10,7 @@
                             <div class="box-p_o">
                                    <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb" target="_blank">
-                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
+                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="<?php echo $product['name']; ?>">
                                     </a>
                                     <div class="p-o_block">
                                             <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><?php } ?>
@@ -19,7 +19,6 @@
                                             <div class="p-o_link">
                                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
                                                     <a href="<?php echo $product['href']; ?>" itemprop="url" target="_blank"><?php echo $product['name']; ?></a>
-                                                    <?php if($is_admin) {?><a target="_blank" href="<?php echo $product['edit_link']; ?>" class="btn btn-default admin-product-edit"><i class="fa fa-edit"></i></a><?php } ?>
                                             </div>
                                             <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                             <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
@@ -90,3 +89,5 @@
                 </div>
         </div>
 </section>
+
+<!-- <php if($is_admin) {?><a target="_blank" href="<php echo $product['edit_link']; ?>" class="btn btn-default admin-product-edit"><i class="fa fa-edit"></i></a><php } ?> -->

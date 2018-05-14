@@ -1,10 +1,13 @@
-robots.txt
-/config.php
-admin/config.php
-
-download/
+ecobot/
 image/
+import/
+download/
 system/storage/cache/
 system/storage/logs/
+system/storage/modification/
 
-.httaccess
+admin/config.php
+config.php
+.htaccess
+robots.txt
+sftp-config.json

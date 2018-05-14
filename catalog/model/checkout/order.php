@@ -32,15 +32,17 @@ class ModelCheckoutOrder extends Model {
 
     
 	public function addOrder($data) {
-                // Заглушка для total в oc_order
-                if(!isset($data['total'])) 
-                {
-                    $total = 0;
-                    foreach ($this->cart->getProducts() as $product) {
-                        $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
-                    }
-                    $data['total'] = $total;
-                }
+        // Заглушка для total в oc_order
+        if(!isset($data['total'])) 
+        {
+            $total = 0;
+
+            foreach ($this->cart->getProducts() as $product) {
+                $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+            }
+            $data['total'] = $total;
+        }
+
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int)$data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int)$data['customer_id'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? json_encode($data['custom_field']) : '') . "', payment_firstname = '" . $this->db->escape($data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape($data['payment_lastname']) . "', payment_company = '" . $this->db->escape($data['payment_company']) . "', payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($data['payment_country']) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($data['payment_zone']) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($data['payment_address_format']) . "', payment_custom_field = '" . $this->db->escape(isset($data['payment_custom_field']) ? json_encode($data['payment_custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', shipping_firstname = '" . $this->db->escape($data['shipping_firstname']) . "', shipping_lastname = '" . $this->db->escape($data['shipping_lastname']) . "', shipping_company = '" . $this->db->escape($data['shipping_company']) . "', shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', shipping_city = '" . $this->db->escape($data['shipping_city']) . "', shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', shipping_country = '" . $this->db->escape($data['shipping_country']) . "', shipping_country_id = '" . (int)$data['shipping_country_id'] . "', shipping_zone = '" . $this->db->escape($data['shipping_zone']) . "', shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', shipping_address_format = '" . $this->db->escape($data['shipping_address_format']) . "', shipping_custom_field = '" . $this->db->escape(isset($data['shipping_custom_field']) ? json_encode($data['shipping_custom_field']) : '') . "', shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float)$data['total'] . "', affiliate_id = '" . (int)$data['affiliate_id'] . "', commission = '" . (float)$data['commission'] . "', marketing_id = '" . (int)$data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int)$data['language_id'] . "', currency_id = '" . (int)$data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float)$data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" .  $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', date_added = NOW(), date_modified = NOW()");
                 
 		$order_id = $this->db->getLastId();
@@ -48,8 +50,8 @@ class ModelCheckoutOrder extends Model {
 		// Products
 		if (isset($data['products'])) {
 			foreach ($data['products'] as $product) {
-                                if(!isset($product['amount'])) $product['amount'] = 1;
-                                if(!isset($product['variant'])) $product['variant'] = 1;
+                if(!isset($product['amount'])) $product['amount'] = 1;
+				if(!isset($product['variant'])) $product['variant'] = 1;
 				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$product['product_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float)$product['quantity'] . "', amount = '" . (int)$product['amount'] . "', variant = '" . (float)$product['variant'] . "', price = '" . (float)$product['price'] . "', total = '" . (float)$product['total'] . "', tax = '" . (float)$product['tax'] . "', reward = '" . (int)$product['reward'] . "'");
 
 				$order_product_id = $this->db->getLastId();
@@ -86,23 +88,33 @@ class ModelCheckoutOrder extends Model {
 		return $order_id;
 	}
 
-        public function setPayment($order_id, $code) {
-            $query = $this->db->query("UPDATE ".DB_PREFIX."order SET payment_code = '".$this->db->escape($code)."' WHERE order_id = '".(int)$order_id."'");
-        }
+    public function setPayment($order_id, $code) {
+        $query = $this->db->query("UPDATE ".DB_PREFIX."order SET payment_code = '".$this->db->escape($code)."' WHERE order_id = '".(int)$order_id."'");
+    }
+
+    public function addDetailPayment($order_id, $order_status_id, $processed = false) {
+    	// Payment
+    		$order = $this->getOrder($order_id);
+
+    		$this->db->query("INSERT INTO " . DB_PREFIX . "order_payments SET order_id = '" . $order_id. "', order_status_id = '" . $order_status_id . "', total = '" . $order['total'] . "', payment_method = '" . $order['payment_method'] . "', payment_code = '" . $order['payment_code'] . "', date_add = NOW(), processed  = '" . $processed . "';");
+    	// ---
+    }
         
 	public function editOrder($order_id, $data) {
 		// Void the order first
 		$this->addOrderHistory($order_id, 0);
 
-                if(!isset($data['delivery_interval'])) $data['delivery_interval'] = '';
-                if(!isset($data['discount'])) $data['discount'] = 0;
+        if(!isset($data['delivery_interval'])) $data['delivery_interval'] = '';
+        if(!isset($data['discount'])) $data['discount'] = 0;
+
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET delivery_time = '" . $this->db->escape($data['delivery_interval']) . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int)$data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int)$data['customer_id'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(json_encode($data['custom_field'])) . "', payment_firstname = '" . $this->db->escape($data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape($data['payment_lastname']) . "', payment_company = '" . $this->db->escape($data['payment_company']) . "', payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($data['payment_country']) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($data['payment_zone']) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($data['payment_address_format']) . "', payment_custom_field = '" . $this->db->escape(json_encode($data['payment_custom_field'])) . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', shipping_firstname = '" . $this->db->escape($data['shipping_firstname']) . "', shipping_lastname = '" . $this->db->escape($data['shipping_lastname']) . "', shipping_company = '" . $this->db->escape($data['shipping_company']) . "', shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', shipping_city = '" . $this->db->escape($data['shipping_city']) . "', shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', shipping_country = '" . $this->db->escape($data['shipping_country']) . "', shipping_country_id = '" . (int)$data['shipping_country_id'] . "', shipping_zone = '" . $this->db->escape($data['shipping_zone']) . "', shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', shipping_address_format = '" . $this->db->escape($data['shipping_address_format']) . "', shipping_custom_field = '" . $this->db->escape(json_encode($data['shipping_custom_field'])) . "', shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float)$data['total'] . "', affiliate_id = '" . (int)$data['affiliate_id'] . "', commission = '" . (float)$data['commission'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "'");
 
 		// Products
 		if (isset($data['products'])) {
-                        $this->db->query("DELETE FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+            $this->db->query("DELETE FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			
 			foreach ($data['products'] as $product) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$product['product_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float)$product['quantity'] . "', amount = '" . (int)$product['amount'] . "', variant = '" . (float)$product['variant'] . "', price = '" . (float)$product['price'] . "', total = '" . (float)$product['total'] . "', tax = '" . (float)$product['tax'] . "', reward = '" . (int)$product['reward'] . "'");
 
@@ -390,10 +402,12 @@ class ModelCheckoutOrder extends Model {
 				$order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
 
 				foreach ($order_total_query->rows as $order_total) {
-					$this->load->model('extension/total/' . $order_total['code']);
+					if( $order_total['code'] != 'discount' && $order_total['code'] != 'discount_percentage' && $order_total['code'] != 'coupon_discount' ){
+						$this->load->model('extension/total/' . $order_total['code']);
 
-					if (property_exists($this->{'model_extension_total_' . $order_total['code']}, 'unconfirm')) {
-						$this->{'model_extension_total_' . $order_total['code']}->unconfirm($order_id);
+						if (property_exists($this->{'model_extension_total_' . $order_total['code']}, 'unconfirm')) {
+							$this->{'model_extension_total_' . $order_total['code']}->unconfirm($order_id);
+						}
 					}
 				}
 
@@ -857,68 +871,88 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 	}
+
+
+	public function setDelivery($order_id, $customer_id, $data, $new_order_status = 1) {
+        $order_data = $this->getOrder($order_id);
+        $order_data['total'] = $data['price'];
+        $order_data['payment_address_1'] = $data['address'];
+        $order_data['comment'] = $data['comment'];
+        $order_data['payment_method'] = $data['payment_method'];
+        $order_data['delivery_time'] = $data['delivery_time'];
+        $order_data['delivery_interval'] = $data['delivery_interval'];
         
-        public function setDelivery($order_id, $customer_id, $data, $new_order_status = 1) {
-            $order_data = $this->getOrder($order_id);
-            $order_data['payment_address_1'] = $data['address'];
-            $order_data['comment'] = $data['comment'];
-            $order_data['payment_method'] = $data['payment_method'];
-            $order_data['delivery_time'] = $data['delivery_time'];
-            $order_data['delivery_interval'] = $data['delivery_interval'];
-            
-            if($data['mkad'] == 'IN_MKAD') {
-                if($order_data['total'] >= 4000) {
-                    $delivery_type = 'free';
-                } else {
-                    $delivery_type = 'flat';
-                }
-            } else {
-                $delivery_type = 'mkadout';
-            }
-            
-            $this->load->model('extension/extension');
-
-            $extResults = $this->model_extension_extension->getExtensions('shipping');
-
-            foreach ($extResults as $result) {
-                    if ($result['code'] == $delivery_type && $this->config->get($result['code'] . '_status')) {
-                            $this->load->model('extension/shipping/' . $result['code']);
-                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote(array('zone_id' => 0, 'country_id' => 0));
-//                            $quote = @$this->{'model_extension_shipping_' . $result['code']}->getQuote($data['address']);
-                            
-                            $order_data['shipping_code'] = $quote['quote'][$delivery_type]['code'];
-                            $order_data['shipping_method'] = $quote['quote'][$delivery_type]['title'];
-                            $order_data['shipping_address_1'] = $data['address'];
-                            
-                            $total = $quote['quote'][$delivery_type]['cost'] + $order_data['total'];
-                            if(isset($data['discount'])) $total -= $data['discount'];
-                            $query_sub_total = $this->db->query("SELECT SUM(total) AS total FROM ".DB_PREFIX."order_product WHERE order_id='" . (int)$order_id . "'");
-                            $order_data_total = (float)$query_sub_total->row['total'];
-                            $order_data['total'] = $total;
-                            @$this->editOrder($order_id, $order_data);
-                            $this->addOrderHistory($order_id, $new_order_status);
-                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$quote['quote'][$delivery_type]['title']}', '{$quote['quote'][$delivery_type]['cost']}', '{$quote['sort_order']}')");
-                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$order_data_total}', '1')");
-                            $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '9')");
-                            if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
-                            if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
-                            if(isset($data['coupon_discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'coupon', 'Скидка по купону', '{$data['coupon_discount']}', '2')");
-                            break;
-                    }
-            }
-            
-                
-            return true;
-        }
+	      
+        $order_data['shipping_code'] = $this->session->data['shipping_code'];
+        $order_data['shipping_method'] = $this->session->data['shipping_method'];
+        $order_data['shipping_address_1'] = $data['address'];
         
-        public function getPersonalOrders($customer_id) {
-            $sql = "SELECT *, (SELECT `name` FROM `".DB_PREFIX."order_status` st WHERE st.order_status_id = rd.order_status_id) AS `status_text`, (SELECT value FROM ".DB_PREFIX."order_total ot WHERE ot.order_id = rd.order_id AND ot.code = 'total') AS order_total FROM `".DB_PREFIX."order` rd WHERE `customer_id` = ".(int)$customer_id." AND order_status_id <> 0 ORDER BY order_id DESC LIMIT 30";
 
-            $query = $this->db->query($sql);
-            if($query->rows) {
-                return $query->rows;
-            } else {
-                return false;
+        // Subtotal
+            if(isset($data['discount']) && isset($data['coupon_discount'])) {
+				if( $data['discount'] > $data['coupon_discount'] ) { $sub_total = $order_data['total'] + $data['discount']; }
+            	else{ $sub_total = $order_data['total'] + $data['coupon_discount']; }
             }
+            else if(isset($data['discount']) && !isset($data['coupon_discount'])) {
+            	$sub_total = $order_data['total'] + $data['discount'];
+            }
+            else if(!isset($data['discount']) && isset($data['coupon_discount'])) {
+            	$sub_total = $order_data['total'] + $data['coupon_discount'];
+            }
+            else { $sub_total = $order_data['total']; }
+        // ---
+            
+        $total = $order_data['total'] + $this->session->data['shipping_price'];
+        $order_data['total'] = $total;
+
+        @$this->editOrder($order_id, $order_data);
+        $this->addOrderHistory($order_id, $new_order_status);
+
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$this->session->data['shipping_method']}', '{$this->session->data['shipping_price']}', '2')");
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$sub_total}', '1')");
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '10')");
+        if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
+        if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
+        if(isset($data['coupon_discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'coupon', 'Скидка по купону', '{$data['coupon_discount']}', '2')");
+        
+        
+        return true;
+    }
+    
+        
+    public function getPersonalOrders($customer_id) {
+        $sql = "SELECT *, (SELECT `name` FROM `".DB_PREFIX."order_status` st WHERE st.order_status_id = rd.order_status_id) AS `status_text`, (SELECT value FROM ".DB_PREFIX."order_total ot WHERE ot.order_id = rd.order_id AND ot.code = 'total') AS order_total FROM `".DB_PREFIX."order` rd WHERE `customer_id` = ".(int)$customer_id." AND order_status_id <> 0 ORDER BY order_id DESC LIMIT 30";
+
+        $query = $this->db->query($sql);
+        if($query->rows) {
+            return $query->rows;
+        } else {
+            return false;
         }
+    }
+
+	// --- //
+	public function setCustomer($order_id, $customer_id) {
+		$this->db->query("UPDATE " . DB_PREFIX . "order SET customer_id = '" . (int)$customer_id . "' WHERE order_id = '" . (int)$order_id . "'");
+        return true;
+	}
+
+	public function setPaymentCustomField($order_id, $payment_custom_field) {
+		$this->db->query("UPDATE " . DB_PREFIX . "order SET payment_custom_field = '" . $payment_custom_field . "' WHERE order_id = '" . (int)$order_id . "'");
+        return true;
+	}
+
+    public function addRoistatVisitId($order_id,$order_roistat_visit_id) {
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "order_roistat` SET order_id = '" . (int)$order_id . "', order_roistat_visit_id = '" . $this->db->escape($order_roistat_visit_id) . "'");
+        return true;
+    }
+
+	public function generateUniqRbsId($order_id) {
+        return $order_id.'-'.substr(md5(uniqid(rand(), true)), 0,4);
+	}
+
+	public function getOrderIdByUniqRbsId($payment_custom_field) {
+		$query = $this->db->query("SELECT `order_id` FROM `" . DB_PREFIX . "order` WHERE `payment_custom_field` = '" . $payment_custom_field . "'");
+        return $query->row['order_id'];
+	}
 }

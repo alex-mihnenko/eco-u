@@ -235,7 +235,7 @@ class ControllerCommonCart extends Controller {
                             } else {
                                 $weightVariant = 1;
                             }
-                            $totalPrice += $product['total'];
+                            $totalPrice += round($product['total']);
                             
                             $product['total'] = floor($product['total']);
                             $product['weightVariant'] = $weightVariant;

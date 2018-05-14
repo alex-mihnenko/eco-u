@@ -72,34 +72,38 @@ class ControllerExtensionPaymentRbs extends Controller {
      * Колбек для возвращения покупателя из ПШ в магазин.
      */
     public function callback() {
+
         if (isset($this->request->get['orderId'])) {
             $orderId= $this->request->get['orderId'];
         } else {
             die('Illegal Access');
         }
 
-        $this->load->model('checkout/order');
         $order_number = 0;
+        
         if(isset($this->session->data['payment_order_id'])) {
-            $order_number = $this->session->data['payment_order_id'];
+            //$order_number = $this->session->data['payment_order_id'];
+            $this->load->model('checkout/order');
+            $order_number = $this->model_checkout_order->getOrderIdByUniqRbsId($this->session->data['payment_order_id']);
         }
+
         $order_info = $this->model_checkout_order->getOrder($order_number);
         if ($order_info) {
             $this->initializeRbs();
             
             $response = $this->rbs->get_order_status($orderId);
             if(($response['errorCode'] == 0) && (($response['orderStatus'] == 1) || ($response['orderStatus'] == 2))) {
-//                $this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_order_status_id'));
-                $this->model_checkout_order->addOrderHistory($order_number, 18);
-                
+                $this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_paid_status_id'));
+                $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_paid_status_id'));
+
                 $this->load->model('sms/confirmation');
                 $message = str_replace('[REPLACE]', $order_number, $this->config->get('config_sms_order_new_text'));
                 $this->model_sms_confirmation->sendSMS($order_info['telephone'], $message);
                 
-//                $this->response->redirect($this->url->link('checkout/success', '', true));
                 $this->session->data['success_order_id'] = $order_number;
                 $this->response->redirect($this->url->link('common/home', '', true));
             } else {
+                $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_nopaid_status_id'));
                 $this->response->redirect($this->url->link('checkout/failure', '', true));
             }
         }

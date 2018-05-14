@@ -34,7 +34,7 @@
 .slick-list.dragging
 {
     cursor: pointer;
-    cursor: hand;
+    /*cursor: hand;*/
 }
 
 .slick-slider .slick-track,
@@ -116,7 +116,7 @@
 .slick-arrow.slick-hidden {
     display: none;
 }
-@charset 'UTF-8';
+/*@charset 'UTF-8';*/
 /* Slider */
 .slick-loading .slick-list
 {

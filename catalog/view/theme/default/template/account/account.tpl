@@ -3,91 +3,99 @@
 <script>
     window.bodyClass = 'page_2';
 </script>
+
 <section class="fond-white">
-        <div class="width-1194 pd-29"> 
-                <ul class="liTabs t_wrap t_wrap_1">
-                    <li class="t_item t-item_1">
-                        <a class="t_link t_link_1 cur" href="#"> <span>ИСТОРИЯ ЗАКАЗОВ</span></a>
-                        <div class="t_content">
-                                <div class="table-responsive">
-                                                <table class="table-history">
-                                                        <tr>
-                                                                <th>Номер заказа</th>
-                                                                <th>Дата</th>
-                                                                <th>Статус</th>
-                                                                <th>Сумма</th>
-                                                        </tr>
-                                                        <?php foreach($orders as $order) { ?>
-                                                            <tr>
-                                                                <td class="t-h_number">№ <?php echo $order['order_id']; ?></td>
-                                                                <td class="t-h_width"><?php echo $order['date']; ?></td>
-                                                                <td class="t-h_width">
-                                                                        <div class="t-h_pay"><?php echo $order['status']; ?></div>
-                                                                </td>
-                                                                <td>
-                                                                        <div class="t-h_price"><?php echo (int)$order['total']; ?> руб.</div>
-                                                                        <?php if(in_array($order['status_id'], Array(1, 2))) { ?><a href="#" class="t-h_submit">Оплатить</a><?php } ?>
-                                                                </td>
-                                                            </tr>
-                                                        <?php } ?>
-                                                </table>
+    <div class="width-1194 pd-29"> 
+        <ul class="liTabs t_wrap t_wrap_1">
+            <li class="t_item t-item_1">
+                <!-- /// -->
+                <a class="t_link t_link_1 cur" href="#"> <span>ИСТОРИЯ ЗАКАЗОВ</span></a>
+
+                <div class="t_content">
+                    <div class="table-responsive">
+                        <table class="table-history">
+                            <tr>
+                                <th>Номер заказа</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                                <th>Сумма</th>
+                            </tr>
+
+
+                            <?php foreach($orders as $order) { ?>
+                                <tr>
+                                    <td class="t-h_number">№ <?php echo $order['order_id']; ?></td>
+                                    <td class="t-h_width"><?php echo $order['date']; ?></td>
+                                    <td class="t-h_width"><div class="t-h_pay"><?php echo $order['status']; ?></div></td>
+                                    <td>
+                                        <div class="t-h_price"><?php echo (int)$order['total']; ?> руб.</div>
+                                        <?php if( $order['payment_custom_field'] != 'undefined' ) { ?>
+                                        <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="t-h_submit" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
+                </div>
+                <!-- /// -->
+            </li>
+
+            <li class="t_item t-item_1">
+                <a class="t_link t_link_1" href="#"><span>ЛИЧНЫЕ ДАННЫЕ</span></a>
+                <div class="t_content"> 
+                        <div>
+                                        <div class="current-discount">
+                                                <div class="c-d_text">Текущая скидка</div>
+                                                <div class="c-d_size"><?php echo $customer_discount; ?>%</div>
                                         </div>
-                        </div>
-                    </li>
-                    <li class="t_item t-item_1">
-                        <a class="t_link t_link_1" href="#"><span>ЛИЧНЫЕ ДАННЫЕ</span></a>
-                        <div class="t_content"> 
-                                <div>
-                                                <div class="current-discount">
-                                                        <div class="c-d_text">Текущая скидка</div>
-                                                        <div class="c-d_size"><?php echo $customer_discount; ?>%</div>
+                                        <form class="form-personal">
+                                                <div class="f-p_box">
+                                                    <input type="text" data-name="customer_firstname" placeholder="Имя" value="<?php echo $customer['firstname']; ?>" class="f-p_input">
                                                 </div>
-                                                <form class="form-personal">
-                                                        <div class="f-p_box">
-                                                            <input type="text" data-name="customer_firstname" placeholder="Имя" value="<?php echo $customer['firstname']; ?>" class="f-p_input">
+                                                <div class="f-p_box">
+                                                        <input type="text" data-name="customer_telephone" placeholder="Телефон" value="<?php echo $customer['telephone']; ?>" class="f-p_input" id="phone">
+                                                </div>
+                                                <div class="f-p_box">
+                                                        <?php
+                                                        $re = '/[0-9]+@eco-u.ru/';
+                                                        if(1 === preg_match_all($re, $customer['email'], $matches, PREG_SET_ORDER, 0)) {
+                                                        ?>
+                                                            <input type="hidden" data-name="customer_email_virtual" value="<?php echo $customer['email']; ?>" class="f-p_input">
+                                                            <input type="text" data-name="customer_email" placeholder="EMAIL" value="" class="f-p_input">
+                                                        <? } else { ?>
+                                                            <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
+                                                        <? } ?>
+                                                </div>
+                                                <div class="f-p_box2">
+                                                        <?php $lastAddress = count($customer['addresses'])-1;
+                                                        foreach($customer['addresses'] as $i => $address) { ?>
+                                                        <div class="f-p_address_container" data-index="<?php echo $address['address_id']; ?>">
+                                                            <div class="f-p_address_remove <?php if($i == $lastAddress) { ?>last<?php } ?>" data-target="<?php echo $address['address_id']; ?>">&times;</div>
+                                                            <input type="text" name="dynamic[]" data-name="customer_address" data-target-id="<?php echo $address['address_id']; ?>" placeholder="Адрес Доставки" value="<?php echo $address['value']; ?>" class="f-p_input">
                                                         </div>
-                                                        <div class="f-p_box">
-                                                                <input type="text" data-name="customer_telephone" placeholder="Телефон" value="<?php echo $customer['telephone']; ?>" class="f-p_input" id="phone">
-                                                        </div>
-                                                        <div class="f-p_box">
-                                                                <?php
-                                                                $re = '/[0-9]+@eco-u.ru/';
-                                                                if(1 === preg_match_all($re, $customer['email'], $matches, PREG_SET_ORDER, 0)) {
-                                                                ?>
-                                                                    <input type="hidden" data-name="customer_email_virtual" value="<?php echo $customer['email']; ?>" class="f-p_input">
-                                                                    <input type="text" data-name="customer_email" placeholder="EMAIL" value="" class="f-p_input">
-                                                                <? } else { ?>
-                                                                    <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
-                                                                <? } ?>
-                                                        </div>
-                                                        <div class="f-p_box2">
-                                                                <?php $lastAddress = count($customer['addresses'])-1;
-                                                                foreach($customer['addresses'] as $i => $address) { ?>
-                                                                <div class="f-p_address_container" data-index="<?php echo $address['address_id']; ?>">
-                                                                    <div class="f-p_address_remove <?php if($i == $lastAddress) { ?>last<?php } ?>" data-target="<?php echo $address['address_id']; ?>">&times;</div>
-                                                                    <input type="text" name="dynamic[]" data-name="customer_address" data-target-id="<?php echo $address['address_id']; ?>" placeholder="Адрес Доставки" value="<?php echo $address['value']; ?>" class="f-p_input">
-                                                                </div>
-                                                                <?php } ?>
-                                                                <div class="f-p_plus"></div>
-                                                        </div>
-                                                        <div class="f-p_chek">
-                                                            <input type="checkbox" id="myId1" name="myName1" <?php if($newsletter) { ?>checked=""<?php } ?>>
-                                                            <label for="myId1">
-                                                                <span class="pseudo-checkbox"></span>
-                                                                <span class="label-text">Я согласен получать информацию о специальных предложениях</span>
-                                                            </label>
-                                                        </div>
-                                                        <div class="clearfix f-p_mobile">
-                                                                <span class="f-p_submit">Сохранить изменения</span>
-                                                        </div>
-                                                </form>
-                                        </div>
-                        </div>
-                    </li>
-                </ul>
-        </div>
+                                                        <?php } ?>
+                                                        <div class="f-p_plus"></div>
+                                                </div>
+                                                <div class="f-p_chek">
+                                                    <input type="checkbox" id="myId1" name="myName1" <?php if($newsletter) { ?>checked=""<?php } ?>>
+                                                    <label for="myId1">
+                                                        <span class="pseudo-checkbox"></span>
+                                                        <span class="label-text">Я согласен получать информацию о специальных предложениях</span>
+                                                    </label>
+                                                </div>
+                                                <div class="clearfix f-p_mobile">
+                                                        <span class="f-p_submit">Сохранить изменения</span>
+                                                </div>
+                                        </form>
+                                </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </section>
 <!-- END Container  -->
+
 <!-- Favorite Products -->
 <section class="fond-f-p">
         <div class="width-1418 clearfix">

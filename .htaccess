@@ -22,6 +22,13 @@ Options -Indexes
 RewriteEngine On
 # If your opencart installation does not run on the main web folder make sure you folder it does run in ie. / becomes /shop/
 
+# Remove trailing slash
+RewriteRule ^(.*)/$ /$1 [L,R]
+
+# WWW to none
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
 RewriteBase /
 RewriteRule ^sitemap.xml$ index.php?route=extension/feed/google_sitemap [L]
 RewriteRule ^googlebase.xml$ index.php?route=extension/feed/google_base [L]
@@ -31,31 +38,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
 RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 
-RewriteCond %{REQUEST_URI} !\?
-RewriteCond %{REQUEST_URI} !\&
-RewriteCond %{REQUEST_URI} !\=
-RewriteCond %{REQUEST_URI} !\.
-RewriteCond %{REQUEST_URI} ![^\/]$
-RewriteRule ^(.*)\/$ /$1 [R=301,L]
+# Versions
+RewriteRule ^(.*)\.v[0-9]+\.css$ $1.css
+RewriteRule ^(.*)\.v[0-9]+\.js$ $1.js
 
-RewriteCond %{HTTP_HOST} ^www\.(.*)$
-RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
 
-RewriteCond %{REQUEST_URI} /index.php
-RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
-
-RewriteCond %{REQUEST_URI} /index.html
-RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
-
-RewriteCond %{REQUEST_URI} /index.html
-RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
-
-RewriteCond %{REQUEST_URI} /default.html
-RewriteCond %{QUERY_STRING} ^\z
-RewriteRule ^(.*)$ http://eco-u.ru/? [R=301,L]
 
 ### Additional Settings that may need to be enabled for some servers
 ### Uncomment the commands by removing the # sign in front of it.

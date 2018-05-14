@@ -495,7 +495,7 @@ class ControllerCheckoutCart extends Controller {
 			$product_id = 0;
 		}
                 
-                $weight_variant = $this->request->post['weight_variant'];
+        $weight_variant = $this->request->post['weight_variant'];
 
 		$this->load->model('catalog/product');
 
@@ -543,11 +543,13 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			if (!$json) {
-                                if(isset($this->request->post['special_price']) && $this->request->post['special_price'] != 'false') {
-                                    $newProductId = $this->request->post['product_id'].'_special';
-                                } else {
-                                    $newProductId = $this->request->post['product_id'];
-                                }
+            if(isset($this->request->post['special_price']) && $this->request->post['special_price'] != 'false') {
+                $newProductId = $this->request->post['product_id'].'_special';
+            } else {
+                $newProductId = $this->request->post['product_id'];
+            }
+
+                                
 				$this->cart->add($newProductId, $quantity, $option, $recurring_id, $weight_variant);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));

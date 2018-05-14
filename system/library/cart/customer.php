@@ -83,42 +83,47 @@ class Customer {
 		}
 	}
         
-        public function loginByPhone($phone, $password, $override = false, &$ban_to = false) {
-                $phone = str_replace(Array('(', ')', '+', ' ', '-'), '', $phone);
-		if($override) {
-                    $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND status = '1' AND approved = '1'");
-                } elseif($ban_to = $this->isBan($phone)) {
-                        return false;
-                } else {
-                    $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
+    public function loginByPhone($phone, $password, $override = false, &$ban_to = false) {
+            $phone = str_replace(Array('(', ')', '+', ' ', '-'), '', $phone);
+
+            if($override) {
+                $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND status = '1' AND approved = '1'");
+            } elseif($ban_to = $this->isBan($phone)) {
+                return false;
+            } else {
+                $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
+            }
+
+            if ($customer_query->num_rows) {
+    			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
+
+    			$this->customer_id = $customer_query->row['customer_id'];
+    			$this->firstname = $customer_query->row['firstname'];
+    			$this->lastname = $customer_query->row['lastname'];
+    			$this->customer_group_id = $customer_query->row['customer_group_id'];
+    			$this->email = $customer_query->row['email'];
+    			$this->telephone = $customer_query->row['telephone'];
+    			$this->fax = $customer_query->row['fax'];
+    			$this->newsletter = $customer_query->row['newsletter'];
+    			$this->address_id = $customer_query->row['address_id'];
+
+    			if(!$override) {
+                    $this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
                 }
-                if ($customer_query->num_rows) {
-			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
 
-			$this->customer_id = $customer_query->row['customer_id'];
-			$this->firstname = $customer_query->row['firstname'];
-			$this->lastname = $customer_query->row['lastname'];
-			$this->customer_group_id = $customer_query->row['customer_group_id'];
-			$this->email = $customer_query->row['email'];
-			$this->telephone = $customer_query->row['telephone'];
-			$this->fax = $customer_query->row['fax'];
-			$this->newsletter = $customer_query->row['newsletter'];
-			$this->address_id = $customer_query->row['address_id'];
+                $this->clearBan($phone);
 
-			if(!$override) {
-                            $this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
-                        }
-                        $this->clearBan($phone);
-//                        $sid = $this->session->session_id;
-//                        $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
-                        if(!$override) {
-                                $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
-                        }
-			return true;
-		} else {
-                        $this->doBan($phone);
-			return false;
-		}
+                //$sid = $this->session->session_id;
+                //$sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
+                
+                if(!$override) {
+                    $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
+                }
+    			return true;
+            } else {
+                $this->doBan($phone);
+    			return false;
+            }
 	}
         
         private function isBan($login) {
@@ -172,7 +177,7 @@ class Customer {
 		$this->newsletter = '';
 		$this->address_id = '';
                 
-                $this->setLoginCookies(0, '');
+        $this->setLoginCookies(0, '');
 	}
         
         private function setLoginCookies($customer_id, $password) {
@@ -313,15 +318,16 @@ class Customer {
             }
         }
         
-        public function setAddress($address_id, $address) {
-            if(!$this->isLogged()) {
-                    return;
-            }
-            if(!empty($address)) { 
+        public function setAddress($address_id, $address, $customer_id = 0) {
+            if( $customer_id == 0 && !$this->isLogged() ) return;
+
+            if(!empty($address)) {
+                if( $customer_id == 0 ) $customer_id = (int)$this->customer_id;
+
                 if($address_id != 0) {
-                    $this->db->query("UPDATE ".DB_PREFIX."address SET address_1 = '".$this->db->escape($address)."' WHERE customer_id = ".(int)$this->customer_id." AND address_id = ".(int)$address_id);
+                    $this->db->query("UPDATE ".DB_PREFIX."address SET address_1 = '".$this->db->escape($address)."' WHERE customer_id = ".$customer_id." AND address_id = ".(int)$address_id);
                 } else {
-                    $this->db->query("INSERT INTO ".DB_PREFIX."address (`customer_id`, `address_1`) VALUES(".(int)$this->customer_id.", '".$this->db->escape($address)."')");
+                    $this->db->query("INSERT INTO ".DB_PREFIX."address (`customer_id`, `address_1`) VALUES(".$customer_id.", '".$this->db->escape($address)."')");
                 }
             }
         }

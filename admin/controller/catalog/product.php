@@ -408,7 +408,7 @@ class ControllerCatalogProduct extends Controller {
 		$data['entry_quantity'] = $this->language->get('entry_quantity');
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_image'] = $this->language->get('entry_image');
-
+                
 		$data['button_copy'] = $this->language->get('button_copy');
 		$data['button_add'] = $this->language->get('button_add');
 		$data['button_edit'] = $this->language->get('button_edit');
@@ -561,6 +561,8 @@ class ControllerCatalogProduct extends Controller {
 
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_description'] = $this->language->get('entry_description');
+                $data['entry_available'] = $this->language->get('entry_available');
+                $data['entry_description_short'] = $this->language->get('entry_description_short');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
@@ -613,7 +615,16 @@ class ControllerCatalogProduct extends Controller {
 		$data['entry_reward'] = $this->language->get('entry_reward');
 		$data['entry_layout'] = $this->language->get('entry_layout');
 		$data['entry_recurring'] = $this->language->get('entry_recurring');
-
+                $data['entry_image_preview'] = $this->language->get('entry_image_preview');
+                $data['entry_weight_variants'] = $this->language->get('entry_weight_variants');
+                $data['entry_shelf_life'] = $this->language->get('entry_shelf_life');
+                $data['entry_special_price'] = $this->language->get('entry_special_price');
+                $data['entry_available_in_time'] = $this->language->get('entry_available_in_time');
+                $data['entry_profitable_offer'] = $this->language->get('entry_profitable_offer');
+                $data['entry_props'] = $this->language->get('entry_props');
+                $data['entry_is_weighted'] = $this->language->get('entry_is_weighted');
+                $data['entry_composite_price'] = $this->language->get('entry_composite_price');
+                
 		$data['help_keyword'] = $this->language->get('help_keyword');
 		$data['help_sku'] = $this->language->get('help_sku');
 		$data['help_upc'] = $this->language->get('help_upc');
@@ -763,6 +774,70 @@ class ControllerCatalogProduct extends Controller {
 			$data['model'] = $product_info['model'];
 		} else {
 			$data['model'] = '';
+		}
+                
+                if (isset($this->request->post['available'])) {
+			$data['available'] = $this->request->post['available'];
+		} elseif (!empty($product_info)) {
+			$data['available'] = $product_info['available'];
+		} else {
+			$data['available'] = '';
+		}
+                
+                if (isset($this->request->post['weight_variants'])) {
+			$data['weight_variants'] = $this->request->post['weight_variants'];
+		} elseif (!empty($product_info)) {
+			$data['weight_variants'] = $product_info['weight_variants'];
+		} else {
+			$data['weight_variants'] = '';
+		}
+                
+                if (isset($this->request->post['shelf_life'])) {
+			$data['shelf_life'] = $this->request->post['shelf_life'];
+		} elseif (!empty($product_info)) {
+			$data['shelf_life'] = $product_info['shelf_life'];
+		} else {
+			$data['shelf_life'] = '';
+		}
+                
+                if (isset($this->request->post['available_in_time'])) {
+			$data['available_in_time'] = $this->request->post['available_in_time'];
+		} elseif (!empty($product_info)) {
+			$data['available_in_time'] = $product_info['available_in_time'];
+		} else {
+			$data['available_in_time'] = '';
+		}
+                
+                if (isset($this->request->post['special_price'])) {
+			$data['special_price'] = $this->request->post['special_price'];
+		} elseif (!empty($product_info)) {
+			$data['special_price'] = $product_info['special_price'];
+		} else {
+			$data['special_price'] = '';
+		}
+                
+                if (isset($this->request->post['profitable_offer'])) {
+			$data['profitable_offer'] = $this->request->post['profitable_offer'];
+		} elseif (!empty($product_info)) {
+			$data['profitable_offer'] = $product_info['profitable_offer'];
+		} else {
+			$data['profitable_offer'] = '';
+		}
+                
+                if (isset($this->request->post['is_weighted'])) {
+			$data['is_weighted'] = $this->request->post['is_weighted'];
+		} elseif (!empty($product_info)) {
+			$data['is_weighted'] = $product_info['is_weighted'];
+		} else {
+			$data['is_weighted'] = 0;
+		}
+                
+                if (isset($this->request->post['composite_price'])) {
+			$data['composite_price'] = $this->request->post['composite_price'];
+		} elseif (!empty($product_info)) {
+			$data['composite_price'] = $product_info['composite_price'];
+		} else {
+			$data['composite_price'] = 0;
 		}
 
 		if (isset($this->request->post['sku'])) {
@@ -1213,6 +1288,25 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+                
+                // Image preview
+		if (isset($this->request->post['image_preview'])) {
+			$data['image_preview'] = $this->request->post['image_preview'];
+		} elseif (!empty($product_info)) {
+			$data['image_preview'] = $product_info['image_preview'];
+		} else {
+			$data['image_preview'] = '';
+		}
+
+		$this->load->model('tool/image');
+
+		if (isset($this->request->post['image_preview']) && is_file(DIR_IMAGE . $this->request->post['image_preview'])) {
+			$data['thumb_preview'] = $this->model_tool_image->resize($this->request->post['image_preview'], 100, 100);
+		} elseif (!empty($product_info) && is_file(DIR_IMAGE . $product_info['image_preview'])) {
+			$data['thumb_preview'] = $this->model_tool_image->resize($product_info['image_preview'], 100, 100);
+		} else {
+			$data['thumb_preview'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+		}
 
 		// Images
 		if (isset($this->request->post['product_image'])) {
@@ -1224,7 +1318,7 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$data['product_images'] = array();
-
+                
 		foreach ($product_images as $product_image) {
 			if (is_file(DIR_IMAGE . $product_image['image'])) {
 				$image = $product_image['image'];

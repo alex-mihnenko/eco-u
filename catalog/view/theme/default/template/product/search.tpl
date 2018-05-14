@@ -19,9 +19,8 @@
                                 <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
                             <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                                 <div class="p-o_link">
-                                        <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                        <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a> 
-                                        <?php if($is_admin) {?><a target="_blank" href="<?php echo $product['edit_link']; ?>" class="btn btn-default admin-product-edit"><i class="fa fa-edit"></i></a><?php } ?>
+                                    <meta itemprop="name" content="<?php echo $product['name']; ?>">
+                                    <a href="<?php echo $product['href']; ?>" itemprop="url"><?php echo $product['name']; ?></a> 
                                 </div>
                                 <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
                                 <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">

@@ -150,6 +150,15 @@ class ControllerCommonHeader extends Controller {
 			$data['class'] = 'common-home';
 		}
 
+
+		// Versions CSS
+			if( !isset($this->session->data['cssversion']) ) {
+				$this->session->data['cssversion'] = 'v'.rand(1, 1000);
+			}
+
+			$data['cssversion'] = $this->session->data['cssversion'];
+		// ---
+
 		return $this->load->view('common/header', $data);
 	}
 }

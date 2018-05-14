@@ -33,6 +33,12 @@ class ControllerCommonFooter extends Controller {
 			}
 		}
 
+		// Contacts
+			$data['telephone'] = $this->config->get('config_telephone');
+			$data['telephone_href'] = preg_replace("/[^0-9,.]/", "",$this->config->get('config_telephone'));
+			$data['email'] = $this->config->get('config_email');
+		// ---
+
 		$data['contact'] = $this->url->link('information/contact');
 		$data['return'] = $this->url->link('account/return/add', '', true);
 		$data['sitemap'] = $this->url->link('information/sitemap');
@@ -71,6 +77,16 @@ class ControllerCommonFooter extends Controller {
 
 			$this->model_tool_online->addOnline($ip, $this->customer->getId(), $url, $referer);
 		}
+
+
+		// Versions JS
+			if( !isset($this->session->data['jsversion']) ) {
+				$this->session->data['jsversion'] = 'v'.rand(1, 1000);
+			}
+
+			$data['jsversion'] = $this->session->data['jsversion'];
+		// ---
+
 
 		return $this->load->view('common/footer', $data);
 	}

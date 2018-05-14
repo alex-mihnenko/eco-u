@@ -5,29 +5,41 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$output  = '<?xml version="1.0" encoding="UTF-8"?>';
 			$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 
+            $output .= '<url><loc>http://eco-u.ru</loc><changefreq>always</changefreq><priority>1.00</priority></url>';
+
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
 
-			$products = $this->model_catalog_product->getProducts();
+			$products = $this->model_catalog_product->getProductsOrigin();
 
 			foreach ($products as $product) {
+				
+				if( $_SERVER['HTTPS'] ){
+					$proudct_url = str_replace(HTTPS_SERVER, HTTPS_SERVER."eda/", $this->url->link('product/product', 'product_id=' . $product['product_id']));
+				}
+				else {
+					$proudct_url = str_replace(HTTP_SERVER, HTTP_SERVER."eda/", $this->url->link('product/product', 'product_id=' . $product['product_id']));
+				}
+
+
 				if ($product['image']) {
 					$output .= '<url>';
-					$output .= '<loc>' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . '</loc>';
+					$output .= '<loc>' . $proudct_url . '</loc>';
 					$output .= '<changefreq>weekly</changefreq>';
 					$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($product['date_modified'])) . '</lastmod>';
 					$output .= '<priority>1.0</priority>';
-					$output .= '<image:image>';
+					/*$output .= '<image:image>';
 					$output .= '<image:loc>' . $this->model_tool_image->resize($product['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>';
 					$output .= '<image:caption>' . $product['name'] . '</image:caption>';
 					$output .= '<image:title>' . $product['name'] . '</image:title>';
-					$output .= '</image:image>';
+					$output .= '</image:image>';*/
 					$output .= '</url>';
 				}
 			}
 
 			$this->load->model('catalog/category');
 
+			/*
 			$output .= $this->getCategories(0);
 
 			$this->load->model('catalog/manufacturer');
@@ -51,6 +63,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 					$output .= '</url>';
 				}
 			}
+			*/
 
 			$this->load->model('catalog/information');
 
@@ -63,6 +76,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				$output .= '<priority>0.5</priority>';
 				$output .= '</url>';
 			}
+			
 
 			$output .= '</urlset>';
 
@@ -74,7 +88,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 	protected function getCategories($parent_id, $current_path = '') {
 		$output = '';
 
-		$results = $this->model_catalog_category->getCategories($parent_id);
+		$results = $this->model_catalog_category->getCategoriesOrigin($parent_id);
 
 		foreach ($results as $result) {
 			if (!$current_path) {

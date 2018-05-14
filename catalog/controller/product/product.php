@@ -2,17 +2,39 @@
 class ControllerProductProduct extends Controller {
 	private $error = array();
 
+
 	public function index() {
 		$this->load->language('product/product');
-                $this->load->model('account/user');
-                if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
-                {
-                    $data['is_admin'] = true;
-                }
-                else
-                {
-                    $data['is_admin'] = false;
-                }
+
+		// Check struckture
+        	$url_data = $this->request->get;
+
+    		$url_product = $this->url->link('product/product', 'product_id=' . $url_data['product_id']);
+
+    		if($_SERVER['HTTPS']) { $url_request = HTTPS_SERVER.$url_data['_route_']; }
+    		else { $url_request = HTTP_SERVER.$url_data['_route_']; }
+
+    		if($_SERVER['HTTPS']) { $url_correct = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $url_product); }
+    		else { $url_correct = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $url_product); }
+
+    		if( $url_request !== $url_correct ){
+    			header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+    			$this->response->redirect($this->url->link('common/home'));
+    		}
+        // ---
+
+		// Check admin
+            $this->load->model('account/user');
+            if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
+            {
+                $data['is_admin'] = true;
+            }
+            else
+            {
+                $data['is_admin'] = false;
+            }
+        // ---
+
                 
 		$data['breadcrumbs'] = array();
 
@@ -282,26 +304,26 @@ class ControllerProductProduct extends Controller {
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-                        $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
-                        $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
-                        $data['weight_variants'] = $product_info['weight_variants'];
-                        $data['weight_class'] = $product_info['weight_class'];
-                        $data['composite_price'] = json_encode($product_info['composite_price']);
-                        $data['quantity'] = $product_info['quantity'];
-                        $data['stock_status_id'] = $product_info['stock_status_id'];
-                        $data['available_in_time'] = $product_info['available_in_time'];
-                        
-                        if($product_info['special']) {
-                            if($product_info['price'] != 0) $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
-                            else $discount_sticker = 0;
-                            $data['discount_sticker'] = $discount_sticker;
-                            unset($discount_sticker);
-                        }
-                        
-                        $data['sticker_name'] = $product_info['sticker']['name'];
-                        $data['sticker_class'] = $product_info['sticker']['class'];
-                        $data['location'] = $product_info['location'];
-                        $data['shelf_life'] = $product_info['shelf_life'];
+            $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
+            $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
+            $data['weight_variants'] = $product_info['weight_variants'];
+            $data['weight_class'] = $product_info['weight_class'];
+            $data['composite_price'] = json_encode($product_info['composite_price']);
+            $data['quantity'] = $product_info['quantity'];
+            $data['stock_status_id'] = $product_info['stock_status_id'];
+            $data['available_in_time'] = $product_info['available_in_time'];
+            
+            if($product_info['special']) {
+                if($product_info['price'] != 0) $discount_sticker = ceil(((float)$product_info['price'] - (float)$product_info['special'])/(float)$product_info['price']*100);
+                else $discount_sticker = 0;
+                $data['discount_sticker'] = $discount_sticker;
+                unset($discount_sticker);
+            }
+            
+            $data['sticker_name'] = $product_info['sticker']['name'];
+            $data['sticker_class'] = $product_info['sticker']['class'];
+            $data['location'] = $product_info['location'];
+            $data['shelf_life'] = $product_info['shelf_life'];
                         
 			if ($product_info['quantity'] <= 0) {
 				$data['stock'] = $product_info['stock_status'];
@@ -440,7 +462,8 @@ class ControllerProductProduct extends Controller {
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
 			foreach ($results as $result) {
-                                if($data['product_id'] == $result['product_id'] || ($result['quantity'] <= 0 && $result['stock_status_id'] == 5)) continue;
+                if($data['product_id'] == $result['product_id'] || ($result['quantity'] <= 0 && $result['stock_status_id'] == 5)) continue;
+				
 				if ($result['image_preview']) {
 					$image = '/image/'.$result['image_preview'];
                                         //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
@@ -479,28 +502,28 @@ class ControllerProductProduct extends Controller {
                                 }
                                 if(isset($this->request->get['path'])) $category_path = 'path=' . $this->request->get['path'];
                                 else $category_path = '';
-				$arProducts = array(
-					'product_id'  => $result['product_id'],
-                                        'status'      => $result['status'],
-                                        'available_in_time' => $result['available_in_time'],
-                                        'quantity'    => $result['quantity'],
-					'thumb'       => $image,
-					'name'        => $result['name'],
-                                        'description_short' => $result['description_short'],
-					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
-					'price'       => $price,
-					'special'     => $special,
-					'tax'         => $tax,
-					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-					'rating'      => $result['rating'],
-					'href'        => $this->url->link('product/product', $category_path . '&product_id=' . $result['product_id'] . $url),
-                                        'stock_status'      => $result['stock_status'],
-                                        'stock_status_id'   => $result['stock_status_id'],
-                                        'weight_variants'   => $result['weight_variants'],
-                                        'weight_class' => $result['weight_class'],
-                                        'sticker_name' => $result['sticker']['name'],
-                                        'sticker_class' => $result['sticker']['class']
-				);
+								$arProducts = array(
+									'product_id'  => $result['product_id'],
+				                                        'status'      => $result['status'],
+				                                        'available_in_time' => $result['available_in_time'],
+				                                        'quantity'    => $result['quantity'],
+									'thumb'       => $image,
+									'name'        => $result['name'],
+				                                        'description_short' => $result['description_short'],
+									'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
+									'price'       => $price,
+									'special'     => $special,
+									'tax'         => $tax,
+									'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
+									'rating'      => $result['rating'],
+									'href'        => $this->url->link('product/product', $category_path . '&product_id=' . $result['product_id'] . $url),
+				                                        'stock_status'      => $result['stock_status'],
+				                                        'stock_status_id'   => $result['stock_status_id'],
+				                                        'weight_variants'   => $result['weight_variants'],
+				                                        'weight_class' => $result['weight_class'],
+				                                        'sticker_name' => $result['sticker']['name'],
+				                                        'sticker_class' => $result['sticker']['class']
+								);
                                 if(isset($discount_sticker)) {
                                     $arProducts['discount_sticker'] = $discount_sticker;
                                     unset($discount_sticker);
@@ -540,9 +563,10 @@ class ControllerProductProduct extends Controller {
                         
 			$this->response->setOutput($this->load->view('product/product', $data));
 		} else {
-                        $this->response->addHeader("Location: http://{$_SERVER['SERVER_NAME']}");
-                        $data = Array();
-                        $this->response->setOutput($this->load->view('error/not_found', $data));
+            $this->response->addHeader("Location: http://{$_SERVER['SERVER_NAME']}");
+            $data = Array();
+            $this->response->setOutput($this->load->view('error/not_found', $data));
+
 			/*$url = '';
 
 			if (isset($this->request->get['path'])) {
@@ -760,5 +784,13 @@ class ControllerProductProduct extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	public function clear() {
+		$this->load->model('catalog/product');
+		$result = $this->model_catalog_product->clearDublicatesAlias();
+		
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($result));
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 class ControllerErrorNotFound extends Controller {
 	public function index() {
+
 		$this->load->language('error/not_found');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -11,9 +12,26 @@ class ControllerErrorNotFound extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
+		
+
 
 		if (isset($this->request->get['route'])) {
 			$url_data = $this->request->get;
+
+			// Check 404
+				$this->load->model('catalog/url_alias');
+
+				$parts = explode('/', $url_data['_route_']);
+				$last = $parts[count($parts)-1];
+
+				if( $last == 'index.php' || $last == 'index.html' || $last == 'default.html' ) {
+					$last = $parts[count($parts)-2];
+				}
+				
+				$result = $this->model_catalog_url_alias->getUrlAlias($last,'product_id');
+				
+				if (count($result) > 0 ){ $redirect = "/eda/".$last; }
+			// ...
 
 			unset($url_data['_route_']);
 
@@ -48,9 +66,14 @@ class ControllerErrorNotFound extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
-		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+		//$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-		$this->response->setOutput($this->load->view('error/not_found', $data));
-		$this->redirect($this->url->link('common/home'));
+		//$this->response->setOutput($this->load->view('error/not_found', $data));
+		
+		if( isset($redirect)) {
+			header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+            $this->response->redirect($redirect);
+		}
+		else { $this->response->redirect($this->url->link('common/home')); }
 	}
 }

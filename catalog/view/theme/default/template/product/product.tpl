@@ -1,14 +1,17 @@
 <?php echo $header; ?>
 
+
 <script>
     window.bodyClass = 'page_2';
 </script>
 
+
 <!-- Container -->
 <section class="fond-white">
         <div class="width-1194 pd-29">
-                <div style="height:70px"></div>
-                <a class="btn-close-tab" onclick="window.close()"></a>
+                <div class="prod-page-top"></div>
+                <!--a class="btn-close-tab" onclick="window.close()"></a-->
+                <a class="btn-back-to-cat" href="/#l-p_35">&#8592; в каталог</a>
                 <ul class="breadcrumbs clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
                         <?php foreach($breadcrumbs as $i => $item) { 
                             if($i < count($breadcrumbs) - 1) { ?>
@@ -27,11 +30,11 @@
                 <div class="card-product clearfix" itemscope itemtype="http://schema.org/Product">
                         <div class="c-p_left">
                                 <div class="c-p_thumb">
-                                    <img src="<?php echo $popup; ?>" alt="" itemprop="image">
+                                    <img src="<?php echo $popup; ?>" alt="<?php echo $heading_title; ?>" itemprop="image">
                                     <?php if(isset($discount_sticker)) { ?><div class="c-p_discount sticker_discount">-<?php echo $discount_sticker; ?>%</div>
                                     <?php } elseif($sticker_class) { ?><div class="c-p_discount sticker_<?php echo $sticker_class; ?>"><?php echo $sticker_name; ?></div><?php } ?>
                                 </div>
-                                <h1 class="c-p_title c-p_title-mobile" itemprop="name"><?php echo $heading_title; ?></h1>
+                                <h2 class="c-p_title c-p_title-mobile" itemprop="name"><?php echo $heading_title; ?></h2>
                                 <ul class="list-composition">
                                         <?php
                                         foreach($attribute_groups as $aGroup) { 
@@ -105,6 +108,18 @@
         </div>
 </section>
 <!-- END Container  -->
+
+<!-- About the product -->
+<section id="anchor-details" class="fond-box_1">
+        <div class="width-1194 about-product">
+                <div class="a-p_title"><?php echo $heading_title; ?></div>
+                <p>
+                    <?php echo $description; ?>
+                </p>
+        </div>
+</section>
+<!-- END About the product -->
+
 <!-- Together with this product is often bought -->
 <?php if(count($products) > 0) { ?>
 <section class="fond-profitable_offer"> 
@@ -117,8 +132,8 @@
                         <div>
                                 <div class="box-p_o">
                                     <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
-                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb" target="_blank">
-                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
+                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
+                                            <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="<?php echo $product['name']; ?>">
                                      </a>
                                      <div class="p-o_block">
                                              <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
@@ -185,15 +200,5 @@
 </section>
 <? } ?>
 <!-- END Together with this product is often bought -->
-<!-- About the product -->
-<section id="anchor-details" class="fond-box_1">
-        <div class="width-1194 about-product">
-                <div class="a-p_title"><?php echo $heading_title; ?></div>
-                <p>
-                    <?php echo $description; ?>
-                </p>
-        </div>
-</section>
-<!-- END About the product -->
 
 <?php echo $footer; ?>

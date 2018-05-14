@@ -45,6 +45,7 @@ if ($config->get('session_autostart')) {
 
 $registry->set('session', $session);
 
+
 // Cache 
 $registry->set('cache', new Cache($config->get('cache_type'), $config->get('cache_expire')));
 

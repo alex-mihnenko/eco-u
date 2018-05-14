@@ -22,21 +22,22 @@ class Session {
 			ini_set('session.use_trans_sid', 'Off');
 			ini_set('session.cookie_httponly', 'On');
                         
-                        // 2018-03-01 Session Life Time
-                        $SESSION_TIME = 604800; // 7 Days
-                        ini_set('session.gc_maxlifetime', $SESSION_TIME);
-                        ini_set('session.cookie_lifetime', $SESSION_TIME);
-                        
-                        $_SESSION_SAVE_PATH = '/home/httpd/vhosts/eco-u.ru/subdomains/test/tmp';
-                        if(file_exists($_SESSION_SAVE_PATH) && is_dir($_SESSION_SAVE_PATH)) {
-                                ini_set('session.save_path', $_SESSION_SAVE_PATH);
-                        }
+            // 2018-03-01 Session Life Time
+            #$SESSION_TIME = 604800; // 7 Days
+            #ini_set('session.gc_maxlifetime', $SESSION_TIME);
+            #ini_set('session.cookie_lifetime', $SESSION_TIME);
+            
+            #$_SESSION_SAVE_PATH = '/home/httpd/vhosts/eco-u.ru/subdomains/test/tmp';
+            #if(file_exists($_SESSION_SAVE_PATH) && is_dir($_SESSION_SAVE_PATH)) {
+                    #ini_set('session.save_path', $_SESSION_SAVE_PATH);
+            #}
                         
 			if (isset($_COOKIE[session_name()]) && !preg_match('/^[a-zA-Z0-9,\-]{22,52}$/', $_COOKIE[session_name()])) {
 				exit('Error: Invalid session ID!');
 			}
 			
-			session_set_cookie_params(0, '/');
+			#session_set_cookie_params(0, '/');
+			session_set_cookie_params(604800);
 			session_start();
 		}			
 	}
@@ -57,7 +58,8 @@ class Session {
 		$this->data = &$_SESSION[$this->session_id];
 		
 		if ($key != 'PHPSESSID') {
-			setcookie($key, $this->session_id, ini_get('session.cookie_lifetime'), ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
+			#setcookie($key, $this->session_id, ini_get('session.cookie_lifetime'), ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
+			setcookie($key, $this->session_id, time() + 604800, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), ini_get('session.cookie_secure'), ini_get('session.cookie_httponly'));
 		}
 		
 		return $this->session_id;

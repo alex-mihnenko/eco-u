@@ -114,6 +114,9 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_checkout_guest'] = $this->language->get('entry_checkout_guest');
 		$data['entry_checkout'] = $this->language->get('entry_checkout');
 		$data['entry_order_status'] = $this->language->get('entry_order_status');
+		$data['entry_payment_status'] = $this->language->get('entry_payment_status');
+		$data['entry_paid_status'] = $this->language->get('entry_paid_status');
+		$data['entry_nopaid_status'] = $this->language->get('entry_nopaid_status');
 		$data['entry_processing_status'] = $this->language->get('entry_processing_status');
 		$data['entry_complete_status'] = $this->language->get('entry_complete_status');
 		$data['entry_fraud_status'] = $this->language->get('entry_fraud_status');
@@ -189,6 +192,9 @@ class ControllerSettingSetting extends Controller {
 		$data['help_checkout'] = $this->language->get('help_checkout');
 		$data['help_invoice_prefix'] = $this->language->get('help_invoice_prefix');
 		$data['help_order_status'] = $this->language->get('help_order_status');
+		$data['help_payment_status'] = $this->language->get('help_payment_status');
+		$data['help_paid_status'] = $this->language->get('help_paid_status');
+		$data['help_nopaid_status'] = $this->language->get('help_nopaid_status');
 		$data['help_processing_status'] = $this->language->get('help_processing_status');
 		$data['help_complete_status'] = $this->language->get('help_complete_status');
 		$data['help_fraud_status'] = $this->language->get('help_fraud_status');
@@ -786,6 +792,24 @@ class ControllerSettingSetting extends Controller {
 			$data['config_order_status_id'] = $this->request->post['config_order_status_id'];
 		} else {
 			$data['config_order_status_id'] = $this->config->get('config_order_status_id');
+		}
+
+		if (isset($this->request->post['config_payment_status_id'])) {
+			$data['config_payment_status_id'] = $this->request->post['config_payment_status_id'];
+		} else {
+			$data['config_payment_status_id'] = $this->config->get('config_payment_status_id');
+		}
+
+		if (isset($this->request->post['config_paid_status_id'])) {
+			$data['config_paid_status_id'] = $this->request->post['config_paid_status_id'];
+		} else {
+			$data['config_paid_status_id'] = $this->config->get('config_paid_status_id');
+		}
+
+		if (isset($this->request->post['config_nopaid_status_id'])) {
+			$data['config_nopaid_status_id'] = $this->request->post['config_nopaid_status_id'];
+		} else {
+			$data['config_nopaid_status_id'] = $this->config->get('config_nopaid_status_id');
 		}
 
 		if (isset($this->request->post['config_processing_status'])) {
