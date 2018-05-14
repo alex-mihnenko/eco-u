@@ -83,6 +83,8 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	$weight_all=0;
 	$weight_ignore=0;
 
+	$order['createdAt']=$date_added;
+	
 	// Get order options
 		$resx=mysql_query("select MSP.ms_id,MSP.product_id,OOP.order_product_id,OOP.quantity,OOP.variant,OOP.amount,OOP.price from oc_order_product as OOP, ms_products as MSP where  MSP.product_id=OOP.product_id and OOP.order_id='$order_id'");
 	
@@ -235,7 +237,6 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
     // Init
 		$link='https://eco-u.retailcrm.ru/api/v5/orders/create?apiKey='.$retail_key;
-		$order['createdAt']=$date_added;
 	   	$order['items']=$items_new;
 		$order['number']='IM'.$order_id;
 		if($weight_ignore==0) { $order['weight']=$weight_all; }
