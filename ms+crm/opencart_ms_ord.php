@@ -23,7 +23,7 @@ $res_orders=mysql_query("
 
 $i=1;
 
-while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
+while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_ad,$shipping_code,$shipping_postcode,$shipping_city,
 // ---
 
 	$shipping_country,$shipping_address_1,$shipping_address_2,$delivery_time)=mysql_fetch_row($res_orders)){
@@ -83,7 +83,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	$weight_all=0;
 	$weight_ignore=0;
 
-	$order['createdAt']=$date_added;
+	$order['createdAt']=$date_ad;
 	
 	// Get order options
 		$resx=mysql_query("select MSP.ms_id,MSP.product_id,OOP.order_product_id,OOP.quantity,OOP.variant,OOP.amount,OOP.price from oc_order_product as OOP, ms_products as MSP where  MSP.product_id=OOP.product_id and OOP.order_id='$order_id'");
