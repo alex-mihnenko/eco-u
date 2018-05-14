@@ -13,6 +13,7 @@
 	$log = "";
 // ---
 
+
 $res_orders=mysql_query("
 	SELECT 
 		payment_method, customer_id, order_id, firstname, lastname, email, telephone, comment, total, 
@@ -54,23 +55,26 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$date_added=date("Y-m-d H:i:s",$ms_last);
 		$ms_data=array();
 
-
-		$res=mysql_query("select ms_id from ms_contacts where shop_id='$phone'");
-		list($ms_id)=mysql_fetch_row($res);
-
 		$data['externalId']=$email;
 		$data['email']=$email;
 		$data['lastName']=$lname;
 		$data['firstName']=$fname;
 		$data['phone']=$phone;
 
-		if(!$ms_id){
+		if ( $qCustomer = mysql_query("SELECT * FROM `ms_contacts` WHERE shop_id='".$phone."';") ) $nCustomer = mysql_num_rows($qCustomer);
+		else $nCustomer = 0;
+
+		if( $nCustomer==0 ){
 			$link='https://eco-u.retailcrm.ru/api/v5/customers/create?apiKey='.$retail_key;
 			$senddata['customer']=json_encode($data);
 			$res=crm_query_send($link,$senddata);
-			mysql_query("insert into ms_contacts set ms_id='{$res['id']}', shop_id='$phone'");
+
+			$qInsert = mysql_query("INSERT INTO `ms_contacts` ( `shop_id`, `ms_id` ) values ('".addslashes($phone)."', ".$res["id"]." );");
 			$cust_id=$res['id'];
-		}else{
+		}
+		else{
+			$customer = mysql_fetch_assoc($qCustomer);
+			$ms_id = $customer['ms_id'];
 			$cust_id=$ms_id;
 		}
 	// ---
@@ -354,5 +358,5 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 // ---
 
 
-$link='https://eco-u.retailcrm.ru/api/v5/customers/?apiKey='.$retail_key;
-$res=crm_query($link);
+//$link='https://eco-u.retailcrm.ru/api/v5/customers/?apiKey='.$retail_key;
+//$res=crm_query($link);
