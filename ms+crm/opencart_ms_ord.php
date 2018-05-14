@@ -1,8 +1,8 @@
 <?php
 // Init
 	
-	#error_reporting(E_ALL);
-	#ini_set('display_errors', '1');
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
 
 	include("opencart_inc.php");
 
@@ -84,7 +84,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	$weight_ignore=0;
 
 	$order['createdAt']=$date_ad;
-	
+
 	// Get order options
 		$resx=mysql_query("select MSP.ms_id,MSP.product_id,OOP.order_product_id,OOP.quantity,OOP.variant,OOP.amount,OOP.price from oc_order_product as OOP, ms_products as MSP where  MSP.product_id=OOP.product_id and OOP.order_id='$order_id'");
 	
