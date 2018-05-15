@@ -13,6 +13,10 @@ $(document).ready(function() {
 	    	$(window).resize(columnizerInit);
 	    // ---
 
+	    // Roistat
+	    	checkRoistat();
+	    // ---
+
 	    // Hashes
 	    	checkHash();
 	    // ---
@@ -488,7 +492,20 @@ $(document).ready(function() {
 	}
 // ---
 
-// Helper
+// Helpers
+	function checkRoistat() {
+		// ---
+			var roistat_visit = Cookies.get('roistat_visit');
+
+			if( typeof roistat_visit != 'undefined' ){
+				// ---
+					console.log(roistat_visit);
+					$('body').append('<div class="roistat-visit"><p>№ '+roistat_visit+'</p></div>');
+				// ---
+			}
+		// ---
+	}
+
 	function checkHash() {
 		var hash = window.location.hash.replace('#','');
 		console.log(hash);

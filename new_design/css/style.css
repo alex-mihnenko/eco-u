@@ -7241,3 +7241,53 @@ select.ca-i_input.input-error_3 {
     overflow: hidden;
     overflow-y: auto;
 }
+
+
+/* Add */
+	/* Roistat */
+		.roistat-visit {
+			position: fixed;
+			top: auto;
+			bottom: 0;
+			left: auto;
+			right: 0;
+			width: auto;
+			height: auto;
+			box-sizing: border-box;
+			padding: 7.5px 15px;
+			background-color: #739d3d;
+			border-radius: 8px 0px 0px 0px;
+			z-index: 10000;
+			opacity: 0;
+
+			-webkit-animation: slide-up-in .5s forwards;
+			animation: slide-up-in .5s forwards;
+		}
+
+		@-webkit-keyframes slide-up-in {
+		  0%   { opacity: 0; -webkit-transform: translateY(10px); }
+		  100% { opacity: 1; -webkit-transform: translateY(0px); }
+		}
+		@-moz-keyframes slide-up-in {
+		  0%   { opacity: 0; -moz-transform: translateY(10px); }
+		  100% { opacity: 1; -moz-transform: translateY(0px); }
+		}
+		@-o-keyframes slide-up-in {
+		  0%   { opacity: 0; -o-transform: translateY(10px); }
+		  100% { opacity: 1; -o-transform: translateY(0px); }
+		}
+		@keyframes slide-up-in {
+		  0%   { opacity: 0; transform: translateY(10px); }
+		  100% { opacity: 1; transform: translateY(0px); }
+		}
+
+		
+		.roistat-visit > p {
+			text-overflow: ellipsis;
+		    font-size: 15px;
+		    font-weight: 700;
+		    line-height: 15px;
+			color: #FFFFFF;
+		}
+	/* Roistat */
+/* Add */
