@@ -230,13 +230,28 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		// Get delivery net cost
 			$deliveryNetCost = 0;
 
-			if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='flat' AND `key`='flat_netcost';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
-			else $nShippingNetCost = 0;
+			if($delivery_code != "free") {
+				// ---
+					if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='".$delivery_code."';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
+					else $nShippingNetCost = 0;
 
 
-			if( $nShippingNetCost>0 ){
-				$shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost);
-				$deliveryNetCost = $shippingNetCostRow['value'];
+					if( $nShippingNetCost>0 ){
+						// ---
+							$mainCost = 0;
+							$netCost = 0;
+
+							while ($shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost)) {
+								
+								if( $shippingNetCostRow['key'] == $delivery_code.'_cost' ) { $mainCost = $shippingNetCostRow['value']; }
+								if( $shippingNetCostRow['key'] == $delivery_code.'_netcost' ) { $netCost = $shippingNetCostRow['value']; }
+							
+							}
+
+							$deliveryNetCost = $deliveryCost + ($mainCost-$netCost);
+						// ---
+					}
+				// ---
 			}
 		// ---
 
