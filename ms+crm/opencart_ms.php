@@ -426,7 +426,7 @@ if($argv[1]=='3'){
 	
 		$limit=100;
 		$offset=$limit*$page;
-		$link="https://online.moysklad.ru/api/remap/1.1/report/stock/all?limit=$limit&offset=$offset";//&updatedFrom=".$updfrom;
+		$link="https://online.moysklad.ru/api/remap/1.1/report/stock/all?stockMode=all&limit=$limit&offset=$offset";//&updatedFrom=".$updfrom;
 		//store.id
 		$json=ms_query($link);
 
