@@ -24,6 +24,8 @@ $i=1;
 while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
 // ---
 
+	$orderCreatedAt = $date_added;
+
 	$shipping_country,$shipping_address_1,$shipping_address_2,$delivery_time)=mysql_fetch_row($res_orders)){
 	
 	// Check email
@@ -266,7 +268,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
     // Init
 		$link='https://eco-u.retailcrm.ru/api/v5/orders/create?apiKey='.$retail_key;
-		$order['createdAt']=$date_added;
+		$order['createdAt']=$orderCreatedAt;
 	   	$order['items']=$items_new;
 		$order['number']='IM'.$order_id;
 		if($weight_ignore==0) { $order['weight']=$weight_all; }
