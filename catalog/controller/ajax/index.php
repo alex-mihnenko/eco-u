@@ -820,58 +820,69 @@ class ControllerAjaxIndex extends Controller {
           $response->deliveryprice = null;
           $response->method = null;
 
-          if ( isset($response->methods['free']) ){
-            // ---
 
-              // Free
-              if( $price >= $response->methods['free']['cost'] ){
-                $response->deliveryprice = 0;
-                $response->method = 'free';
-              }
-              // Mkad
-              else {
+
+          // Inside
+          if( $response->mkad == 'IN_MKAD' ){
+            // ---
+              if ( isset($response->methods['free']) ){
                 // ---
-                  if ( isset($response->methods['flat']) && isset($response->methods['mkadout']) ){
-                    // Inside
-                    if( $response->mkad == 'IN_MKAD' ){
-                      $response->deliveryprice = $response->methods['flat']['cost'];
-                      $response->method = 'flat';
-                    }
-                    // Outside
-                    else {
+                  if( $price >= $response->methods['free']['cost'] ){
+                    $response->deliveryprice = 0;
+                    $response->method = 'free';
+                  }
+                  else{
+                    $response->deliveryprice = $response->methods['flat']['cost'];
+                    $response->method = 'flat';
+                  }
+                // ---
+              }
+              else{
+                // ---
+                  $response->deliveryprice = $response->methods['flat']['cost'];
+                  $response->method = 'flat';
+                // ---
+              }
+            // ---
+          }
+          // Outside
+          else {
+            // ---
+              if ( isset($response->methods['free']) ){
+                // ---
+                  if( $price >= $response->methods['free']['cost'] ){
+                    // ---
+                      if( $response->tobeltway != null ){
+                        $response->deliveryprice = (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
+                      }
+                      else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+
+
+                      $response->method = 'mkadout';
+                    // ---
+                  }
+                  else{
+                    // ---
                       if( $response->tobeltway != null ){
                         $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
                       }
                       else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
 
                       $response->method = 'mkadout';
-                    }
+                    // ---
                   }
                 // ---
               }
-
-            // ---
-          }
-          else {
-            // ---
-
-              if ( isset($response->methods['flat']) && isset($response->methods['mkadout']) ){
-                // Inside
-                if( $response->mkad == 'IN_MKAD' ){
-                  $response->deliveryprice = $response->methods['flat']['cost'];
-                  $response->method = 'flat';
-                }
-                // Outside
-                else {
+              else{
+                // ---
                   if( $response->tobeltway != null ){
-                      $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
-                    }
-                    else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+                    $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
+                  }
+                  else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
 
                   $response->method = 'mkadout';
-                }
+                // ---
               }
-
             // ---
           }
 

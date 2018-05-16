@@ -21,6 +21,26 @@ $res_orders=mysql_query("
 
 $i=1;
 
+
+
+// Get free shipping
+	$freeShippingTotalValue = 1000000;
+
+	// Get free
+		if ( $qFreeTotal = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='free';") ) $nFreeTotal = mysql_num_rows($qFreeTotal);
+		else $nFreeTotal = 0;
+
+
+		if( $nFreeTotal>0 ){
+			// ---
+				while ($freeTotalRow = mysql_fetch_assoc($qFreeTotal)) {
+					if( $freeTotalRow['key'] == 'free_total' ) { $freeShippingTotalValue = $freeTotalRow['value']; }
+				}
+			// ---
+		}
+	// ---
+// ---
+
 while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
 	$shipping_country,$shipping_address_1,$shipping_address_2,$delivery_time)=mysql_fetch_row($res_orders)){
 	
@@ -230,30 +250,45 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 		// Get delivery net cost
 			$deliveryNetCost = 0;
+			
+			// Get current
+				if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='".$delivery_code."';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
+				else $nShippingNetCost = 0;
 
-			if($delivery_code != "free") {
-				// ---
-					if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='".$delivery_code."';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
-					else $nShippingNetCost = 0;
 
+				if( $nShippingNetCost>0 ){
+					// ---
+						$mainCost = 0;
+						$netCost = 0;
 
-					if( $nShippingNetCost>0 ){
-						// ---
-							$mainCost = 0;
-							$netCost = 0;
-
-							while ($shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost)) {
-								
-								if( $shippingNetCostRow['key'] == $delivery_code.'_cost' ) { $mainCost = $shippingNetCostRow['value']; }
-								if( $shippingNetCostRow['key'] == $delivery_code.'_netcost' ) { $netCost = $shippingNetCostRow['value']; }
+						while ($shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost)) {
 							
-							}
+							if( $shippingNetCostRow['key'] == $delivery_code.'_cost' ) { $mainCost = $shippingNetCostRow['value']; }
+							if( $shippingNetCostRow['key'] == $delivery_code.'_netcost' ) { $netCost = $shippingNetCostRow['value']; }
+						
+						}
 
-							$deliveryNetCost = $deliveryCost + ($mainCost-$netCost);
-						// ---
-					}
-				// ---
-			}
+						if($delivery_code=="flat") {
+							$deliveryNetCost = $netCost;
+						}
+						else{
+							// ---
+								if( $total_new >= $freeShippingTotalValue ){
+									// Free shipping
+										$deliveryNetCost = $netCost + $deliveryCost;
+									// ---
+								}
+								else{
+									// Paided shipping
+										$deliveryNetCost = $netCost + ($deliveryCost - $mainCost);
+									// ---
+								}
+							// ---
+						}
+
+					// ---
+				}
+			// ---
 		// ---
 
 
