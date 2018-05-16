@@ -41,9 +41,11 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	if(!isset($roistat_id)) $roistat_id="";
 	
 	
-	$res=mysql_query("select value from oc_order_total where code='shipping' and order_id='$order_id'");
-	list($deliveryCost)=mysql_fetch_row($res);
-	if(!isset($deliveryCost)) $deliveryCost=0;
+	// Get delivery cost
+		$res=mysql_query("select value from oc_order_total where code='shipping' and order_id='$order_id'");
+		list($deliveryCost)=mysql_fetch_row($res);
+		if(!isset($deliveryCost)) $deliveryCost=0;
+	// ---
 
 	// Customer
 		$ms_last_tmp=DateTime::createFromFormat("Y-m-d H:i:s",$date_added);
@@ -213,33 +215,38 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$delivery_code = $tmp[0];
 		$order['shipmentStore']='eco-u';
 		$vr=$delivery_code;
-		if($delivery_code=="mkadout")
-		{
+
+		if($delivery_code=="mkadout") {
 			$vr="mkad";
 		}
-		if($delivery_code=="free")
-		{
+		if($delivery_code=="free") {
 			$vr="flat";
 		}
-		if($delivery_code=="flat")
-		{
+		if($delivery_code=="flat") {
 			$vr="flat-pay";
 		}
 
+
+		// Get delivery net cost
+			$deliveryNetCost = 0;
+
+			if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='flat' AND `key`='flat_netcost';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
+			else $nShippingNetCost = 0;
+
+
+			if( $nShippingNetCost>0 ){
+				$shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost);
+				$deliveryNetCost = $shippingNetCostRow['value'];
+			}
+		// ---
+
+
         $order['delivery'] = array(
-            // 'code' => !empty($delivery_code) ? $delivery_code:0, //$settings['retailcrm_delivery'][$delivery_code] : '',
-             'code' => !empty($vr) ? $vr:0, //$settings['retailcrm_delivery'][$delivery_code] : '',
-            // 'service'=>array(
-            //'deliveryType' => !empty($vr) ? $vr:0, 
-			//),
-            	'cost' => (double)$deliveryCost,
-            	'address' => array(
-				//'index' => $shipping_postcode,
-				//'city' => $shipping_city,
-                'text' => $add_text
-			)
-		
-		);				
+			'code' => !empty($vr) ? $vr:0,
+			'cost' => (double)$deliveryCost,
+			'netCost' => (double)$deliveryNetCost,
+			'address' => array('text' => $add_text)
+		);
     // ---
 
     // Init

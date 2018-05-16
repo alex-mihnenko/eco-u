@@ -26,6 +26,8 @@ class ControllerExtensionShippingMkadout extends Controller {
 		$data['text_none'] = $this->language->get('text_none');
 
 		$data['entry_cost'] = $this->language->get('entry_cost');
+		$data['entry_netcost'] = $this->language->get('entry_netcost');
+		$data['entry_milecost'] = $this->language->get('entry_milecost');
 		$data['entry_tax_class'] = $this->language->get('entry_tax_class');
 		$data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -65,6 +67,18 @@ class ControllerExtensionShippingMkadout extends Controller {
 			$data['mkadout_cost'] = $this->request->post['mkadout_cost'];
 		} else {
 			$data['mkadout_cost'] = $this->config->get('mkadout_cost');
+		}
+
+		if (isset($this->request->post['mkadout_netcost'])) {
+			$data['mkadout_netcost'] = $this->request->post['mkadout_netcost'];
+		} else {
+			$data['mkadout_netcost'] = $this->config->get('mkadout_netcost');
+		}
+
+		if (isset($this->request->post['mkadout_milecost'])) {
+			$data['mkadout_milecost'] = $this->request->post['mkadout_milecost'];
+		} else {
+			$data['mkadout_milecost'] = $this->config->get('mkadout_milecost');
 		}
 
 		if (isset($this->request->post['mkadout_tax_class_id'])) {

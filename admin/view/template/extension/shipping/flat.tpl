@@ -32,6 +32,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-netcost"><?php echo $entry_netcost; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="flat_netcost" value="<?php echo $flat_netcost; ?>" placeholder="<?php echo $entry_netcost; ?>" id="input-netcost" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-tax-class"><?php echo $entry_tax_class; ?></label>
             <div class="col-sm-10">
               <select name="flat_tax_class_id" id="input-tax-class" class="form-control">

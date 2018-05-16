@@ -26,6 +26,7 @@ class ControllerExtensionShippingFlat extends Controller {
 		$data['text_none'] = $this->language->get('text_none');
 
 		$data['entry_cost'] = $this->language->get('entry_cost');
+		$data['entry_netcost'] = $this->language->get('entry_netcost');
 		$data['entry_tax_class'] = $this->language->get('entry_tax_class');
 		$data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -65,6 +66,12 @@ class ControllerExtensionShippingFlat extends Controller {
 			$data['flat_cost'] = $this->request->post['flat_cost'];
 		} else {
 			$data['flat_cost'] = $this->config->get('flat_cost');
+		}
+
+		if (isset($this->request->post['flat_netcost'])) {
+			$data['flat_netcost'] = $this->request->post['flat_netcost'];
+		} else {
+			$data['flat_netcost'] = $this->config->get('flat_netcost');
 		}
 
 		if (isset($this->request->post['flat_tax_class_id'])) {

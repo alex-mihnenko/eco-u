@@ -10,6 +10,8 @@ $_['text_edit']        = 'Редактирование';
 
 // Entry
 $_['entry_cost']       = 'Стоимость';
+$_['entry_netcost']    = 'Себестоимость';
+$_['entry_milecost']   = 'Цена за км';
 $_['entry_tax_class']  = 'Класс налога';
 $_['entry_geo_zone']   = 'Географическая зона';
 $_['entry_status']     = 'Статус';
