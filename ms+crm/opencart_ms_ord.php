@@ -1,7 +1,7 @@
 <?php
 // Init
-	#error_reporting(E_ALL);
-	#ini_set('display_errors', '1');
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
 
 	include("opencart_inc.php");
 
@@ -22,11 +22,10 @@ $res_orders=mysql_query("
 $i=1;
 
 while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
-// ---
-
-	$orderCreatedAt = $date_added;
-
 	$shipping_country,$shipping_address_1,$shipping_address_2,$delivery_time)=mysql_fetch_row($res_orders)){
+	
+// ---
+	$orderCreatedAt = $date_added;
 	
 	// Check email
 	if($email == 'empty@localhost' || $email=='') {
