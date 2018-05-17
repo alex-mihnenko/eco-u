@@ -38,6 +38,7 @@ class Cart {
 		foreach ($cart_query->rows as $cart) {
 			$stock = true;
 
+			$product_query_sql = "SELECT *, p.weight_variants AS weight_variants, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class FROM " . DB_PREFIX . "product_to_store p2s LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p2s.product_id = '" . (int)$cart['product_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'";
 			$product_query = $this->db->query("SELECT *, p.weight_variants AS weight_variants, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class FROM " . DB_PREFIX . "product_to_store p2s LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p2s.product_id = '" . (int)$cart['product_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'");
 
 			if ($product_query->num_rows && ($cart['quantity'] > 0)) {
@@ -276,7 +277,7 @@ class Cart {
                                         'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
-				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." cart_id = '" . (int)$cart['cart_id'] . "' customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($product_query)."\n", FILE_APPEND);
+				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." cart_id = '" . (int)$cart['cart_id'] . "' customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " query:".$product_query_sql."\n", FILE_APPEND);
 				//$this->remove($cart['cart_id']);
 			}
 		}
