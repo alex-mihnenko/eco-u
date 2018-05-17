@@ -7,6 +7,7 @@ $time=time();
 $log = [];
 
 
+
 if ( $qItems = mysql_query("SELECT * FROM `oc_order_payments` WHERE `processed`=0 ORDER BY date_add DESC LIMIT 20;") ) $nItems = mysql_num_rows($qItems);
 else $nItems = 0;
 
@@ -15,6 +16,20 @@ if( $nItems==0 ){
 	$res['mess']='No items...';
 	echo json_encode($res); exit;
 }
+
+
+// Get managers
+	$managers = [];
+
+	$url = 'https://eco-u.retailcrm.ru/api/v5/users?apiKey='.$retail_key;
+	$response=crm_query($url);
+
+	foreach ($response['users'] as $key => $user) {
+		if( $user['isManager'] == 1 ){
+			$managers[] = $user['id'];
+		}
+	}
+// ---
 
 while ($row = mysql_fetch_assoc($qItems)) {
 	// ---
@@ -34,13 +49,17 @@ while ($row = mysql_fetch_assoc($qItems)) {
 		// Edit payment		
 			if( isset($paymentId) ){
 				// ---
-					$link='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.$retail_key;
+					$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.$retail_key;
 					
 					// Set data
 						// Status
-							if( $row['order_status_id'] == 20 ) { $status = 'paid'; }
-							else if( $row['order_status_id'] == 21 ) { $status = 'fail'; }
-							else { $status = 'new'; }
+							if( $row['order_status_id'] == 20 ) {
+								$status = 'paid';
+							}
+							else if( $row['order_status_id'] == 21 ) {
+								$status = 'fail';
+							}
+							else {$status = 'new'; }
 						// ---
 
 						// Comment
@@ -59,13 +78,34 @@ while ($row = mysql_fetch_assoc($qItems)) {
 						$data['payment'] = json_encode($payment);
 					// ---
 
-					$response=crm_query_send($link,$data);
+					$response=crm_query_send($url,$data);
 
 					if (!$response['success'])  { $log[$row['id_paymant']] = $response; }
 					else { $log[$row['id_paymant']] = 'Success update'; }
 
 					// Set proccessed
 						$qUpdate = mysql_query("UPDATE `oc_order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";" );
+					// ---
+
+					// Set task
+						if( $row['order_status_id'] == 20 ) {
+							// ---
+								$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.$retail_key;
+
+								foreach ($managers as $key => $manager_id) {
+									// Set data
+										$order['externalId'] = $row['order_id'];
+										$task['text'] = 'Заказ №'.$row['order_id'].' оплачен';
+										$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
+										$task['performerId'] = $manager_id;
+										$task['order'] = $order;
+										$data['task'] = json_encode($task);
+									// ---
+									
+									$response=crm_query_send($url,$data);
+								}
+							// ---
+						}
 					// ---
 				// ---
 			}
