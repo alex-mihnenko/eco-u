@@ -276,8 +276,8 @@ class Cart {
                                         'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
-				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($product_query)."\n", FILE_APPEND);
-				$this->remove($cart['cart_id']);
+				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." cart_id = '" . (int)$cart['cart_id'] . "' customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($product_query)."\n", FILE_APPEND);
+				//$this->remove($cart['cart_id']);
 			}
 		}
                 
