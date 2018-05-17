@@ -1091,6 +1091,11 @@ class ControllerAjaxIndex extends Controller {
                   // Clear cart
                   $this->cart->clear();
 
+                  // Send sms        
+                  $this->load->model('sms/confirmation');
+                  $message = str_replace('[REPLACE]', $order_id, $this->config->get('config_sms_order_new_text'));
+                  $this->model_sms_confirmation->sendSMS($telephone, $message);
+                  
                   // Response
                   $response->order_id = $order_id;
                   $response->status = 'success';
