@@ -34,6 +34,7 @@ class Cart {
 		$product_data = array();
 
 		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($cart_query)."\n", FILE_APPEND);
 
 		foreach ($cart_query->rows as $cart) {
 			$stock = true;
@@ -276,7 +277,7 @@ class Cart {
                                         'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
-				//$this->remove($cart['cart_id']);
+				$this->remove($cart['cart_id']);
 			}
 		}
                 
@@ -307,15 +308,19 @@ class Cart {
 
 	public function update($cart_id, $quantity) {
 		$query = $this->db->query("UPDATE " . DB_PREFIX . "cart SET quantity = '" . (float)$quantity . "' WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-        }
+    }
 
 	public function remove($cart_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		file_put_contents('_dump_cart_cart_remove.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . "\n", FILE_APPEND);
+		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		return true;
 	}
 
 	public function clear() {
+		file_put_contents('_dump_cart_cart_clear.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . "\n", FILE_APPEND);
 		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' OR session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' OR session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		return true;
 	}
 
 	public function getRecurringProducts() {
