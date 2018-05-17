@@ -319,7 +319,7 @@ class Cart {
 	public function clear() {
 		file_put_contents('_dump_cart_cart_clear.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . "\n", FILE_APPEND);
 		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' OR session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' OR session_id = '" . $this->db->escape($this->session->getId()) . "'");
 		return true;
 	}
 
