@@ -312,8 +312,7 @@ class Cart {
 
 	public function remove($cart_id) {
 		file_put_contents('_dump_cart_cart_remove.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . "\n", FILE_APPEND);
-		//$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-		return true;
+		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 	}
 
 	public function clear() {
