@@ -34,7 +34,6 @@ class Cart {
 		$product_data = array();
 
 		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-		file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($cart_query)."\n", FILE_APPEND);
 
 		foreach ($cart_query->rows as $cart) {
 			$stock = true;
@@ -277,6 +276,7 @@ class Cart {
                                         'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
+				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " results:".json_encode($product_query)."\n", FILE_APPEND);
 				$this->remove($cart['cart_id']);
 			}
 		}
