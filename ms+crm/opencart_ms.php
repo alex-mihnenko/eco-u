@@ -8,6 +8,17 @@ Header("Content-Type: text/html;charset=UTF-8");
 
 include("opencart_inc.php");
 
+
+$page=0;
+$limit=100;
+$offset=$limit*$page;
+$link="https://online.moysklad.ru/api/remap/1.1/entity/product?limit=$limit&offset=$offset";
+$json=ms_query($link);
+
+echo json_encode($json);
+exit;
+
+
 if($_GET['argv']) $argv[1]=$_GET['argv'];
 
 
@@ -444,13 +455,17 @@ if($argv[1]=='3'){
 				echo("$sub_post_id - $qty<BR>");
 				
 				if($sub_post_id ){
-//					if($qty>0) { $QTS[$wp_id]=$wp_id; $AVA=" and AVAILABLE='Y'"; } 
 					$res2=mysql_query("select product_id from oc_product_option_value where  product_option_value_id='$sub_post_id'");
 					list($chpr_id)=mysql_fetch_row($res2);
 					
 					if($chpr_id){
 						$QTS[$chpr_id]=$chpr_id; 
-						mysql_query("update oc_product set status='1', quantity='$qty'  where product_id='$chpr_id'");
+
+						mysql_query("
+							UPDATE `oc_product` SET 
+							`status`='1', `quantity`='$qty', `date_available`='' 
+							WHERE `product_id`='$chpr_id';
+						");
 					}
 					mysql_query("update oc_product_option_value set quantity='$qty' where product_option_value_id='$sub_post_id'");
 
@@ -460,7 +475,12 @@ if($argv[1]=='3'){
 				list($wp_id)=mysql_fetch_row($res);
 				if($wp_id)  {
 					if($qty>0) { $QTS[$wp_id]=$wp_id; $AVA=" and AVAILABLE='Y'"; } 
-					mysql_query("update oc_product set status='1',quantity='$qty'  where product_id='$wp_id'");
+
+					mysql_query("
+						UPDATE `oc_product` SET 
+						`status`='1', `quantity`='$qty', `date_available`='' 
+						WHERE `product_id`='$wp_id';
+					");
 				}
 			}
 		}
