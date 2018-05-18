@@ -20,6 +20,8 @@ class Cart {
 
 			// Once the customer is logged in we want to update the customers cart
 			$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '0' AND customer_id = '0' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+			$cart_query_sql = "SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '0' AND customer_id = '0' AND session_id = '" . $this->db->escape($this->session->getId()) . "'";
+			file_put_contents('_dump_cart_cart_construct.log', date('d.m.Y H:i', time())." customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->session->getId() . " query:".$cart_query_sql."\n\n", FILE_APPEND);
 
 			foreach ($cart_query->rows as $cart) {
 				$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart['cart_id'] . "'");
@@ -277,7 +279,7 @@ class Cart {
                                         'weight_variant'  => $cart['weight_variant']
 				);
 			} else {
-				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." cart_id = '" . (int)$cart['cart_id'] . "' customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " query:".$product_query_sql."\n", FILE_APPEND);
+				file_put_contents('_dump_cart_cart_getProducts.log', date('d.m.Y H:i', time())." cart_id = '" . (int)$cart['cart_id'] . "' customer_id = '" . (int)$this->customer->getId() . "' session_id = '" . $this->db->escape($this->session->getId()) . " query:".$product_query_sql."\n\n", FILE_APPEND);
 				//$this->remove($cart['cart_id']);
 			}
 		}
