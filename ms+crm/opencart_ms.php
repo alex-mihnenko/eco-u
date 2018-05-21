@@ -1,7 +1,7 @@
 <?  
 // Init 
-	//ini_set('display_errors', 1);
-	//ini_set('error_reporting', E_ALL);
+	ini_set('display_errors', 1);
+	ini_set('error_reporting', E_ALL);
 	ini_set('memory_limit', '512M');
 	ini_set('max_execution_time', '300');
 
@@ -14,7 +14,7 @@
 // ---
 
 
-// 1 - New products and categories
+// 1 - New categories
 if($argv[1]=='1'){
 	$CHECK_MS=true;
 
@@ -90,7 +90,7 @@ if($argv[1]=='1'){
 				}
 
 				mysql_query("update oc_category_description set name='".addslashes($v['name'])."' where category_id='$cat_id' and language_id='1' ");	
-				mysql_query("update  oc_category set parent_id='$par_cat_id' where category_id='$cat_id'");
+				mysql_query("update oc_category set parent_id='$par_cat_id' where category_id='$cat_id'");
 			}
 
 		}//foreach
@@ -138,13 +138,18 @@ if($argv[1]=='2'){
 			$json=ms_query($link);
 				
 			foreach($json['rows'] as $k=>$v){
-				$res=mysql_query("select manufacturer_id from oc_manufacturer where name='".$v['name']."'");
-				list($manid)=mysql_fetch_row($res);
-				if(!$manid) {
+				if ( $qCountries = mysql_query("SELECT `manufacturer_id` FROM `oc_manufacturer` WHERE `name`='".$v['name']."';") ) $nCountries = mysql_num_rows($qCountries);
+				else $nCountries = 0;
+
+				if( $nCountries>0 ){
+					$rowCountry = mysql_fetch_assoc($qCountries);
+					$manid = $rowCountry['manufacturer_id'];
+				}
+				else{
 					mysql_query("insert into oc_manufacturer  set name='".$v['name']."'");
 					$manid=mysql_insert_id();
 				}
-			
+					
 				$res=mysql_query("select manufacturer_id from oc_manufacturer_to_store where manufacturer_id='".$manid."'");
 				list($manid2)=mysql_fetch_row($res);
 				
@@ -162,7 +167,6 @@ if($argv[1]=='2'){
 			$page++;
 		}
 	// ---
-
 
 	// Get products
 		$CHECK_MS=true;
@@ -184,14 +188,14 @@ if($argv[1]=='2'){
 						$res=mysql_query("select name from oc_product_description where product_id='$product_id'");
 						list($prname)=mysql_fetch_row($res);
 
-						if(!$prname) echo("<br><font color=red>$product_id - {$v['name']} - {$v['id']}</font><br>");
+						if(!$prname) echo("<br><font color=red>Новый продукт - $product_id - {$v['name']} - {$v['id']}</font><br>");
 						if(!$product_id) {
 							$rj=mysql_query("select product_id from oc_product where sku='".$v['externalCode']."'");
 							list($product_id)=mysql_fetch_row($rj);
 						}
 
 						$saleprice=$v['salePrices'][0]['value']/100;
-						if($v['weighed']) $minimum=0;
+						if( isset($v['weighed']) && $v['weighed'] ) $minimum=0;
 						else $minimum=1;
 
 						foreach($v['salePrices'] as $kch=>$vch){
@@ -212,6 +216,8 @@ if($argv[1]=='2'){
 						// ---
 
 						if($product_id){
+							echo '<br><b>UPDATE PRODUCT</b><br>';
+
 							// Update existed product
 								if(isset($v['image']['meta']['href'])) {
 									$image_url=$v['image']['meta']['href'];
@@ -272,8 +278,7 @@ if($argv[1]=='2'){
 
 								mysql_query("
 									UPDATE `oc_product` SET 
-									`date_modified`='".date("Y-m-d H:i:s",time())."',
-									`manufacturer_id`='".$CNTRS[$v['country']['meta']['href']]."',
+									`date_modified`=NOW(),
 									`weight`='".$v['weight']."',
 									`minimum`='$minimum',
 									`weight_class_id`='$uomid',
@@ -281,12 +286,48 @@ if($argv[1]=='2'){
 									`model`='".$v['name']."' 
 									WHERE product_id='$product_id'
 								");
-							// ---
 
+								if( isset($v['country']) ){
+									mysql_query("
+										UPDATE `oc_product` SET 
+										`manufacturer_id`='".$CNTRS[$v['country']['meta']['href']]."',
+										WHERE product_id='$product_id'
+									");
+								}
+							// ---
 						}
 						else{
+							echo '<br><b>ADD PRODUCT</b><br>';
+
 							// Add new product
-								if(isset($v['image']['meta']['href'])) {
+								if( !isset($v['weight']) ) { $v['weight'] = 0; }
+								if( !isset($v['weighed']) ) { $v['weighed'] = 0; }
+								if( !isset($v['name']) ) { $v['name'] = ''; }
+								if( !isset($v['description']) ) { $v['description'] = ''; }
+								if( !isset($v['image']) ) {
+									$v['image'] = array(
+										'meta' => array('href' => '','mediaType' => 'application/octet-stream'),
+										'title' => '',
+										'filename' => '',
+										'size' => 0,
+										'updated' => '0000-00-00 00:00:00',
+										'miniature' => array('href' => '','mediaType' => 'image/png'),
+										'tiny' => array('href' => '','mediaType' => 'image/png')
+									);
+								}
+								if( !isset($v['country']) ) {
+									$v['country'] = array(
+										'meta' => array(
+											'href' => '',
+											'metadataHref' => '',
+											'type' => 'country',
+											'mediaType' => 'application/json'
+										)
+									);
+								}
+
+
+								if(isset($v['image']['meta']['href']) && $v['image']['meta']['href']!='') {
 									$image_url=$v['image']['meta']['href'];
 									$topath=$_SERVER['DOCUMENT_ROOT'].'/image/catalog/';
 									$file_path=$topath.$v['image']['filename'];
@@ -308,32 +349,62 @@ if($argv[1]=='2'){
 									if(file_exists($file_path)) resizeImage($tmp,$_SERVER['DOCUMENT_ROOT'].'/image/cache/catalog/',$v['image']['title']."-74x74-product_thumb.jpg",74,74,100);
 								}
 
-								mysql_query("
-									INSERT INTO `oc_product` SET 
-									`minimum`='$minimum',
-									`available`='0',
-									`stock_status_id`='5', 
-									`manufacturer_id`='".$CNTRS[$v['country']['meta']['href']]."',
-									`weight`='".$v['weight']."',
-									`weight_class_id`='$uomid',
-									`price`='".$price."', 
-									`date_added`='".date("Y-m-d H:i:s",time())."',
-									`model`='".$v['name']."',
-									`sku`='".$v['externalCode']."',
-									`quantity`='0', status='1',
-									`image`= '".'catalog/'.$v['image']['filename']."';
+								$qInsert = mysql_query("
+									INSERT IGNORE INTO oc_product SET 
+									model = '" . addslashes($v['name']) . "',
+									is_weighted = '0',
+									composite_price = '0',
+									sku = '" . $v['externalCode'] . "',
+									weight_variants = '',
+									shelf_life = '',
+									available_in_time = '',
+									special_price = '0',
+									profitable_offer = '0',
+									available = '0',
+									upc = '',
+									ean = '',
+									jan = '',
+									isbn = '',
+									mpn = '',
+									location = '',
+									quantity = '0',
+									minimum = '" . (int)$minimum . "',
+									subtract = '1',
+									stock_status_id = '5',
+									date_available = '0000-00-00',
+									manufacturer_id = '" . (int)$CNTRS[$v['country']['meta']['href']] . "',
+									shipping = '1',
+									price = '" . (float)$price . "',
+									points = '0',
+									weight = '" . (float)$v['weight'] . "',
+									weight_class_id = '" . (int)$uomid . "',
+									length = '0',
+									width = '0',
+									height = '0',
+									length_class_id = '0',
+									status = '1',
+									tax_class_id = '0',
+									sort_order = '0',
+									date_added = NOW(),
+									image= '".'catalog/'.$v['image']['filename']."';
 								");
 
-								$product_id=mysql_insert_id();	
+								$product_id=mysql_insert_id();
+								echo $product_id." oc_product error:".mysql_error();
+								echo '<br>';
 
-								mysql_query("
-									INSERT INTO oc_product_description SET 
+								$qInsert = mysql_query("
+									INSERT IGNORE INTO oc_product_description SET 
 									name='".addslashes($v['name'])."',
 									meta_title='".addslashes($v['name'])."',
 									product_id='".$product_id."',
 									language_id='1',
-									description='".$v['description']."';
+									description='".$v['description']."',
+									description_short='';
 								");
+								echo "oc_product_description error: ".mysql_error();
+								echo '<br><br>';
+
 
 								mysql_query("delete from oc_url_alias where query='product_id=$product_id'");
 								
@@ -343,11 +414,13 @@ if($argv[1]=='2'){
 
 						        mysql_query("insert into oc_product_to_store set  product_id='$product_id',store_id='0'");
 
-								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id',ms_id='".$v['id']."',del='0'");
+								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id', ms_id='".$v['id']."',del='0',purchaseprice='0'");
 							// ---
 						}
 
 					}
+
+					echo "<br> --- <br>";
 				// ---
 			}
 			if(!count($json['rows'])) { $CHECK_MS=false; } 
@@ -445,8 +518,7 @@ if($argv[1]=='3'){
 	// ---
 		$PARENTS=NULL;
 		$CHECK_MS=true;
-		$page=0;
-
+		$page=0;		
 
 		while($CHECK_MS){
 		
@@ -457,15 +529,18 @@ if($argv[1]=='3'){
 			$json=ms_query($link);
 
 			foreach($json['rows'] as $k=>$v){
-				$url=parse_url ($v['meta']['href']);
-				$id_arr=explode("/",$url['path']);
-				$id=$id_arr[6];
+				$url=parse_url($v['meta']['href']);
+
+				// Get id product
+					$idsArr=explode("/",$url['path']);
+					$id=$idsArr[6];
+				// ---
 
 				$qty=$v['quantity'];
-
+				
 				if($v['meta']['type']=='variant') {
 
-					$res=mysql_query("select product_option_value_id  from ms_variants where ms_id='$id'");
+					$res=mysql_query("select product_option_value_id from ms_variants where ms_id='$id'");
 					list($sub_post_id)=mysql_fetch_row($res);
 					echo("$sub_post_id - $qty<BR>");
 					
@@ -477,8 +552,8 @@ if($argv[1]=='3'){
 							$QTS[$chpr_id]=$chpr_id; 
 
 							mysql_query("
-								UPDATE `oc_product` SET 
-								`status`='1', `quantity`='$qty', `date_available`='' 
+								UPDATE IGNORE `oc_product` SET 
+								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
 								WHERE `product_id`='$chpr_id';
 							");
 						}
@@ -486,17 +561,23 @@ if($argv[1]=='3'){
 
 					}
 				}elseif($v['meta']['type']=='product') {
-					$res=mysql_query("select product_id from ms_products where ms_id='$id'");
-					list($wp_id)=mysql_fetch_row($res);
-					if($wp_id)  {
-						if($qty>0) { $QTS[$wp_id]=$wp_id; $AVA=" and AVAILABLE='Y'"; } 
+					// ---
+						if ( $qProduct = mysql_query("SELECT `product_id` FROM `ms_products` WHERE ms_id='$id';") ) $nProduct = mysql_num_rows($qProduct);
+						else $nProduct = 0;
 
-						mysql_query("
-							UPDATE `oc_product` SET 
-							`status`='1', `quantity`='$qty', `date_available`='' 
-							WHERE `product_id`='$wp_id';
-						");
-					}
+						if( $nProduct>0 ){
+							$rowMSProduct = mysql_fetch_assoc($qProduct);
+							$product_id=$rowMSProduct['product_id'];
+
+							if($qty>0) { $QTS[$product_id]=$product_id; $AVA=" and AVAILABLE='Y'"; } 
+
+							mysql_query("
+								UPDATE IGNORE `oc_product` SET 
+								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
+								WHERE `product_id`=".$product_id.";
+							");
+						}
+					// ---
 				}
 			}
 			
@@ -506,15 +587,15 @@ if($argv[1]=='3'){
 		}
 
 		
-		$res=mysql_query("select product_id from oc_product ");
-		while(list($CHID)=mysql_fetch_row($res)){
+		//$res=mysql_query("select product_id from oc_product ");
+		//while(list($CHID)=mysql_fetch_row($res)){
 			//$res2=mysql_query("select del from ms_products where product_id='$CHID'");
 			//list($del)=mysql_fetch_row($res2);
-			$UPDST='';
+			//$UPDST='';
 			//if(!in_array($CHID,$QTS)){
 			//if($del==1) $UPDST="status='0',"; else $UPDST='';			
 			//mysql_query("update oc_product set  $UPDST quantity='0',stock_status_id='5' where product_id='$CHID'");
-		}
+		//}
 
 	// ---
 }
