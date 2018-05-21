@@ -180,9 +180,6 @@ if($argv[1]=='2'){
 
 			foreach($json['rows'] as $k=>$v){
 				// ---
-					print_r($v);
-					echo "<br>";
-
 					$NDEL_METKA[$v['id']]=$v['id'];
 					
 					if(isset($v['externalCode'])){			
