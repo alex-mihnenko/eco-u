@@ -128,7 +128,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.floor(mtpl * quantity * price);
+                            var totalPrice = Math.round(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
                         });
@@ -145,7 +145,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.floor(mtpl * quantity * price);
+                            var totalPrice = Math.round(mtpl * quantity * price);
                             if(totalPrice > 999) currencyStr = ' р';
                             $(this).parents('.size-0').find('.m-product_price_shadow').html(totalPrice + currencyStr);
                         });
@@ -163,7 +163,7 @@
                                     mtpl = cpFormat[quantity];
                                 }
                             }
-                            var totalPrice = Math.floor(mtpl * quantity * price);
+                            var totalPrice = Math.round(mtpl * quantity * price);
                             $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
                         });
                         $item.parents('.c-p_select').find('select').trigger('change');;
@@ -1297,7 +1297,7 @@
             var variant = parseFloat(variantField.html());
             if(value > 1) {
                 targetField.val(value-1);
-                var productTotal = Math.floor((value-1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
+                var productTotal = Math.round((value-1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
                 $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
                 if(window.quantityTimer) clearTimeout(quantityTimer);
                 window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
@@ -1309,7 +1309,7 @@
             var value = parseInt(targetField.val());
             var variant = parseFloat(variantField.html());
             targetField.val(value+1);
-            var productTotal = Math.floor((value+1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
+            var productTotal = Math.round((value+1) * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
             window.quantityTimer = setTimeout(ChangeCartQuantity, 500, targetField.data('cart-id'), targetField.val() * variant);
@@ -1319,7 +1319,7 @@
             var variantField = $('#'+$(this).data('variant'));
             var variant = parseFloat(variantField.html());
             var cart_id = $(this).data('cart-id');
-            var productTotal = Math.floor(quantity * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
+            var productTotal = Math.round(quantity * variant * parseInt($(this).parents('tr').find('.table-b_price2').html()));
             $(this).parents('tr').find('.table-b_price').html(productTotal + ' руб.');
             if(window.quantityTimer) clearTimeout(quantityTimer);
             window.quantityTimer = setTimeout(ChangeCartQuantity, 500, cart_id, quantity * variant);
