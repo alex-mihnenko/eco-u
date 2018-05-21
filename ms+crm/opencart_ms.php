@@ -138,13 +138,18 @@ if($argv[1]=='2'){
 			$json=ms_query($link);
 				
 			foreach($json['rows'] as $k=>$v){
-				$res=mysql_query("select manufacturer_id from oc_manufacturer where name='".$v['name']."'");
-				list($manid)=mysql_fetch_row($res);
-				if(!$manid) {
+				if ( $qCountries = mysql_query("SELECT `manufacturer_id` FROM `oc_manufacturer` WHERE `name`='".$v['name']."';") ) $nCountries = mysql_num_rows($qCountries);
+				else $nCountries = 0;
+
+				if( $nCountries>0 ){
+					$rowCountry = mysql_fetch_assoc($qCountries);
+					$manid = $rowCountry['manufacturer_id'];
+				}
+				else{
 					mysql_query("insert into oc_manufacturer  set name='".$v['name']."'");
 					$manid=mysql_insert_id();
 				}
-			
+					
 				$res=mysql_query("select manufacturer_id from oc_manufacturer_to_store where manufacturer_id='".$manid."'");
 				list($manid2)=mysql_fetch_row($res);
 				
@@ -163,7 +168,6 @@ if($argv[1]=='2'){
 		}
 	// ---
 
-
 	// Get products
 		$CHECK_MS=true;
 		$page=0;
@@ -176,6 +180,9 @@ if($argv[1]=='2'){
 
 			foreach($json['rows'] as $k=>$v){
 				// ---
+					print_r($v);
+					echo "<br>";
+
 					$NDEL_METKA[$v['id']]=$v['id'];
 					
 					if(isset($v['externalCode'])){			
@@ -184,7 +191,7 @@ if($argv[1]=='2'){
 						$res=mysql_query("select name from oc_product_description where product_id='$product_id'");
 						list($prname)=mysql_fetch_row($res);
 
-						if(!$prname) echo("<br><font color=red>$product_id - {$v['name']} - {$v['id']}</font><br>");
+						if(!$prname) echo("<br><font color=red>Новый продукт - $product_id - {$v['name']} - {$v['id']}</font><br>");
 						if(!$product_id) {
 							$rj=mysql_query("select product_id from oc_product where sku='".$v['externalCode']."'");
 							list($product_id)=mysql_fetch_row($rj);
@@ -212,6 +219,8 @@ if($argv[1]=='2'){
 						// ---
 
 						if($product_id){
+							echo '<br><b>UPDATE PRODUCT</b><br>';
+
 							// Update existed product
 								if(isset($v['image']['meta']['href'])) {
 									$image_url=$v['image']['meta']['href'];
@@ -291,6 +300,8 @@ if($argv[1]=='2'){
 							// ---
 						}
 						else{
+							echo '<br><b>ADD PRODUCT</b><br>';
+
 							// Add new product
 								if( !isset($v['weight']) ) { $v['weight'] = 0; }
 								if( !isset($v['weighed']) ) { $v['weighed'] = 0; }
@@ -385,7 +396,7 @@ if($argv[1]=='2'){
 								echo $product_id." oc_product error:".mysql_error();
 								echo '<br>';
 
-								mysql_query("
+								$qInsert = mysql_query("
 									INSERT IGNORE INTO oc_product_description SET 
 									name='".addslashes($v['name'])."',
 									meta_title='".addslashes($v['name'])."',
@@ -406,11 +417,13 @@ if($argv[1]=='2'){
 
 						        mysql_query("insert into oc_product_to_store set  product_id='$product_id',store_id='0'");
 
-								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id',ms_id='".$v['id']."',del='0'");
+								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id', ms_id='".$v['id']."',del='0',purchaseprice='0'");
 							// ---
 						}
 
 					}
+
+					echo "<br> --- <br>";
 				// ---
 			}
 			if(!count($json['rows'])) { $CHECK_MS=false; } 
