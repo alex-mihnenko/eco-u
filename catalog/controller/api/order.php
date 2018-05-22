@@ -788,6 +788,57 @@ class ControllerApiOrder extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	public function products() {
+		$this->load->language('api/order');
+
+		$json = array();
+
+		if (!isset($this->session->data['api_id'])) {
+			$json['error'] = $this->language->get('error_permission');
+		} else {
+			$this->load->model('checkout/order');
+
+			if (isset($this->request->post['order_id'])) {
+				$order_id = $this->request->post['order_id'];
+			} else {
+				$order_id = 0;
+			}
+
+			if (isset($this->request->post['order_status_id'])) {
+				$order_status_id = $this->request->post['order_status_id'];
+			} else {
+				$order_status_id = 0;
+			}
+
+			if (isset($this->request->post['quantity'])) {
+				$quantity = $this->request->post['quantity'];
+			} else {
+				$quantity = 1000000;
+			}
+
+
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id, $order_status_id, $quantity);
+
+			if ($order_products) {
+				$json['orders'] = $order_products;
+
+				$json['success'] = $this->language->get('text_success');
+			} else {
+				$json['error'] = $this->language->get('error_not_found');
+			}
+		}
+
+		if (isset($this->request->server['HTTP_ORIGIN'])) {
+			$this->response->addHeader('Access-Control-Allow-Origin: ' . $this->request->server['HTTP_ORIGIN']);
+			$this->response->addHeader('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			$this->response->addHeader('Access-Control-Max-Age: 1000');
+			$this->response->addHeader('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
 	public function history() {
 		$this->load->language('api/order');
 

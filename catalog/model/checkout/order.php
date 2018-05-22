@@ -924,6 +924,7 @@ class ModelCheckoutOrder extends Model {
         $sql = "SELECT *, (SELECT `name` FROM `".DB_PREFIX."order_status` st WHERE st.order_status_id = rd.order_status_id) AS `status_text`, (SELECT value FROM ".DB_PREFIX."order_total ot WHERE ot.order_id = rd.order_id AND ot.code = 'total') AS order_total FROM `".DB_PREFIX."order` rd WHERE `customer_id` = ".(int)$customer_id." AND order_status_id <> 0 ORDER BY order_id DESC LIMIT 30";
 
         $query = $this->db->query($sql);
+
         if($query->rows) {
             return $query->rows;
         } else {
@@ -932,6 +933,46 @@ class ModelCheckoutOrder extends Model {
     }
 
 	// --- //
+	public function getOrderProducts($order_id, $order_status_id, $quantity) {
+
+
+		$sql = "SELECT * FROM `" . DB_PREFIX . "order` WHERE `order_status_id` = '" . (int)$order_status_id . "'";
+		if( $order_id > 0 ){ $sql .= " AND `order_id`='".$order_id."'"; }
+
+		$query = $this->db->query($sql);
+        $results = array();
+
+        if($query->rows) {
+        	foreach ($query->rows as $key => $order) {
+        		// ---
+        			$sql = "SELECT * FROM `" . DB_PREFIX . "order_product` LEFT JOIN `" . DB_PREFIX . "product` ON `" . DB_PREFIX . "product`.`product_id` = `" . DB_PREFIX . "order_product`.`product_id` WHERE `order_id` = '" . $order['order_id'] . "'";
+					
+					if( $quantity >= 0 ) { $sql .= " AND `" . DB_PREFIX . "product`.`quantity`=".$quantity; }
+					else { $sql .= " AND `" . DB_PREFIX . "product`.`quantity`<0"; }
+
+					$queryProducts = $this->db->query($sql);
+					$products = array();
+
+					if($queryProducts->rows) {
+        				foreach ($queryProducts->rows as $key => $product) {
+        					// ---
+        						$products[$product['product_id']] = array('quantity'=>$product['quantity'], 'image'=>$product['quantity']);
+        					// ---
+        				}
+        			}
+
+
+
+        			$results[$order['order_id']] = $products;
+        		// ---
+        	}
+            
+            return $results;
+        } else {
+            return false;
+        }
+	}
+
 	public function setCustomer($order_id, $customer_id) {
 		$this->db->query("UPDATE " . DB_PREFIX . "order SET customer_id = '" . (int)$customer_id . "' WHERE order_id = '" . (int)$order_id . "'");
         return true;
