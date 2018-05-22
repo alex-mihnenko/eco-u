@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="/new_design/css/style.<?php echo $cssversion; ?>.css">
+    <link rel="stylesheet" href="/new_design/css/style.css">
     <link rel="stylesheet" href="/new_design/css/remodal.css">
     <link rel="stylesheet" href="/new_design/css/ecomodal.css">
     <link rel="stylesheet" href="/new_design/css/selectric.css">
