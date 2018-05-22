@@ -240,7 +240,7 @@ class ControllerCommonCart extends Controller {
                             $product['total'] = floor($product['total']);
                             $product['weightVariant'] = $weightVariant;
                             
-                            $product['quantity'] = round($product['quantity']/$weightVariant);
+                            $product['quantity'] = $product['quantity'];
                             
                             
                             if ($product['image_preview']) {
@@ -259,7 +259,6 @@ class ControllerCommonCart extends Controller {
                         
                         $data['islogged'] = $this->customer->isLogged();
                         $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
-//                        $data['total'] = floor($this->cart->getOrderPrice());
                         $data['discount'] = number_format(floor($totalPrice) - floor($this->cart->getOrderPrice()), 0, '.', ' ');
                         
                 } else {

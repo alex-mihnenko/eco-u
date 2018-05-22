@@ -1206,7 +1206,8 @@
             if($(this).hasClass('sold')) return false;
                     var pElement = $(this).parents('.c-p_right');
                     var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = parseFloat(pElement.find('.selectric .label').html());
+                    var quantity = 1;
+                    var packaging = parseFloat(pElement.find('.selectric .label').html());
                     var label = pElement.find('.selectric .label').html();
                     var special_price = true;
                     var weight_variant = 0;
@@ -1218,6 +1219,7 @@
                     $.post('/?route=checkout/cart/add', {
                         product_id: product_id,
                         quantity: quantity,
+                        packaging: packaging,
                         weight_variant:weight_variant
                     }, function(msg){
                         if(location.pathname == '/cart') {
@@ -1260,7 +1262,7 @@
             var quantity = parseInt($this.val());
             var prevQuantity = parseInt($this.data('cart-quantity'));
             if(prevQuantity != quantity) {
-                ChangeCartQuantity(cartId, quantity * variant);
+                ChangeCartQuantity(cartId, quantity);
             }
         });
         

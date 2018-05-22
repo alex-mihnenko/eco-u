@@ -259,15 +259,15 @@ class Cart {
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,
-					'price'           => round( ($cart['special_price'] == 0) ? ($price + $option_price) : (int)$product_query->row['special_price']),
-					'total'           => round( ($cart['special_price'] == 0) ? (($price + $option_price) * $cart['quantity']) : ((int)$product_query->row['special_price'] * $cart['quantity'])),
+					'price'           => round( ($cart['special_price'] == 0) ? ( round(($price + $option_price) * $cart['packaging']) ) : (int)$product_query->row['special_price']),
+					'total'           => round( ($cart['special_price'] == 0) ? ( round(($price + $option_price) * $cart['packaging']) * $cart['quantity'] ) : round((int)$product_query->row['special_price'] * $cart['packaging']) * $cart['quantity'] ),
 					'reward'          => $reward * $cart['quantity'],
 					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
 					'tax_class_id'    => $product_query->row['tax_class_id'],
 					'weight'          => ($product_query->row['weight'] + $option_weight) * $cart['quantity'],
 					'weight_class_id' => $product_query->row['weight_class_id'],
-                                        'weight_class'    => $product_query->row['weight_class'],
-                                        'weight_variants' => $product_query->row['weight_variants'],
+                    'weight_class'    => $product_query->row['weight_class'],
+                    'weight_variants' => $product_query->row['weight_variants'],
 					'length'          => $product_query->row['length'],
 					'width'           => $product_query->row['width'],
 					'height'          => $product_query->row['height'],
@@ -284,7 +284,7 @@ class Cart {
 		return $product_data;
 	}
 
-	public function add($product_id, $quantity = 1, $option = array(), $recurring_id = 0, $weight_variant = 0) {
+	public function add($product_id, $quantity = 1, $packaging = 0, $option = array(), $recurring_id = 0, $weight_variant = 0) {
                 // Спеццена
                 if(gettype($product_id) == 'string') {
                     if(strpos($product_id, '_special')) {
@@ -300,7 +300,7 @@ class Cart {
                 $queryCheckWeightVariants = $this->db->query("SELECT weight_variants FROM " . DB_PREFIX . "product WHERE product_id = ".$this->db->escape($product_id));
 
                 if (!$query->row['total']) {
-			$this->db->query("INSERT " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "', customer_id = '" . (int)$this->customer->getId() . "', session_id = '" . $this->db->escape($this->session->getId()) . "', product_id = '" . (int)$product_id . "', recurring_id = '" . (int)$recurring_id . "', `option` = '" . $this->db->escape(json_encode($option)) . "', quantity = '" . (float)$quantity . "', date_added = NOW()");
+			$this->db->query("INSERT " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "', customer_id = '" . (int)$this->customer->getId() . "', session_id = '" . $this->db->escape($this->session->getId()) . "', product_id = '" . (int)$product_id . "', recurring_id = '" . (int)$recurring_id . "', `option` = '" . $this->db->escape(json_encode($option)) . "', quantity = '" . (float)$quantity . "', packaging = '" . (float)$packaging . "', date_added = NOW()");
 		} else {
 			$this->db->query("UPDATE " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", quantity = (quantity + " . (float)$quantity . ") WHERE weight_variant = ".(int)$weight_variant." AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
 		}

@@ -359,7 +359,8 @@ $(document).ready(function() {
 	                var pElement = $(this).parents('.p-o_block');
 	                var product_id = pElement.find('input[name="product_id"]').val();
 	                var label = pElement.find('.selectric .label').html();
-	                var quantity = parseFloat(label);
+	                var quantity = 1;
+	                var packaging = parseFloat(label);
 	                var weight_class = label.substr(label.indexOf(' ')+1);
 	                var weight_variant = 0;
 	                var special_price = false;
@@ -374,6 +375,7 @@ $(document).ready(function() {
 	                $.post('/?route=checkout/cart/add', {
 	                    product_id: product_id,
 	                    quantity: quantity,
+	                    packaging: packaging,
 	                    weight_variant: weight_variant,
 	                    special_price: special_price
 	                }, function(msg){

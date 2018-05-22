@@ -1299,6 +1299,7 @@ class ControllerAjaxIndex extends Controller {
   public function ajaxChangeCartQuantity() {
         $cart_id = $this->request->post['cart_id'];
         $quantity = $this->request->post['quantity'];
+
         if(!empty($cart_id) && !empty($quantity)) {
             $this->cart->update($cart_id, $quantity);
             $this->response->addHeader('Content-Type: application/json');

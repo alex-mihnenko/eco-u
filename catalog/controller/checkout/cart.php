@@ -508,6 +508,12 @@ class ControllerCheckoutCart extends Controller {
 				$quantity = $product_info['minimum'] ? $product_info['minimum'] : 1;
 			}
 
+			if (isset($this->request->post['packaging']) && ((float)$this->request->post['packaging'] >= $product_info['minimum'])) {
+				$packaging = (float)$this->request->post['packaging'];
+			} else {
+				$packaging = $product_info['minimum'] ? $product_info['minimum'] : 1;
+			}
+
 			if (isset($this->request->post['option'])) {
 				$option = array_filter($this->request->post['option']);
 			} else {
@@ -550,7 +556,7 @@ class ControllerCheckoutCart extends Controller {
             }
 
                                 
-				$this->cart->add($newProductId, $quantity, $option, $recurring_id, $weight_variant);
+				$this->cart->add($newProductId, $quantity, $packaging, $option, $recurring_id, $weight_variant);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
 
