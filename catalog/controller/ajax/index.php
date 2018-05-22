@@ -192,6 +192,8 @@ class ControllerAjaxIndex extends Controller {
           $data['products'] = $this->cart->getProducts();
           $total = 0;
           foreach($data['products'] as $i => $product) {
+              $data['products'][$i]['quantity'] = $product['quantity']*$product['packaging'];
+
               if(empty($product['weight_variants'])) {
                   $data['products'][$i]['amount'] = round($product['quantity']*$product['packaging']);
                   $data['products'][$i]['variant'] = 1;
