@@ -192,8 +192,6 @@ class ControllerAjaxIndex extends Controller {
           $data['products'] = $this->cart->getProducts();
           $total = 0;
           foreach($data['products'] as $i => $product) {
-              $data['products'][$i]['quantity'] = $product['quantity']*$product['packaging'];
-
               if(empty($product['weight_variants'])) {
                   $data['products'][$i]['amount'] = $product['quantity'];
                   $data['products'][$i]['variant'] = 1;
@@ -202,6 +200,9 @@ class ControllerAjaxIndex extends Controller {
                   $data['products'][$i]['amount'] = round($product['quantity']*$product['packaging']/$arWeightVariants[$product['weight_variant']]);
                   $data['products'][$i]['variant'] = $arWeightVariants[$product['weight_variant']];
               }
+
+              $data['products'][$i]['quantity'] = $product['quantity']*$product['packaging'];
+              
               $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
           }
           $data['total'] = $total;
