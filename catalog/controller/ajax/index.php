@@ -195,7 +195,7 @@ class ControllerAjaxIndex extends Controller {
               $data['products'][$i]['quantity'] = $product['quantity']*$product['packaging'];
 
               if(empty($product['weight_variants'])) {
-                  $data['products'][$i]['amount'] = round($product['quantity']*$product['packaging']);
+                  $data['products'][$i]['amount'] = $product['quantity'];
                   $data['products'][$i]['variant'] = 1;
               } else {
                   $arWeightVariants = explode(',', $product['weight_variants']);
