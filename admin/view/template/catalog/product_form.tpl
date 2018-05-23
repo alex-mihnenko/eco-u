@@ -202,6 +202,16 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label"><?php echo $entry_ultra_fresh; ?></label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                      <label>
+                          <input type="checkbox" name="ultra_fresh" value="1" <?php if($ultra_fresh) { ?>checked="checked" <? } ?> />
+                      </label>
+                    </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-price"><?php echo $entry_price; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" />
@@ -217,6 +227,12 @@
                 <label class="col-sm-2 control-label" for="input-weight-variants"><?php echo $entry_weight_variants; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="weight_variants" value="<?php echo $weight_variants; ?>" placeholder="<?php echo $entry_weight_variants; ?>" id="input-weight-variants" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-weight-package"><?php echo $entry_weight_package; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="weight_package" value="<?php echo $weight_package; ?>" placeholder="<?php echo $entry_weight_package; ?>" id="input-weight-package" class="form-control" />
                 </div>
               </div>
               <div class="form-group">

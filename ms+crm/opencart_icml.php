@@ -30,8 +30,8 @@ echo("<yml_catalog date=\"2016-12-10 22:27:15\">
 
 echo("</categories><offers>");
 
-	$res=mysql_query("select product_id,model,sku,image,price,weight_class_id,quantity from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
-	while(list($EL_ID,$model,$sku,$image,$price,$wclid,$quantity)=mysql_fetch_row($res)){
+	$res=mysql_query("select product_id,model,sku,image,price,weight_class_id,quantity,quantity,ultra_fresh from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
+	while(list($EL_ID,$model,$sku,$image,$price,$wclid,$quantity,$ultra_fresh)=mysql_fetch_row($res)){
 
 
 		$res2=mysql_query("select title ,unit from oc_weight_class_description where weight_class_id='$wclid'");
@@ -89,7 +89,7 @@ echo("</categories><offers>");
 
 
 
-			$res5=mysql_query("select id,	product_option_value_id,xmlId from ms_variants where product_id='$EL_ID'");
+			$res5=mysql_query("select id, product_option_value_id,xmlId from ms_variants where product_id='$EL_ID'");
 			while(list($msid,$ms_povi,$xmlId2)=mysql_fetch_row($res5)){
 
 				echo("<offer id=\"$EL_ID"."#$ms_povi\" productId=\"$EL_ID\" quantity=\"0\">");
@@ -100,6 +100,9 @@ echo("</categories><offers>");
 				echo("<xmlId>$xmlId#$xmlId2</xmlId>");
 				echo("<url>http://eco-u.ru/$keyword</url>");
 				echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
+				if( $ultra_fresh == 1 ) {
+					echo("<param name=\"UltraFresh\" code=\"ultrafresh\">UltraFresh</param>");
+				}
 				$ms_povi_arr=explode(",",$ms_povi);
 				$tmpchar=null;
 				foreach($ms_povi_arr as $kp=>$vp){

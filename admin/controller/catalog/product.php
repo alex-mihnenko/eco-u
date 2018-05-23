@@ -615,15 +615,18 @@ class ControllerCatalogProduct extends Controller {
 		$data['entry_reward'] = $this->language->get('entry_reward');
 		$data['entry_layout'] = $this->language->get('entry_layout');
 		$data['entry_recurring'] = $this->language->get('entry_recurring');
-                $data['entry_image_preview'] = $this->language->get('entry_image_preview');
-                $data['entry_weight_variants'] = $this->language->get('entry_weight_variants');
-                $data['entry_shelf_life'] = $this->language->get('entry_shelf_life');
-                $data['entry_special_price'] = $this->language->get('entry_special_price');
-                $data['entry_available_in_time'] = $this->language->get('entry_available_in_time');
-                $data['entry_profitable_offer'] = $this->language->get('entry_profitable_offer');
-                $data['entry_props'] = $this->language->get('entry_props');
-                $data['entry_is_weighted'] = $this->language->get('entry_is_weighted');
-                $data['entry_composite_price'] = $this->language->get('entry_composite_price');
+        
+        $data['entry_image_preview'] = $this->language->get('entry_image_preview');
+        $data['entry_weight_variants'] = $this->language->get('entry_weight_variants');
+        $data['entry_weight_package'] = $this->language->get('entry_weight_package');
+        $data['entry_shelf_life'] = $this->language->get('entry_shelf_life');
+        $data['entry_special_price'] = $this->language->get('entry_special_price');
+        $data['entry_available_in_time'] = $this->language->get('entry_available_in_time');
+        $data['entry_profitable_offer'] = $this->language->get('entry_profitable_offer');
+        $data['entry_props'] = $this->language->get('entry_props');
+        $data['entry_is_weighted'] = $this->language->get('entry_is_weighted');
+        $data['entry_composite_price'] = $this->language->get('entry_composite_price');
+        $data['entry_ultra_fresh'] = $this->language->get('entry_ultra_fresh');
                 
 		$data['help_keyword'] = $this->language->get('help_keyword');
 		$data['help_sku'] = $this->language->get('help_sku');
@@ -776,7 +779,7 @@ class ControllerCatalogProduct extends Controller {
 			$data['model'] = '';
 		}
                 
-                if (isset($this->request->post['available'])) {
+        if (isset($this->request->post['available'])) {
 			$data['available'] = $this->request->post['available'];
 		} elseif (!empty($product_info)) {
 			$data['available'] = $product_info['available'];
@@ -784,15 +787,23 @@ class ControllerCatalogProduct extends Controller {
 			$data['available'] = '';
 		}
                 
-                if (isset($this->request->post['weight_variants'])) {
+        if (isset($this->request->post['weight_variants'])) {
 			$data['weight_variants'] = $this->request->post['weight_variants'];
 		} elseif (!empty($product_info)) {
 			$data['weight_variants'] = $product_info['weight_variants'];
 		} else {
 			$data['weight_variants'] = '';
 		}
+
+		if (isset($this->request->post['weight_package'])) {
+			$data['weight_package'] = $this->request->post['weight_package'];
+		} elseif (!empty($product_info)) {
+			$data['weight_package'] = $product_info['weight_package'];
+		} else {
+			$data['weight_package'] = '';
+		}
                 
-                if (isset($this->request->post['shelf_life'])) {
+        if (isset($this->request->post['shelf_life'])) {
 			$data['shelf_life'] = $this->request->post['shelf_life'];
 		} elseif (!empty($product_info)) {
 			$data['shelf_life'] = $product_info['shelf_life'];
@@ -800,7 +811,7 @@ class ControllerCatalogProduct extends Controller {
 			$data['shelf_life'] = '';
 		}
                 
-                if (isset($this->request->post['available_in_time'])) {
+        if (isset($this->request->post['available_in_time'])) {
 			$data['available_in_time'] = $this->request->post['available_in_time'];
 		} elseif (!empty($product_info)) {
 			$data['available_in_time'] = $product_info['available_in_time'];
@@ -808,7 +819,7 @@ class ControllerCatalogProduct extends Controller {
 			$data['available_in_time'] = '';
 		}
                 
-                if (isset($this->request->post['special_price'])) {
+        if (isset($this->request->post['special_price'])) {
 			$data['special_price'] = $this->request->post['special_price'];
 		} elseif (!empty($product_info)) {
 			$data['special_price'] = $product_info['special_price'];
@@ -816,7 +827,7 @@ class ControllerCatalogProduct extends Controller {
 			$data['special_price'] = '';
 		}
                 
-                if (isset($this->request->post['profitable_offer'])) {
+        if (isset($this->request->post['profitable_offer'])) {
 			$data['profitable_offer'] = $this->request->post['profitable_offer'];
 		} elseif (!empty($product_info)) {
 			$data['profitable_offer'] = $product_info['profitable_offer'];
@@ -824,7 +835,7 @@ class ControllerCatalogProduct extends Controller {
 			$data['profitable_offer'] = '';
 		}
                 
-                if (isset($this->request->post['is_weighted'])) {
+        if (isset($this->request->post['is_weighted'])) {
 			$data['is_weighted'] = $this->request->post['is_weighted'];
 		} elseif (!empty($product_info)) {
 			$data['is_weighted'] = $product_info['is_weighted'];
@@ -832,12 +843,20 @@ class ControllerCatalogProduct extends Controller {
 			$data['is_weighted'] = 0;
 		}
                 
-                if (isset($this->request->post['composite_price'])) {
+        if (isset($this->request->post['composite_price'])) {
 			$data['composite_price'] = $this->request->post['composite_price'];
 		} elseif (!empty($product_info)) {
 			$data['composite_price'] = $product_info['composite_price'];
 		} else {
 			$data['composite_price'] = 0;
+		}
+
+		if (isset($this->request->post['ultra_fresh'])) {
+			$data['ultra_fresh'] = $this->request->post['ultra_fresh'];
+		} elseif (!empty($product_info)) {
+			$data['ultra_fresh'] = $product_info['ultra_fresh'];
+		} else {
+			$data['ultra_fresh'] = 0;
 		}
 
 		if (isset($this->request->post['sku'])) {
