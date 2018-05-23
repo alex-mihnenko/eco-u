@@ -158,8 +158,9 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 					echo 'weight_package: '.$weight_package;
 
 					if( $weight_package != '' ) {
-						$weight_package = json_decode($weight_package);
-						print_r($weight_package);
+						$wpArr = (array) json_decode($weight_package);
+						echo 'weight_package:'; print_r($wpArr);
+						echo "<br>";
 
 						$weight_package_index = strval($fasovka);
 						echo $weight_package_index.' --- '.$weight_package[$weight_package_index];
