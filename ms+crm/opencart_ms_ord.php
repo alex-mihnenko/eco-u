@@ -155,6 +155,8 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				}
 
 				// Add package weight
+					echo 'weight_package: '.$weight_package;
+
 					if( $weight_package != '' ) {
 						$weight_package = json_decode($weight_package);
 						print_r($weight_package);
