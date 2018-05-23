@@ -241,7 +241,8 @@ class Cart {
                     $wVariants = explode(',', $product_query->row['weight_variants']);
                     $wKey = $cart['weight_variant'];
                     if(isset($wVariants[$wKey]) && isset($cPrice[$wVariants[$wKey]])) {
-                        $price = $price * $cPrice[$wVariants[$wKey]];
+                        //$price = $price * $cPrice[$wVariants[$wKey]];
+                        $price = round(round($price * $cPrice[$wVariants[$wKey]]*$wVariants[$wKey])/$wVariants[$wKey]);
                     }
                 }
                                 
@@ -260,7 +261,7 @@ class Cart {
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,
-					'price'           => ($cart['special_price'] == 0) ? ($price + $option_price) : (int)$product_query->row['special_price'],
+					'price'           => ($cart['special_price'] == 0) ? (round($price) + $option_price) : (int)$product_query->row['special_price'],
 					'total'           => round( ($cart['special_price'] == 0) ? ( round(($price + $option_price) * $cart['packaging']) * $cart['quantity'] ) : round((int)$product_query->row['special_price'] * $cart['packaging']) * $cart['quantity'] ),
 					'reward'          => $reward * $cart['quantity'],
 					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
