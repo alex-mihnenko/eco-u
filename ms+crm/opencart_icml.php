@@ -101,7 +101,7 @@ echo("</categories><offers>");
 				echo("<url>http://eco-u.ru/$keyword</url>");
 				echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
 				if( $ultra_fresh == 1 ) {
-					echo("<param name=\"UltraFresh\" code=\"article\">UltraFresh</param>");
+					echo("<param name=\"UltraFresh\" code=\"ultrafresh\">UltraFresh</param>");
 				}
 				$ms_povi_arr=explode(",",$ms_povi);
 				$tmpchar=null;
