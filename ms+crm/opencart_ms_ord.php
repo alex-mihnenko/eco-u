@@ -160,7 +160,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 					if( $weight_package != '' ) {
 						$weight_package = (array)json_decode($weight_package);
 	
-						echo $fasovka]."<br>";
+						echo $fasovka."<br>";
 						
 						if( isset($weight_package[$fasovka]) ) {
 							// g
