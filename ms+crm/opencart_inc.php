@@ -85,7 +85,7 @@ function ms_query_image($link){
 	curl_setopt($curl,CURLOPT_POST,0);
 	curl_setopt($curl,CURLOPT_USERPWD,$AUTH_DATA);
 	curl_setopt($curl,CURLOPT_HEADER,false);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 
 	curl_setopt($curl,CURLOPT_SSL_VERIFYPEER,0);
 	curl_setopt($curl,CURLOPT_SSL_VERIFYHOST,0);

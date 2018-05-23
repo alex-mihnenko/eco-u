@@ -24,14 +24,13 @@
 // ---
 
 // Set query
-	$url = "https://online.moysklad.ru/api/remap/1.1/entity/purchaseorder";
+	$url = "https://online.moysklad.ru/api/remap/1.1/entity/purchaseorder?limit=100&offset=0";
 	$qdata = array();
 // ---
 
 // Request
 	$orders = connectMSAPI($url,AUTH_DATA);
 	$log['orderes'] = count($orders['rows']);
-
 
 	if( $config->current < 0 ) { $config->current = 0; }
 	else { $config->current = $config->current + 1; }

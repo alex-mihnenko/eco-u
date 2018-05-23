@@ -350,17 +350,9 @@ if($argv[1]=='2'){
 								}
 
 								$qInsert = mysql_query("
-									INSERT IGNORE INTO oc_product SET 
+									INSERT INTO oc_product SET 
 									model = '" . addslashes($v['name']) . "',
-									is_weighted = '0',
-									composite_price = '0',
 									sku = '" . $v['externalCode'] . "',
-									weight_variants = '',
-									shelf_life = '',
-									available_in_time = '',
-									special_price = '0',
-									profitable_offer = '0',
-									available = '0',
 									upc = '',
 									ean = '',
 									jan = '',
@@ -368,25 +360,38 @@ if($argv[1]=='2'){
 									mpn = '',
 									location = '',
 									quantity = '0',
-									minimum = '" . (int)$minimum . "',
-									subtract = '1',
+									available = '0',
 									stock_status_id = '5',
-									date_available = '0000-00-00',
+									image_preview = '',
+									image= '".'catalog/'.$v['image']['filename']."',
 									manufacturer_id = '" . (int)$CNTRS[$v['country']['meta']['href']] . "',
 									shipping = '1',
 									price = '" . (float)$price . "',
 									points = '0',
+									tax_class_id = '0',
+									date_available = '0000-00-00',
 									weight = '" . (float)$v['weight'] . "',
 									weight_class_id = '" . (int)$uomid . "',
 									length = '0',
 									width = '0',
 									height = '0',
 									length_class_id = '0',
-									status = '1',
-									tax_class_id = '0',
+									subtract = '1',
+									minimum = '" . (int)$minimum . "',
 									sort_order = '0',
+									status = '1',
+									viewed = '0',
 									date_added = NOW(),
-									image= '".'catalog/'.$v['image']['filename']."';
+									date_modified = NOW(),
+									weight_variants = '',
+									weight_package = '',
+									shelf_life = '',
+									available_in_time = '',
+									special_price = '0',
+									profitable_offer = '0',
+									composite_price = '0',
+									ultra_fresh = '0',
+									is_weighted = '0'
 								");
 
 								$product_id=mysql_insert_id();
@@ -394,13 +399,17 @@ if($argv[1]=='2'){
 								echo '<br>';
 
 								$qInsert = mysql_query("
-									INSERT IGNORE INTO oc_product_description SET 
-									name='".addslashes($v['name'])."',
-									meta_title='".addslashes($v['name'])."',
+									INSERT INTO oc_product_description SET 
 									product_id='".$product_id."',
 									language_id='1',
+									name='".addslashes($v['name'])."',
+									description_short='',
 									description='".$v['description']."',
-									description_short='';
+									customer_props3='',
+									tag='',
+									meta_title='".addslashes($v['name'])."',
+									meta_description='".addslashes($v['name'])."',
+									meta_keyword='".addslashes($v['name'])."'
 								");
 								echo "oc_product_description error: ".mysql_error();
 								echo '<br><br>';
@@ -552,7 +561,7 @@ if($argv[1]=='3'){
 							$QTS[$chpr_id]=$chpr_id; 
 
 							mysql_query("
-								UPDATE IGNORE `oc_product` SET 
+								UPDATE `oc_product` SET 
 								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
 								WHERE `product_id`='$chpr_id';
 							");
@@ -572,7 +581,7 @@ if($argv[1]=='3'){
 							if($qty>0) { $QTS[$product_id]=$product_id; $AVA=" and AVAILABLE='Y'"; } 
 
 							mysql_query("
-								UPDATE IGNORE `oc_product` SET 
+								UPDATE `oc_product` SET 
 								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
 								WHERE `product_id`=".$product_id.";
 							");
