@@ -509,6 +509,7 @@ class ControllerAjaxIndex extends Controller {
                   $data['accept_language'] = '';
           }
           
+          
           $order_id = $this->model_checkout_order->addOrder($data);
           
           

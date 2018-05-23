@@ -120,17 +120,18 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	
 		while(list( $ms_pr_id,$msp_product_id,$opid,$quantity,$fasovka,$amount,$price)=mysql_fetch_row($resx)){
 
-			$resx2=mysql_query("select MSV.ms_id,MSV.product_option_value_id  from oc_order_option as OOO, ms_variants as MSV where MSV.product_option_value_id=OOO.product_option_value_id and OOO.order_id='$order_id' 
-				and OOO.order_product_id='$opid'");
+			$resx2=mysql_query("select MSV.ms_id,MSV.product_option_value_id  from oc_order_option as OOO, ms_variants as MSV where MSV.product_option_value_id=OOO.product_option_value_id and OOO.order_id='$order_id' and OOO.order_product_id='$opid'");
 			list( $ms_var_id, $msv_povid)=mysql_fetch_row($resx2);
+
 			/*Подсчитываем общий вес всех товаров*/
+
 			//1.Получем единицу измерения товара
 			$resx3=mysql_query("select weight_class_id,weight from oc_product  where  product_id='".(int)$msp_product_id."'");
 			list( $weight_class_id, $weight)=mysql_fetch_row($resx3);
-			//echo $quantity." ".$weight."<br>";
-			//2.Формируем вес
 			
+			//2.Формируем вес
 			//Если в МС не установлен вес для весовых товаров, то берём по умолчанию 1 кг
+
 			if($weight=="0.00000000" && $weight_class_id==9){
 				$weight="1";
 			}
@@ -139,8 +140,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			if($weight=="0.00000000"){
 				$weight_ignore=1;
 			}
-			else 
-			{
+			else {
 				
 				if($weight_class_id==8 || $weight_class_id==2 || $weight_class_id==1 || $weight_class_id==7)
 				{

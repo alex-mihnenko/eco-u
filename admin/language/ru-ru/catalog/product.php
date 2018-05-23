@@ -87,9 +87,11 @@ $_['entry_available']    = 'В наличии';
 $_['entry_props'] = '3 потребительских свойства';
 $_['entry_is_weighted'] = 'Весовой';
 $_['entry_composite_price'] = 'Сложная цена';
+$_['entry_ultra_fresh'] = 'UltraFresh';
 
 $_['entry_profitable_offer']    = 'Выгодное предложение';
 $_['entry_weight_variants']    = 'Варианты фасовки (через&nbsp;запятую)';
+$_['entry_weight_package']    = 'Вес упаковки (через&nbsp;запятую)';
 $_['entry_shelf_life']            = 'Срок хранения';
 $_['entry_available_in_time']    = 'Срок поставки';
 $_['entry_special_price']    = 'Только сейчас (спеццена)';
