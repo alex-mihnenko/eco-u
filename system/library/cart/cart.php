@@ -379,7 +379,7 @@ class Cart {
 		$total = 0;
 
 		foreach ($this->getProducts() as $product) {
-			$total += round($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+			$total += round($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * ($product['quantity'] * $product['packaging']));
 		}
 
 		return $total;
