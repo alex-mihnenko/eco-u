@@ -127,7 +127,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			/*Подсчитываем общий вес всех товаров*/
 
 			//1.Получем единицу измерения товара
-			$resx3=mysql_query("select weight_class_id,weight,weight_package from oc_product where  product_id='".(int)$msp_product_id."'");
+			$resx3=mysql_query("select weight_class_id,weight,weight_package from oc_product where product_id='".(int)$msp_product_id."'");
 			list( $weight_class_id,$weight,$weight_package)=mysql_fetch_row($resx3);
 			
 			//2.Формируем вес
@@ -155,8 +155,12 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				}
 
 				// Add package weight
+					echo $weight_package."---";
+					
 					if( $weight_package != '' ) {
 						$weight_package = (array)json_decode($weight_package);
+	
+						echo $fasovka]."<br>";
 						
 						if( isset($weight_package[$fasovka]) ) {
 							// g
