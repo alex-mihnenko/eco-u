@@ -155,7 +155,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				}
 
 				// Add package weight
-					if( $weight_package != '' )
+					if( $weight_package != '' ) {
 						$weight_package = (array)json_decode($weight_package);
 						
 						if( isset($weight_package[$fasovka]) ) {
