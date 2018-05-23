@@ -156,7 +156,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 				// Add package weight
 					if( $weight_package != '' ) {
-						var_dump($weight_package);
+						var_dump(htmlentities($weight_package));
 						echo "<br>";
 						
 						$wpArr = (array) json_decode($weight_package);
