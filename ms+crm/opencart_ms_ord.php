@@ -2,6 +2,7 @@
 // Init
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
+	header('Content-Type: text/html; charset=utf-8');
 
 	include("opencart_inc.php");
 
@@ -21,7 +22,6 @@ $res_orders=mysql_query("
 	FROM oc_order WHERE customer_id>0 AND order_status_id>0 ORDER BY date_modified DESC LIMIT 0,20");
 
 $i=1;
-
 
 
 // Get free shipping
@@ -155,9 +155,10 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				}
 
 				// Add package weight
-					echo 'weight_package: '.$weight_package;
-
 					if( $weight_package != '' ) {
+						var_dump($weight_package);
+						echo "<br>";
+						
 						$wpArr = (array) json_decode($weight_package);
 						echo 'weight_package:'; print_r($wpArr);
 						echo "<br>";
