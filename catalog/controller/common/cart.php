@@ -259,7 +259,7 @@ class ControllerCommonCart extends Controller {
                         
                         $data['islogged'] = $this->customer->isLogged();
                         $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
-                        $data['discount'] = number_format(floor($totalPrice) - round($this->cart->getOrderPrice()), 0, '.', ' ');
+                        $data['discount'] = number_format(floor($totalPrice) - floor($this->cart->getOrderPrice()), 0, '.', ' ');
                         
                 } else {
                         return false;
