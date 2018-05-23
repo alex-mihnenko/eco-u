@@ -161,12 +161,12 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 						if( isset($weight_package[$fasovka]) ) {
 							// g
 							if($weight_class_id==2) {
-								$weight_all=$weight_all + float($weight_package[$fasovka]);
+								$weight_all=$weight_all + floatval($weight_package[$fasovka]);
 							}
 
 							// kg
 							if($weight_class_id==9) {
-								$weight_all=$weight_all + float($weight_package[$fasovka])*1000;
+								$weight_all=$weight_all + floatval($weight_package[$fasovka])*1000;
 							}
 						}
 					}
