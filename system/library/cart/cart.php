@@ -260,7 +260,7 @@ class Cart {
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,
-					'price'           => round( ($cart['special_price'] == 0) ? ( round(($price + $option_price) * $cart['packaging']) ) : (int)$product_query->row['special_price']),
+					'price'           => ($cart['special_price'] == 0) ? ($price + $option_price) : (int)$product_query->row['special_price'],
 					'total'           => round( ($cart['special_price'] == 0) ? ( round(($price + $option_price) * $cart['packaging']) * $cart['quantity'] ) : round((int)$product_query->row['special_price'] * $cart['packaging']) * $cart['quantity'] ),
 					'reward'          => $reward * $cart['quantity'],
 					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
