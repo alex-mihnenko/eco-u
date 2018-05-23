@@ -12,6 +12,7 @@
 	$log = "";
 // ---
 
+
 $res_orders=mysql_query("
 	SELECT 
 		payment_method, customer_id, order_id, firstname, lastname, email, telephone, comment, total, 
@@ -126,8 +127,8 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			/*Подсчитываем общий вес всех товаров*/
 
 			//1.Получем единицу измерения товара
-			$resx3=mysql_query("select weight_class_id,weight from oc_product  where  product_id='".(int)$msp_product_id."'");
-			list( $weight_class_id, $weight)=mysql_fetch_row($resx3);
+			$resx3=mysql_query("select weight_class_id,weight,weight_package from oc_product where  product_id='".(int)$msp_product_id."'");
+			list( $weight_class_id,$weight,$weight_package)=mysql_fetch_row($resx3);
 			
 			//2.Формируем вес
 			//Если в МС не установлен вес для весовых товаров, то берём по умолчанию 1 кг
@@ -142,17 +143,33 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			}
 			else {
 				
-				if($weight_class_id==8 || $weight_class_id==2 || $weight_class_id==1 || $weight_class_id==7)
-				{
+				if($weight_class_id==8 || $weight_class_id==2 || $weight_class_id==1 || $weight_class_id==7) {
 					$weight_all=$weight_all+round(($quantity*$weight));
 					
 				}
+
 				//Если килограммы, то тоже самое но умножаем на 1000
-				if($weight_class_id==9)
-				{
+				if($weight_class_id==9) {
 					$weight_all=$weight_all+(round(($quantity*$weight)*1000));
 					
 				}
+
+				// Add package weight
+					$weight_package = (array)json_decode($weight_package);
+					
+					if( isset($weight_package[$fasovka]) ) {
+						// g
+						if($weight_class_id==2) {
+							$weight_all=$weight_all + $weight_package[$fasovka];
+						}
+
+						// kg
+						if($weight_class_id==9) {
+							$weight_all=$weight_all + $weight_package[$fasovka]**1000;
+						}
+					}
+
+				// ---
 			}
 			
 			
