@@ -155,20 +155,21 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				}
 
 				// Add package weight
-					$weight_package = (array)json_decode($weight_package);
-					
-					if( isset($weight_package[$fasovka]) ) {
-						// g
-						if($weight_class_id==2) {
-							$weight_all=$weight_all + $weight_package[$fasovka];
-						}
+					if( $weight_package != '' )
+						$weight_package = (array)json_decode($weight_package);
+						
+						if( isset($weight_package[$fasovka]) ) {
+							// g
+							if($weight_class_id==2) {
+								$weight_all=$weight_all + float($weight_package[$fasovka]);
+							}
 
-						// kg
-						if($weight_class_id==9) {
-							$weight_all=$weight_all + $weight_package[$fasovka]**1000;
+							// kg
+							if($weight_class_id==9) {
+								$weight_all=$weight_all + float($weight_package[$fasovka])*1000;
+							}
 						}
 					}
-
 				// ---
 			}
 			
