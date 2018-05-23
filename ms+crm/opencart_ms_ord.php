@@ -159,7 +159,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 						$weight_package = (array)json_decode($weight_package);
 	
 						
-						$weight_package_index = strval($fasovka);
+						$weight_package_index = "".strval($fasovka);
 						echo $weight_package_index.' --- '.$weight_package[$weight_package_index];
 						echo '<br>';
 
