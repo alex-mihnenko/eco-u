@@ -158,15 +158,15 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 					if( $weight_package != '' ) {
 						$wpArr = (array) json_decode(html_entity_decode($weight_package));
 
-						if( isset($weight_package[$fasovka]) ) {
+						if( isset($wpArr[$fasovka]) ) {
 							// g
 							if($weight_class_id==2) {
-								$weight_all=$weight_all + floatval($weight_package[$fasovka]);
+								$weight_all=$weight_all + floatval($wpArr[$fasovka]);
 							}
 
 							// kg
 							if($weight_class_id==9) {
-								$weight_all=$weight_all + floatval($weight_package[$fasovka])*1000;
+								$weight_all=$weight_all + floatval($wpArr[$fasovka])*1000;
 							}
 						}
 					}
