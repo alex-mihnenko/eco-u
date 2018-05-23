@@ -456,9 +456,9 @@ class Cart {
             }
             
             if((int)$total1 <= (int)$total2) {
-                return round($total1);
+                return $total1;
             } else {
-                return round($total2);
+                return $total2;
             }
         }
         
