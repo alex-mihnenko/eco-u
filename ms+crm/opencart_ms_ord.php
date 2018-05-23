@@ -159,14 +159,8 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 						$wpArr = (array) json_decode(html_entity_decode($weight_package));
 
 						if( isset($wpArr[$fasovka]) ) {
-							// g
-							if($weight_class_id==2) {
+							if($weight_class_id==2 || $weight_class_id==9) {
 								$weight_all=$weight_all + floatval($wpArr[$fasovka]);
-							}
-
-							// kg
-							if($weight_class_id==9) {
-								$weight_all=$weight_all + floatval($wpArr[$fasovka])*1000;
 							}
 						}
 					}
