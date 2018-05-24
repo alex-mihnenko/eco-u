@@ -106,7 +106,7 @@ class ControllerExtensionDashboardProcurement extends Controller {
 		$data['token'] = $this->session->data['token'];
 
 		// Load API library
-		$this->load->model('api/api');
+		include_once(DIR_APPLICATION . '/model/api/api.php');
 		$apiKey = $this->config->get('config_apikey');
 		$oc = new OpenCart\OpenCart(HTTP_CATALOG);
 

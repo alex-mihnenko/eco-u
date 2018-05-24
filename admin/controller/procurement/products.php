@@ -103,7 +103,8 @@ class ControllerProcurementProducts extends Controller {
 			$data['categories'] = $categories;
 		// ---
 
-		$this->load->model('api/api');
+		include_once(DIR_APPLICATION . '/model/api/api.php');
+
 		$apiKey = $this->config->get('config_apikey');
 		$oc = new OpenCart\OpenCart(HTTP_CATALOG);
 
