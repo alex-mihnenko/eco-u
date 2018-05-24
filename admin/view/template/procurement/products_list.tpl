@@ -79,11 +79,9 @@
                 <?php if ($products) { ?>
                 <?php foreach ($products as $product_id => $product) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($marketing['marketing_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $product_id; ?>" checked="checked" />
-                    <?php } else { ?>
+                  <td class="text-center">
                     <input type="checkbox" name="selected[]" value="<?php echo $product_id; ?>" />
-                    <?php } ?></td>
+                  </td>
                   <td class="text-left"><?php echo $product['name']; ?></td>
                   <td class="text-right"><?php echo $product['quantity']; ?></td>
                   <td class="text-right"><?php echo $product['price']; ?></td>
