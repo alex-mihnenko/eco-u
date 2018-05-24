@@ -20,6 +20,8 @@
 <?php if($order_id) { ?>
 <script type="text/javascript">
     setTimeout(function() {
+        yaCounter33704824.reachGoal('checkout-success');
+        
         $('.modal-basket').addClass('modal-basket-380');
         $('.modal-basket .remodal-close').hide();
         $('.t_item_p4 a').click();

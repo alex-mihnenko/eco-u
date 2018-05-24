@@ -889,7 +889,7 @@
                     order_id: $('#checkout-order-id').val()
                 }, function(data){
                 	// ---
-                        //ga('send', 'event', 'Order', 'Checkout', 'Create');
+                        yaCounter33704824.reachGoal('checkout-delivery');
                         gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Create' });
 
                         if(data.status == 'success') {
@@ -913,12 +913,15 @@
             // Сохраняем информацию о доставке и переходим на следующий шаг
             if(address != '') {
                 $('.t_item_p3 a').click();
+                yaCounter33704824.reachGoal('checkout-confim');
             }
         }
     });
     $('.modal-basket').delegate('.payment-method', 'click', function(e) {
         e.preventDefault();
         
+        yaCounter33704824.reachGoal('checkout-payments');
+
         var $this = $(this);
         $('#cart-loading').show();
         
@@ -965,6 +968,7 @@
 		                    } else {
 		                        $('.t_item_p4 a').click();
 		                        $('#cart-order-id').html(data.order_id);
+		                        yaCounter33704824.reachGoal('checkout-success');
 		                    }
 
             			// ---
