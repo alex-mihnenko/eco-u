@@ -816,11 +816,18 @@ class ControllerApiOrder extends Controller {
 				$quantity = 1000000;
 			}
 
+			if (isset($this->request->post['filter'])) {
+				$filter = $this->request->post['filter'];
+			} else {
+				$filter = array();
+			}
 
-			$order_products = $this->model_checkout_order->getOrderProducts($order_id, $order_status_id, $quantity);
+
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id, $order_status_id, $quantity, $filter);
+			
 
 			if ($order_products) {
-				$json['orders'] = $order_products;
+				$json['products'] = $order_products;
 
 				$json['success'] = $this->language->get('text_success');
 			} else {

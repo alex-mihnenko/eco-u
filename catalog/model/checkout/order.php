@@ -933,40 +933,69 @@ class ModelCheckoutOrder extends Model {
     }
 
 	// --- //
-	public function getOrderProducts($order_id, $order_status_id, $quantity) {
+	public function getOrderProducts($order_id, $order_status_id, $quantity, $filter=array()) {
+		// Crate sql
+			$sql = "
+				SELECT *, SUM('op.quantity') as quantity FROM `" . DB_PREFIX . "order` o 
+				LEFT JOIN `" . DB_PREFIX . "order_product` op
+	        	ON op.order_id = o.order_id 
+	        	LEFT JOIN `" . DB_PREFIX . "product` p
+	        	ON p.product_id = op.product_id 
+	        	LEFT JOIN `" . DB_PREFIX . "product_description` pd 
+	        	ON pd.product_id = op.product_id 
+	        	LEFT JOIN `" . DB_PREFIX . "product_to_category` ptc 
+	        	ON ptc.product_id = op.product_id 
+	        	WHERE o.order_status_id = '" . (int)$order_status_id . "'
+			";
+			
+			if( $order_id > 0 ){ $sql .= " AND o.`order_id`='".$order_id."'"; }
 
+			if( $quantity >= 0 ) { $sql .= " AND p.quantity=".$quantity; }
+			else { $sql .= " AND p.quantity<0"; }
 
-		$sql = "SELECT * FROM `" . DB_PREFIX . "order` WHERE `order_status_id` = '" . (int)$order_status_id . "'";
-		if( $order_id > 0 ){ $sql .= " AND `order_id`='".$order_id."'"; }
+			// Filter
+				if (!empty($filter['filter_name'])) {
+					$sql .= " AND pd.name LIKE '%" . $this->db->escape($filter['filter_name']) . "%'";
+				}
+
+				if (!empty($filter['filter_category'])) {
+					$sql .= " AND ptc.category_id =" . $filter['filter_category'] . "";
+				}
+			// ---
+
+			$sql .= " GROUP BY op.product_id";
+
+			// Sort
+				if( isset($filter['sort']) && $filter['sort'] != null ){
+					$sql .= " ORDER BY " .$filter['sort']." ".$filter['order'];
+				}
+			// ---
+
+			// Limit
+				if (isset($filter['start']) || isset($filter['limit'])) {
+					if ($filter['start'] < 0) {
+						$filter['start'] = 0;
+					}
+
+					if ($filter['limit'] < 1) {
+						$filter['limit'] = 20;
+					}
+
+					$sql .= " LIMIT " . (int)$filter['start'] . "," . (int)$filter['limit'];
+				}
+			// ---
+		// ---
 
 		$query = $this->db->query($sql);
         $results = array();
 
         if($query->rows) {
-        	foreach ($query->rows as $key => $order) {
+        	foreach ($query->rows as $key => $product) {
         		// ---
-        			$sql = "SELECT * FROM `" . DB_PREFIX . "order_product` LEFT JOIN `" . DB_PREFIX . "product` ON `" . DB_PREFIX . "product`.`product_id` = `" . DB_PREFIX . "order_product`.`product_id` WHERE `order_id` = '" . $order['order_id'] . "'";
-					
-					if( $quantity >= 0 ) { $sql .= " AND `" . DB_PREFIX . "product`.`quantity`=".$quantity; }
-					else { $sql .= " AND `" . DB_PREFIX . "product`.`quantity`<0"; }
-
-					$queryProducts = $this->db->query($sql);
-					$products = array();
-
-					if($queryProducts->rows) {
-        				foreach ($queryProducts->rows as $key => $product) {
-        					// ---
-        						$products[$product['product_id']] = array('quantity'=>$product['quantity'], 'image'=>$product['quantity']);
-        					// ---
-        				}
-        			}
-
-
-
-        			$results[$order['order_id']] = $products;
+        			$results[] = array('order_id'=>$product['order_id'], 'product_id'=>$product['product_id'], 'name'=>$product['name'], 'price'=>$product['price'], 'quantity'=>$product['amount'], 'image'=>$product['image']);
         		// ---
         	}
-            
+
             return $results;
         } else {
             return false;

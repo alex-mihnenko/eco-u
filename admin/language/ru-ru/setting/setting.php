@@ -131,6 +131,7 @@ $_['entry_file_mime_allowed']      = 'Разрешенные MIME типы';
 $_['entry_maintenance']            = 'Режим обслуживания';
 $_['entry_password']               = 'Разрешить восстановление пароля';
 $_['entry_encryption']             = 'Ключ шифрования';
+$_['entry_apikey']             		= 'Ключ API';
 $_['entry_compression']            = 'Уровень сжатия';
 $_['entry_timezone']               = 'Временная зона';
 $_['entry_error_display']          = 'Показывать ошибки';

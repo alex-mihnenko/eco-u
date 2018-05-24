@@ -1388,6 +1388,15 @@
                     <?php } ?>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-apikey"><span data-toggle="tooltip" title="<?php echo $help_apikey; ?>"><?php echo $entry_apikey; ?></span></label>
+                  <div class="col-sm-10">
+                    <textarea name="config_apikey" rows="5" placeholder="<?php echo $entry_apikey; ?>" id="input-apikey" class="form-control"><?php echo $config_apikey; ?></textarea>
+                    <?php if ($error_apikey) { ?>
+                    <div class="text-danger"><?php echo $error_apikey; ?></div>
+                    <?php } ?>
+                  </div>
+                </div>
               </fieldset>
               <fieldset>
                 <legend><?php echo $text_upload; ?></legend>

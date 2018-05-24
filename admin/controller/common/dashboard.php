@@ -33,6 +33,7 @@ class ControllerCommonDashboard extends Controller {
 
 		// Get a list of installed modules
 		$extensions = $this->model_extension_extension->getInstalled('dashboard');
+		file_put_contents('_dump.txt', json_encode($extensions));
 		
 		// Add all the modules which have multiple settings for each module
 		foreach ($extensions as $code) {

@@ -159,6 +159,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_maintenance'] = $this->language->get('entry_maintenance');
 		$data['entry_password'] = $this->language->get('entry_password');
 		$data['entry_encryption'] = $this->language->get('entry_encryption');
+		$data['entry_apikey'] = $this->language->get('entry_apikey');
 		$data['entry_seo_url'] = $this->language->get('entry_seo_url');
 		$data['entry_compression'] = $this->language->get('entry_compression');
 		$data['entry_error_display'] = $this->language->get('entry_error_display');
@@ -1181,6 +1182,12 @@ class ControllerSettingSetting extends Controller {
 			$data['config_encryption'] = $this->request->post['config_encryption'];
 		} else {
 			$data['config_encryption'] = $this->config->get('config_encryption');
+		}
+
+		if (isset($this->request->post['config_apikey'])) {
+			$data['config_apikey'] = $this->request->post['config_apikey'];
+		} else {
+			$data['config_apikey'] = $this->config->get('config_apikey');
 		}
 
 		if (isset($this->request->post['config_compression'])) {
