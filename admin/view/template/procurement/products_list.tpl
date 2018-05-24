@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-marketing">
+        <form action="" method="post" enctype="multipart/form-data" id="form-marketing">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
