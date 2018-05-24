@@ -112,18 +112,20 @@ class ControllerExtensionDashboardProcurement extends Controller {
 
 		if ($oc->login($apiKey)) {
 		   //---
-				$procurement = $oc->order->products(0,13,-1);
+				$results = $oc->order->products(0,13,-1);
+				$count = count($results['products']);
 
-				if (count($procurement) > 1000000000000) {
-					$data['total'] = round(count($procurement) / 1000000000000, 1) . 'T';
-				} elseif (count($procurement) > 1000000000) {
-					$data['total'] = round(count($procurement) / 1000000000, 1) . 'B';
-				} elseif (count($procurement) > 1000000) {
-					$data['total'] = round(count($procurement) / 1000000, 1) . 'M';
-				} elseif (count($procurement) > 1000) {
-					$data['total'] = round(count($procurement) / 1000, 1) . 'K';
+
+				if ($count > 1000000000000) {
+					$data['total'] = round($count / 1000000000000, 1) . 'T';
+				} elseif ($count > 1000000000) {
+					$data['total'] = round($count / 1000000000, 1) . 'B';
+				} elseif ($count > 1000000) {
+					$data['total'] = round($count / 1000000, 1) . 'M';
+				} elseif ($count > 1000) {
+					$data['total'] = round($count / 1000, 1) . 'K';
 				} else {
-					$data['total'] = count($procurement);
+					$data['total'] = $count;
 				}
 		   //---
 		} else {
