@@ -2,9 +2,11 @@ var app = {
   dashboard: {
     enjoyhint: null
   },
-  customer: {
-  	
-  }
+  modals: {
+  	auth: null,
+  	recovery: null
+  },
+  customer: {}
 }
 
 $(document).ready(function() {
@@ -33,6 +35,10 @@ $(document).ready(function() {
 					}
 				// ---
 			}
+		// ---
+
+		// Masks
+			$('[name="phone"]').mask("+7 (h99) 999-99-99");
 		// ---
 	// ---
 
@@ -394,20 +400,206 @@ $(document).ready(function() {
 	// ---
 
 	// Account
-		$('[data-action="rbs-payment"]').on('click', function(e){
-			// ---
-				$order_id = $(this).attr('data-order-id');
+		app.modals.basket = $('[data-remodal-id="modal-basket"]').remodal();
+		app.modals.auth = $('[data-remodal-id="modal"]').remodal();
+		app.modals.recovery = $('[data-remodal-id="modal-recovery"]').remodal();
+		app.modals.coupon = $('[data-remodal-id="modal-coupon"]').remodal();
+		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();
 
-				$.post('.?route=ajax/index/rbsPostPayment', {order_id:$order_id}, function(data){
-					// ---
-						console.log(data.redirect);
-						document.location = data.redirect;
-					// ---
-				},'json');
-
-				e.preventDefault();
-			// ---
+		$('.remodal').on('focus', '.input-error_1 input', function(){
+			$(this).parents('.remodal').find('.t-c_input').removeClass('input-error_1');
+			$(this).parents('.remodal').find('.message-error').hide();
 		});
+
+		// Auth
+			$('#form-auth').submit(function(){
+				console.log('Auth init');
+				
+				var form = $(this);
+
+				var phone = $('#phone3').val();
+	            var pass = $('#password3').val();
+
+	            if(phone != '' && pass != '') {
+	                $.post('/?route=ajax/index/ajaxLoginByPhone',{ telephone: phone, password: pass}, function(data){
+	                    if(data.status == 'success') {
+	                    	console.log('Auth success');
+
+	                        if(afterLogin && afterLogin()) { return; }
+	                        window.location.href = window.location.pathname;
+	                    } else {
+	                    	console.log('Auth error');
+
+	                        form.find('.t-c_input').addClass('input-error_1');
+	                        form.find('.message-error').html( data.message );
+	                        form.find('.message-error').show();
+	                    }
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Recovery
+			$('[data-remodal-id="modal"]').on('click', '[data-action="auth-recovery-init"]', function(){
+				// ---
+					app.modals.auth.close();
+
+			        $('#phone4').val('');
+
+					setTimeout(function(){
+						app.modals.recovery.open();
+					},500);
+				// ---
+			});
+
+			$('#form-recovery').submit(function(){
+				console.log('Recovery init');
+
+				var $form = $(this);
+				var $modal = $(this).parents('.remodal');
+				var telephone = $('#phone4').val();
+
+	            if(telephone != '' ) {
+	                $.post('/?route=ajax/index/recoveryPasswordByTelephone',{ telephone: telephone}, function(data){
+	                    // ---
+	                    	console.log(data);
+
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$form.find('.t-c_input').addClass('input-error_1');
+	                    			$form.find('.message-error').html(data.message);
+	                    			$form.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			$modal.find('.form').css('display','none');
+
+	                    			$modal.find('.success .message-success').html(data.message);
+	                    			$modal.find('.success .message-success').show();
+	                    			$modal.find('.success').fadeIn('fast');
+
+
+							        $('#phone4').val('');
+
+									setTimeout(function(){ app.modals.recovery.close(); },3000);
+									setTimeout(function(){ app.modals.auth.open(); },3500);
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Coupon
+			$('#form-coupon').submit(function(){
+				console.log('Сoupon init');
+
+				var $form = $(this);
+				var $modal = $(this).parents('.remodal');
+				var coupon = $form.find('input[name="coupon"]').val();
+
+	            if(coupon != '' ) {
+	                $.post('/?route=ajax/index/ajaxApplyCoupon',{ code: coupon}, function(data){
+	                    // ---
+	                    	console.log(data);
+
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$form.find('.t-c_input').addClass('input-error_1');
+	                    			$form.find('.message-error').html(data.message);
+	                    			$form.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			LoadCart();
+									setTimeout(function(){ app.modals.coupon.close(); },1000);
+									setTimeout(function(){ app.modals.basket.open(); },1500);
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Phone
+			$('#form-phone').submit(function(){
+				console.log('Phone init');
+
+				var $form = $(this);
+				var $modal = $(this).parents('.remodal');
+				var phone = $form.find('input[name="phone"]').val();
+
+	            if(phone != '' ) {
+	                $.post('/?route=ajax/index/sendCallRequest',{ phone: phone}, function(data){
+	                    // ---
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$form.find('.t-c_input').addClass('input-error_1');
+	                    			$form.find('.message-error').html(data.message);
+	                    			$form.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			$modal.find('.form').css('display','none');
+
+	                    			$modal.find('.success .message-success').html(data.message);
+	                    			$modal.find('.success .message-success').show();
+	                    			$modal.find('.success').fadeIn('fast');
+
+
+							        $form.find('input[name="phone"]').val('');
+
+									setTimeout(function(){ app.modals.phone.close(); },5000);
+									setTimeout(function(){
+										$modal.find('.form').css('display','block');
+
+		                    			$modal.find('.success .message-success').html('');
+		                    			$modal.find('.success .message-success').hide();
+		                    			$modal.find('.success').css('display','none');
+									},5500);
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Payment
+			$('[data-action="rbs-payment"]').on('click', function(e){
+				// ---
+					$order_id = $(this).attr('data-order-id');
+
+					$.post('.?route=ajax/index/rbsPostPayment', {order_id:$order_id}, function(data){
+						// ---
+							console.log(data.redirect);
+							document.location = data.redirect;
+						// ---
+					},'json');
+
+					e.preventDefault();
+				// ---
+			});
+		// ---
 	// ---
 
 });

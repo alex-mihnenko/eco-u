@@ -111,17 +111,21 @@ class ControllerAjaxIndex extends Controller {
     
     // Login
     public function ajaxLoginByPhone() {
-        $arUser = $this->request->post;
-        $phone = str_replace(Array('(', ')', '+', '-', ' '), '', $arUser['telephone']);
-        $password = $arUser['password'];
+        //$arUser = $this->request->post;
+        //$phone = str_replace(Array('(', ')', '+', '-', ' '), '', $arUser['telephone']);
+        //$password = $arUser['password'];
+
+        $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+        $password =$this->request->post['password'];
+
         if(!empty($password)) {
-            $response = Array('status' => 'success');
+            $response = Array('status' => 'success', 'message' => '');
             $locked = '';
-            if($this->customer->loginByPhone($phone, $password, false, $locked)) {
-                echo json_encode($response);
+
+            if($this->customer->loginByPhone($telephone, $password, false, $locked)) {
+              echo json_encode($response);
             }
-            else
-            {
+            else {
                 if($locked) {
                     if($locked == 1) {
                         $m = 'минуту';
@@ -130,11 +134,12 @@ class ControllerAjaxIndex extends Controller {
                     } else {
                         $m = 'минут';
                     }
-                    $locked = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
+                    $message = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
                 } else {
-                    $locked = '';
+                    $message = 'Не верный номер или пароль';
                 }
-                echo json_encode(Array('status' => 'error', 'locked' => $locked));
+
+                echo json_encode(Array('status' => 'error', 'message' => $message));
             }
         }
     }
@@ -143,6 +148,47 @@ class ControllerAjaxIndex extends Controller {
     public function ajaxLogout() {
         $this->customer->logout();
         $this->response->setOutput(json_encode(Array('status' => 'success')));
+    }
+
+    // Recovery password
+    public function recoveryPasswordByTelephone() {
+      // Init
+          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+
+          $response = new stdClass();
+        // ---
+
+      // Check customer
+        $this->load->model('account/customer');
+        $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+        if( empty($customer) ) {
+          $response->status = 'error';
+          $response->message = 'Не верный телефон';
+          echo json_encode($response);
+          exit;
+        }
+        else {
+          // Create new password
+            $password = $this->model_account_customer->generatePassword();
+            $this->model_account_customer->editPassword($telephone,$password);
+          // ---
+          
+          // SMS alert
+            $this->load->model('sms/confirmation');
+            $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
+            $this->model_sms_confirmation->sendSMS($telephone, $message);
+          // ---
+        }
+
+        // Response
+        $response->status = 'success';
+        $response->message = 'Мы отправили Вам SMS с паролем';
+        
+
+        echo json_encode($response);
+        exit;
+      // ---
     }
 
     // Get customer
@@ -178,7 +224,138 @@ class ControllerAjaxIndex extends Controller {
         echo json_encode($response);
         exit;
       // ---
-    }  
+    } 
+
+    public function ajaxApplyCoupon() {
+      // ---
+        // Init
+          $code = $this->request->post['code'];
+          $response = new stdClass();
+        // ---
+
+
+        // Processing
+        if(isset($code)) {
+          $this->load->model('extension/total/coupon');
+          $coupon = $this->model_extension_total_coupon->getCoupon($code);
+          
+          if(!$coupon) {
+            $response->status = 'error';
+            $response->message = 'Указан несуществующий купон';
+            echo json_encode($response);
+            exit;
+          }
+
+          if($coupon) {
+              $this->session->data['coupon'] = $coupon['code'];
+              $this->session->data['coupon_id'] = $coupon['coupon_id'];
+          } else {
+              unset($this->session->data['coupon']);
+              unset($this->session->data['coupon_id']);
+          }
+          
+          // Totals
+          $this->load->model('extension/extension');
+
+          $totals = array();
+          $taxes = $this->cart->getTaxes();
+          $total = 0;
+
+          // Because __call can not keep var references so we put them into an array. 
+          $total_data = array(
+            'totals' => &$totals,
+            'taxes'  => &$taxes,
+            'total'  => &$total
+          );
+
+          $sort_order = array();
+
+          $results = $this->model_extension_extension->getExtensions('total');
+
+          foreach ($results as $key => $value) {
+                  $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+          }
+
+          array_multisort($sort_order, SORT_ASC, $results);
+
+          foreach ($results as $result) {
+            if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('extension/total/' . $result['code']);
+                    $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
+            }
+          }
+
+          $sort_order = array();
+
+          foreach ($totals as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
+          }
+
+          array_multisort($sort_order, SORT_ASC, $totals);  
+          
+          foreach($totals as $total) {
+              if($total['code'] == 'total') {
+                  $total_price = ceil($total["value"]);
+                  
+                  if(isset($this->session->data['coupon_id'])) {
+                      $customer_coupon = $this->customer->getCouponDiscount();
+                  }
+                  $html = '<div>'; // root
+                  if($customer_id = $this->customer->isLogged()) {
+                      $this->load->model('checkout/order');
+                      $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                      $customer_discount = $this->customer->getPersonalDiscount($customer_id, $orders);
+                      $html .= '<div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px; margin-top: -32px;display: none;">';
+                      $html .= 'Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;">' . -1 * (int)$customer_discount . '%</span>';
+                      $html .= '<input type="hidden" id="customer_discount" data-type="P" value="' . (int)$customer_discount . '">';
+                      $html .= '</div>';
+                  }
+
+                  $html .= '<div class="personal-coupon" style="height:50px;  margin-top: -32px; display: none;">';
+                  if(isset($customer_coupon)) {
+                      if($customer_coupon['type'] == 'P') {
+                          $cDcnt = (int)$totals[0]['value']*((int)$customer_coupon['discount']/100);
+                          $html .= 'Текущая скидка <span class="p-o_discount sticker_discount b-d_coupon_circle">' . -1*(int)$customer_coupon['discount'] . '%</span>';
+                      } elseif($customer_coupon['type'] == 'F') {
+                          $cDcnt = (int)$customer_coupon['discount'];
+                          $html .= 'Ваша скидка <span class="c-d_amount">' . (int)$customer_coupon['discount'] . '</span> руб';
+                      }
+                      $html .= '<input type="hidden" id="customer_coupon" data-type="' . $customer_coupon['type'] . '" value="' . (int)$customer_coupon['discount'] . '">';
+                  }
+                  $html .= '</div>';
+                  if(!isset($customer_coupon) && !isset($customer_discount)) {
+                          $html .= '<div class="b-d_coupon" style="display: none;">';
+                          $html .= 'Есть купон на скидку?';
+                          $html .= '</div>';
+                  } else {
+                          $html .= '<div class="b-d_coupon_discount" style="display: none;">';
+                          $html .= 'Увеличить скидку';
+                          $html .= '</div>';
+                  }
+                  $html .= '</div>'; // root
+
+
+                  $response->status = 'success';
+                  $response->message = 'Купон успешно применен';
+
+                  //$response->total = (int)$this->cart->getOrderPrice();
+                  //$response->html = $html;
+                  //$discountValue = (int)$this->cart->getTotal() - $response['total'];
+                  //$response->discountValue = $discountValue;
+
+                  echo json_encode($response);
+                  exit;
+              }
+          }
+        } else {
+          $response->status = 'error';
+          $response->message = 'Введите купон купон';
+          echo json_encode($response);
+          exit;
+        }
+        // ---
+      // ---
+    }
   // ---
 
 
@@ -1201,6 +1378,47 @@ class ControllerAjaxIndex extends Controller {
   // ---
 
 
+  // Other
+    // Call request
+    public function sendCallRequest() {
+        // Init
+          $phone = $this->request->post['phone'];
+          $response = new stdClass();
+        // ---
+
+
+        // Send request
+          $subject = "Заказа обратного звонка eco-u.ru";
+          $message = "
+            <h4> Заказ обратного звонка </h4>
+            <b>Номер телефона:</b> ".$phone."
+          ";
+
+          $headers = "From: noreoly@eco-u.ru\r\n";
+          $headers .= "Reply-To: noreoly@eco-u.ru\r\n";
+          $headers .= "MIME-Version: 1.0\r\n";
+          $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+          $to = $this->config->get('email');
+
+          // Semd email
+          if (mail($to, $subject, $message, $headers)) {
+              $response->status = 'Send to client '.$to;
+          } else {
+              $response->status = 'Do not send to client '.$to;
+          }
+        // ---
+
+
+        $response->status = 'success';
+        $response->message = 'Запрос успешно отправлен.<br>Спасибо!';
+
+        echo json_encode($response);
+        exit;
+    }
+  // ---
+
+
   public function ajaxGetProducts() {
     $this->load->language('ajax/index');
     $this->load->model('catalog/product');
@@ -1476,117 +1694,6 @@ class ControllerAjaxIndex extends Controller {
           $this->model_sms_confirmation->clearOldCodes();
           $this->model_sms_confirmation->sendSMS($phoneFormat, $message);
           $this->response->setOutput(json_encode(Array('status' => 'success')));
-      } else {
-          $this->response->setOutput(json_encode(Array('status' => 'error')));
-      }
-  }
-  
-  public function ajaxApplyCoupon() {
-      $this->load->model('extension/total/coupon');
-      $arRequest = $this->request->post;
-      if(isset($arRequest['code'])) {
-          $coupon = $this->model_extension_total_coupon->getCoupon($arRequest['code']);
-          if($coupon) {
-              $this->session->data['coupon'] = $coupon['code'];
-              $this->session->data['coupon_id'] = $coupon['coupon_id'];
-          } else {
-              unset($this->session->data['coupon']);
-              unset($this->session->data['coupon_id']);
-          }
-          
-          // Totals
-        $this->load->model('extension/extension');
-
-        $totals = array();
-        $taxes = $this->cart->getTaxes();
-        $total = 0;
-
-        // Because __call can not keep var references so we put them into an array. 
-        $total_data = array(
-                'totals' => &$totals,
-                'taxes'  => &$taxes,
-                'total'  => &$total
-        );
-
-        $sort_order = array();
-
-        $results = $this->model_extension_extension->getExtensions('total');
-
-        foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-        }
-
-        array_multisort($sort_order, SORT_ASC, $results);
-
-        foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                        $this->load->model('extension/total/' . $result['code']);
-                        $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-                }
-        }
-
-        $sort_order = array();
-
-        foreach ($totals as $key => $value) {
-                $sort_order[$key] = $value['sort_order'];
-        }
-
-        array_multisort($sort_order, SORT_ASC, $totals);  
-        
-        
-        foreach($totals as $total) {
-            if($total['code'] == 'total') {
-                $total_price = ceil($total["value"]);
-                
-                if(isset($this->session->data['coupon_id'])) {
-                    $customer_coupon = $this->customer->getCouponDiscount();
-                }
-                $html = '<div>'; // root
-                if($customer_id = $this->customer->isLogged()) {
-                    $this->load->model('checkout/order');
-                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                    $customer_discount = $this->customer->getPersonalDiscount($customer_id, $orders);
-                    $html .= '<div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px; margin-top: -32px;display: none;">';
-                    $html .= 'Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;">' . -1 * (int)$customer_discount . '%</span>';
-                    $html .= '<input type="hidden" id="customer_discount" data-type="P" value="' . (int)$customer_discount . '">';
-                    $html .= '</div>';
-                }
-
-                $html .= '<div class="personal-coupon" style="height:50px;  margin-top: -32px; display: none;">';
-                if(isset($customer_coupon)) {
-                    if($customer_coupon['type'] == 'P') {
-                        $cDcnt = (int)$totals[0]['value']*((int)$customer_coupon['discount']/100);
-                        $html .= 'Текущая скидка <span class="p-o_discount sticker_discount b-d_coupon_circle">' . -1*(int)$customer_coupon['discount'] . '%</span>';
-                    } elseif($customer_coupon['type'] == 'F') {
-                        $cDcnt = (int)$customer_coupon['discount'];
-                        $html .= 'Ваша скидка <span class="c-d_amount">' . (int)$customer_coupon['discount'] . '</span> руб';
-                    }
-                    $html .= '<input type="hidden" id="customer_coupon" data-type="' . $customer_coupon['type'] . '" value="' . (int)$customer_coupon['discount'] . '">';
-                }
-                $html .= '</div>';
-                if(!isset($customer_coupon) && !isset($customer_discount)) {
-                        $html .= '<div class="b-d_coupon" style="display: none;">';
-                        $html .= 'Есть купон на скидку?';
-                        $html .= '</div>';
-                } else {
-                        $html .= '<div class="b-d_coupon_discount" style="display: none;">';
-                        $html .= 'Увеличить скидку';
-                        $html .= '</div>';
-                }
-                $html .= '</div>'; // root
-
-                $response = Array(
-                    'status' => 'success',
-                    'total' => (int)$this->cart->getOrderPrice(),
-                    'html' => $html
-                );
-                $response['discountValue'] = (int)$this->cart->getTotal() - $response['total'];
-
-                
-                $this->response->setOutput(json_encode($response));
-                break;
-            }
-        }
       } else {
           $this->response->setOutput(json_encode(Array('status' => 'error')));
       }

@@ -1103,12 +1103,14 @@
                 }
 	});
         var afterLogin = false;
+
         var reopenCart = function() {
             var inst = $('[data-remodal-id="modal-basket"]').remodal();
             inst.open();
             afterLogin = false;
             $(document).unbind('closed', reopenCart);
         };
+
         $('.modal-basket').delegate('#btn-cart-auth', 'click', function(e) {
             e.preventDefault();
             var inst = $('[data-remodal-id=modal]').remodal();
@@ -1124,46 +1126,8 @@
 
             return false;
         });
-        //Авторизация
-        $('.m-p_entrance').click(function(e){
-            e.preventDefault();
-            var phone = $('#phone3').val();
-            var pass = $('#password3').val();
-            if(phone != '' && pass != '') {
-                $('.js-hide_1').submit();
-                $.post('/?route=ajax/index/ajaxLoginByPhone',{
-                    telephone: phone,
-                    password: pass
-                }, function(msg){
-                    if(msg.status == 'success') {
-                        if(afterLogin && afterLogin()) {
-                            return;
-                        }
-                        window.location.href = window.location.pathname;
-                    } else {
-                        $('.m-p_entrance').parent().find('.t-c_input').addClass('input-error_1').find('input').css('border-bottom', '3px solid #D00');
-                        var $errEl = $('.m-p_entrance').parent().find('.login-wrong');
-                        if(msg.locked) {
-                            $errEl.text(msg.locked);
-                        } else {
-                            $errEl.text($errEl.data('wrong-text'));
-                        }
-                        $errEl.show();
-                    }
-                }, "json");
-            }
-        });
-        
-        $('.js-hide_1').find('input').keydown(function(){
-                $('.login-wrong').hide();
-        });
-        
-	$('.m-p_forgot').on( 'click', function(){
-		$('.js-hide_1').closest(".t-c_box").find(".js-hide_1").hide();
-                $('#smscode4').val('')
-		$(".show-forgot").show();
-                $(".m-p_registration.js-reg-2").text('Напомнить пароль');
-	});
+  
+
 	$(".m-p_registration.js-reg-2").on( 'click', function(){
 		$(".password-sent").show();	
 		$(".m-p_registration.js-reg-2").show();
@@ -1269,21 +1233,6 @@
                 ChangeCartQuantity(cartId, quantity);
             }
         });
-        
-        // Apply Coupon
-        $('#m-basket-coupon').bind('ecomodal.onhide', function() {
-            $('#m-basket-coupon input').val('');
-        });
-        $('#m-basket-coupon a').click(function() {
-            $.post('/?route=ajax/index/ajaxApplyCoupon', {
-                code: $('#m-basket-coupon input').val()
-            }, function(msg){
-                if(msg.status == 'success') {
-                    LoadCart();
-                    $('#m-basket-coupon').trigger('ecomodal.hide');
-                }
-            }, "json");
-        });        
         
         /*
         $('.table-basket').find('.table-b_close').click(function(){

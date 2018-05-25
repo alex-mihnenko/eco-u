@@ -30,17 +30,6 @@
             <div class="b-copyright">© <?php echo date("Y", time()); ?> Ecou Shop. All Rights Reserved</div>
         </div>
     </footer>
-            
-    <div class="ecomodal" id="m-basket-coupon">
-        <button data-ecomodal-action="close" class="ecomodal-close"></button>
-        <div class="ecomodal-title mar-b-xl">Введите купон на скидку</div>
-        <div class="pad-md">
-            <input type="text" value="" class="o-i_input d-block mar-b-xl">
-            <div class="pad-md">
-                <a class="m_button d-block mar-b-xl">Применить</a>
-            </div>
-        </div>
-    </div>
     
     <div class="remodal list-modal privacy-policy" data-remodal-id="modal11">
             <button data-remodal-action="close" class="remodal-close"></button>
