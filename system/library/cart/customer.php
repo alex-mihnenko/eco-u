@@ -354,7 +354,7 @@ class Customer {
                 }
             }
             $discount = intval(floor($totalCustomerOutcome/10000));
-            if($discount > 10) $discount = 10;
+            if($discount > $this->config->get('config_max_discount')) $discount = $this->config->get('config_max_discount');
             $this->session->data['personal_discount'] = $discount;
             return $discount;
         }

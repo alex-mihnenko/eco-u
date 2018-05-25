@@ -864,6 +864,12 @@
                     </select>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-max-dicsount"><span data-toggle="tooltip" title="<?php echo $help_max_discount; ?>"><?php echo $entry_max_discount; ?></span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_max_discount" value="<?php echo $config_max_discount; ?>" placeholder="<?php echo $entry_max_discount; ?>" id="input-max-dicsount" class="form-control" />
+                  </div>
+                </div>
               </fieldset>
               <fieldset>
                 <legend><?php echo $text_stock; ?></legend>

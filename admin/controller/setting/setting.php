@@ -110,6 +110,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_login_attempts'] = $this->language->get('entry_login_attempts');
 		$data['entry_account'] = $this->language->get('entry_account');
 		$data['entry_invoice_prefix'] = $this->language->get('entry_invoice_prefix');
+		$data['entry_max_discount'] = $this->language->get('entry_max_discount');
 		$data['entry_cart_weight'] = $this->language->get('entry_cart_weight');
 		$data['entry_checkout_guest'] = $this->language->get('entry_checkout_guest');
 		$data['entry_checkout'] = $this->language->get('entry_checkout');
@@ -192,6 +193,7 @@ class ControllerSettingSetting extends Controller {
 		$data['help_checkout_guest'] = $this->language->get('help_checkout_guest');
 		$data['help_checkout'] = $this->language->get('help_checkout');
 		$data['help_invoice_prefix'] = $this->language->get('help_invoice_prefix');
+		$data['help_max_discount'] = $this->language->get('help_max_discount');
 		$data['help_order_status'] = $this->language->get('help_order_status');
 		$data['help_payment_status'] = $this->language->get('help_payment_status');
 		$data['help_paid_status'] = $this->language->get('help_paid_status');
@@ -781,12 +783,21 @@ class ControllerSettingSetting extends Controller {
 			$data['config_checkout_id'] = $this->config->get('config_checkout_id');
 		}
 
+
 		if (isset($this->request->post['config_invoice_prefix'])) {
 			$data['config_invoice_prefix'] = $this->request->post['config_invoice_prefix'];
 		} elseif ($this->config->get('config_invoice_prefix')) {
 			$data['config_invoice_prefix'] = $this->config->get('config_invoice_prefix');
 		} else {
 			$data['config_invoice_prefix'] = 'INV-' . date('Y') . '-00';
+		}
+		
+		if (isset($this->request->post['config_max_discount'])) {
+			$data['config_max_discount'] = $this->request->post['config_max_discount'];
+		} elseif ($this->config->get('config_max_discount')) {
+			$data['config_max_discount'] = $this->config->get('config_max_discount');
+		} else {
+			$data['config_max_discount'] = 0;
 		}
 
 		if (isset($this->request->post['config_order_status_id'])) {
