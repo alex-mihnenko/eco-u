@@ -366,4 +366,12 @@ class Customer {
             
             return $query->row;
         }
+
+        // ---
+
+        public function getCustomerDiscount($customer_id) {
+            $query = $this->db->query("SELECT `discount` FROM " . DB_PREFIX . "customer WHERE `customer_id` = '{$customer_id}'");
+            if(isset($query->row['discount'])) return $query->row['discount'];
+            else return false;
+        }
 }

@@ -65,6 +65,15 @@
                           </select>
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-discount"><?php echo $entry_discount; ?></label>
+                        <div class="col-sm-10">
+                          <input type="number" name="discount" value="<?php echo $discount; ?>" placeholder="<?php echo $entry_discount; ?>" id="input-discount" class="form-control" />
+                          <?php if ($error_discount) { ?>
+                          <div class="text-danger"><?php echo $error_discount; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                         <div class="col-sm-10">

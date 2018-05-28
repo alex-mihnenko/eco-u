@@ -108,27 +108,39 @@
 			<button data-remodal-action="close" class="remodal-close"></button>
 
 			<ul class="tabs__caption clearfix">
-				<li>Я новый покупатель</li>
-				<li class="active">Я уже покупал</li> 
+				<li class="registration">Я новый покупатель</li>
+				<li class="auth active">Я уже покупал</li> 
 			</ul>
 			<div class="tabs__content">
-				<div class="t-c_box"> <!-- show-registration -->
-					<div class="t-c_title">Зарегистрироваться</div>
+				<div class="t-c_box">
+					<div class="form">
+						<div class="t-c_title">Зарегистрироваться</div>
 
-					<div class="t-c_input input-error_1">
-						<input type="text" placeholder="+7 (___) ___-__-__" class="input" id="phone5">
-						<span class="underline"></span>
+						<form id="form-registration" class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
+							<div class="t-c_input">
+								<input type="text" placeholder="Ваше имя" class="input i-2" name="firstname">
+								<span class="underline"></span>
+							</div>
+							<div class="t-c_input">
+								<input type="text" placeholder="+7 (___) ___-__-__" class="input" name="phone">
+								<span class="underline"></span>
+							</div>
+		                    
+		                    <div class="message-error"></div>
+							<input type="submit" value="Зарегистрироваться" class="m-p_entrance">
+						</form>
 					</div>
-					<div class="t-c_input input-error_1">
-						<input id="password5" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" class="input i-2">
-						<span class="underline"></span>
+
+					<div class="message success">
+						<div class="wrap-table">
+							<div class="wrap-cell">
+								<img src="catalog/view/theme/default/image/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+								<br><br>
+
+								<div class="message-success"></div>
+							</div>
+						</div>
 					</div>
-					<div class="t-c_input t-c_code">
-						<input id="smscode5" type="text" placeholder="Введите SMS код" class="input">
-						<span class="underline"></span>
-					</div>
-					<a href="#" class="submit m-p_registration js-reg" onclick="return false;">Зарегистрироваться</a>
-					<div class="sms-hint"></div>
 				</div>
 			</div>
 

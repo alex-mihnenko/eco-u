@@ -425,8 +425,7 @@ $(document).ready(function() {
 	                    if(data.status == 'success') {
 	                    	console.log('Auth success');
 
-	                        if(afterLogin && afterLogin()) { return; }
-	                        window.location.href = window.location.pathname;
+	                        window.location.href = '/my-account';
 	                    } else {
 	                    	console.log('Auth error');
 
@@ -434,6 +433,50 @@ $(document).ready(function() {
 	                        form.find('.message-error').html( data.message );
 	                        form.find('.message-error').show();
 	                    }
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Recovery
+			$('#form-registration').submit(function(){
+				console.log('Registration init');
+
+				var $form = $(this);
+				var $modal = $(this).parents('.remodal');
+				var firstname = $form.find('[name="firstname"]').val();
+				var telephone = $form.find('[name="phone"]').val();
+
+	            if(telephone != '' ) {
+	                $.post('/?route=ajax/index/registrationCustomer',{firstname: firstname, telephone: telephone}, function(data){
+	                    // ---
+	                    	console.log(data);
+
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$form.find('.t-c_input').addClass('input-error_1');
+	                    			$form.find('.message-error').html(data.message);
+	                    			$form.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			$modal.find('.form').css('display','none');
+
+	                    			$modal.find('.success .message-success').html(data.message);
+	                    			$modal.find('.success .message-success').show();
+	                    			$modal.find('.success').fadeIn('fast');
+
+									setTimeout(function(){
+	                    				$modal.find('.tabs__caption li.auth').trigger('click');
+									},3000);
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
 	                }, "json");
 	            }
 

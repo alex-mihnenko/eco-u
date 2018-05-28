@@ -683,6 +683,7 @@ class ControllerCustomerCustomer extends Controller {
 		$data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
 
 		$data['entry_customer_group'] = $this->language->get('entry_customer_group');
+		$data['entry_discount'] = $this->language->get('entry_discount');
 		$data['entry_firstname'] = $this->language->get('entry_firstname');
 		$data['entry_lastname'] = $this->language->get('entry_lastname');
 		$data['entry_email'] = $this->language->get('entry_email');
@@ -738,6 +739,12 @@ class ControllerCustomerCustomer extends Controller {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
 			$data['error_warning'] = '';
+		}
+
+		if (isset($this->error['discount'])) {
+			$data['error_discount'] = $this->error['discount'];
+		} else {
+			$data['error_discount'] = '';
 		}
 
 		if (isset($this->error['firstname'])) {
@@ -864,6 +871,14 @@ class ControllerCustomerCustomer extends Controller {
 			$data['customer_group_id'] = $customer_info['customer_group_id'];
 		} else {
 			$data['customer_group_id'] = $this->config->get('config_customer_group_id');
+		}
+
+		if (isset($this->request->post['discount'])) {
+			$data['discount'] = $this->request->post['discount'];
+		} elseif (!empty($customer_info)) {
+			$data['discount'] = $customer_info['discount'];
+		} else {
+			$data['discount'] = '';
 		}
 
 		if (isset($this->request->post['firstname'])) {
