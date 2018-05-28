@@ -1014,8 +1014,6 @@ class ControllerAjaxIndex extends Controller {
           }
         // ---
 
-        file_put_contents('_dump.txt', $data['coupon_discount'].' - '.$data['discount_percentage'].'%');
-
         // Checkout
           $this->load->model('checkout/order');
           
