@@ -92,6 +92,10 @@ xxl
 	.link:hover {
 	    text-decoration: none;
 	}
+
+	[data-display="disabled"] {
+		pointer-events: none !important;
+	}
 /* General */
 
 /* Modals */

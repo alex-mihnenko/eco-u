@@ -24,7 +24,11 @@
                         <div class="box-p_o">
                            <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
 
-                            <a href="<?php echo $product['href']; ?>" class="p-o_thumb" target="_blank">
+                            <?php if( $product['description']=='' ) { ?>
+                            <a href="<?php echo $product['href']; ?>" class="p-o_thumb" data-display="disabled">
+                            <?php } else { ?>
+                            <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
+                            <?php } ?>
                                 <img <?php if(!empty($product['thumb'])) echo 'src="/new_design/img/spinner.gif" data-src="'.$product['thumb'].'" class="b-lazy"'; else echo 'src="/image/eco_logo.jpg"'; ?> alt="<?php echo $product['name']; ?>">
                             </a>
 
@@ -41,7 +45,13 @@
 
                                 <div class="p-o_link">
                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                    <a href="<?php echo $product['href']; ?>" itemprop="url" target="_blank"><?php echo $product['name']; ?></a> 
+                                    <?php if( $product['description']=='' ) { ?>
+                                    <a href="<?php echo $product['href']; ?>" itemprop="url" data-display="disabled">
+                                    <?php } else { ?>
+                                    <a href="<?php echo $product['href']; ?>" itemprop="url">
+                                    <?php } ?>
+                                        <?php echo $product['name']; ?>
+                                    </a> 
                                 </div>
 
                                 <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
