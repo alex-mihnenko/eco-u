@@ -3,14 +3,20 @@ var app = {
     enjoyhint: null
   },
   modals: {
+  	basket: null,
   	auth: null,
-  	recovery: null
+  	recovery: null,
+  	coupon: null,
+  	phone: null,
+  	privacy: null
   },
   customer: {}
 }
 
 $(document).ready(function() {
 	// Init
+		initStart();
+
 		// Handlers
 	    	$(window).resize(columnizerInit);
 	    // ---
@@ -36,10 +42,6 @@ $(document).ready(function() {
 				// ---
 			}
 		// ---
-
-		// Masks
-			$('[name="phone"]').mask("+7 (h99) 999-99-99");
-		// ---
 	// ---
 
 	// Scroll
@@ -64,50 +66,43 @@ $(document).ready(function() {
 	// ---
 
 	// Cart
+		app.modals.coupon = $('[data-remodal-id="modal-coupon"]').remodal();
+
 		// Input phone
-			$('.modal-basket').on('keyup change paste', 'input[id="phone2_m_disable"]', function(){
-				$phone = $(this).val().replace(/\D/g,'');
+			$(document).on('keyup change paste', '.modal-basket [name="telephone"]', function(){
+				// ---
+					$phone = $(this).val().replace(/\D/g,'');
 
-				if( $phone.length == 11 ){
-					// ---
-						$.post('.?route=ajax/index/getCustomerByTelephone', {telephone:$phone}, function(data){
-							// ---
+					if( $phone.length == 11 ){
+						$('[name="address"]').focus();
+					}
+				// ---
+			});
+		// ...
 
-							if( data.result == true ){
-								// ---
-									$('input[id="customer-name"]').val(data.customer.firstname);
-									
+		// Input address
+			$(document).on('keyup change paste', '.modal-basket [name="address"]', function(){
+				// ---
+					var $form = $(this).parents('form');
+					var $modal = $(this).parents('.remodal');
 
-									var options = '';
-									$.each(data.addresses, function(key, address){
-										options += '<option value="'+address.address_id+'">'+address.address_1+'</option>';
-									});
+					var address = $(this).val();
+					var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
+					console.log(address);
 
-									if( options != '' ){
-										// ---
-											options += '<option class="new_address" value="0">Новый адрес доставки</option>';
+					if( deliveryprice != 0 ){
+                        $form.find('[name="deliveryprice"]').val('0');
 
-											$('.delivery-address-m').html(''+
-												'<select id="delivery_address_m" name="tech" class="tech ca-i_input ta-center">'+
-													options+
-												'</select>'+
-											'');
-										// ---
-									}
-									else{
-										// ---
-											$('.delivery-address-m').html('<input type="text" class="ca-i_input ta-center" id="delivery_address_m" value="" placeholder="Новый адрес доставки">');
-										// ---
-									}					
-								// ---
-							}
-							else {
-								$('.delivery-address-m').html('<input type="text" class="ca-i_input ta-center" id="delivery_address_m" value="" placeholder="Новый адрес доставки">');
-							}
-							// ---
-						},'json');
-					// ---
-				}
+                        $form.find('.cart-shipping-price .h4').html('');
+                        $form.find('.cart-total-price .h4').html('');
+
+                        $form.find('.cart-shipping-price').hide();
+                        $form.find('.cart-total-price').hide();
+
+
+                        $form.find('button[type="submit"]').html('Рассчитать стоимость доставки');
+					}
+				// ---
 			});
 		// ...
 
@@ -117,6 +112,233 @@ $(document).ready(function() {
 			  	LoadCart();
 			  	console.log('Modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			  }
+			});
+		// ---
+
+		// Privacy
+			// ---
+				app.modals.privacy = $('[data-remodal-id="modal-privacy"]').remodal();
+			// ---
+		// ---
+
+		// Coupon
+			$('.modal-basket').on('click', '[data-action="show-apply-coupon"]', function(){
+				$this = $(this);
+				$modal = $(this).parents('.remodal');
+
+				$this.hide();
+				$modal.find('.coupon .apply').show();
+			});
+
+			$('.modal-basket').on('click', '[data-action="send-apply-coupon"]', function(){
+				console.log('Сoupon init');
+
+				var $modal = $(this).parents('.remodal');
+				var coupon = $modal.find('input[name="coupon"]').val();
+
+	            if(coupon != '' ) {
+	                $.post('/?route=ajax/index/ajaxApplyCoupon',{ code: coupon}, function(data){
+	                    // ---
+	                    	console.log(data);
+
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$modal.find('.coupon .message-error').html(data.message);
+	                    			$modal.find('.coupon .message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			LoadCart();
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
+	                }, "json");
+	            }
+
+				return false;
+			});
+
+			$('#form-coupon').submit(function(){
+				console.log('Сoupon init');
+
+				var $form = $(this);
+				var $modal = $(this).parents('.remodal');
+				var coupon = $form.find('input[name="coupon"]').val();
+
+	            if(coupon != '' ) {
+	                $.post('/?route=ajax/index/ajaxApplyCoupon',{ code: coupon}, function(data){
+	                    // ---
+	                    	console.log(data);
+
+	                    	if( data.status == 'error' ) {
+	                    		// ---
+	                    			$form.find('.t-c_input').addClass('input-error_1');
+	                    			$form.find('.message-error').html(data.message);
+	                    			$form.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			LoadCart();
+									setTimeout(function(){ app.modals.coupon.close(); },1000);
+									setTimeout(function(){ app.modals.basket.open(); },1500);
+	                    		// ---
+	                    	}
+
+							return false;
+	                    // ---
+	                }, "json");
+	            }
+
+				return false;
+			});
+		// ---
+
+		// Steps
+			$('.modal-basket').on('click', '[data-step]', function(){
+				$this = $(this);
+				$modal = $(this).parents('.remodal');
+				$step = parseInt($(this).attr('data-step'));
+
+				$modal.find('.steps .step').hide();
+				$modal.find('.steps .step').attr('data-display','default');
+				$modal.find('.steps .step[data-marker="'+$step+'"]').show();
+				$modal.find('.steps .step[data-marker="'+$step+'"]').attr('data-display','active');
+
+				if($step > 1){	
+					$modal.find('button.back').attr('data-step',($step-1));
+					$modal.find('button.back').show();
+				}
+				else{
+					$modal.find('button.back').hide();
+				}
+			});
+		// ---
+
+		// Form
+            $(document).on('submit', '.modal-basket form', function(){
+				// Init
+					var $form = $(this);
+					var $modal = $(this).parents('.remodal');
+
+					var order_id = parseInt($form.find('[name="order_id"]').val());
+					var firstname = $form.find('[name="firstname"]').val();
+					var telephone = $form.find('[name="telephone"]').val();
+					var address = $form.find('[name="address"]').val();
+
+					var payment_method = $form.find('[name="payment_method"]').val();
+					var payment_code = $form.find('[name="payment_code"]').val();
+					var total = parseInt($form.find('[name="total"]').val());
+					var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
+
+					var date = $form.find('#delivery_date_m').val();
+            		var time = $form.find('#delivery_time_m').val();
+				// ---
+
+				// Send request
+					if( deliveryprice == 0 ){
+						// Get shipping price
+							$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
+			                	// ---
+			                        yaCounter33704824.reachGoal('checkout-delivery');
+			                        gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Create' });
+
+			                        if(data.status == 'success') {
+			                        	// ---
+				                            if((data.order_id !== undefined) && (data.order_id > 0)) {
+				                                $form.find('[name="order_id"]').val(data.order_id);
+				                            }
+
+				                            $form.find('[name="address"]').val(data.address);
+				                            $form.find('[name="deliveryprice"]').val(data.deliveryprice);
+
+				                            $form.find('.cart-shipping-price .h4').html(data.deliveryprice+' рублей');
+				                            $form.find('.cart-total-price .h4').html((total+data.deliveryprice)+' рублей');
+
+				                            $form.find('.cart-shipping-price').show();
+				                            $form.find('.cart-total-price').show();
+
+
+				                            $form.find('button[type="submit"]').html('Далее');
+			                        	// ---
+			                        }
+			                        else{
+			                        	alert(data.message);
+			                        }
+			                	// ---
+			                }, "json");
+						// ---
+					}
+					else {
+						// Confirm
+							$form.find('button[type="submit"]').html('Подождите');
+							$form.find('button[type="submit"]').attr('disabled','true');
+							$form.find('button[type="submit"]').attr('type','button');
+
+							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
+			                	// ---
+									yaCounter33704824.reachGoal('checkout-confim');
+			                        gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Confirm' });
+
+			                        if(data.status == 'success') {
+			                        	// ---
+						                    // Show success
+						                    $modal.find('[data-marker="order-id"]').html(data.order_id);
+
+						                    
+											$step = parseInt($modal.find('.steps .step[data-display="active"]').attr('data-marker'));
+
+											$modal.find('.steps .step').hide();
+											$modal.find('.steps .step').attr('data-display','default');
+											$modal.find('.steps .step[data-marker="'+($step+1)+'"]').show();
+											$modal.find('.steps .step[data-marker="'+($step+1)+'"]').attr('data-display','active');
+											$modal.find('button.back').hide();
+
+
+											$modal.find('.step-last[data-marker="'+payment_code+'"]').show();
+				                            
+				                            if(typeof data.redirect != 'undefined' && data.redirect != '' ) {
+				                            	// Redirect to online payment
+				                            	setTimeout(function(){
+						                        	document.location = data.redirect;
+				                            	}, 3500);
+						                    } else {
+						                    	// Show success checkout
+						                        yaCounter33704824.reachGoal('checkout-success');
+						                    }
+			                        	// ---
+			                        }
+			                        else{
+			                        	alert(data.message);
+			                        }
+			                	// ---
+			                }, "json");
+						// ---
+					}
+				// ---
+
+				return false;
+			});
+
+
+            $(document).on('click', '.modal-basket .payment-method', function(){
+				// ---
+					var $this = $(this);
+					var $form = $(this).parents('form');
+					var $container = $(this).parents('.payment-methods');
+
+					var title = $this.attr('data-title');
+					var code = $this.attr('data-code');
+
+					$container.find('.payment-method').attr('data-display','default');
+					$this.attr('data-display','active');
+
+					$form.find('[name="payment_method"]').val(title);
+					$form.find('[name="payment_code"]').val(code);
+				// ---
 			});
 		// ---
 	// ---
@@ -403,7 +625,6 @@ $(document).ready(function() {
 		app.modals.basket = $('[data-remodal-id="modal-basket"]').remodal();
 		app.modals.auth = $('[data-remodal-id="modal"]').remodal();
 		app.modals.recovery = $('[data-remodal-id="modal-recovery"]').remodal();
-		app.modals.coupon = $('[data-remodal-id="modal-coupon"]').remodal();
 		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();
 
 		$('.remodal').on('focus', '.input-error_1 input', function(){
@@ -541,43 +762,6 @@ $(document).ready(function() {
 			});
 		// ---
 
-		// Coupon
-			$('#form-coupon').submit(function(){
-				console.log('Сoupon init');
-
-				var $form = $(this);
-				var $modal = $(this).parents('.remodal');
-				var coupon = $form.find('input[name="coupon"]').val();
-
-	            if(coupon != '' ) {
-	                $.post('/?route=ajax/index/ajaxApplyCoupon',{ code: coupon}, function(data){
-	                    // ---
-	                    	console.log(data);
-
-	                    	if( data.status == 'error' ) {
-	                    		// ---
-	                    			$form.find('.t-c_input').addClass('input-error_1');
-	                    			$form.find('.message-error').html(data.message);
-	                    			$form.find('.message-error').show();
-	                    		// ---
-	                    	}
-	                    	else{
-	                    		// ---
-	                    			LoadCart();
-									setTimeout(function(){ app.modals.coupon.close(); },1000);
-									setTimeout(function(){ app.modals.basket.open(); },1500);
-	                    		// ---
-	                    	}
-
-							return false;
-	                    // ---
-	                }, "json");
-	            }
-
-				return false;
-			});
-		// ---
-
 		// Phone
 			$('#form-phone').submit(function(){
 				console.log('Phone init');
@@ -645,8 +829,111 @@ $(document).ready(function() {
 		// ---
 	// ---
 
+	// Components
+		// Form
+			$(document).on('click', '.form-checkbox', function(){
+				// ---
+					$this = $(this);
+					$form = $(this).parents('form');
+					$privacy = $(this).parents('.privacy');
+
+					if( $this.attr('data-checked') == 'true' ){
+						$this.attr('data-checked','false');
+						$this.find('input').attr('checked', false);
+
+						if( $privacy.length > 0 ){ $form.find('[type="submit"]').attr('disabled','true'); }
+					}
+					else{
+						$this.attr('data-checked','true');
+						$this.find('input').attr('checked', true);
+
+						if( $privacy.length > 0 ){ $form.find('[type="submit"]').removeAttr('disabled'); }
+					}
+
+					console.log($privacy.length);
+				// ---
+			});
+		// ---
+	// ---
 });
 
+// General
+	function initStart(){
+		$('[name="phone"]').mask("+7 (h99) 999-99-99");
+		$('[name="telephone"]').mask("+7 (h99) 999-99-99");
+	}
+// ---
+
+// Cart
+	function initSuggestionsDadata(){
+		// ---
+			$('.modal-basket [name="address"]').suggestions({
+                token: "a4ad0e938bf22c2ffbf205a4935ef651fc92ed52",
+                type: "ADDRESS",
+                count: 5,
+                /* Вызывается, когда пользователь выбирает одну из подсказок */
+                onSelect: function(suggestion) {
+                    console.log(suggestion);
+                }
+            });
+		// ---
+	}
+
+	function LoadCart() {
+		// ---
+		    $.get('/?route=ajax/index/ajaxGetCart', {}, function(data){
+		    	// ---
+		        
+		            var totalPrice = data.total;
+		            var totalPositions = data.count;
+		            
+		            var $html = $(data.html);
+		            
+		            $('.modal-basket').html($html.html());
+		            $('.cart-price-total').html(totalPrice);
+
+
+		            if(totalPrice == 0) {
+		                $('.b-basket, .b-basket_mobile').find('.b-b_price').html('');
+		                $('.b-basket, .b-basket_mobile').find('.b-b_quantity').hide();
+		            } else {
+		                $('.b-basket, .b-basket_mobile').find('.b-b_price').html(totalPrice + ' <span>руб</span>');
+		                $('.b-basket, .b-basket_mobile').find('.b-b_quantity').show();
+		            }
+		            
+		            
+		            $('.b-basket, .b-basket_mobile').find('.b-b_quantity').html(totalPositions);
+
+		            $.get('/?route=ajax/index/ajaxGetOrderPrice', {}, function(data){
+		                if(data.status == 'success') {
+		                    $('#form-customer').find('.o-i_price').html(data.price + ' <span>руб</span>');
+		                    //$('.b-discount .c-d_amount').html(data.discount);
+		                } else {
+		                    console.log('Ошибка расчета цены');
+		                }
+		            }, "json");
+
+
+		            var $items = $('.modal-basket .tech:not(.dd-ready)');
+
+			        if($items.length) {
+	                    $items.each(function() {
+	                        var $item = $(this);
+	                        if($item.hasClass('dd-ready')) return true;
+	                        $item.addClass('dd-ready');
+	                        $item.selectric();
+	                    });
+			        }
+
+			        // Init
+			        	initStart();
+						initSuggestionsDadata();
+			        // ---
+				// ---
+		    }, "json");
+		// ---
+	}
+// ---
 
 // Catalog
 	function columnizerInit() {

@@ -1,272 +1,316 @@
 <?php
 class ControllerCommonCart extends Controller {
     
-        public function index($options = array()) {
-                $this->load->language('checkout/cart');
-            
-                $data['has_success'] = !empty($this->session->data['success_order_id']);
-                if(empty($options['empty'])) {
-                    $data['page_cart'] = $this->cart();
-                    $data['page_customer'] = $this->customer();
-                    $data['page_payment'] = $this->payment();
-                    $data['page_success'] = $this->success();
-                } else {
-                    $data['page_cart'] = '';
-                    $data['page_customer'] = '';
-                    $data['page_payment'] = '';
-                    $data['page_success'] = '';
-                }
-                
-                return $this->load->view('common/cart', $data);
-        }
+    public function index($options = array()) {
+            $this->load->language('checkout/cart');
         
-        private function customer() {
-                $this->load->model('checkout/order');
+            $data['has_success'] = !empty($this->session->data['success_order_id']);
+            if(empty($options['empty'])) {
+                $data['page_cart'] = $this->cart();
+                $data['page_customer'] = $this->customer();
+                $data['page_payment'] = $this->payment();
+                $data['page_success'] = $this->success();
+            } else {
+                $data['page_cart'] = '';
+                $data['page_customer'] = '';
+                $data['page_payment'] = '';
+                $data['page_success'] = '';
+            }
             
-                // Totals
-                $this->load->model('extension/extension');
-
-                $totals = array();
-                $taxes = $this->cart->getTaxes();
-                $total = 0;
-
-                // Because __call can not keep var references so we put them into an array. 			
-                $total_data = array(
-                        'totals' => &$totals,
-                        'taxes'  => &$taxes,
-                        'total'  => &$total
-                );
-
-                // Display prices
-                if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-                        $sort_order = array();
-
-                        $results = $this->model_extension_extension->getExtensions('total');
-
-                        foreach ($results as $key => $value) {
-                                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-                        }
-
-                        array_multisort($sort_order, SORT_ASC, $results);
-
-                        foreach ($results as $result) {
-                                if ($this->config->get($result['code'] . '_status')) {
-                                        $this->load->model('extension/total/' . $result['code']);
-
-                                        // We have to put the totals in an array so that they pass by reference.
-                                        $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-                                }
-                        }
-
-                        $sort_order = array();
-
-                        foreach ($totals as $key => $value) {
-                                $sort_order[$key] = $value['sort_order'];
-                        }
-
-                        array_multisort($sort_order, SORT_ASC, $totals);
-                }
-
-                $data['totals'] = array();
-
-                foreach ($totals as $total) {
-                        $data['totals'][] = array(
-                                'title' => $total['title'],
-                                'text'  => $this->currency->format($total['value'], $this->session->data['currency'])
-                        );
-                }
-
-
-                $data['customer'] = Array(
-                    'phone' => $this->customer->getTelephone(),
-                    'first_name' => $this->customer->getFirstName()
-                );
-                
-                if($customer_id = $this->customer->isLogged()) {
-                        $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                        $data['customer_discount'] = $this->customer->getPersonalDiscount($customer_id, $orders);
-                }
-                if(isset($this->session->data['coupon_id'])) {
-                    $data['customer_coupon'] = $this->customer->getCouponDiscount();
-                }
-                        
-                $data['order_price'] = $this->cart->getOrderPrice();
-                
-                
-                // Shipping
-                $date = new DateTime();
-                $mRus = Array(
-                    '01' => 'января',
-                    '02' => 'февраля',
-                    '03' => 'марта',
-                    '04' => 'апреля',
-                    '05' => 'мая',
-                    '06' => 'июня',
-                    '07' => 'июля',
-                    '08' => 'августа',
-                    '09' => 'сентября',
-                    '10' => 'октября',
-                    '11' => 'ноября',
-                    '12' => 'декабря'
-                );
-                
-                $order_time = explode(':',$this->config->get('config_order_time'));
-                
-                $data['delivery_date'] = Array();
-                if(((int)$date->format('H') < $order_time[0]) || ((int)$date->format('H') == $order_time[0] && (int)$date->format('i') < $order_time[1])) {                
-                    $date->add(new DateInterval('P1D'));
-                    $data['delivery_date'][] = Array(
-                        'format' => $date->format('d.m.Y'),
-                        'text' => 'Завтра '.$date->format('d')
-                    );
-                    $date->add(new DateInterval('P1D'));
-                } else {
-                    $date->add(new DateInterval('P2D'));
-                }
-                $data['delivery_date'][] = Array(
-                    'format' => $date->format('d.m.Y'),
-                    'text' => 'Послезавтра '.$date->format('d')
-                );
-                for($i=0;$i<5;$i++) {
-                    $date->add(new DateInterval('P1D'));
-                    $data['delivery_date'][] = Array(
-                        'format' => $date->format('d.m.Y'),
-                        'text' => $date->format('d').' '.$mRus[$date->format('m')]
-                    );
-                }
-                
-                $addresses = $this->customer->getAddresses();
-                $arAddress = Array();
-                if(!empty($addresses)) {
-                    foreach($addresses as $address) {
-                        $arAddress[] = Array(
-                            'address_id' => $address['address_id'],
-                            'value' => $address['address_1']
-                        );
-                    }
-                } else {
-                    $arAddress = Array();
-                }
-                $data['delivery_address'] = $arAddress;
-			
-                $intervals = $this->config->get('config_delivery_intervals');
-                if(!empty($intervals)) {
-                    $data['delivery_intervals'] = explode(',',$intervals);
-                } else {
-                    $data['delivery_intervals'] = array();
-                }
-                
-                
-                return $this->load->view('common/cart_page_customer', $data);
-        }
+            return $this->load->view('common/cart', $data);
+    }
     
-        private function payment() {
-            // Payment Methods
-            $method_data = array();
-
+    private function customer() {
+            $this->load->model('checkout/order');
+        
+            // Totals
             $this->load->model('extension/extension');
 
-            $results = $this->model_extension_extension->getExtensions('payment');
+            $totals = array();
+            $taxes = $this->cart->getTaxes();
+            $total = 0;
 
-            $recurring = $this->cart->hasRecurringProducts();
+            // Because __call can not keep var references so we put them into an array. 			
+            $total_data = array(
+                    'totals' => &$totals,
+                    'taxes'  => &$taxes,
+                    'total'  => &$total
+            );
 
-            $total = $this->cart->getTotal();
-            foreach ($results as $result) {
-                    if ($this->config->get($result['code'] . '_status')) {
-                            $this->load->model('extension/payment/' . $result['code']);
+            // Display prices
+            if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+                $sort_order = array();
 
-                            $method = $this->{'model_extension_payment_' . $result['code']}->getMethod(array('country_id' => 0, 'zone_id' => 0), $total);
+                $results = $this->model_extension_extension->getExtensions('total');
 
-                            if ($method) {
-                                    $method['image'] = '/new_design/img/payment/' . $result['code'] . '.png';
-                                    if ($recurring) {
-                                            if (property_exists($this->{'model_extension_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_extension_payment_' . $result['code']}->recurringPayments()) {
-                                                    $method_data[$result['code']] = $method;
-                                            }
-                                    } else {
-                                            $method_data[$result['code']] = $method;
-                                    }
-                            }
-                    }
-            }
-
-            $sort_order = array();
-
-            foreach ($method_data as $key => $value) {
-                    $sort_order[$key] = $value['sort_order'];
-            }
-
-            array_multisort($sort_order, SORT_ASC, $method_data);
-
-            $data['payment_methods'] = $method_data;
-            
-            return $this->load->view('common/cart_page_payment', $data);
-        }
-    
-        private function success() {
-            //$this->session->data['success_order_id'] = 12345;
-            if(!empty($this->session->data['success_order_id'])) {
-                    $success_order_id = $this->session->data['success_order_id'];
-                    unset($this->session->data['success_order_id']);
-            } else {
-                    $success_order_id = 0;
-            }
-
-            $data['order_id'] = $success_order_id;
-
-            return $this->load->view('common/cart_page_success', $data);
-        }
-        
-        private function cart() {
-                $totalPrice = 0;
-                $totalPositions = 0;
-                
-                $data['products'] = Array();
-                if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
-                        $this->load->model('tool/image');
-                        $products = $this->cart->getProducts();
-                        foreach($products as $i => $product) {
-                            
-                            if($product['weight_variants'] !== '') {
-                                $weightVariants = explode(',', $product['weight_variants']);
-                                $weightVariant = $weightVariants[$product['weight_variant']];
-                                $wwLabel = '(' . $weightVariants[$product['weight_variant']] . ' ' . $product['weight_class'] . ')';
-                                $product['name'] = $product['name'] . ' ' . $wwLabel;
-                            } else {
-                                $weightVariant = 1;
-                            }
-                            $totalPrice += round($product['total']);
-                            
-                            $product['total'] = floor($product['total']);
-                            $product['weightVariant'] = $weightVariant;
-                            
-                            $product['quantity'] = $product['quantity'];
-                            
-                            
-                            if ($product['image_preview']) {
-                                    $image = '/image/' . $product['image_preview'];
-                            } else {
-                                    $image = $this->model_tool_image->resize('eco_logo.png', 257, 240);
-                            }
-
-                            $product['image'] = $image;
-                            
-                            $product['link_remove'] = '/?route=ajax/index/ajaxRemoveCartProduct&cart_id='.$product['cart_id'];
-                            $data['products'][] = $product;
-                        }
-                        
-                        $data['error_total'] = floor($totalPrice) < 1000;
-                        
-                        $data['islogged'] = $this->customer->isLogged();
-                        $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
-                        $data['discount'] = number_format(floor($totalPrice) - floor($this->cart->getOrderPrice()), 0, '.', ' ');
-                        
-                } else {
-                        return false;
+                foreach ($results as $key => $value) {
+                        $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
                 }
+
+                array_multisort($sort_order, SORT_ASC, $results);
+
+                foreach ($results as $result) {
+                        if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('extension/total/' . $result['code']);
+
+                                // We have to put the totals in an array so that they pass by reference.
+                                $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
+                        }
+                }
+
+                $sort_order = array();
+
+                foreach ($totals as $key => $value) {
+                        $sort_order[$key] = $value['sort_order'];
+                }
+
+                array_multisort($sort_order, SORT_ASC, $totals);
+            }
+
+            $data['totals'] = array();
+
+            foreach ($totals as $total) {
+                    $data['totals'][] = array(
+                            'title' => $total['title'],
+                            'text'  => $this->currency->format($total['value'], $this->session->data['currency'])
+                    );
+            }
+
+
+            $data['customer'] = Array(
+                'phone' => $this->customer->getTelephone(),
+                'first_name' => $this->customer->getFirstName()
+            );
             
-                return $this->load->view('common/cart_page_cart', $data);
+            if($customer_id = $this->customer->isLogged()) {
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                    $data['customer_discount'] = $this->customer->getPersonalDiscount($customer_id, $orders);
+            }
+            if(isset($this->session->data['coupon_id'])) {
+                $data['customer_coupon'] = $this->customer->getCouponDiscount();
+            }
+                    
+            $data['order_price'] = $this->cart->getOrderPrice();
+            
+            
+            // Shipping
+            $date = new DateTime();
+            $mRus = Array(
+                '01' => 'января',
+                '02' => 'февраля',
+                '03' => 'марта',
+                '04' => 'апреля',
+                '05' => 'мая',
+                '06' => 'июня',
+                '07' => 'июля',
+                '08' => 'августа',
+                '09' => 'сентября',
+                '10' => 'октября',
+                '11' => 'ноября',
+                '12' => 'декабря'
+            );
+            
+            $order_time = explode(':',$this->config->get('config_order_time'));
+            
+            $data['delivery_date'] = Array();
+            if(((int)$date->format('H') < $order_time[0]) || ((int)$date->format('H') == $order_time[0] && (int)$date->format('i') < $order_time[1])) {                
+                $date->add(new DateInterval('P1D'));
+                $data['delivery_date'][] = Array(
+                    'format' => $date->format('d.m.Y'),
+                    'text' => 'Завтра '.$date->format('d')
+                );
+                $date->add(new DateInterval('P1D'));
+            } else {
+                $date->add(new DateInterval('P2D'));
+            }
+            $data['delivery_date'][] = Array(
+                'format' => $date->format('d.m.Y'),
+                'text' => 'Послезавтра '.$date->format('d')
+            );
+            for($i=0;$i<5;$i++) {
+                $date->add(new DateInterval('P1D'));
+                $data['delivery_date'][] = Array(
+                    'format' => $date->format('d.m.Y'),
+                    'text' => $date->format('d').' '.$mRus[$date->format('m')]
+                );
+            }
+            
+            $addresses = $this->customer->getAddresses();
+            $arAddress = Array();
+            if(!empty($addresses)) {
+                foreach($addresses as $address) {
+                    $arAddress[] = Array(
+                        'address_id' => $address['address_id'],
+                        'value' => $address['address_1']
+                    );
+                }
+            } else {
+                $arAddress = Array();
+            }
+            $data['delivery_address'] = $arAddress;
+		
+            $intervals = $this->config->get('config_delivery_intervals');
+            if(!empty($intervals)) {
+                $data['delivery_intervals'] = explode(',',$intervals);
+            } else {
+                $data['delivery_intervals'] = array();
+            }
+
+
+
+            // Payments
+                $method_data = array();
+
+                $this->load->model('extension/extension');
+
+                $results = $this->model_extension_extension->getExtensions('payment');
+
+                $recurring = $this->cart->hasRecurringProducts();
+
+                $total = $this->cart->getTotal();
+                $data['total'] = $total;
+
+                foreach ($results as $result) {
+                        if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('extension/payment/' . $result['code']);
+
+                                $method = $this->{'model_extension_payment_' . $result['code']}->getMethod(array('country_id' => 0, 'zone_id' => 0), $total);
+
+                                if ($method) {
+                                        $method['image'] = '/catalog/view/theme/default/img/' . $result['code'] . '.svg';
+                                        if ($recurring) {
+                                                if (property_exists($this->{'model_extension_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_extension_payment_' . $result['code']}->recurringPayments()) {
+                                                        $method_data[$result['code']] = $method;
+                                                }
+                                        } else {
+                                                $method_data[$result['code']] = $method;
+                                        }
+                                }
+                        }
+                }
+
+                $sort_order = array();
+
+                foreach ($method_data as $key => $value) {
+                        $sort_order[$key] = $value['sort_order'];
+                }
+
+                array_multisort($sort_order, SORT_DESC, $method_data);
+
+                $data['payment_methods'] = $method_data;
+            // ---
+            
+            
+            return $this->load->view('common/cart_page_customer', $data);
+    }
+
+    private function payment() {
+        // Payment Methods
+        $method_data = array();
+
+        $this->load->model('extension/extension');
+
+        $results = $this->model_extension_extension->getExtensions('payment');
+
+        $recurring = $this->cart->hasRecurringProducts();
+
+        $total = $this->cart->getTotal();
+        foreach ($results as $result) {
+                if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('extension/payment/' . $result['code']);
+
+                        $method = $this->{'model_extension_payment_' . $result['code']}->getMethod(array('country_id' => 0, 'zone_id' => 0), $total);
+
+                        if ($method) {
+                                $method['image'] = '/new_design/img/payment/' . $result['code'] . '.png';
+                                if ($recurring) {
+                                        if (property_exists($this->{'model_extension_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_extension_payment_' . $result['code']}->recurringPayments()) {
+                                                $method_data[$result['code']] = $method;
+                                        }
+                                } else {
+                                        $method_data[$result['code']] = $method;
+                                }
+                        }
+                }
         }
+
+        $sort_order = array();
+
+        foreach ($method_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $method_data);
+
+        $data['payment_methods'] = $method_data;
+        
+        return $this->load->view('common/cart_page_payment', $data);
+    }
+
+    private function success() {
+        //$this->session->data['success_order_id'] = 12345;
+        if(!empty($this->session->data['success_order_id'])) {
+                $success_order_id = $this->session->data['success_order_id'];
+                unset($this->session->data['success_order_id']);
+        } else {
+                $success_order_id = 0;
+        }
+
+        $data['order_id'] = $success_order_id;
+
+        return $this->load->view('common/cart_page_success', $data);
+    }
+    
+    private function cart() {
+            $totalPrice = 0;
+            $totalPositions = 0;
+            
+            $data['products'] = Array();
+            if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
+                    $this->load->model('tool/image');
+                    $products = $this->cart->getProducts();
+                    foreach($products as $i => $product) {
+                        
+                        if($product['weight_variants'] !== '') {
+                            $weightVariants = explode(',', $product['weight_variants']);
+                            $weightVariant = $weightVariants[$product['weight_variant']];
+                            $wwLabel = '(' . $weightVariants[$product['weight_variant']] . ' ' . $product['weight_class'] . ')';
+                            $product['name'] = $product['name'] . ' ' . $wwLabel;
+                        } else {
+                            $weightVariant = 1;
+                        }
+                        $totalPrice += round($product['total']);
+                        
+                        $product['total'] = floor($product['total']);
+                        $product['weightVariant'] = $weightVariant;
+                        
+                        $product['quantity'] = $product['quantity'];
+                        
+                        
+                        if ($product['image_preview']) {
+                                $image = '/image/' . $product['image_preview'];
+                        } else {
+                                $image = $this->model_tool_image->resize('eco_logo.png', 257, 240);
+                        }
+
+                        $product['image'] = $image;
+                        
+                        $product['link_remove'] = '/?route=ajax/index/ajaxRemoveCartProduct&cart_id='.$product['cart_id'];
+                        $data['products'][] = $product;
+                    }
+                    
+                    $data['error_total'] = floor($totalPrice) < 1000;
+                    
+                    $data['islogged'] = $this->customer->isLogged();
+                    $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
+                    $data['discount'] = number_format(floor($totalPrice) - floor($this->cart->getOrderPrice()), 0, '.', ' ');
+                    
+            } else {
+                    return false;
+            }
+        
+            return $this->load->view('common/cart_page_cart', $data);
+    }
         
 	public function index_bak() {
 		$this->load->language('common/cart');

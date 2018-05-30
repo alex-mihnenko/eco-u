@@ -1,40 +1,36 @@
 <?php if($page_cart || $has_success) { ?>
-<div class="remodal modal-basket" data-remodal-id="modal-basket">
-<?php if(0) { ?>
-        <button class="remodal-clear">Очистить корзину</button>
-<?php } ?>
-        <button data-remodal-action="close" class="remodal-close"></button>
-        
-        <ul class="liTabs_cart t_wrap t_wrap_2">
-            <li class="t_item t_item_2 t_item_p1">
-                <a class="t_link t_link_2" href="#"></a>
-                <div class="t_content"><?php echo $page_cart; ?></div>
-            </li>
-            <li class="t_item t_item_2 t_item_p2">
-                <a class="t_link t_link_2" href="#"></a>
-                <div class="t_content"><?php echo $page_customer; ?></div>
-            </li>
-            <li class="t_item t_item_2 t_item_p3">
-                <a class="t_link t_link_2" href="#"></a>
-                <div class="t_content"><?php echo $page_payment; ?></div>
-            </li>
-            <li class="t_item t_item_2 t_item_p4">
-                <a class="t_link t_link_2" href="#"></a>
-                <div class="t_content"><?php echo $page_success; ?></div>
-            </li>
-        </ul>
-        
-</div>
+  <div class="remodal modal-basket" data-remodal-id="modal-basket">
+    <button data-remodal-action="close" class="remodal-close"></button>
+    
+    <button class="back"> назад </button>
+
+    <div class="body">
+      <div class="steps">
+          <div class="step" data-marker="1" data-display="active">
+              <?php echo $page_cart; ?>
+          </div>
+          <div class="step" data-marker="2">
+              <?php echo $page_customer; ?>
+          </div>
+          <div class="step" data-marker="3">
+              <?php echo $page_success; ?>
+          </div>
+      </div>  
+    </div>
+    
+  </div>
 <?php } else { ?>
-<div class="remodal modal-basket" data-remodal-id="modal-basket">
-        <button data-remodal-action="close" class="remodal-close"></button>
-        <div class="m-basket_border">
-                <div class="m-basket_title">Ваша корзина пуста</div>
-                <div class="m-basket_title-message">Добавьте сюда свежие и полезные продукты</div>
-        </div>
-        <div class="m-basket_padding">
-        </div>
-</div>
+  <div class="remodal modal-basket" data-remodal-id="modal-basket">
+    <button data-remodal-action="close" class="remodal-close"></button>
+
+    <div class="m-basket_border">
+      <div class="m-basket_title">Ваша корзина пуста</div>
+      <div class="m-basket_title-message">Добавьте сюда свежие и полезные продукты</div>
+    </div>
+
+    <div class="m-basket_padding">
+    </div>
+  </div>
 <?php } ?>
 
 

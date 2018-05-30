@@ -636,10 +636,6 @@ class ControllerAjaxIndex extends Controller {
             $json = Array('status' => 'error');
           }
           
-          if($is_guest) {
-            $this->customer->logout();
-          }
-          
           if($return) {
             return $order_id;
           }
@@ -669,9 +665,8 @@ class ControllerAjaxIndex extends Controller {
           $firstname = $this->request->post['firstname'];
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
-          $price = (int)$this->request->post['price'];
+          $total = (int)$this->request->post['total'];
           $address = $this->request->post['address'];
-          $address_new = $this->request->post['address_new'];
 
           $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
           
@@ -786,7 +781,7 @@ class ControllerAjaxIndex extends Controller {
             // ---
               if ( isset($response->methods['free']) ){
                 // ---
-                  if( $price >= $response->methods['free']['cost'] ){
+                  if( $total >= $response->methods['free']['cost'] ){
                     $response->deliveryprice = 0;
                     $response->method = 'free';
                   }
@@ -809,7 +804,7 @@ class ControllerAjaxIndex extends Controller {
             // ---
               if ( isset($response->methods['free']) ){
                 // ---
-                  if( $price >= $response->methods['free']['cost'] ){
+                  if( $total >= $response->methods['free']['cost'] ){
                     // ---
                       if( $response->tobeltway != null ){
                         $response->deliveryprice = (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
@@ -883,14 +878,14 @@ class ControllerAjaxIndex extends Controller {
           $firstname = $this->request->post['firstname'];
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
-          $price = (int)$this->request->post['price'];
+          $total = (int)$this->request->post['total'];
           $address = $this->request->post['address'];
           $comment = $this->request->post['comment'];
           
           $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
 
-          $payment_method = $this->request->post['payment_method_title'];
-          $payment_code = $this->request->post['payment_method_code'];
+          $payment_method = $this->request->post['payment_method'];
+          $payment_code = $this->request->post['payment_code'];
 
           $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
           $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
@@ -954,7 +949,7 @@ class ControllerAjaxIndex extends Controller {
             
         // Set data
           $data = Array(
-              'price' => $price,
+              'price' => $total,
               'address' => $this->session->data['shipping_address_1'],
               'comment' => $comment,
               'delivery_price' => $this->session->data['shipping_price'],
@@ -1019,7 +1014,7 @@ class ControllerAjaxIndex extends Controller {
           
           $this->model_checkout_order->setPayment($order_id, $payment_code);
 
-          $payment_method_online = $this->request->post['payment_method_code'] == 'cod' ? false : true;
+          $payment_method_online = $payment_code == 'cod' ? false : true;
           
           if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
             // ---
