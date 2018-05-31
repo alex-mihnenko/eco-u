@@ -273,7 +273,7 @@
 		</div>
 
 
-		<div class="remodal modal-privacy modal-xl" data-remodal-id="modal-privacy">
+		<div class="remodal modal-privacy modal-md" data-remodal-id="modal-privacy">
         	<button data-remodal-action="close" class="remodal-close"></button>
 
         	<div class="body">

@@ -66,7 +66,9 @@ $(document).ready(function() {
 	// ---
 
 	// Cart
+		app.modals.basket = $('[data-remodal-id="modal-basket"]').remodal();
 		app.modals.coupon = $('[data-remodal-id="modal-coupon"]').remodal();
+		app.modals.privacy = $('[data-remodal-id="modal-privacy"]').remodal();
 
 		// Input phone
 			$(document).on('keyup change paste', '.modal-basket [name="telephone"]', function(){
@@ -107,18 +109,21 @@ $(document).ready(function() {
 		// ...
 
 		// Close
-			$(document).on('closing', '.remodal', function (e) {
-			  if( $(this).hasClass('modal-basket') ) {
+			$(document).on('closing', '.remodal.modal-basket', function (e) {
 			  	LoadCart();
-			  	console.log('Modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
-			  }
+			  	console.log('Basker modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			});
 		// ---
 
 		// Privacy
-			// ---
-				app.modals.privacy = $('[data-remodal-id="modal-privacy"]').remodal();
-			// ---
+			$(document).on('click', '.modal-basket .privacy span', function(){
+				app.modals.privacy.open();
+			});
+
+			$(document).on('closing', '.remodal.modal-privacy', function (e) {
+				app.modals.basket.open();
+			  	console.log('Privacy modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
+			});
 		// ---
 
 		// Coupon
@@ -622,7 +627,6 @@ $(document).ready(function() {
 	// ---
 
 	// Account
-		app.modals.basket = $('[data-remodal-id="modal-basket"]').remodal();
 		app.modals.auth = $('[data-remodal-id="modal"]').remodal();
 		app.modals.recovery = $('[data-remodal-id="modal-recovery"]').remodal();
 		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();

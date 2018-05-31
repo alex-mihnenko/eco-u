@@ -137,6 +137,12 @@ xxl
 		}
 
 		@media (min-width: 768px) {
+			.modal-md {
+				width: 768px;
+				max-width: 768px;
+				overflow: hidden;
+			}
+
 			.modal-xl {
 				width: 90%;
 				max-width: 100%;

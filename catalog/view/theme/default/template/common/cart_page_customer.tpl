@@ -96,31 +96,9 @@
           <div class="form-checkbox" data-checked="true">
             <input class="input" type="checkbox" value="" name="privacy-check" checked="true">
           </div>
-          <span for="privacy-check" data-remodal-target="modal-privacy">Даю согласие на обработку персональных данных</span>
+          <span for="privacy-check">Даю согласие на обработку персональных данных</span>
         </div>
     </form>
 </div>
 
  <hr class="indent sm">
-
-
-<!-- <div>
-    <div class="hidden o-i_price"></div>
-
-    <div class="block-delivery-price">
-        <div class="cost-delivery">Стоимость доставки</div>
-        <div class="c-d_price">330 руб</div>
-    </div>
-
-    <div class="shipping-amount">
-        <div class="sh-a_txt1">Итого</div>
-        <div class="sh-a_price">330 руб</div>
-    </div>
-
-    <div class="btn-block">
-        <div class="pad-md">
-            <span class="c-m_submit">Рассчитать стоимость доставки</span>
-        </div>
-    </div>
-
-</div> -->
