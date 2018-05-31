@@ -168,6 +168,13 @@ xxl
 			box-sizing: border-box;
 			padding: 45px 30px;
 		}
+
+		@media (max-width: 478px) {
+			.remodal .body {
+				box-sizing: border-box;
+				padding: 25px 15px;
+			}
+		}
 	/* Body */
 
 	/* Tabs */
@@ -458,6 +465,21 @@ xxl
 				width: auto;
 			}
 
+			.remodal .cart-products .product p {
+				display: block;
+				padding: 0;
+
+				font-size: 15px;
+				line-height: 18px;
+				font-weight: 500;
+			}
+
+			@media (max-width: 478px) {
+				.remodal .cart-products .product p {
+					font-size: 12px;
+					line-height: 16px;
+				}
+			}
 
 			/* Image */
 				.remodal .cart-products .product .col.thumb {
@@ -472,9 +494,10 @@ xxl
 					border-radius: 4px;
 				}
 
-				@media (max-width: 575px) {
+				@media (max-width: 478px) {
 					.remodal .cart-products .product .col.thumb {
-						display: none;
+						width: 40px;
+						height: 40px;
 					}
 				}
 			/* Image */
@@ -486,18 +509,13 @@ xxl
 					padding: 30px 30px;
 				}
 
-				.remodal .cart-products .product .col.about p {
-					display: block;
-					padding: 0;
-
-					font-size: 15px;
-					line-height: 18px;
-					font-weight: 500;
+				.remodal .cart-products .product .col.about .thumb {
+					display: none;
 				}
 
 				@media (max-width: 575px) {
 					.remodal .cart-products .product .col.about {
-						padding: 15px 15px 15px 0;
+						padding: 15px;
 					}
 				}
 			/* About */
@@ -574,6 +592,12 @@ xxl
 					    user-select: none;
 					}
 				}
+
+				@media (max-width: 478px) {
+					.remodal .cart-products .product .col.quantity .selectric .label {
+					    font-size: 12px;
+					}
+				}
 			/* Quantity */
 
 			/* Total */
@@ -581,12 +605,6 @@ xxl
 					.remodal .cart-products .product .col.total {
 						display: none;
 					}
-				}
-
-				.remodal .cart-products .product .col.total p {
-					font-size: 15px;
-					font-weight: 500;
-					padding: 0;
 				}
 			/* Total */
 
@@ -658,7 +676,7 @@ xxl
 
 			.remodal .cart-form .row > .col {
 				display: inline-block;
-				width: 49%;
+				width: 49.6%;
 			}
 
 			@media (max-width: 575px) {
@@ -910,6 +928,17 @@ xxl
 
 		@media (max-width: 575px) {
 			.btn {
+				width: 100%;
+			}
+
+			.btn.btn-inline {
+				width: auto;
+			}
+		}
+
+		@media (max-width: 478px) {
+			.btn {
+				width: 100%;
 			    padding: 0px 10px;
 			    font-weight: 900;
 			    line-height: 48px;

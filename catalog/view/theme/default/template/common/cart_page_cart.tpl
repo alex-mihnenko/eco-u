@@ -36,6 +36,7 @@
                 </div>
 
                 <div class="total">
+                    <hr class="indent xxs">
                     <p><?php echo $product['total']; ?> <span>руб.</span></p>
                 </div>
             </div>
@@ -67,7 +68,7 @@
                 
                 <div class="apply">
                     <input type="text" name="coupon" class="form-control" placeholder="Купон на скидку">
-                    <button class="btn btn-bordered btn-sm margin xs" type="button" data-action="send-apply-coupon">OK</button>
+                    <button class="btn btn-bordered btn-sm btn-inline margin xs" type="button" data-action="send-apply-coupon">OK</button>
                 </div>
 
                 <p class="xs message-error"></p>
