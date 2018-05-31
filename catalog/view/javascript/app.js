@@ -605,6 +605,11 @@ $(document).ready(function() {
 	                        weight_variant = $(item).val();
 	                    }
 	                });
+
+	                console.log(label);
+	                console.log(quantity);
+	                console.log(weight_class);
+	                
 	                $.post('/?route=checkout/cart/add', {
 	                    product_id: product_id,
 	                    quantity: quantity,
@@ -613,7 +618,7 @@ $(document).ready(function() {
 	                    special_price: special_price
 	                }, function(msg){
 	                    pElement.find('.p-o_select, .p-o_right').hide();
-	                    pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+quantity+' '+weight_class+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
+	                    pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+label+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
 	                    LoadCart();
 	                    setTimeout(function(){
 	                        pElement.find('.basket-added').remove();
