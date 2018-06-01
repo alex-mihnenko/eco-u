@@ -227,6 +227,8 @@ $(document).ready(function() {
 				else{
 					$modal.find('button.back').hide();
 				}
+
+				$modal.parents(".remodal-wrapper").animate({ scrollTop: 0 });
 			});
 		// ---
 
