@@ -7,7 +7,7 @@
 
 <div class="success">
     <p class="padding no">Номер вашего заказа <span data-marker="order-id"><?php echo $order_id; ?></span></p>
-    <p class="padding no xs">в течении 20 минут с вами свяжется оператор.</p>
+    <p class="padding no xs">Вскоре с вами свяжется оператор для подтверждения заказа.</p>
     <hr class="indent sm">
     <p class="padding no xs">Телефон отдела по заботе о клиентах</p>
     <p class="padding no">+7 (495) 108-18-76</p>
