@@ -163,6 +163,13 @@ xxl
 				max-width: 300px;
 				overflow: hidden;
 			}
+
+			.modal-xs {
+				width: 100%;
+				max-width: none;
+				min-height: 250px;
+				overflow: hidden;
+			}
 		}
 
 		.modal-profile:before {
@@ -1052,17 +1059,27 @@ xxl
 
 	/* Privacy */
 		form .privacy {
-			display: block;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			align-content: center;
 			width: 100%;
 			height: auto;
 		}
 		
+		form .privacy .form-checkbox {
+			display: inline-flex;
+			margin-right: 5px;
+		}
+
 		form .privacy span {
+			display: inline-flex;
 			font-size: 14px;
 		    line-height: 24px;
 		    color: #374047;
 		    box-sizing: border-box;
-		    padding: 0 0 5px;
+		    padding: 0;
 		    cursor: pointer;
 
 		    -webkit-transition: color .3s;
@@ -1074,6 +1091,12 @@ xxl
 
 		form .privacy span:hover {
 			color: #749D3E;
+		}
+
+		@media (max-width: 575px) {
+			form .privacy span {
+				font-size: 8px;
+			}
 		}
 	/* Privacy */
 /* Components */
