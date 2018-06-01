@@ -1126,6 +1126,13 @@ xxl
 			margin: 0;
 			padding: 0;
 		}
+
+		@media (max-width: 767px) {
+			.roistat-visit > p {
+		    	font-size: 10px;
+			    line-height: 12px;
+			}
+		}
 	/* Roistat */
 /* Add */
 
