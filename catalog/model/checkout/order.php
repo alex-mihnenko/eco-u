@@ -889,20 +889,10 @@ class ModelCheckoutOrder extends Model {
         
 
         // Subtotal
-            if(isset($data['discount']) && isset($data['coupon_discount'])) {
-				if( $data['discount'] > $data['coupon_discount'] ) { $sub_total = $order_data['total'] + $data['discount']; }
-            	else{ $sub_total = $order_data['total'] + $data['coupon_discount']; }
-            }
-            else if(isset($data['discount']) && !isset($data['coupon_discount'])) {
-            	$sub_total = $order_data['total'] + $data['discount'];
-            }
-            else if(!isset($data['discount']) && isset($data['coupon_discount'])) {
-            	$sub_total = $order_data['total'] + $data['coupon_discount'];
-            }
-            else { $sub_total = $order_data['total']; }
+        	$sub_total = $order_data['total'];
         // ---
             
-        $total = $order_data['total'] + $this->session->data['shipping_price'];
+        $total = $order_data['total'] + $this->session->data['shipping_price'] - $data['discount'];
         $order_data['total'] = $total;
 
         @$this->editOrder($order_id, $order_data);

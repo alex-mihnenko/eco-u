@@ -410,6 +410,7 @@ class ControllerAjaxIndex extends Controller {
 
                   $response->status = 'success';
                   $response->message = 'Купон успешно применен';
+                  $response->coupon_id = $this->session->data['coupon_id'];
 
                   //$response->total = (int)$this->cart->getOrderPrice();
                   //$response->html = $html;
@@ -960,58 +961,87 @@ class ControllerAjaxIndex extends Controller {
           );
         // ---
 
+        $this->load->model('checkout/order');
+
         // Check discount
-          $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+            $this->session->data['personal_discount'] = 0;
+            $this->session->data['personal_discount_percentage'] = 0;
+            
+            $this->session->data['cumulative_discount'] = 0;
+            $this->session->data['cumulative_discount_percentage'] = 0;
+            
+            // Personal discount
+                $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+                
+                $basePrice = $this->cart->getTotal();
+                $order_discount = $customer_discount/100;
 
-          if( $customer_discount == 0 ) {
+                $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
+                $this->session->data['personal_discount_percentage'] = $customer_discount;
             // ---
-              if(!$this->customer->getCouponDiscount()) {
-                // ---
-                  $data['discount'] = $this->cart->getOrderDiscount();
 
-                  if(isset($this->session->data['personal_discount'])) {
-                    $personalPercentage = (int)$this->session->data['personal_discount'];
-                    $data['discount_percentage'] = $personalPercentage;
-                  }
-                // ---
-              } else {
-                // ---
-                  if(isset($this->session->data['personal_discount'])) {
-                      $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
-                      if($this->session->data['personal_discount'] <= $this->config->get('config_max_discount')) $personalPercentage = (int)$this->session->data['personal_discount'];
-                  } else $personalDiscount = 0;
+            // Cumulative discount
+                $totalCustomerOutcome = 0;
+                $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
 
+                if($orders !== false) {
+                    foreach($orders as $order) {
+                        if($order['order_status_id'] == 5) {
+                            $totalCustomerOutcome += $order['total'];
+                        }
+                    }
+                }
+
+                $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
+                $basePrice = $this->cart->getTotal();
+                $order_discount = $cumulative_discount/100;
+                if($order_discount > $this->config->get('config_max_discount')) $order_discount = $this->config->get('config_max_discount');
+
+
+                $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
+                $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
+            // ---
+
+
+            $data['discount'] = 0;
+            $data['discount_percentage'] = 0;
+
+            if(!$this->customer->getCouponDiscount()) {
+                // ---
+                    if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
+                        $data['discount'] = $this->session->data['personal_discount'];
+                        $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
+                    }
+                    else{
+                        $data['discount'] = $this->session->data['cumulative_discount'];
+                        $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
+                    }
+                // ---
+            } else {
+                // ---
                   $coupon = $this->customer->getCouponDiscount();
                   $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+                  $couponPercentage = $coupon['discount'];
 
-                  if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
-
-                  if($couponDiscount > $personalDiscount) {
-                      $data['coupon_discount'] = $couponDiscount;
-                      $data['discount_percentage'] = $couponPercentage;
-                  } else {
-                      $data['discount'] = $personalDiscount;
-                      $data['discount_percentage'] = $personalPercentage;
-                  }
+                  if( $couponPercentage > $this->session->data['personal_discount_percentage']  && $couponPercentage > $this->session->data['cumulative_discount_percentage'] ) {
+                        $data['discount'] = $couponDiscount;
+                        $data['discount_percentage'] = $couponPercentage;
+                    }
+                    else{
+                        if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
+                            $data['discount'] = $this->session->data['personal_discount'];
+                            $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
+                        }
+                        else{
+                            $data['discount'] = $this->session->data['cumulative_discount'];
+                            $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
+                        }
+                    }
                 // ---
-              }
-            // ---
-          }
-          else {
-            // ---
-              $basePrice = $this->cart->getTotal();
-              $order_discount = $customer_discount/100;
-
-              $data['discount'] = floor($order_discount * $basePrice);
-              $data['discount_percentage'] = $customer_discount;
-              $data['price'] = $data['price'] - $data['discount'];
-            // ---
-          }
+            }
         // ---
 
         // Checkout
-          $this->load->model('checkout/order');
-          
           $this->model_checkout_order->setPayment($order_id, $payment_code);
 
           $payment_method_online = $payment_code == 'cod' ? false : true;

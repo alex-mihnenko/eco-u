@@ -84,8 +84,6 @@ class Customer {
 	}
         
     public function loginByPhone($phone, $password, $override = false, &$ban_to = false) {
-            $phone = str_replace(Array('(', ')', '+', ' ', '-'), '', $phone);
-
             if($override) {
                 $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `telephone` = '" . $this->db->escape($phone) . "' AND status = '1' AND approved = '1'");
             } elseif($ban_to = $this->isBan($phone)) {
@@ -95,7 +93,24 @@ class Customer {
             }
 
             if ($customer_query->num_rows) {
-    			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
+                // Auth
+                    // Unset guest
+                    unset($this->session->data['guest']);
+
+                    // Add to activity log
+                    if ($this->config->get('config_customer_activity')) {
+                        $this->load->model('account/activity');
+
+                        $activity_data = array(
+                            'customer_id' => $this->customer->getId(),
+                            'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
+                        );
+
+                        $this->model_account_activity->addActivity('login', $activity_data);
+                    }
+    			 
+                 $this->session->data['customer_id'] = $customer_query->row['customer_id'];
+                // ---
 
     			$this->customer_id = $customer_query->row['customer_id'];
     			$this->firstname = $customer_query->row['firstname'];
@@ -113,8 +128,8 @@ class Customer {
 
                 $this->clearBan($phone);
 
-                //$sid = $this->session->session_id;
-                //$sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
+                $sid = $this->session->session_id;
+                $sql = $this->db->query("UPDATE " . DB_PREFIX . "cart SET customer_id = ".(int)$this->customer_id." WHERE session_id = '".$this->db->escape($sid)."'");
                 
                 if(!$override) {
                     $this->setLoginCookies($this->customer_id, $customer_query->row['password']);
