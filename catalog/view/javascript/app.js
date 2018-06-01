@@ -258,8 +258,10 @@ $(document).ready(function() {
 						// Get shipping price
 							$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
 			                	// ---
-			                        yaCounter33704824.reachGoal('checkout-delivery');
-			                        gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Create' });
+			                		if( typeof yaCounter33704824 != 'undefined' ){
+				                        yaCounter33704824.reachGoal('checkout-delivery');
+				                        gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Create' });
+			                		}
 
 			                        if(data.status == 'success') {
 			                        	// ---
@@ -295,8 +297,10 @@ $(document).ready(function() {
 
 							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
 			                	// ---
-									yaCounter33704824.reachGoal('checkout-confim');
-			                        gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Confirm' });
+			                		if( typeof yaCounter33704824 != 'undefined' ){
+										yaCounter33704824.reachGoal('checkout-confim');
+			                        	gtag('event', 'Checkout', { 'event_category': 'Order', 'event_label': 'Confirm' });
+			                        }
 
 			                        if(data.status == 'success') {
 			                        	// ---
@@ -322,7 +326,9 @@ $(document).ready(function() {
 				                            	}, 3500);
 						                    } else {
 						                    	// Show success checkout
-						                        yaCounter33704824.reachGoal('checkout-success');
+						                    	if( typeof yaCounter33704824 != 'undefined' ){
+						                        	yaCounter33704824.reachGoal('checkout-success');
+						                        }
 						                    }
 			                        	// ---
 			                        }
