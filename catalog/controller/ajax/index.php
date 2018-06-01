@@ -1158,31 +1158,36 @@ class ControllerAjaxIndex extends Controller {
     // Call request
     public function sendCallRequest() {
         // Init
-          $phone = $this->request->post['phone'];
+          $phone = preg_replace("/[^0-9,.]/", "", $this->request->post['phone']);
           $response = new stdClass();
         // ---
 
 
         // Send request
-          $subject = "Заказа обратного звонка eco-u.ru";
-          $message = "
-            <h4> Заказ обратного звонка </h4>
-            <b>Номер телефона:</b> ".$phone."
-          ";
+          include_once(DIR_APPLICATION . '/model/tool/teleo.php');
 
-          $headers = "From: noreoly@eco-u.ru\r\n";
-          $headers .= "Reply-To: noreoly@eco-u.ru\r\n";
-          $headers .= "MIME-Version: 1.0\r\n";
-          $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+          $response->call = call_proccessing($phone);
 
-          $to = $this->config->get('email');
+          // Email
+            // $subject = "Заказа обратного звонка eco-u.ru";
+            // $message = "
+            //   <h4> Заказ обратного звонка </h4>
+            //   <b>Номер телефона:</b> ".$phone."
+            // ";
 
-          // Semd email
-          if (mail($to, $subject, $message, $headers)) {
-              $response->status = 'Send to client '.$to;
-          } else {
-              $response->status = 'Do not send to client '.$to;
-          }
+            // $headers = "From: noreoly@eco-u.ru\r\n";
+            // $headers .= "Reply-To: noreoly@eco-u.ru\r\n";
+            // $headers .= "MIME-Version: 1.0\r\n";
+            // $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+            // $to = $this->config->get('email');
+
+            // if (mail($to, $subject, $message, $headers)) {
+            //     $response->status = 'Send to client '.$to;
+            // } else {
+            //     $response->status = 'Do not send to client '.$to;
+            // }
+          // ---
         // ---
 
 

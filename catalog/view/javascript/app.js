@@ -789,6 +789,8 @@ $(document).ready(function() {
 	            if(phone != '' ) {
 	                $.post('/?route=ajax/index/sendCallRequest',{ phone: phone}, function(data){
 	                    // ---
+	                    	console.log(data);
+
 	                    	if( data.status == 'error' ) {
 	                    		// ---
 	                    			$form.find('.t-c_input').addClass('input-error_1');

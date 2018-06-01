@@ -136,6 +136,13 @@ xxl
 			overflow: hidden;
 		}
 
+		.modal-xs {
+			width: 460px;
+			max-width: 460px;
+			min-height: 300px;
+			overflow: hidden;
+		}
+
 		@media (min-width: 768px) {
 			.modal-md {
 				width: 768px;
