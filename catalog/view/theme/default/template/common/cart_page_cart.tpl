@@ -21,8 +21,8 @@
                     <select data-cart-quantity="<?php echo (int)$product['quantity']; ?>" data-cart-id="<?php echo $product['cart_id']; ?>" data-cart-variant="<?php echo $product['weightVariant']; ?>" name="m_cart[<?php echo $product['cart_id']; ?>]" class="tech change-m-cart-quantity">
                         <?php 
                             $quantity = (int)$product['quantity']; 
-                            $start = $quantity - 5;
-                            $end = $quantity + 5;
+                            $start = $quantity - 9;
+                            $end = $quantity + 9;
                             if($start < 1) $start = 1;
                         ?>
                         <?php for($i = $start; $i <= $end; $i++) { ?>
