@@ -85,12 +85,19 @@ $(document).ready(function() {
 		// Input address
 			$(document).on('keyup change paste', '.modal-basket [name="address"]', function(){
 				// ---
+					var $this = $(this);
 					var $form = $(this).parents('form');
 					var $modal = $(this).parents('.remodal');
 
 					var address = $(this).val();
 					var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
 					console.log(address);
+
+					if( $this.hasClass('select') ) {
+						console.log('Ok select');
+						$this.parents('.delivery-address-container').html('<input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки" required="">');
+						initSuggestionsDadata();
+					}
 
 					if( deliveryprice != 0 ){
                         $form.find('[name="deliveryprice"]').val('0');

@@ -973,6 +973,7 @@ xxl
 		.form-input {
 		    width: auto;
 		    height: auto;
+		    min-height: 42px;
 		    display: inline-block;
 		    margin: 0;
 		    -moz-border-radius: 4px;

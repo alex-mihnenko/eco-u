@@ -18,21 +18,21 @@
             </div>
         </div>
 
-        <div class="delivery-address-m">
+        <div class="delivery-address-container">
             <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
-            <select id="delivery_address_m" name="tech" class="form-input">
+            <select name="address" class="form-input select" required="">
                 <?php foreach($delivery_address as $address) { ?>
                 <option value="<?php echo $address['address_id']; ?>"><?php echo $address['value']; ?></option>
                 <?php } ?>
-                <option class="new_address" value="0">Новый адрес доставки</option>
+                <option value="0">Новый адрес доставки</option>
             </select> 
             <?php } else { ?>
-            <input type="text" class="form-input text-align-center text-align-left-xs" name="address" value="" placeholder="Адрес доставки" required="">
+            <input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки" required="">
             <?php } ?>
         </div>
         <hr class="indent xs">
         
-        <textarea class="form-input" name="comment" value="" placeholder="Комментарий к заказу"></textarea>
+        <textarea class="form-input " name="comment" value="" placeholder="Комментарий к заказу"></textarea>
         <hr class="indent xs">
 
 
