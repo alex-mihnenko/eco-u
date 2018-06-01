@@ -960,7 +960,7 @@ class ControllerAjaxIndex extends Controller {
           );
         // ---
 
-        // Check coupon
+        // Check discount
           $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
 
           if( $customer_discount == 0 ) {

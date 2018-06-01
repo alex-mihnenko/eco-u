@@ -142,9 +142,57 @@ class ControllerAccountAccount extends Controller {
                         );
                     }
                 }
-                $data['customer_discount'] = -1 * $this->customer->getPersonalDiscount($customer_id, $orders);
             // ---
             
+
+            // Check discount
+              $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+
+              if( $customer_discount == 0 ) {
+                // ---
+                  if(!$this->customer->getCouponDiscount()) {
+                    // ---
+                      $data['discount'] = $this->cart->getOrderDiscount();
+
+                      if(isset($this->session->data['personal_discount'])) {
+                        $personalPercentage = (int)$this->session->data['personal_discount'];
+                        $data['discount_percentage'] = $personalPercentage;
+                      }
+                    // ---
+                  } else {
+                    // ---
+                      if(isset($this->session->data['personal_discount'])) {
+                          $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());
+                          if($this->session->data['personal_discount'] <= $this->config->get('config_max_discount')) $personalPercentage = (int)$this->session->data['personal_discount'];
+                      } else $personalDiscount = 0;
+
+                      $coupon = $this->customer->getCouponDiscount();
+                      $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+
+                      if($coupon['discount'] <= 100) $couponPercentage = $coupon['discount'];
+
+                      if($couponDiscount > $personalDiscount) {
+                          $data['coupon_discount'] = $couponDiscount;
+                          $data['discount_percentage'] = $couponPercentage;
+                      } else {
+                          $data['discount'] = $personalDiscount;
+                          $data['discount_percentage'] = $personalPercentage;
+                      }
+                    // ---
+                  }
+                // ---
+              }
+              else {
+                // ---
+                  $basePrice = $this->cart->getTotal();
+                  $order_discount = $customer_discount/100;
+
+                  $data['discount'] = floor($order_discount * $basePrice);
+                  $data['discount_percentage'] = $customer_discount;
+                  $data['price'] = $data['price'] - $data['discount'];
+                // ---
+              }
+            // ---
             
             $addresses = $this->customer->getAddresses();
             $arAddress = Array();

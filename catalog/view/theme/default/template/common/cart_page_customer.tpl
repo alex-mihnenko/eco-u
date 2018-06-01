@@ -74,8 +74,9 @@
         <input type="hidden" name="order_id" value="0">
         <input type="hidden" name="payment_method" value="Наличными курьеру">
         <input type="hidden" name="payment_code" value="cod">
+        <input type="hidden" name="discount" value="<?php echo $discount; ?>">
         <input type="hidden" name="total" value="<?php echo $total; ?>">
-        <input type="hidden" name="deliveryprice" value="0">
+        <input type="hidden" name="deliveryprice" value="-1">
         <hr class="indent sm">
 
         <div class="cart-shipping-price">

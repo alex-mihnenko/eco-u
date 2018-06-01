@@ -100,7 +100,7 @@ $(document).ready(function() {
 					}
 
 					if( deliveryprice != 0 ){
-                        $form.find('[name="deliveryprice"]').val('0');
+                        $form.find('[name="deliveryprice"]').val('-1');
 
                         $form.find('.cart-shipping-price .h4').html('');
                         $form.find('.cart-total-price .h4').html('');
@@ -149,7 +149,7 @@ $(document).ready(function() {
 				var coupon = $modal.find('input[name="coupon"]').val();
 
 	            if(coupon != '' ) {
-	                $.post('/?route=ajax/index/ajaxApplyCoupon',{ code: coupon}, function(data){
+	                $.post('/?route=ajax/index/ajaxApplyCoupon',{code: coupon}, function(data){
 	                    // ---
 	                    	console.log(data);
 
@@ -244,6 +244,7 @@ $(document).ready(function() {
 					var payment_method = $form.find('[name="payment_method"]').val();
 					var payment_code = $form.find('[name="payment_code"]').val();
 					var total = parseInt($form.find('[name="total"]').val());
+					var discount = parseInt($form.find('[name="discount"]').val());
 					var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
 
 					var date = $form.find('#delivery_date_m').val();
@@ -251,7 +252,7 @@ $(document).ready(function() {
 				// ---
 
 				// Send request
-					if( deliveryprice == 0 ){
+					if( deliveryprice == -1 ){
 						// Get shipping price
 							$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
 			                	// ---
@@ -268,7 +269,7 @@ $(document).ready(function() {
 				                            $form.find('[name="deliveryprice"]').val(data.deliveryprice);
 
 				                            $form.find('.cart-shipping-price .h4').html(data.deliveryprice+' рублей');
-				                            $form.find('.cart-total-price .h4').html((total+data.deliveryprice)+' рублей');
+				                            $form.find('.cart-total-price .h4').html((total+data.deliveryprice-discount)+' рублей');
 
 				                            $form.find('.cart-shipping-price').show();
 				                            $form.find('.cart-total-price').show();
