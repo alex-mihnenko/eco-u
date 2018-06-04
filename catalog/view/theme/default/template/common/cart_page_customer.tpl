@@ -22,7 +22,7 @@
             <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
             <select name="address" class="form-input select" required="">
                 <?php foreach($delivery_address as $address) { ?>
-                <option value="<?php echo $address['address_id']; ?>"><?php echo $address['value']; ?></option>
+                <option value="<?php echo $address['value']; ?>"><?php echo $address['value']; ?></option>
                 <?php } ?>
                 <option value="0">Новый адрес доставки</option>
             </select> 
