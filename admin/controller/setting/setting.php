@@ -61,6 +61,7 @@ class ControllerSettingSetting extends Controller {
 		$data['text_security'] = $this->language->get('text_security');
 		$data['text_upload'] = $this->language->get('text_upload');
 		$data['text_error'] = $this->language->get('text_error');
+		$data['text_first_purchase'] = $this->language->get('text_first_purchase');
 
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_owner'] = $this->language->get('entry_owner');
@@ -73,12 +74,12 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_open'] = $this->language->get('entry_open');
 		$data['entry_comment'] = $this->language->get('entry_comment');
 		$data['entry_location'] = $this->language->get('entry_location');
-                $data['entry_sms_order_new_text'] = $this->language->get('entry_sms_order_new_text');
-                $data['entry_sms_password_new_text'] = $this->language->get('entry_sms_password_new_text');
-                $data['entry_composite_price'] = $this->language->get('entry_composite_price');
-                $data['entry_min_order_total'] = $this->language->get('entry_min_order_total');
-                $data['entry_delivery_intervals'] = $this->language->get('entry_delivery_intervals');
-                $data['entry_order_time'] = $this->language->get('entry_order_time');
+        $data['entry_sms_order_new_text'] = $this->language->get('entry_sms_order_new_text');
+        $data['entry_sms_password_new_text'] = $this->language->get('entry_sms_password_new_text');
+        $data['entry_composite_price'] = $this->language->get('entry_composite_price');
+        $data['entry_min_order_total'] = $this->language->get('entry_min_order_total');
+        $data['entry_delivery_intervals'] = $this->language->get('entry_delivery_intervals');
+        $data['entry_order_time'] = $this->language->get('entry_order_time');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
@@ -167,6 +168,16 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_error_log'] = $this->language->get('entry_error_log');
 		$data['entry_error_filename'] = $this->language->get('entry_error_filename');
 		$data['entry_status'] = $this->language->get('entry_status');
+		$data['entry_first_purchase'] = $this->language->get('entry_first_purchase');
+		$data['entry_first_purchase_discount'] = $this->language->get('entry_first_purchase_discount');
+		$data['help_first_purchase_discount'] = $this->language->get('help_first_purchase_discount');
+		$data['entry_first_purchase_discount_percent'] = $this->language->get('entry_first_purchase_discount_percent');
+		$data['help_first_purchase_discount_percent'] = $this->language->get('help_first_purchase_discount_percent');
+		$data['entry_first_purchase_free_delivery'] = $this->language->get('entry_first_purchase_free_delivery');
+		$data['entry_first_purchase_date'] = $this->language->get('entry_first_purchase_date');
+		$data['help_first_purchase_date'] = $this->language->get('help_first_purchase_date');
+		$data['entry_first_purchase_date_start'] = $this->language->get('entry_first_purchase_date_start');
+		$data['entry_first_purchase_date_end'] = $this->language->get('entry_first_purchase_date_end');
 
 		$data['help_geocode'] = $this->language->get('help_geocode');
 		$data['help_open'] = $this->language->get('help_open');
@@ -1223,6 +1234,44 @@ class ControllerSettingSetting extends Controller {
 			$data['config_error_filename'] = $this->request->post['config_error_filename'];
 		} else {
 			$data['config_error_filename'] = $this->config->get('config_error_filename');
+		}
+
+		// ---
+
+		if (isset($this->request->post['config_first_purchase'])) {
+			$data['config_first_purchase'] = $this->request->post['config_first_purchase'];
+		} else {
+			$data['config_first_purchase'] = $this->config->get('config_first_purchase');
+		}
+
+		if (isset($this->request->post['config_first_purchase_discount'])) {
+			$data['config_first_purchase_discount'] = $this->request->post['config_first_purchase_discount'];
+		} else {
+			$data['config_first_purchase_discount'] = $this->config->get('config_first_purchase_discount');
+		}
+
+		if (isset($this->request->post['config_first_purchase_discount_percent'])) {
+			$data['config_first_purchase_discount_percent'] = $this->request->post['config_first_purchase_discount_percent'];
+		} else {
+			$data['config_first_purchase_discount_percent'] = $this->config->get('config_first_purchase_discount_percent');
+		}
+
+		if (isset($this->request->post['config_first_purchase_free_delivery'])) {
+			$data['config_first_purchase_free_delivery'] = $this->request->post['config_first_purchase_free_delivery'];
+		} else {
+			$data['config_first_purchase_free_delivery'] = $this->config->get('config_first_purchase_free_delivery');
+		}
+
+		if (isset($this->request->post['config_first_purchase_date_start'])) {
+			$data['config_first_purchase_date_start'] = $this->request->post['config_first_purchase_date_start'];
+		} else {
+			$data['config_first_purchase_date_start'] = $this->config->get('config_first_purchase_date_start');
+		}
+
+		if (isset($this->request->post['config_first_purchase_date_end'])) {
+			$data['config_first_purchase_date_end'] = $this->request->post['config_first_purchase_date_end'];
+		} else {
+			$data['config_first_purchase_date_end'] = $this->config->get('config_first_purchase_date_end');
 		}
 
 		$data['header'] = $this->load->controller('common/header');

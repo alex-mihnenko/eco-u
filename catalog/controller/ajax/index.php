@@ -860,6 +860,75 @@ class ControllerAjaxIndex extends Controller {
           $this->session->data['shipping_method'] = $quote['quote'][$response->method]['title'];
         // ---
 
+        // First purchase
+          $now = time();
+
+          $first_purchase = intval($this->config->get('config_first_purchase'));
+
+          $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
+          $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
+          $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
+
+          $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
+          $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
+          $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
+
+          $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
+          
+          $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
+          $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
+          $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
+          $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+          
+          if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
+            // ---
+              // Check first purchase
+                $this->load->model('account/customer');
+                $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+                $customer_first_purchase = false;
+
+                if( empty($customer) ) {
+                  // ---
+                    $customer_first_purchase = true;
+                  // ---
+                }
+                else {
+                  // Check orders
+                    $customer_id = $customer['customer_id'];
+
+                    $this->load->model('checkout/order');
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                    
+                    if( $orders == false ){ $customer_first_purchase = true; }
+                  // ---
+                }
+              // ---
+
+              if( $customer_first_purchase == true ) {
+                $response->first_purchase = true;
+
+                // Calculate purchase discount
+                  $total = floatval($this->cart->getTotal());
+                  $totalOne = floatval($first_purchase_discount);
+                  $totalTwo = round($total * ($first_purchase_discount_percent/100));
+
+                  if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
+                  else { $response->first_purchase_discount = $totalTwo; }
+
+                  $response->totalOne = $totalOne;
+                  $response->totalTwo = $totalTwo;
+                // ---
+
+                if( $first_purchase_free_delivery == 1 ){
+                  $response->deliveryprice = 0;
+                  $this->session->data['shipping_price'] = 0;
+                }
+              }
+            // ---
+          }
+        // ---
+
         // Response
         $response->order_id = $order_id;
         $response->status = 'success';
@@ -1040,6 +1109,66 @@ class ControllerAjaxIndex extends Controller {
                     }
                 // ---
             }
+        // ---
+
+        // First purchase
+          $now = time();
+
+          $first_purchase = intval($this->config->get('config_first_purchase'));
+
+          $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
+          $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
+          $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
+
+          $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
+          $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
+          $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
+
+          $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
+          
+          $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
+          $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
+          $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
+          $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+          
+          if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
+            // ---
+              // Check first purchase
+                $this->load->model('account/customer');
+                $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+                $customer_first_purchase = false;
+
+                // Check orders
+                  $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                  
+                  if( $orders == false ){ $customer_first_purchase = true; }
+                // ---
+               
+
+              if( $customer_first_purchase == true ) {
+                $response->first_purchase = true;
+
+                // Calculate purchase discount
+                  $total = floatval($this->cart->getTotal());
+                  $totalOne = floatval($first_purchase_discount);
+                  $totalTwo = round($total * ($first_purchase_discount_percent/100));
+
+                  if( $totalOne >= $totalTwo ){
+                    $response->first_purchase_discount = $totalOne;
+                    $response->first_purchase_discount_percent = round( (100 * $totalOne)/$total );
+                  }
+                  else {
+                    $response->first_purchase_discount = $totalTwo;
+                    $response->first_purchase_discount_percent = $first_purchase_discount_percent;
+                  }
+
+                  $data['discount'] = $response->first_purchase_discount;
+                  $data['discount_percentage'] = $response->first_purchase_discount_percent;
+                // ---
+              }
+            // ---
+          }
         // ---
 
         // Checkout

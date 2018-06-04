@@ -79,14 +79,19 @@
         <input type="hidden" name="deliveryprice" value="-1">
         <hr class="indent sm">
 
+        <div class="cart-first-purchase">
+            <p class="xs">Скидка на первую покупку</p>
+            <p class="text-color-green" data-type="value"></p>
+        </div>
+
         <div class="cart-shipping-price">
             <p class="xs">Стоимость доставки</p>
-            <p class="h4"></p>
+            <p class="h4" data-type="value"></p>
         </div>
 
         <div class="cart-total-price">
             <p class="xs">Итого</p>
-            <p class="h4"></p>
+            <p class="h4" data-type="value"></p>
         </div>
 
 

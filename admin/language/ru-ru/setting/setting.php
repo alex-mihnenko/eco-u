@@ -231,3 +231,17 @@ $_['error_malformed_filename']	   = 'Некорректное имя Log фай�
 $_['error_encryption']             = 'Ключ шифрования должен быть от 32 до 1024 символов!';
 
 
+// Custom
+	// Fits purchase
+		$_['text_first_purchase'] = 'Первая покупка';
+		$_['entry_first_purchase'] = 'Применять особые условия на первую покупку';
+		$_['entry_first_purchase_discount'] = 'Скидка на первую покупку (сумма)';
+		$_['help_first_purchase_discount'] = 'Введите сумму скидки';
+		$_['entry_first_purchase_discount_percent'] = 'Скидка на первую покупку (процент)';
+		$_['help_first_purchase_discount_percent'] = 'Введите процент скидки';
+		$_['entry_first_purchase_free_delivery'] = 'Бесплатная доставка';
+		$_['entry_first_purchase_date'] = 'Срок действий условий';
+		$_['help_first_purchase_date'] = 'Выберите дату';
+		$_['entry_first_purchase_date_start'] = 'Дата начала';
+		$_['entry_first_purchase_date_end'] = 'Дата завершения';
+	// ---

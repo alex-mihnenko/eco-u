@@ -269,11 +269,19 @@ $(document).ready(function() {
 				                                $form.find('[name="order_id"]').val(data.order_id);
 				                            }
 
+				                            if( data.first_purchase == true ){
+				                            	discount = data.first_purchase_discount;
+				                            	$form.find('[name="discount"]').val(discount);
+
+				                            	$form.find('.cart-first-purchase [data-type="value"]').html(data.first_purchase_discount+' рублей');
+				                            	$form.find('.cart-first-purchase').show();
+				                            }
+
 				                            $form.find('[name="address"]').val(data.address);
 				                            $form.find('[name="deliveryprice"]').val(data.deliveryprice);
 
-				                            $form.find('.cart-shipping-price .h4').html(data.deliveryprice+' рублей');
-				                            $form.find('.cart-total-price .h4').html((total+data.deliveryprice-discount)+' рублей');
+				                            $form.find('.cart-shipping-price [data-type="value"]').html(data.deliveryprice+' рублей');
+				                            $form.find('.cart-total-price [data-type="value"]').html((total+data.deliveryprice-discount)+' рублей');
 
 				                            $form.find('.cart-shipping-price').show();
 				                            $form.find('.cart-total-price').show();

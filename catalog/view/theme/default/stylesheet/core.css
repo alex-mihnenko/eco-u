@@ -758,8 +758,14 @@ xxl
 				}
 			/* Payment methods*/
 
+			/* First purchase */
+				.remodal .cart-form .cart-first-purchase {
+					display: none;
+				}
+			/* First purchase */
+
 			/* Totals */
-				.cart-shipping-price, .cart-total-price {
+				.remodal .cart-form .cart-shipping-price, .remodal .cart-form .cart-total-price {
 					display: none;
 					width: 100%;
 					height: auto;
@@ -767,7 +773,7 @@ xxl
     				padding: 15px 15px;
 				}
 
-				.cart-shipping-price {
+				.remodal .cart-form .cart-shipping-price {
 					width: calc(100% + 380px);
 					margin-left: -190px;
 					background-color: #ECECEC;

@@ -449,6 +449,78 @@
                 </div>
               </fieldset>
               <fieldset>
+                <legend><?php echo $text_first_purchase; ?></legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label"><?php echo $entry_first_purchase; ?></label>
+                  <div class="col-sm-10">
+                    <label class="radio-inline">
+                      <?php if ($config_first_purchase) { ?>
+                      <input type="radio" name="config_first_purchase" value="1" checked="checked" />
+                      <?php echo $text_yes; ?>
+                      <?php } else { ?>
+                      <input type="radio" name="config_first_purchase" value="1" />
+                      <?php echo $text_yes; ?>
+                      <?php } ?>
+                    </label>
+                    <label class="radio-inline">
+                      <?php if (!$config_first_purchase) { ?>
+                      <input type="radio" name="config_first_purchase" value="0" checked="checked" />
+                      <?php echo $text_no; ?>
+                      <?php } else { ?>
+                      <input type="radio" name="config_first_purchase" value="0" />
+                      <?php echo $text_no; ?>
+                      <?php } ?>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-first-purchase-discount"><span data-toggle="tooltip" title="<?php echo $help_first_purchase_discount; ?>"><?php echo $entry_first_purchase_discount; ?></span></label>
+                  <div class="col-sm-10">
+                    <input type="number" name="config_first_purchase_discount" value="<?php echo $config_first_purchase_discount; ?>" placeholder="<?php echo $entry_first_purchase_discount; ?>" id="input-first-purchase-discount" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-first-purchase-discount-percent"><span data-toggle="tooltip" title="<?php echo $help_first_purchase_discount_percent; ?>"><?php echo $entry_first_purchase_discount_percent; ?></span></label>
+                  <div class="col-sm-10">
+                    <input type="number" name="config_first_purchase_discount_percent" value="<?php echo $config_first_purchase_discount_percent; ?>" placeholder="<?php echo $entry_first_purchase_discount_percent; ?>" id="input-first-purchase-discount-percent" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label"><?php echo $entry_first_purchase_free_delivery; ?></label>
+                  <div class="col-sm-10">
+                    <label class="radio-inline">
+                      <?php if ($config_first_purchase_free_delivery) { ?>
+                      <input type="radio" name="config_first_purchase_free_delivery" value="1" checked="checked" />
+                      <?php echo $text_yes; ?>
+                      <?php } else { ?>
+                      <input type="radio" name="config_first_purchase_free_delivery" value="1" />
+                      <?php echo $text_yes; ?>
+                      <?php } ?>
+                    </label>
+                    <label class="radio-inline">
+                      <?php if (!$config_first_purchase_free_delivery) { ?>
+                      <input type="radio" name="config_first_purchase_free_delivery" value="0" checked="checked" />
+                      <?php echo $text_no; ?>
+                      <?php } else { ?>
+                      <input type="radio" name="config_first_purchase_free_delivery" value="0" />
+                      <?php echo $text_no; ?>
+                      <?php } ?>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-first-purchase-date-start"><span data-toggle="tooltip" title="<?php echo $help_first_purchase_date; ?>"><?php echo $entry_first_purchase_date; ?></span></label>
+                  <div class="col-sm-10">
+                    <div class="col-sm-6">
+                      <input type="datetime-local" name="config_first_purchase_date_start" value="<?php echo $config_first_purchase_date_start; ?>" placeholder="<?php echo $entry_first_purchase_date_start; ?>" id="input-first-purchase-date-start" class="form-control" />
+                    </div>
+                    <div class="col-sm-6">
+                      <input type="datetime-local" name="config_first_purchase_date_end" value="<?php echo $config_first_purchase_date_end; ?>" placeholder="<?php echo $entry_first_purchase_date_end; ?>" id="input-first-purchase-date-end" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
                 <legend><?php echo $text_tax; ?></legend>
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><?php echo $entry_tax; ?></label>
