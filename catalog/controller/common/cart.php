@@ -196,43 +196,45 @@ class ControllerCommonCart extends Controller {
 
             // Check discount
                 if($customer_id = $this->customer->isLogged()) {
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+
                     $this->session->data['personal_discount'] = 0;
                     $this->session->data['personal_discount_percentage'] = 0;
 
                     $this->session->data['cumulative_discount'] = 0;
                     $this->session->data['cumulative_discount_percentage'] = 0;
 
-                    // Check discount
-                        // Personal discount
-                            $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
-                            
-                            $basePrice = $this->cart->getTotal();
-                            $order_discount = $customer_discount/100;
+                    // Personal discount
+                        $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+                        
+                        $basePrice = $this->cart->getTotal();
+                        $order_discount = $customer_discount/100;
 
-                            $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
-                            $this->session->data['personal_discount_percentage'] = $customer_discount;
-                        // ---
+                        $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
+                        $this->session->data['personal_discount_percentage'] = $customer_discount;
+                    // ---
 
-                        // Cumulative discount
-                            $totalCustomerOutcome = 0;
+                    // Cumulative discount
+                        $totalCustomerOutcome = 0;
 
-                            if($orders !== false) {
-                                foreach($orders as $order) {
-                                    if($order['order_status_id'] == 5) {
-                                        $totalCustomerOutcome += $order['total'];
-                                    }
+                        if($orders !== false) {
+                            foreach($orders as $order) {
+                                if($order['order_status_id'] == 5) {
+                                    $totalCustomerOutcome += $order['total'];
                                 }
                             }
+                        }
 
-                            $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                            $basePrice = $this->cart->getTotal();
-                            $order_discount = $cumulative_discount/100;
-                            if($order_discount > $this->config->get('config_max_discount')) $order_discount = $this->config->get('config_max_discount');
+                        $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
+                        if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                        
+                        $order_discount = $cumulative_discount/100;
+                        $basePrice = $this->cart->getTotal();
 
 
-                            $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
-                            $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
-                        // ---
+                        $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
+                        $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
+                    // ---
                 }
 
                 $data['discount'] = 0;
@@ -381,44 +383,50 @@ class ControllerCommonCart extends Controller {
                     return false;
             }
 
+            $this->load->model('checkout/order');
+
             // Check discount
-                $this->session->data['personal_discount'] = 0;
-                $this->session->data['personal_discount_percentage'] = 0;
-                
-                $this->session->data['cumulative_discount'] = 0;
-                $this->session->data['cumulative_discount_percentage'] = 0;
-                    
-                // Personal discount
-                    $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
-                    
-                    $basePrice = $this->cart->getTotal();
-                    $order_discount = $customer_discount/100;
+                if($customer_id = $this->customer->isLogged()) {
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
 
-                    $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
-                    $this->session->data['personal_discount_percentage'] = $customer_discount;
-                // ---
+                    $this->session->data['personal_discount'] = 0;
+                    $this->session->data['personal_discount_percentage'] = 0;
 
-                // Cumulative discount
-                    $totalCustomerOutcome = 0;
+                    $this->session->data['cumulative_discount'] = 0;
+                    $this->session->data['cumulative_discount_percentage'] = 0;
 
-                    if($orders !== false) {
-                        foreach($orders as $order) {
-                            if($order['order_status_id'] == 5) {
-                                $totalCustomerOutcome += $order['total'];
+                    // Personal discount
+                        $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+                        
+                        $basePrice = $this->cart->getTotal();
+                        $order_discount = $customer_discount/100;
+
+                        $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
+                        $this->session->data['personal_discount_percentage'] = $customer_discount;
+                    // ---
+
+                    // Cumulative discount
+                        $totalCustomerOutcome = 0;
+
+                        if($orders !== false) {
+                            foreach($orders as $order) {
+                                if($order['order_status_id'] == 5) {
+                                    $totalCustomerOutcome += $order['total'];
+                                }
                             }
                         }
-                    }
 
-                    $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                    $basePrice = $this->cart->getTotal();
-                    $order_discount = $cumulative_discount/100;
-                    if($order_discount > $this->config->get('config_max_discount')) $order_discount = $this->config->get('config_max_discount');
+                        $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
+                        if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                        
+                        $order_discount = $cumulative_discount/100;
+                        $basePrice = $this->cart->getTotal();
 
 
-                    $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
-                    $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
-                // ---
-
+                        $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
+                        $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
+                    // ---
+                }
 
                 $data['discount'] = 0;
                 $data['discount_percentage'] = 0;
@@ -456,6 +464,7 @@ class ControllerCommonCart extends Controller {
                         }
                     // ---
                 }
+                // ---
             // ---
         
             return $this->load->view('common/cart_page_cart', $data);

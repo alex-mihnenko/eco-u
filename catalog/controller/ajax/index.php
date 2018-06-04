@@ -964,6 +964,8 @@ class ControllerAjaxIndex extends Controller {
         $this->load->model('checkout/order');
 
         // Check discount
+            $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+            
             $this->session->data['personal_discount'] = 0;
             $this->session->data['personal_discount_percentage'] = 0;
             
@@ -982,7 +984,6 @@ class ControllerAjaxIndex extends Controller {
 
             // Cumulative discount
                 $totalCustomerOutcome = 0;
-                $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
 
                 if($orders !== false) {
                     foreach($orders as $order) {
@@ -993,15 +994,15 @@ class ControllerAjaxIndex extends Controller {
                 }
 
                 $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                $basePrice = $this->cart->getTotal();
+                if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                
                 $order_discount = $cumulative_discount/100;
-                if($order_discount > $this->config->get('config_max_discount')) $order_discount = $this->config->get('config_max_discount');
+                $basePrice = $this->cart->getTotal();
 
 
                 $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
                 $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
             // ---
-
 
             $data['discount'] = 0;
             $data['discount_percentage'] = 0;

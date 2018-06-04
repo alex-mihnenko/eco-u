@@ -174,9 +174,10 @@ class ControllerAccountAccount extends Controller {
                     }
 
                     $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
+                    if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                    
                     $basePrice = $this->cart->getTotal();
                     $order_discount = $cumulative_discount/100;
-                    if($order_discount > $this->config->get('config_max_discount')) $order_discount = $this->config->get('config_max_discount');
 
 
                     $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
@@ -201,6 +202,7 @@ class ControllerAccountAccount extends Controller {
                 } else {
                     // ---
                       $coupon = $this->customer->getCouponDiscount();
+
                       $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
                       $couponPercentage = $coupon['discount'];
 
