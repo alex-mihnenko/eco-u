@@ -134,7 +134,7 @@
 					<div class="message success">
 						<div class="wrap-table">
 							<div class="wrap-cell">
-								<img src="catalog/view/theme/default/image/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+								<img src="catalog/view/theme/default/img/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
 								<br><br>
 
 								<div class="message-success"></div>
@@ -192,7 +192,7 @@
 					<div class="message success">
 						<div class="wrap-table">
 							<div class="wrap-cell">
-								<img src="catalog/view/theme/default/image/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+								<img src="catalog/view/theme/default/img/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
 								<br><br>
 
 								<div class="message-success"></div>
@@ -250,7 +250,7 @@
 				<!-- <div class="message success">
 					<div class="wrap-table">
 						<div class="wrap-cell">
-							<img src="catalog/view/theme/default/image/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+							<img src="catalog/view/theme/default/img/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
 							<br><br>
 
 							<div class="message-success"></div>
