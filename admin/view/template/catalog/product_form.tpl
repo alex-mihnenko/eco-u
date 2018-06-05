@@ -64,6 +64,12 @@
                     </div>
                   </div>
                   <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-description-short<?php echo $language['language_id']; ?>"><?php echo $entry_description_yml; ?></label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="product_description[<?php echo $language['language_id']; ?>][description_yml]" placeholder="<?php echo $entry_description_yml; ?>" id="input-description-short-<?php echo $language['language_id']; ?>" class="form-control summernote" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description_yml'] : ''; ?>">
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                     <div class="col-sm-10">
                       <textarea name="product_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" class="form-control summernote"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
@@ -191,6 +197,16 @@
                     </div>
                 </div>
               </div>-->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><?php echo $entry_yml; ?></label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                      <label>
+                          <input type="checkbox" name="yml" value="1" <?php if($yml) { ?>checked="checked" <? } ?> />
+                      </label>
+                    </div>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_composite_price; ?></label>
                 <div class="col-sm-10">

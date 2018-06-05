@@ -81,13 +81,15 @@ $_['entry_reward']           = 'Бонусные баллы';
 $_['entry_layout']           = 'Макет';
 $_['entry_recurring']        = 'Профиль периодичности';
 $_['entry_image_preview']    = 'Картинка превью';
-$_['entry_description_short']    = 'Текст превью';
+$_['entry_description_short']    = 'Короткое описание';
+$_['entry_description_yml']    = 'Описание для YML';
 $_['entry_description_top']    = 'Короткое описание';
 $_['entry_available']    = 'В наличии';
 $_['entry_props'] = '3 потребительских свойства';
 $_['entry_is_weighted'] = 'Весовой';
 $_['entry_composite_price'] = 'Сложная цена';
 $_['entry_ultra_fresh'] = 'UltraFresh';
+$_['entry_yml'] = 'Выгружать в YML';
 
 $_['entry_profitable_offer']    = 'Выгодное предложение';
 $_['entry_weight_variants']    = 'Варианты фасовки (через&nbsp;запятую)';

@@ -561,8 +561,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_description'] = $this->language->get('entry_description');
-                $data['entry_available'] = $this->language->get('entry_available');
-                $data['entry_description_short'] = $this->language->get('entry_description_short');
+        $data['entry_available'] = $this->language->get('entry_available');
+        $data['entry_description_short'] = $this->language->get('entry_description_short');
+        $data['entry_description_yml'] = $this->language->get('entry_description_yml');
 		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
 		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
@@ -627,6 +628,7 @@ class ControllerCatalogProduct extends Controller {
         $data['entry_is_weighted'] = $this->language->get('entry_is_weighted');
         $data['entry_composite_price'] = $this->language->get('entry_composite_price');
         $data['entry_ultra_fresh'] = $this->language->get('entry_ultra_fresh');
+        $data['entry_yml'] = $this->language->get('entry_yml');
                 
 		$data['help_keyword'] = $this->language->get('help_keyword');
 		$data['help_sku'] = $this->language->get('help_sku');
@@ -842,7 +844,15 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$data['is_weighted'] = 0;
 		}
-                
+        
+        if (isset($this->request->post['yml'])) {
+			$data['yml'] = $this->request->post['yml'];
+		} elseif (!empty($product_info)) {
+			$data['yml'] = $product_info['yml'];
+		} else {
+			$data['yml'] = 0;
+		}
+
         if (isset($this->request->post['composite_price'])) {
 			$data['composite_price'] = $this->request->post['composite_price'];
 		} elseif (!empty($product_info)) {
