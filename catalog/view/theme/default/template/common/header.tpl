@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="/new_design/css/style.css">
+    <link rel="stylesheet" href="/new_design/css/style.<?php echo $cssversion; ?>.css">
     <link rel="stylesheet" href="/new_design/css/remodal.css">
     <link rel="stylesheet" href="/new_design/css/ecomodal.css">
     <link rel="stylesheet" href="/new_design/css/selectric.css">
@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/new_design/css/jquery-ui.css">
     <link rel="stylesheet" href="/new_design/css/jquery.jscrollpane.css">
 
-    <link href="catalog/view/theme/default/stylesheet/core.css" rel="stylesheet">
+    <link href="catalog/view/theme/default/stylesheet/core.<?php echo $cssversion; ?>.css" rel="stylesheet">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">

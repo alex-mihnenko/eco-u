@@ -152,8 +152,16 @@ class ControllerCommonHeader extends Controller {
 
 
 		// Versions CSS
+			if( isset($this->session->data['controlversion']) ) {
+				if( $this->session->data['controlversion'] < time()-1800 ) {
+					unset($this->session->data['controlversion']);
+					unset($this->session->data['cssversion']);
+				}
+			}
+
 			if( !isset($this->session->data['cssversion']) ) {
 				$this->session->data['cssversion'] = 'v'.rand(1, 1000);
+				$this->session->data['controlversion'] = time();
 			}
 
 			$data['cssversion'] = $this->session->data['cssversion'];

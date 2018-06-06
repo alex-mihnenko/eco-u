@@ -80,8 +80,16 @@ class ControllerCommonFooter extends Controller {
 
 
 		// Versions JS
+			if( isset($this->session->data['controlversion']) ) {
+				if( $this->session->data['controlversion'] < time()-1800 ) {
+					unset($this->session->data['controlversion']);
+					unset($this->session->data['jsversion']);
+				}
+			}
+
 			if( !isset($this->session->data['jsversion']) ) {
 				$this->session->data['jsversion'] = 'v'.rand(1, 1000);
+				$this->session->data['controlversion'] = time();
 			}
 
 			$data['jsversion'] = $this->session->data['jsversion'];
