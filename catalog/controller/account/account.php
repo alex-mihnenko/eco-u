@@ -6,16 +6,6 @@ class ControllerAccountAccount extends Controller {
 
 			$this->response->redirect($this->url->link('account/login', '', true));
 		}
-                
-                // $this->load->model('account/user');
-                // if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
-                // {
-                //     $data['is_admin'] = true;
-                // }
-                // else
-                // {
-                //     $data['is_admin'] = false;
-                // }
 
 		$this->load->language('account/account');
 

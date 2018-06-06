@@ -2693,7 +2693,6 @@ footer {
 	padding: 10px 11px 10px 0px;
 }
 .table-history tr td a {
-	color: #374047;
 	text-decoration: none;
 }
 .table-history tr td .t-h_pay {
@@ -2731,10 +2730,10 @@ footer {
 	transition: 0.3s ease-in-out all;
 }
 .table-history tr td.t-h_number {
-	width: 29%;
+	width: 30%;
 }
 .table-history tr td.t-h_width {
-	width: 27%;
+	width: 20%;
 }
 .fond-f-p {
 	background: #EFF2F5;

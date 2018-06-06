@@ -302,28 +302,29 @@ xxl
 	/* Box */
 
 	/* Message */
-		.t-c_box .message.success {
+		.t-c_box .message.success,
+		.body .message.success {
 			display: none;
-		}
-
-		.t-c_box .message.success {
 			height: 300px;
 		}
 
-		.t-c_box .wrap-table {
+		.t-c_box .wrap-table,
+		.body .wrap-table {
 			display: table;
 			width: 100%;
 			height: 100%;
 		}
 
-		.t-c_box .wrap-table > .wrap-cell {
+		.t-c_box .wrap-table > .wrap-cell,
+		.body .wrap-table > .wrap-cell {
 			display: table-cell;
 			vertical-align: middle;
 			width: 100%;
 			height: auto;
 		}
 
-		.t-c_box .message-success{
+		.t-c_box .message-success,
+		.body .message-success {
 		    display: none;
 		    vertical-align: top;
 		    font-size: 22px;
@@ -514,11 +515,44 @@ xxl
 						height: 40px;
 					}
 				}
+
+				.remodal .cart-products .product .col.thumb.none {
+					position: relative;
+				}
+
+				.remodal .cart-products .product .col.thumb.none:before {
+					content: ' ';
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+
+					background-color: rgba(255,255,255,0.5);
+
+					z-index: 100;
+				}
+				.remodal .cart-products .product .col.thumb.none:after {
+					content: ' ';
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+
+					background: url(../img/svg/prohibition-sign.svg) no-repeat center center scroll; 
+					-webkit-background-size: 65% 65%;
+					-moz-background-size: 65% 65%;
+					-o-background-size: 65% 65%;
+					background-size: 65% 65%;
+
+					z-index: 200;
+				}
 			/* Image */
 
 			/* About */
 				.remodal .cart-products .product .col.about {
-					width: 60%;
+					width: 55%;
 					box-sizing: border-box;
 					padding: 30px 30px;
 				}
@@ -897,6 +931,7 @@ xxl
 		.btn {
 		    display: inline-block;
 		    width: auto;
+		    min-width: 130px;
 		    height: auto;
 		    background: #749D3E;
 		    box-sizing: border-box;
@@ -1179,6 +1214,7 @@ xxl
     .text-color-gray { color: #ECECEC; }
     .text-color-black { color: #1A1A18; }
     .text-color-green { color: #749D3E; }
+    .text-color-red { color: #d00; }
 
     .background-color-white { background-color: #FFFFFF; }
     .background-color-gray { background-color: #F2F2F2; }

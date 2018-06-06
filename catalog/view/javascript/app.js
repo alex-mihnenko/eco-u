@@ -660,6 +660,8 @@ $(document).ready(function() {
 		app.modals.recovery = $('[data-remodal-id="modal-recovery"]').remodal();
 		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();
 
+		app.modals.repeat = $('[data-remodal-id="modal-repeat"]').remodal();
+
 		$('.remodal').on('focus', '.input-error_1 input', function(){
 			$(this).parents('.remodal').find('.t-c_input').removeClass('input-error_1');
 			$(this).parents('.remodal').find('.message-error').hide();
@@ -694,7 +696,7 @@ $(document).ready(function() {
 			});
 		// ---
 
-		// Recovery
+		// Registration
 			$('#form-registration').submit(function(){
 				console.log('Registration init');
 
@@ -855,6 +857,56 @@ $(document).ready(function() {
 						// ---
 							console.log(data.redirect);
 							document.location = data.redirect;
+						// ---
+					},'json');
+
+					e.preventDefault();
+				// ---
+			});
+		// ---
+
+		// Repeat
+			$('[data-action="order-repeat"]').on('click', function(e){
+				// ---
+					$order_id = $(this).attr('data-order-id');
+
+					$.post('.?route=ajax/index/getCustomerOrder', {order_id:$order_id}, function(data){
+						// ---
+							$('[data-remodal-id="modal-repeat"]').find('.body').html(data.html);
+							app.modals.repeat.open();
+						// ---
+					},'json');
+
+					e.preventDefault();
+				// ---
+			});
+
+			$(document).on('click', '[data-action="repeat-confirm"]', function(e){
+				// ---
+					$body = $(this).parents('.body');
+					$order_id = $(this).attr('data-order-id');
+
+					$.post('.?route=ajax/index/repeatCustomerOrder', {order_id:$order_id}, function(data){
+						// ---
+							console.log(data);
+
+							if( data.status == 'error' ) {
+	                    		// ---
+	                    			$body.find('.message-error p').html(data.message);
+	                    			$body.find('.message-error').show();
+	                    		// ---
+	                    	}
+	                    	else{
+	                    		// ---
+	                    			$body.find('.content').css('display','none');
+
+	                    			$body.find('.success .message-success').html(data.message);
+	                    			$body.find('.success .message-success').show();
+	                    			$body.find('.success').fadeIn('fast');
+	                    		// ---
+	                    	}
+
+							LoadCart();
 						// ---
 					},'json');
 

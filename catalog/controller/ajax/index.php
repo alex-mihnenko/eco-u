@@ -430,6 +430,104 @@ class ControllerAjaxIndex extends Controller {
         // ---
       // ---
     }
+
+    // Get order
+    public function getCustomerOrder() {
+      // ---
+        // Init
+          $order_id = $this->request->post['order_id'];
+          
+          $response = new stdClass();
+        // ---
+
+        // Get
+          $options['order_id'] = $order_id;
+          
+          $response->order_id = $order_id;
+          $response->html = $this->load->controller('account/repeat',$options);
+        // ---
+
+        // Response
+        $response->status = 'success';
+        
+        echo json_encode($response);
+        exit;
+      // ---
+    }
+
+    public function repeatCustomerOrder() {
+      // ---
+        // Init
+          $order_id = $this->request->post['order_id'];
+          
+          $response = new stdClass();
+        // ---
+
+        // Get
+          $this->load->model('account/order');
+          $this->load->model('catalog/product');
+
+          $products = $this->model_account_order->getOrderProducts($order_id);
+
+          $response->count = 0;
+
+          foreach ($products as $product) {
+            // ---
+              $product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
+              $product_id = $product['product_id'];
+              $quantity = $product['quantity'];
+              $packaging = 1;
+
+              if ($product_info && $product_info['quantity']>0) {
+                // ---
+                  if($product_info['weight_variants'] !== '') {
+                    $weightVariants = explode(',', $product_info['weight_variants']);
+                    $weight_variant = array_search($product['quantity'], $weightVariants);
+                  } else {
+                    $weight_variant = 1;
+                  }
+
+                  $option = array();
+
+                  $product_options = $this->model_catalog_product->getProductOptions($product_id);
+
+                  foreach ($product_options as $product_option) {
+                    if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
+                      $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
+                    }
+                  }
+
+                  $recurring_id = 0;
+                                         
+                  $this->cart->add($product_id, $quantity, $packaging, $option, $recurring_id, $weight_variant);
+
+                  $response->report[$product_id] = array('quantity' => $quantity, 'packaging' => $packaging, 'option' => $option, 'recurring_id' => $recurring_id, 'weight_variant' => $weight_variant);
+                  
+                  $response->count++;
+                // ---
+              }
+            // ---
+          }
+
+          $response->order_id = $order_id;
+        // ---
+
+        // Response
+        if( $response->count > 0 ) {
+          $response->status = 'success';
+          $response->message = 'Товары добавлены в корзину.<br>Вы можете продолжить<br>оформление заказа.';
+        }
+        else {
+          $response->status = 'error';
+          $response->message = 'Нет товаров для добавления в корзину';
+        }
+
+        
+        echo json_encode($response);
+        exit;
+      // ---
+    }
   // ---
 
 

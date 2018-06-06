@@ -1,4 +1,15 @@
 <?php echo $header; ?>
+
+<div class="remodal modal-repeat" data-remodal-id="modal-repeat">
+    <button data-remodal-action="close" class="remodal-close"></button>
+
+    <div class="body">
+    </div>
+</div>
+
+
+
+
 <!-- Container -->
 <script>
     window.bodyClass = 'page_2';
@@ -26,11 +37,23 @@
                                 <tr>
                                     <td class="t-h_number">№ <?php echo $order['order_id']; ?></td>
                                     <td class="t-h_width"><?php echo $order['date']; ?></td>
-                                    <td class="t-h_width"><div class="t-h_pay"><?php echo $order['status']; ?></div></td>
+                                    <td class="t-h_width">
+                                        <?php if( $order['status_id'] != 7 ) { ?>
+                                            <p class="text-color-green"><?php echo $order['status']; ?></p>
+                                        <?php } else { ?>
+                                            <p class="text-color-red"><?php echo $order['status']; ?></p>
+                                        <?php } ?>
+                                    </td>
                                     <td>
-                                        <div class="t-h_price"><?php echo (int)$order['total']; ?> руб.</div>
-                                        <?php if( $order['payment_custom_field'] != 'undefined' ) { ?>
-                                        <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="t-h_submit" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                        <p><?php echo (int)$order['total']; ?> руб.</p>
+                                    </td>
+                                    <td>
+                                        <?php if( $order['status_id'] != 5  && $order['status_id'] != 7 ) { ?>
+                                            <?php if( $order['payment_custom_field'] != '' && $order['payment_custom_field'] != 'undefined' && $order['payment_custom_field'] != '""' ) { ?>
+                                                <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                            <?php } ?>
+                                        <?php } else { ?>
+                                            <a href="#repeat-<?php echo $order['order_id']; ?>" class="btn btn-bordered btn-sm" data-action="order-repeat" data-order-id="<?php echo $order['order_id']; ?>">Повторить</a>
                                         <?php } ?>
                                     </td>
                                 </tr>
