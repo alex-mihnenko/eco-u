@@ -165,12 +165,37 @@ class ModelCatalogProduct extends Model {
 		");
 
 		// Fix
-			if( isset($data['is_weighted']) ) 		$this->db->query("UPDATE " . DB_PREFIX . "product  SET is_weighted = '" . $this->db->escape($data['is_weighted']) . "' WHERE product_id = '" . (int)$product_id . "'");
-			if( isset($data['composite_price']) ) 	$this->db->query("UPDATE " . DB_PREFIX . "product  SET composite_price = '" . $this->db->escape($data['composite_price']) . "' WHERE product_id = '" . (int)$product_id . "'");
-			if( isset($data['ultra_fresh']) ) 		$this->db->query("UPDATE " . DB_PREFIX . "product  SET ultra_fresh = '" . $this->db->escape($data['ultra_fresh']) . "' WHERE product_id = '" . (int)$product_id . "'");
-			if( isset($data['yml']) ) 		$this->db->query("UPDATE " . DB_PREFIX . "product  SET yml = '" . $this->db->escape($data['yml']) . "' WHERE product_id = '" . (int)$product_id . "'");
-			if( isset($data['profitable_offer']) ) 	$this->db->query("UPDATE " . DB_PREFIX . "product  SET profitable_offer = '" . $this->db->escape($data['profitable_offer']) . "' WHERE product_id = '" . (int)$product_id . "'");
-			if( isset($data['available']) ) 		$this->db->query("UPDATE " . DB_PREFIX . "product  SET available = '" . $this->db->escape($data['available']) . "' WHERE product_id = '" . (int)$product_id . "'");
+			if( isset($data['is_weighted']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET is_weighted = '" . $data['is_weighted'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET is_weighted = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			if( isset($data['composite_price']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET composite_price = '" . $data['composite_price'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET composite_price = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			if( isset($data['ultra_fresh']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET ultra_fresh = '" . $data['ultra_fresh'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET ultra_fresh = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			if( isset($data['yml']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET yml = '" . $data['yml'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET yml = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			if( isset($data['profitable_offer']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET profitable_offer = '" . $this->db->escape($data['profitable_offer']) . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET profitable_offer = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			if( isset($data['available']) ) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product  SET available = '" . $this->db->escape($data['available']) . "' WHERE product_id = '" . (int)$product_id . "'");
+			}
+			else { $this->db->query("UPDATE " . DB_PREFIX . "product  SET available = '0' WHERE product_id = '" . (int)$product_id . "'"); }
+
+			
 			if( isset($data['location']) ) 			$this->db->query("UPDATE " . DB_PREFIX . "product  SET location = '" . $this->db->escape($data['location']) . "' WHERE product_id = '" . (int)$product_id . "'");
 			if( isset($data['length']) ) 			$this->db->query("UPDATE " . DB_PREFIX . "product  SET length = '" . (float)$data['length'] . "' WHERE product_id = '" . (int)$product_id . "'");
 			if( isset($data['width']) ) 			$this->db->query("UPDATE " . DB_PREFIX . "product  SET width = '" . (float)$data['width'] . "' WHERE product_id = '" . (int)$product_id . "'");

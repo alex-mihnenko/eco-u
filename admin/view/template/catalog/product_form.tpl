@@ -1538,4 +1538,6 @@ $('.datetime').datetimepicker({
 $('#language a:first').tab('show');
 $('#option a:first').tab('show');
 //--></script></div>
+
+
 <?php echo $footer; ?>
