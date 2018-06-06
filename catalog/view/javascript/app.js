@@ -281,7 +281,27 @@ $(document).ready(function() {
 				                            $form.find('[name="deliveryprice"]').val(data.deliveryprice);
 
 				                            $form.find('.cart-shipping-price [data-type="value"]').html(data.deliveryprice+' рублей');
-				                            $form.find('.cart-total-price [data-type="value"]').html((total+data.deliveryprice-discount)+' рублей');
+
+				                            var newtotal = total+data.deliveryprice-discount;
+				                            var newtotal_string = newtotal.toString();;
+
+				                            // Check curency
+				                            	var currency = 'рублей';
+
+				                            	var totalend = parseInt(newtotal_string.substring(newtotal_string.length - 2));
+										        var totallast = parseInt(newtotal_string.substring(newtotal_string.length - 1));
+
+										        if( totalend > 10 && totalend <= 19 ) {
+										            currency = 'рублей';
+										        } else {
+										          	if(totallast == 1 ) { currency = 'рубль'; } 
+										            else if( totallast > 1 && totallast < 5 )  { currency = 'рубля'; }
+										            else { currency = 'рублей'; }
+										        }
+
+				                            // ---
+
+				                            $form.find('.cart-total-price [data-type="value"]').html(newtotal+' '+currency);
 
 				                            $form.find('.cart-shipping-price').show();
 				                            $form.find('.cart-total-price').show();
@@ -959,9 +979,7 @@ $(document).ready(function() {
                 type: "ADDRESS",
                 count: 5,
                 /* Вызывается, когда пользователь выбирает одну из подсказок */
-                onSelect: function(suggestion) {
-                    console.log(suggestion);
-                }
+                onSelect: function(suggestion) {}
             });
 		// ---
 	}

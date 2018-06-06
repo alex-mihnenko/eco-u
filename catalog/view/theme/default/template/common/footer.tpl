@@ -64,8 +64,8 @@
     <script src="catalog/view/libs/enjoyhint-master/enjoyhint.js"></script>
 
     <!-- Core -->
-    <script src="/new_design/js/my_scripts.v1.js"></script>
-    <script src="catalog/view/javascript/app.v1.js"></script>
+    <script src="/new_design/js/my_scripts.js"></script>
+    <script src="catalog/view/javascript/app.js"></script>
 
     <!-- Yandex.Metrika counter -->
     <script>

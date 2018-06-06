@@ -43,7 +43,21 @@
 
     <div class="cart-footer text-align-center">
         <p class="xs">Стоимость заказа</p>
-        <p class="h4"><?php echo $total; ?> рублей</p>
+
+        <?php $totalend = intval(substr($total, -2)); ?>
+        <?php $totallast = intval(substr($total, -1)); ?>
+
+        <?php if( $totalend > 10 && $totalend <= 19 ) { ?>
+            <?php $currency = 'рублей'; ?>
+        <?php } else { ?>
+            <?php
+                if( $totallast == 1 ) { $currency = 'рубль'; } 
+                else if( $totallast > 1 && $totallast < 5 )  { $currency = 'рубля'; }
+                else { $currency = 'рублей'; }
+            ?>
+        <?php } ?>
+
+        <p class="h4"><?php echo $total; ?> <?php echo $currency; ?></p>
         <p class="xs">(без учета скидки и стоимости доставки)</p>
 
         <hr class="indent xs">

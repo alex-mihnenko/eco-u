@@ -241,7 +241,7 @@ $_['error_encryption']             = 'Ключ шифрования должен
 		$_['help_first_purchase_discount_percent'] = 'Введите процент скидки';
 		$_['entry_first_purchase_free_delivery'] = 'Бесплатная доставка';
 		$_['entry_first_purchase_date'] = 'Срок действий условий';
-		$_['help_first_purchase_date'] = 'Выберите дату';
+		$_['help_first_purchase_date'] = 'Выберите даты и время (обязательно)';
 		$_['entry_first_purchase_date_start'] = 'Дата начала';
 		$_['entry_first_purchase_date_end'] = 'Дата завершения';
 	// ---

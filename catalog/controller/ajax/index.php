@@ -962,21 +962,28 @@ class ControllerAjaxIndex extends Controller {
           $now = time();
 
           $first_purchase = intval($this->config->get('config_first_purchase'));
-
           $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
           $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
           $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
 
-          $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
-          $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
-          $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
+          if ( $this->config->get('config_first_purchase_date_start') != '' && $this->config->get('config_first_purchase_date_end') != '' ) {
+            // ---
+              $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
+              $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
+              $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
 
-          $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
-          
-          $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
-          $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
-          $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
-          $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+              $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
+              
+              $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
+              $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
+              $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
+              $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+            // ---
+          }
+          else {
+            $first_purchase_date_start = $now-86400;
+            $first_purchase_date_end = $now-86400;
+          }
           
           if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
             // ---
@@ -1013,15 +1020,15 @@ class ControllerAjaxIndex extends Controller {
 
                   if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
                   else { $response->first_purchase_discount = $totalTwo; }
-
-                  $response->totalOne = $totalOne;
-                  $response->totalTwo = $totalTwo;
                 // ---
 
                 if( $first_purchase_free_delivery == 1 ){
                   $response->deliveryprice = 0;
                   $this->session->data['shipping_price'] = 0;
                 }
+              }
+              else {
+                $response->first_purchase = false;
               }
             // ---
           }
@@ -1129,105 +1136,114 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         $this->load->model('checkout/order');
-
         // Check discount
-            $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-            
-            $this->session->data['personal_discount'] = 0;
-            $this->session->data['personal_discount_percentage'] = 0;
-            
-            $this->session->data['cumulative_discount'] = 0;
-            $this->session->data['cumulative_discount_percentage'] = 0;
-            
-            // Personal discount
-                $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
-                
-                $basePrice = $this->cart->getTotal();
-                $order_discount = $customer_discount/100;
-
-                $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
-                $this->session->data['personal_discount_percentage'] = $customer_discount;
-            // ---
-
-            // Cumulative discount
-                $totalCustomerOutcome = 0;
-
-                if($orders !== false) {
-                    foreach($orders as $order) {
-                        if($order['order_status_id'] == 5) {
-                            $totalCustomerOutcome += $order['total'];
-                        }
-                    }
-                }
-
-                $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
-                
-                $order_discount = $cumulative_discount/100;
-                $basePrice = $this->cart->getTotal();
-
-
-                $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
-                $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
-            // ---
-
             $data['discount'] = 0;
             $data['discount_percentage'] = 0;
+            
+            $personal_discount = 0;
+            $personal_discount_percentage = 0;
+
+            $cumulative_discount = 0;
+            $cumulative_discount_percentage = 0;
+
+            if(isset($customer_id)) {
+                $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+
+                // Personal discount
+                    $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+                    
+                    $basePrice = $this->cart->getTotal();
+                    $order_discount = $customer_discount/100;
+
+                    $personal_discount = floor($order_discount * $basePrice);
+                    $personal_discount_percentage = $customer_discount;
+                // ---
+
+                // Cumulative discount
+                    $totalCustomerOutcome = 0;
+
+                    if($orders !== false) {
+                        foreach($orders as $order) {
+                            if($order['order_status_id'] == 5) {
+                                $totalCustomerOutcome += $order['total'];
+                            }
+                        }
+                    }
+
+                    $customer_discount = intval(floor($totalCustomerOutcome/10000));
+                    if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
+                    
+                    $order_discount = $customer_discount/100;
+                    $basePrice = $this->cart->getTotal();
+
+
+                    $cumulative_discount = floor($order_discount * $basePrice);
+                    $cumulative_discount_percentage = $customer_discount;
+                // ---
+            }
 
             if(!$this->customer->getCouponDiscount()) {
                 // ---
-                    if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
-                        $data['discount'] = $this->session->data['personal_discount'];
-                        $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
+                    if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                        $data['discount'] = $personal_discount;
+                        $data['discount_percentage'] = $personal_discount_percentage;
                     }
                     else{
-                        $data['discount'] = $this->session->data['cumulative_discount'];
-                        $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
+                        $data['discount'] = $cumulative_discount;
+                        $data['discount_percentage'] = $cumulative_discount_percentage;
                     }
                 // ---
             } else {
                 // ---
-                  $coupon = $this->customer->getCouponDiscount();
-                  $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
-                  $couponPercentage = $coupon['discount'];
+                    $coupon = $this->customer->getCouponDiscount();
+                    $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+                    $couponPercentage = $coupon['discount'];
 
-                  if( $couponPercentage > $this->session->data['personal_discount_percentage']  && $couponPercentage > $this->session->data['cumulative_discount_percentage'] ) {
+                    if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
                         $data['discount'] = $couponDiscount;
                         $data['discount_percentage'] = $couponPercentage;
                     }
                     else{
-                        if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
-                            $data['discount'] = $this->session->data['personal_discount'];
-                            $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
+                        if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                            $data['discount'] = $personal_discount;
+                            $data['discount_percentage'] = $personal_discount_percentage;
                         }
                         else{
-                            $data['discount'] = $this->session->data['cumulative_discount'];
-                            $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
+                            $data['discount'] = $cumulative_discount;
+                            $data['discount_percentage'] = $cumulative_discount_percentage;
                         }
                     }
                 // ---
             }
+
         // ---
 
         // First purchase
           $now = time();
 
           $first_purchase = intval($this->config->get('config_first_purchase'));
-
           $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
           $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
           $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
 
-          $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
-          $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
-          $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
+          if ( $this->config->get('config_first_purchase_date_start') != '' && $this->config->get('config_first_purchase_date_end') != '' ) {
+            // ---
+              $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
+              $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
+              $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
 
-          $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
-          
-          $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
-          $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
-          $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
-          $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+              $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
+              
+              $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
+              $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
+              $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
+              $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+            // ---
+          }
+          else {
+            $first_purchase_date_start = $now-86400;
+            $first_purchase_date_end = $now-86400;
+          }
           
           if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
             // ---
@@ -1237,12 +1253,22 @@ class ControllerAjaxIndex extends Controller {
 
                 $customer_first_purchase = false;
 
-                // Check orders
-                  $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                  
-                  if( $orders == false ){ $customer_first_purchase = true; }
-                // ---
-               
+                if( empty($customer) ) {
+                  // ---
+                    $customer_first_purchase = true;
+                  // ---
+                }
+                else {
+                  // Check orders
+                    $customer_id = $customer['customer_id'];
+
+                    $this->load->model('checkout/order');
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                    
+                    if( $orders == false ){ $customer_first_purchase = true; }
+                  // ---
+                }
+              // ---
 
               if( $customer_first_purchase == true ) {
                 $response->first_purchase = true;
@@ -1264,6 +1290,14 @@ class ControllerAjaxIndex extends Controller {
                   $data['discount'] = $response->first_purchase_discount;
                   $data['discount_percentage'] = $response->first_purchase_discount_percent;
                 // ---
+
+                if( $first_purchase_free_delivery == 1 ){
+                  $response->deliveryprice = 0;
+                  $this->session->data['shipping_price'] = 0;
+                }
+              }
+              else {
+                $response->first_purchase = false;
               }
             // ---
           }
