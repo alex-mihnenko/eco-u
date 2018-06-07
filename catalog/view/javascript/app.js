@@ -1,4 +1,7 @@
 var app = {
+  width: 0,
+  height: 0,
+  size: '',
   dashboard: {
     enjoyhint: null
   },
@@ -18,7 +21,8 @@ $(document).ready(function() {
 		initStart();
 
 		// Handlers
-	    	$(window).resize(columnizerInit);
+			watchEnv();
+			$(window).resize(watchEnv);
 	    // ---
 
 	    // Roistat
@@ -965,6 +969,55 @@ $(document).ready(function() {
 });
 
 // General
+	function watchEnv(){
+		app.width = $(window).width();
+		app.height = $(window).height();
+		
+		//console.log(app.width + ' x ' + app.height);
+
+		// Get size
+			if (app.width < 576) { app.size = 'xs'; }
+			else if (app.width >= 576 && app.width < 768) { app.size = 'sm'; }
+			else if (app.width >= 768 && app.width < 992) { app.size = 'md'; }
+			else if (app.width >= 992 && app.width < 1200) { app.size = 'lg'; }
+			else if (app.width >= 1200 && app.width < 1920) { app.size = 'xl'; }
+			else if (app.width >= 1920) { app.size = 'xxl'; }
+		// ---
+
+		// Product grid
+			$('.slider-profitable_offer .box-p_o').each(function(key,val){
+				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+					$(this).find('a').attr('target','_blank');
+				}
+				else {
+					$(this).find('a').removeAttr('target');
+				}
+			});
+
+			$('.tabs__block .box-p_o').each(function(key,val){
+				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+					$(this).find('a').attr('target','_blank');
+				}
+				else {
+					$(this).find('a').removeAttr('target');
+				}
+			});
+
+			$('.remodal .modal-product').each(function(key,val){
+				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+					$(this).find('a').attr('target','_blank');
+				}
+				else {
+					$(this).find('a').removeAttr('target');
+				}
+			});
+		// ---
+
+		// Addon
+			columnizerInit();
+		// ---
+	}
+
 	function initStart(){
 		$('[name="phone"]').mask("+7 (h99) 999-99-99");
 		$('[name="telephone"]').mask("+7 (h99) 999-99-99");
