@@ -696,13 +696,13 @@ $(document).ready(function() {
 			$('#form-auth').submit(function(){
 				console.log('Auth init');
 				
-				var form = $(this);
+				var $form = $(this);
 
-				var phone = $('#phone3').val();
-	            var pass = $('#password3').val();
+				var telephone = $form.find('[name="phone"]').val();
+				var password = $form.find('[name="password"]').val();
 
-	            if(phone != '' && pass != '') {
-	                $.post('/?route=ajax/index/ajaxLoginByPhone',{ telephone: phone, password: pass}, function(data){
+	            if(telephone != '' && password != '') {
+	                $.post('/?route=ajax/index/ajaxLoginByPhone',{ telephone: telephone, password: password}, function(data){
 	                    if(data.status == 'success') {
 	                    	console.log('Auth success');
 
@@ -710,9 +710,9 @@ $(document).ready(function() {
 	                    } else {
 	                    	console.log('Auth error');
 
-	                        form.find('.t-c_input').addClass('input-error_1');
-	                        form.find('.message-error').html( data.message );
-	                        form.find('.message-error').show();
+	                        $form.find('.t-c_input').addClass('input-error_1');
+	                        $form.find('.message-error').html( data.message );
+	                        $form.find('.message-error').show();
 	                    }
 	                }, "json");
 	            }
@@ -770,7 +770,7 @@ $(document).ready(function() {
 				// ---
 					app.modals.auth.close();
 
-			        $('#phone4').val('');
+			        $('#form-recovery').find('[name="phone"]').val('');
 
 					setTimeout(function(){
 						app.modals.recovery.open();
@@ -783,7 +783,7 @@ $(document).ready(function() {
 
 				var $form = $(this);
 				var $modal = $(this).parents('.remodal');
-				var telephone = $('#phone4').val();
+				var telephone = $form.find('[name="phone"]').val();
 
 	            if(telephone != '' ) {
 	                $.post('/?route=ajax/index/recoveryPasswordByTelephone',{ telephone: telephone}, function(data){
@@ -806,7 +806,8 @@ $(document).ready(function() {
 	                    			$modal.find('.success').fadeIn('fast');
 
 
-							        $('#phone4').val('');
+							        $('#form-recovery').find('[name="phone"]').val('');
+							        $('#form-auth').find('[name="phone"]').val(telephone);
 
 									setTimeout(function(){ app.modals.recovery.close(); },3000);
 									setTimeout(function(){ app.modals.auth.open(); },3500);

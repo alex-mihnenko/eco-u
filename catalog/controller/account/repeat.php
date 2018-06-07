@@ -60,6 +60,7 @@ class ControllerAccountRepeat extends Controller {
 				'model'    => $product_info['model'],
 				'quantity' => $product['quantity'],
 				'quantity_stock' => $product_info['quantity'],
+				'status' => $product_info['status'],
 				'stock_status_id' => $product_info['stock_status_id'],
 				'weight_class' => $product_info['weight_class'],
 				'weight_variant' => $product_info['weight_variant'],
