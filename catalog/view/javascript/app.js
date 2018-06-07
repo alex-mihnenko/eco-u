@@ -246,6 +246,7 @@ $(document).ready(function() {
 					var firstname = $form.find('[name="firstname"]').val();
 					var telephone = $form.find('[name="telephone"]').val();
 					var address = $form.find('[name="address"]').val();
+					var comment = $form.find('[name="comment"]').val();
 
 					var payment_method = $form.find('[name="payment_method"]').val();
 					var payment_code = $form.find('[name="payment_code"]').val();
@@ -260,7 +261,7 @@ $(document).ready(function() {
 				// Send request
 					if( deliveryprice == -1 ){
 						// Get shipping price
-							$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
+							$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time, comment: comment }, function(data){
 			                	// ---
 			                		if( typeof yaCounter33704824 != 'undefined' ){
 				                        yaCounter33704824.reachGoal('checkout-delivery');
@@ -327,7 +328,7 @@ $(document).ready(function() {
 							$form.find('button[type="submit"]').attr('disabled','true');
 							$form.find('button[type="submit"]').attr('type','button');
 
-							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time }, function(data){
+							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time, comment: comment }, function(data){
 			                	// ---
 			                		if( typeof yaCounter33704824 != 'undefined' ){
 										yaCounter33704824.reachGoal('checkout-confim');
@@ -398,7 +399,7 @@ $(document).ready(function() {
 
 	// Catalog
 		// Filter
-			$('.tabs__catalog li.modal8').on( 'click', function(){
+			$('.tabs__catalog li.modal8').on( 'click', function(e){
 				if(!$(this).hasClass('active')) {
 					// ---
 						$category_id = $('#category').attr('data-id');

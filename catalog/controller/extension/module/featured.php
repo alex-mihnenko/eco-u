@@ -2,15 +2,6 @@
 class ControllerExtensionModuleFeatured extends Controller {
 	public function index($setting) {
 		$this->load->language('extension/module/featured');
-
-                if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
-                {
-                    $data['is_admin'] = true;
-                }
-                else
-                {
-                    $data['is_admin'] = false;
-                }
                 
 		$data['heading_title'] = $this->language->get('heading_title');
 

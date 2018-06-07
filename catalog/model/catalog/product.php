@@ -82,13 +82,21 @@ class ModelCatalogProduct extends Model {
                 }
 
                 // Автоматическое присвоение/снятие стикера "Новинка"
+                //$dateAdded = strtotime($row['date_added']);
+                $datetime = explode(' ', $row['date_added']);
+                $date = explode('-', $datetime[0]);
+                $time = explode(':', $datetime[1]);
 
-                $dateAdded = strtotime($row['date_added']);
-                if($dateAdded > time() - 432000) {
+                $date_added = mktime(intval($time[0]), intval($time[1]), intval($time[2]), intval($date[1]), intval($date[2]), intval($date[0]));
+
+                if($date_added > time() - 604800) {
                     $sticker = Array(
                         'class' => 20,
                         'name' => "Новинка"
                     );
+                }
+                else {
+                    $sticker = false;
                 }
 
                 $products[$row['product_id']] = array(
@@ -201,12 +209,20 @@ class ModelCatalogProduct extends Model {
                     
                         // Автоматическое присвоение/снятие стикера "Новинка"
                     
-                        $dateAdded = strtotime($query->row['date_added']);
-                        if($dateAdded > time() - 432000) {
+                        $datetime = explode(' ', $query->row['date_added']);
+                        $date = explode('-', $datetime[0]);
+                        $time = explode(':', $datetime[1]);
+
+                        $date_added = mktime(intval($time[0]), intval($time[1]), intval($time[2]), intval($date[1]), intval($date[2]), intval($date[0]));
+
+                        if($date_added > time() - 604800) {
                             $sticker = Array(
                                 'class' => 20,
                                 'name' => "Новинка"
                             );
+                        }
+                        else {
+                            $sticker = false;
                         }
                     
 			return array(
