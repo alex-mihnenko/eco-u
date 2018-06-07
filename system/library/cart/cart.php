@@ -299,13 +299,14 @@ class Cart {
                 }
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "cart WHERE weight_variant = ".(int)$weight_variant." AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
 
-                $queryCheckWeightVariants = $this->db->query("SELECT weight_variants FROM " . DB_PREFIX . "product WHERE product_id = ".$this->db->escape($product_id));
+        $queryCheckWeightVariants = $this->db->query("SELECT weight_variants FROM " . DB_PREFIX . "product WHERE product_id = ".$this->db->escape($product_id));
 
-                if (!$query->row['total']) {
+        if (!$query->row['total']) {
 			$this->db->query("INSERT " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "', customer_id = '" . (int)$this->customer->getId() . "', session_id = '" . $this->db->escape($this->session->getId()) . "', product_id = '" . (int)$product_id . "', recurring_id = '" . (int)$recurring_id . "', `option` = '" . $this->db->escape(json_encode($option)) . "', quantity = '" . (float)$quantity . "', packaging = '" . (float)$packaging . "', date_added = NOW()");
 		} else {
 			$this->db->query("UPDATE " . DB_PREFIX . "cart SET weight_variant = " . $weight_variant . ", special_price = " . $special_price . ", quantity = (quantity + " . (float)$quantity . ") WHERE weight_variant = ".(int)$weight_variant." AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
 		}
+
 	}
 
 	public function update($cart_id, $quantity) {

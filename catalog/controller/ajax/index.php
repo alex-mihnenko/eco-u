@@ -476,27 +476,21 @@ class ControllerAjaxIndex extends Controller {
               $product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
               $product_id = $product['product_id'];
-              $quantity = $product['quantity'];
-              $packaging = 1;
+              $quantity = $product['amount'];
+              $packaging = $product['variant'];
 
               if ($product_info && $product_info['quantity']>0) {
                 // ---
+                  //file_put_contents('_dump.txt', $product_id . ' --- ' . $product['amount'] . ' --- ' . $product_info['weight_variants']."\n", FILE_APPEND | LOCK_EX);
+
                   if($product_info['weight_variants'] !== '') {
                     $weightVariants = explode(',', $product_info['weight_variants']);
-                    $weight_variant = array_search($product['quantity'], $weightVariants);
+                    $weight_variant = array_search($product['variant'], $weightVariants);
                   } else {
                     $weight_variant = 1;
                   }
 
                   $option = array();
-
-                  $product_options = $this->model_catalog_product->getProductOptions($product_id);
-
-                  foreach ($product_options as $product_option) {
-                    if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
-                      $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
-                    }
-                  }
 
                   $recurring_id = 0;
                                          

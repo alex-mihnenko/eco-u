@@ -21,11 +21,18 @@
                 </div>
 
                 <div class="col quantity text-align-left-xs text-align-left-sm">
-                    <p><?php echo $product['quantity']; ?> <span><?php echo $product['weight_class']; ?></span></p>
+                    <?php if( $product['quantity_stock'] > 0 ) { ?>
+                        <p><?php echo $product['quantity']; ?> <span><?php echo $product['weight_class']; ?></span></p>
+                    <?php } ?>
 
                     <div class="total">
-                        <hr class="indent xxs">
-                        <p><?php echo $product['total']; ?> <span>руб.</span></p>
+                        <?php if( $product['quantity_stock'] > 0 ) { ?>
+                            <hr class="indent xxs">
+                            <p><?php echo $product['total']; ?> <span>руб.</span></p>
+                        <?php } else { ?>
+                            <p class="text-color-red">Нет в наличии</p>
+                        <?php } ?>
+                        
                     </div>
                 </div>
 
@@ -42,7 +49,7 @@
 
 
     <div class="cart-footer text-align-center">
-        <p class="xs">Стоимость заказа</p>
+        <p class="xs">Сумма без учета скидок и доставки</p>
 
         <?php $totalend = intval(substr($total, -2)); ?>
         <?php $totallast = intval(substr($total, -1)); ?>
@@ -58,7 +65,6 @@
         <?php } ?>
 
         <p class="h4"><?php echo $total; ?> <?php echo $currency; ?></p>
-        <p class="xs">(без учета скидки и стоимости доставки)</p>
 
         <hr class="indent xs">
 
