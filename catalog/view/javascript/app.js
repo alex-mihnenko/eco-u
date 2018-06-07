@@ -932,6 +932,10 @@ $(document).ready(function() {
 	                    		// ---
 	                    	}
 
+	                    	setTimeout(function(){
+	                    		app.modals.repeat.close();
+	                    	}, 3000);
+	                    	
 							LoadCart();
 						// ---
 					},'json');

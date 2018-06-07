@@ -479,7 +479,7 @@ class ControllerAjaxIndex extends Controller {
               $quantity = $product['amount'];
               $packaging = $product['variant'];
 
-              if ($product_info && $product_info['quantity']>0) {
+              if ($product_info && $product_info['status']==1 && $product_info['stock_status_id']==7) {
                 // ---
                   //file_put_contents('_dump.txt', $product_id . ' --- ' . $product['amount'] . ' --- ' . $product_info['weight_variants']."\n", FILE_APPEND | LOCK_EX);
 
