@@ -768,9 +768,12 @@ $(document).ready(function() {
 		// Recovery
 			$('[data-remodal-id="modal"]').on('click', '[data-action="auth-recovery-init"]', function(){
 				// ---
+					var $form = $(this).parents('#form-auth');
+					var telephone = $form.find('[name="phone"]').val();
+					
 					app.modals.auth.close();
 
-			        $('#form-recovery').find('[name="phone"]').val('');
+			        $('#form-recovery').find('[name="phone"]').val(telephone);
 
 					setTimeout(function(){
 						app.modals.recovery.open();
@@ -935,7 +938,7 @@ $(document).ready(function() {
 	                    	setTimeout(function(){
 	                    		app.modals.repeat.close();
 	                    	}, 3000);
-	                    	
+
 							LoadCart();
 						// ---
 					},'json');
