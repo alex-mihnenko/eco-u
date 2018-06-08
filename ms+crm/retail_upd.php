@@ -1,7 +1,10 @@
 <?php
 
-include("opencart_inc.php");
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
+include("opencart_inc.php");
+$log = [];
 
 $link="https://eco-u.retailcrm.ru/api/v5/reference/statuses?apiKey=".$retail_key;
 $res=crm_query($link);
@@ -36,54 +39,93 @@ if($_GET['type']){
 	}
 
 
-	//Проверяем если что-то в заказе добавилось добавляем в order_product если удалилось, то удаляем, если изменилось, то изменяем
-	$ndel=array();
+	// Edit order products
+		$ndel=array();
+		
+		foreach($res['order']['items'] as $kg=>$vg){
+			// ---
+				if ( $qOrderProduct = mysql_query("SELECT `order_product_id` FROM `oc_order_product` WHERE `order_id`=".$num." AND `product_id`='{$vg['offer']['externalId']}';") ) $nOrderProduct = mysql_num_rows($qOrderProduct);
+				else $nOrderProduct = 0;
 
-	foreach($res['order']['items'] as $kg=>$vg){
-	    $resx=mysql_query("select order_product_id from oc_order_product where order_id='$num' and product_id='{$vg['offer']['externalId']}'");
-		list($opid)=mysql_fetch_row($resx);
+				$totalg=$vg['initialPrice']*$vg['quantity'];
 
-		$totalg=$vg['initialPrice']*$vg['quantity'];
+				if( $nOrderProduct==0 ){
+					// ---
+						// Get product
+							if ( $qProduct = mysql_query("SELECT * FROM `oc_product` WHERE `product_id`='{$vg['offer']['externalId']}';") ) $nProduct = mysql_num_rows($qProduct);
+							else $nProduct = 0;
+						// ---
 
-		if(!$opid) {
+						if( $nProduct>0 ){
+							// ---
+								$rowProduct = mysql_fetch_assoc($qOrderProduct);
 
-			mysql_query("
-				INSERT INTO `oc_order_product` SET 
-				order_id='$num', product_id='{$vg['offer']['externalId']}',
-				name='{$vg['offer']['name']}',
-				quantity='{$vg['quantity']}',
-				price='{$vg['initialPrice']}',
-				total ='$totalg';
-			");
+								$qInsert = mysql_query("
+									INSERT INTO `oc_order_product` SET 
+									`order_id`='$num',
+									`product_id`='{$vg['offer']['externalId']}',
+									`name`='{$vg['offer']['name']}',
+									`model`='".$rowProduct['model']."',
+									`quantity`='{$vg['quantity']}',
+									`amount`='1',
+									`variant`='1',
+									`price`='{$vg['initialPrice']}',
+									`total` ='$totalg',
+									`tax`='0',
+									`reward`='0'
+								");
 
-			$opid=mysql_insert_id();
+								$opid=mysql_insert_id();
+
+								$log[] = "New product in order: [".$opid."] SQL Error Insert: [".mysql_error()."]";
+							// ---
+						}
+
+					// ---
+				}
+				else {
+					// ---
+						$rowProduct = mysql_fetch_assoc($qOrderProduct);
+						$opid=$rowProduct['order_product_id'];
+
+						$qUpdate = mysql_query("
+							UPDATE `oc_order_product` SET 
+							quantity='{$vg['quantity']}',
+							price='{$vg['initialPrice']}',
+							total ='$totalg' 
+							WHERE `order_product_id`='$opid';
+						");
+
+						$log[] = "Update product in order: [".$opid."] SQL Error Update: [".mysql_error()."]";
+					// ---
+				}
+			
+				$ndel[]=$opid;
+			// ---
 		}
-		else{
-			mysql_query("
-				UPDATE `oc_order_product` SET 
-				quantity='{$vg['quantity']}',
-				price='{$vg['initialPrice']}',
-				total ='$totalg' 
-				WHERE `order_product_id`='$opid';
-			");
+	// ---
+
+	// Clear products
+		if ( $qOrderProduct = mysql_query("SELECT `order_product_id` FROM `oc_order_product` WHERE `order_id`=".$num.";") ) $nOrderProduct = mysql_num_rows($qOrderProduct);
+		else $nOrderProduct = 0;
+
+		if( $nOrderProduct>0 ){
+			// ---
+				while ($row = mysql_fetch_assoc($qOrderProduct)) {
+				    if(!in_array($row['order_product_id'],$ndel)) {
+				    	$qDelete = mysql_query("DELETE FROM `oc_order_product` WHERE `order_product_id`='".$row['order_product_id']."';");
+				    }
+				}
+			// ---
 		}
+	// ---
 
-		$ndel[]=$opid;
-	}
-
-    $resx=mysql_query("select order_product_id from oc_order_product where order_id='$num' ");
-
-	while(list($opid)=mysql_fetch_row($resx)){
-		if(!in_array($opid,$ndel)) mysql_query("delete from oc_order_product where order_product_id='$opid'");
-	}
-
-
-	//Обновляем данные по заказу в oc_order и в oc_order_total
-	mysql_query("UPDATE `oc_order` SET `total`='{$res['order']['totalSumm']}', `order_status_id`='$order_status_id', `rcrm_status`='edited' WHERE `order_id`='{$res['order']['externalId']}'");
-	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['totalSumm']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='total'");
-	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['summ']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='sub_total'");
-	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['delivery']['cost']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='shipping'");
-
+	// Update order and totals
+		$qUpdate = mysql_query("UPDATE `oc_order` SET `total`='{$res['order']['totalSumm']}', `order_status_id`='$order_status_id', `rcrm_status`='edited' WHERE `order_id`='{$res['order']['externalId']}'");
+		$qUpdate = mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['totalSumm']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='total'");
+		$qUpdate = mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['summ']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='sub_total'");
+		$qUpdate = mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['delivery']['cost']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='shipping'");
+	// ---
 
 	//Ищем ID заказа в МоёмCкладе
 	$resx=mysql_query("select ms_id,demand_id from ms_leads where retailcrm_id='$num'");
@@ -235,5 +277,8 @@ if($_GET['type']){
 		// ---
 	}
 
+
+	// Show log
+	print_r($log);
 // ---
 }
