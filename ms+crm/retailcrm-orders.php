@@ -77,8 +77,8 @@
 							// ---
 						}
 			    	// ---
-						
-					echo $weight;
+
+					$log[] = 'Total weight: ' . $weight;
 
 					// Update order
 						if( $weight > 0 ){
