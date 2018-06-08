@@ -97,9 +97,9 @@
 							$q = "UPDATE `oc_order` SET `rcrm_status` = '' WHERE `order_id`=".$order['order_id'].";";
 
 							if ($db->query($q) === TRUE) {
-							    $log[] .= 'Success update: '.$order['order_id'];
+							    $log[] = 'Success update: '.$order['order_id'];
 							} else {
-							    $log[] .= 'Error updating: '.$order['order_id'].' ['. $db->error.']';
+							    $log[] = 'Error updating: '.$order['order_id'].' ['. $db->error.']';
 							}
 						}
 			    	// ---
