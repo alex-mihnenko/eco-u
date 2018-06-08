@@ -8,7 +8,13 @@
         <?php foreach($products as $product) { ?>
             <div class="product">
 
-                <?php if( $product['status'] == 1 && $product['stock_status_id'] == 7 ) { ?>
+                <?php
+                    if( $product['quantity'] > 0 && $product['status'] == 1 ) { $instock = true; }
+                    else if ( $product['quantity'] <= 0 && $product['status'] == 1 && ($product['stock_status_id'] == 7 || $product['stock_status_id'] == 6) ) { $instock = true; }
+                    else { $instock = false; }
+                ?>
+
+                <?php if( $instock ) { ?>
                 <div class="col thumb">
                 <?php } else { ?>
                 <div class="col thumb none">
@@ -21,12 +27,12 @@
                 </div>
 
                 <div class="col quantity text-align-left-xs text-align-left-sm">
-                    <?php if( $product['status'] == 1 && $product['stock_status_id'] == 7 ) { ?>
+                    <?php if( $instock ) { ?>
                         <p><?php echo $product['quantity']; ?> <span><?php echo $product['weight_class']; ?></span></p>
                     <?php } ?>
 
                     <div class="total">
-                        <?php if( $product['status'] == 1 && $product['stock_status_id'] == 7 ) { ?>
+                        <?php if( $instock ) { ?>
                             <hr class="indent xxs">
                             <p><?php echo $product['total']; ?> <span>руб.</span></p>
                         <?php } else { ?>
@@ -37,7 +43,7 @@
                 </div>
 
                 <div class="col total">
-                    <?php if( $product['status'] == 1 && $product['stock_status_id'] == 7 ) { ?>
+                    <?php if( $instock ) { ?>
                         <p><?php echo $product['total']; ?> <span>руб.</span></p>
                     <?php } else { ?>
                         <p class="text-color-red">Нет в наличии</p>

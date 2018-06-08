@@ -480,24 +480,34 @@ class ControllerAjaxIndex extends Controller {
               $quantity = $product['amount'];
               $packaging = $product['variant'];
 
-              if ($product_info && $product_info['status']==1 && $product_info['stock_status_id']==7) {
+
+              if ($product_info) {
                 // ---
-                  if($product_info['weight_variants'] !== '') {
-                    $weightVariants = explode(',', $product_info['weight_variants']);
-                    $weight_variant = array_search($product['variant'], $weightVariants);
-                  } else {
-                    $weight_variant = 1;
+                  // In stock calculate
+                  if( $product_info['quantity'] > 0 && $product_info['status'] == 1 ) { $instock = true; }
+                  else if ( $product_info['quantity'] <= 0 && $product_info['status'] == 1 && ($product_info['stock_status_id'] == 7 || $product_info['stock_status_id'] == 6) ) { $instock = true; }
+                  else { $instock = false; }
+
+                  if ( $instock ) {
+                    // ---
+                      if($product_info['weight_variants'] !== '') {
+                        $weightVariants = explode(',', $product_info['weight_variants']);
+                        $weight_variant = array_search($product['variant'], $weightVariants);
+                      } else {
+                        $weight_variant = 1;
+                      }
+
+                      $option = array();
+
+                      $recurring_id = 0;
+                                             
+                      $this->cart->add($product_id, $quantity, $packaging, $option, $recurring_id, $weight_variant);
+
+                      $response->report[$product_id] = array('quantity' => $quantity, 'packaging' => $packaging, 'option' => $option, 'recurring_id' => $recurring_id, 'weight_variant' => $weight_variant);
+                      
+                      $response->count++;
+                    // ---
                   }
-
-                  $option = array();
-
-                  $recurring_id = 0;
-                                         
-                  $this->cart->add($product_id, $quantity, $packaging, $option, $recurring_id, $weight_variant);
-
-                  $response->report[$product_id] = array('quantity' => $quantity, 'packaging' => $packaging, 'option' => $option, 'recurring_id' => $recurring_id, 'weight_variant' => $weight_variant);
-                  
-                  $response->count++;
                 // ---
               }
             // ---
