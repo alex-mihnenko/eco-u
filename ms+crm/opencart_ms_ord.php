@@ -172,8 +172,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			$extid=$msp_product_id;
 			if($msv_povid) $extid.="#$msv_povid";
 
-			if($quantity) $items_[$extid][]=array('quantity'=>(float)$quantity, 'amount'=>(float)$amount, 'initialPrice'=>(double)$price,
-				'fasovka'=>$fasovka);	
+			if($quantity) $items_[$extid][]=array('quantity'=>(float)$quantity, 'amount'=>(float)$amount, 'initialPrice'=>(double)$price, 'fasovka'=>$fasovka);	
 		} // while
 	// ...
 
