@@ -455,6 +455,7 @@ class ControllerAjaxIndex extends Controller {
       // ---
     }
 
+    // Reorder
     public function repeatCustomerOrder() {
       // ---
         // Init
@@ -481,8 +482,6 @@ class ControllerAjaxIndex extends Controller {
 
               if ($product_info && $product_info['status']==1 && $product_info['stock_status_id']==7) {
                 // ---
-                  //file_put_contents('_dump.txt', $product_id . ' --- ' . $product['amount'] . ' --- ' . $product_info['weight_variants']."\n", FILE_APPEND | LOCK_EX);
-
                   if($product_info['weight_variants'] !== '') {
                     $weightVariants = explode(',', $product_info['weight_variants']);
                     $weight_variant = array_search($product['variant'], $weightVariants);
