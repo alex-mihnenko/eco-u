@@ -35,7 +35,7 @@
 			while ($order = $orders->fetch_assoc()) {
 			    // ---
 			    	// Calculate weight
-						$q = "SELECT `oc_order_product`.`variant`, `oc_product`.`weight_class_id`, `oc_product`.`weight`, `oc_product`.`weight_package` FROM `oc_order_product` LEFT JOIN `oc_product` ON `oc_product`.`product_id`=`oc_order_product`.`product_id` WHERE `oc_order_product`.`order_id`=".$order['order_id'].";;";
+						$q = "SELECT `oc_order_product`.`quantity`, `oc_order_product`.`variant`, `oc_product`.`weight_class_id`, `oc_product`.`weight`, `oc_product`.`weight_package` FROM `oc_order_product` LEFT JOIN `oc_product` ON `oc_product`.`product_id`=`oc_order_product`.`product_id` WHERE `oc_order_product`.`order_id`=".$order['order_id'].";;";
 						$products = $db->query($q);
 
 						$weight=0;
@@ -50,13 +50,13 @@
 										
 										if($product['weight']!="0.00000000"){
 											if($product['weight_class_id']==8 || $product['weight_class_id']==2 || $product['weight_class_id']==1 || $product['weight_class_id']==7) {
-												$weight=$weight+round(($order['quantity']*$product['weight']));
+												$weight=$weight+round(($product['quantity']*$product['weight']));
 												
 											}
 
 											//Если килограммы, то тоже самое но умножаем на 1000
 											if($product['weight_class_id']==9) {
-												$weight=$weight+(round(($order['quantity']*$product['weight'])*1000));
+												$weight=$weight+(round(($product['quantity']*$product['weight'])*1000));
 												
 											}
 
