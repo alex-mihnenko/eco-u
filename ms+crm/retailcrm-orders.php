@@ -24,22 +24,25 @@
 // ---
 
 // Get edited orders
-	if ( $qOrders = mysql_query("SELECT * FROM `oc_order` WHERE `rcrm_status`='edited' AND `order_id`=22678 LIMIT 5;") ) $nOrders = mysql_num_rows($qOrders);
-	else $nOrders = 0;
+	# Get itemes
+		$q = "SELECT * FROM `oc_order` WHERE `rcrm_status`='edited' AND `order_id`=22678 LIMIT 5;";
+		$orders = $db->query($q);
+	# ...
 
-	if( $nOrders>0 ){
+
+	if ($orders->num_rows > 0) {
 		// ---
-			while ($order = mysql_fetch_assoc($qOrders)) {
+			while ($order = $orders->fetch_assoc()) {
 			    // ---
 			    	// Calculate weight
-				    	if ( $qProducts = mysql_query("SELECT `weight_class_id`, `weight`, `weight_package` FROM `oc_order_product` LEFT JOIN `oc_product` ON `oc_product`.`product_id`=`oc_order_product`.`product_id` WHERE `order_id`=".$order['order_id'].";") ) $nProducts = mysql_num_rows($qProducts);
-						else $nProducts = 0;
+						$q = "SELECT `oc_order_product`.`variant`, `oc_product`.`weight_class_id`, `oc_product`.`weight`, `oc_product`.`weight_package` FROM `oc_order_product` LEFT JOIN `oc_product` ON `oc_product`.`product_id`=`oc_order_product`.`product_id` WHERE `oc_order_product`.`order_id`=".$order['order_id'].";;";
+						$products = $db->query($q);
 
 						$weight=0;
 
-						if( $nProducts>0 ){
+						if ($products->num_rows > 0) {
 							// ---
-								while ($product = mysql_fetch_assoc($qProducts)) {
+								while ($product = $products->fetch_assoc()) {
 								    // ---
 										if($product['weight']=="0.00000000" && $product['weight_class_id']==9){
 											$product['weight']=1;
@@ -61,11 +64,11 @@
 												if( $product['weight_package'] != '' ) {
 													$wpArr = (array) json_decode(html_entity_decode($product['weight_package']));
 
-													if( isset($wpArr[$product['variant']) ) {
-														if($product['weight_class_id']==2 || $product['weight_class_id']==9) {
-															$weight=$weight + floatval($wpArr[$product['variant']);
-														}
-													}
+													// if( isset($wpArr[$product['variant']) ) {
+													// 	if($product['weight_class_id']==2 || $product['weight_class_id']==9) {
+													// 		$weight=$weight + floatval($wpArr[$product['variant']);
+													// 	}
+													// }
 												}
 											// ---
 										}
