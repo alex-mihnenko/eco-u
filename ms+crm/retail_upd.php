@@ -11,9 +11,6 @@ foreach($res['statuses'] as $k=>$v){
  $STAT[$k]=$v['name'];
 }
 
-$_GET['type'] = true;
-$_GET['id'] = 17249;
-
 if($_GET['type']){
 // ---
 
@@ -82,10 +79,10 @@ if($_GET['type']){
 
 
 	//Обновляем данные по заказу в oc_order и в oc_order_total
-	mysql_query("update  oc_order set total='{$res['order']['totalSumm']}', order_status_id='$order_status_id' where  order_id='{$res['order']['externalId']}'");
-	mysql_query("update  oc_order_total set value='{$res['order']['totalSumm']}'  where  order_id='{$res['order']['externalId']}' and code='total'");
-	mysql_query("update  oc_order_total set value='{$res['order']['summ']}'  where  order_id='{$res['order']['externalId']}' and code='sub_total'");
-	mysql_query("update  oc_order_total set value='{$res['order']['delivery']['cost']}'  where  order_id='{$res['order']['externalId']}' and code='shipping'");
+	mysql_query("UPDATE `oc_order` SET `total`='{$res['order']['totalSumm']}', `order_status_id`='$order_status_id', `rcrm_status`='edited' WHERE `order_id`='{$res['order']['externalId']}'");
+	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['totalSumm']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='total'");
+	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['summ']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='sub_total'");
+	mysql_query("UPDATE `oc_order_total` SET `value`='{$res['order']['delivery']['cost']}'  WHERE `order_id`='{$res['order']['externalId']}' AND code='shipping'");
 
 
 	//Ищем ID заказа в МоёмCкладе
