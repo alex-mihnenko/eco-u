@@ -77,6 +77,8 @@
 							// ---
 						}
 			    	// ---
+						
+					echo $weight;
 
 					// Update order
 						if( $weight > 0 ){
