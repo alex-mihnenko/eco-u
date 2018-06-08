@@ -9,8 +9,8 @@
             <div class="product">
 
                 <?php
-                    if( $product['quantity'] > 0 && $product['status'] == 1 ) { $instock = true; }
-                    else if ( $product['quantity'] <= 0 && $product['status'] == 1 && ($product['stock_status_id'] == 7 || $product['stock_status_id'] == 6) ) { $instock = true; }
+                    if( $product['quantity_stock'] > 0 && $product['status'] == 1 ) { $instock = true; }
+                    else if ( $product['quantity_stock'] <= 0 && $product['status'] == 1 && ($product['stock_status_id'] == 7 || $product['stock_status_id'] == 6) ) { $instock = true; }
                     else { $instock = false; }
                 ?>
 
