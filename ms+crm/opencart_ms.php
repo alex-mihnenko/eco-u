@@ -391,6 +391,7 @@ if($argv[1]=='2'){
 									profitable_offer = '0',
 									composite_price = '0',
 									ultra_fresh = '0',
+									yml = '0',
 									is_weighted = '0'
 								");
 
@@ -404,6 +405,7 @@ if($argv[1]=='2'){
 									language_id='1',
 									name='".addslashes($v['name'])."',
 									description_short='',
+									description_yml='',
 									description='".$v['description']."',
 									customer_props3='',
 									tag='',
