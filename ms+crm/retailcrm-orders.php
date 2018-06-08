@@ -95,6 +95,7 @@
 
 							$res=connectPostAPI($url,$data);
 
+							$log[] = 'Response '.json_encode($res);
 
 							$q = "UPDATE `oc_order` SET `rcrm_status` = '' WHERE `order_id`=".$order['order_id'].";";
 
