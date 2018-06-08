@@ -25,7 +25,7 @@
 
 // Get edited orders
 	# Get itemes
-		$q = "SELECT * FROM `oc_order` WHERE `rcrm_status`='edited' AND `order_id`=22678 LIMIT 5;";
+		$q = "SELECT * FROM `oc_order` WHERE `rcrm_status`='edited' LIMIT 5;";
 		$orders = $db->query($q);
 	# ...
 
