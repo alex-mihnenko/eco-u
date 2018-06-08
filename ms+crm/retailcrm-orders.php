@@ -82,12 +82,12 @@
 
 					// Update order
 						if( $weight > 0 ){
-							$url='https://eco-u.retailcrm.ru/api/v5/orders/IM'.$order['order_id'].'/edit?apiKey='.RETAILCRM_KEY;
+							$url='https://eco-u.retailcrm.ru/api/v5/orders/'.$order['order_id'].'/edit?apiKey='.RETAILCRM_KEY;
 							
 							$data = array();
 							$data_order = array();
 
-							$data_order['externalId'] = 'IM'.$order['order_id'];
+							$data_order['externalId'] = $order['order_id'];
 							$data_order['weight'] = $weight;
 
 							$data['by']='externalId';
