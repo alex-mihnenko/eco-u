@@ -111,9 +111,9 @@
 	}
 // ---
 
-$res['log'] = $log;
-$res['mess']='OK';
-echo json_encode($res); exit;
+$response['log'] = $log;
+$response['mess']='OK';
+echo json_encode($response); exit;
 
 
 
