@@ -207,14 +207,18 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	// ...
 
 	// Discount
+		$managerCommentCouponDiscount = '';
 	    $discval=$discvalproc=0;
 	    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='coupon'");
 	    
 	    list($discval)=mysql_fetch_row($resxxx);
 		
 		if(!$discval){
-		    	$resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount'");
-		        list($discval)=mysql_fetch_row($resxxx);
+		    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount'");
+		    list($discval)=mysql_fetch_row($resxxx);
+		}
+		else{
+			$couponFlag = true;
 		}
 
 	    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount_percentage'");
@@ -231,7 +235,12 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 
         if($discval!=0) $order['discountManualAmount']=(double)$discval;
-        if($discvalproc!=0) $order['discountManualPercent']=(double)$discvalproc;
+        if($discvalproc!=0) {
+        	$order['discountManualPercent']=(double)$discvalproc;
+        	if( isset($couponFlag) && $couponFlag == true ) {
+        		$managerCommentCouponDiscount = 'Скидка '.$order['discountManualPercent'].'% по купону';
+        	}
+        }
     // ---
 		
     // Shipping
@@ -325,6 +334,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				
 	if($cust_id) $order['customer']['id']=$cust_id;
 	$order['customerComment']=$comm;
+	$order['managerComment']=$managerCommentCouponDiscount;
 
 	$tmpd=explode(" ",$delivery_time);
 
