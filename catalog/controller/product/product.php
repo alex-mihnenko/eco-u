@@ -6,8 +6,22 @@ class ControllerProductProduct extends Controller {
 	public function index() {
 		$this->load->language('product/product');
 
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
+
+		$continue = false;
+
 		// Check struckture
         	$url_data = $this->request->get;
+        	
+        	$category_id = intval($url_data['path']);
+        	$product_id = intval($url_data['product_id']);
+
+    		$categories= $this->model_catalog_product->getCategories($product_id);
+
+    		foreach ($categories as $key => $val) {
+    			if( $val['category_id'] == $category_id ) { $continue = true; }
+    		}
 
     		$url_product = $this->url->link('product/product', 'product_id=' . $url_data['product_id']);
 
@@ -17,7 +31,7 @@ class ControllerProductProduct extends Controller {
     		if($_SERVER['HTTPS']) { $url_correct = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $url_product); }
     		else { $url_correct = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $url_product); }
 
-    		if( $url_request !== $url_correct ){
+    		if( $url_request !== $url_correct || !$continue ){
     			header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
     			$this->response->redirect($this->url->link('common/home'));
     		}
@@ -42,8 +56,6 @@ class ControllerProductProduct extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
-
-		$this->load->model('catalog/category');
 
 		if (isset($this->request->get['path'])) {
 			$path = '';
@@ -184,8 +196,6 @@ class ControllerProductProduct extends Controller {
 		} else {
 			$product_id = 0;
 		}
-
-		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
