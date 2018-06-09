@@ -125,6 +125,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_api'] = $this->language->get('entry_api');
 		$data['entry_stock_display'] = $this->language->get('entry_stock_display');
 		$data['entry_stock_warning'] = $this->language->get('entry_stock_warning');
+		$data['entry_available_in_time'] = $this->language->get('entry_available_in_time');
 		$data['entry_stock_checkout'] = $this->language->get('entry_stock_checkout');
 		$data['entry_affiliate_approval'] = $this->language->get('entry_affiliate_approval');
 		$data['entry_affiliate_auto'] = $this->language->get('entry_affiliate_auto');
@@ -215,6 +216,7 @@ class ControllerSettingSetting extends Controller {
 		$data['help_api'] = $this->language->get('help_api');
 		$data['help_stock_display'] = $this->language->get('help_stock_display');
 		$data['help_stock_warning'] = $this->language->get('help_stock_warning');
+		$data['help_available_in_time'] = $this->language->get('help_available_in_time');
 		$data['help_stock_checkout'] = $this->language->get('help_stock_checkout');
 		$data['help_affiliate_approval'] = $this->language->get('help_affiliate_approval');
 		$data['help_affiliate_auto'] = $this->language->get('help_affiliate_auto');
@@ -881,6 +883,12 @@ class ControllerSettingSetting extends Controller {
 			$data['config_stock_warning'] = $this->request->post['config_stock_warning'];
 		} else {
 			$data['config_stock_warning'] = $this->config->get('config_stock_warning');
+		}
+
+		if (isset($this->request->post['config_available_in_time'])) {
+			$data['config_available_in_time'] = $this->request->post['config_available_in_time'];
+		} else {
+			$data['config_available_in_time'] = $this->config->get('config_available_in_time');
 		}
 
 		if (isset($this->request->post['config_stock_checkout'])) {

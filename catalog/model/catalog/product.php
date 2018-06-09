@@ -463,6 +463,11 @@ class ModelCatalogProduct extends Model {
                 $product_data[$result['product_id']] = $arProductsAll[$result['product_id']];
                 $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
     		}
+
+            if( $product_data['available_in_time'] == ''){
+                $product_data['available_in_time'] = $this->config->get('config_available_in_time');
+            }
+
     		/*foreach ($query->rows as $result) {
     			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
                             $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];

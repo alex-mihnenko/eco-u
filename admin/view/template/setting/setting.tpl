@@ -1014,6 +1014,12 @@
                     </label>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-available-in-time"><span data-toggle="tooltip" title="<?php echo $help_available_in_time; ?>"><?php echo $entry_available_in_time; ?></span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_available_in_time" value="<?php echo $config_available_in_time; ?>" placeholder="<?php echo $entry_available_in_time; ?>" id="input-available-in-time" class="form-control" />
+                  </div>
+                </div>
               </fieldset>
               <fieldset>
                 <legend><?php echo $text_affiliate; ?></legend>
