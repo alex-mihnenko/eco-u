@@ -31,9 +31,10 @@ class ControllerExtensionPaymentRbs extends Controller {
         }
 
         $order_number = $order_id ? $order_id : $this->session->data['order_id'];
+        
         if( strpos('-', $order_number) !== false ){
             $order_id_tmp = explode('-', $order_number);
-            $order_id = intval($order_id_tmp[0])
+            $order_id = intval($order_id_tmp[0]);
         }
 
         $this->load->model('checkout/order');
