@@ -502,23 +502,25 @@ class ControllerCheckoutCart extends Controller {
 		$product_info = $this->model_catalog_product->getProduct($product_id);
                 
 		if ($product_info) {
-			if (isset($this->request->post['quantity']) && ((float)$this->request->post['quantity'] >= $product_info['minimum'])) {
-				$quantity = (float)$this->request->post['quantity'];
-			} else {
-				$quantity = $product_info['minimum'] ? $product_info['minimum'] : 1;
-			}
+			// Check quantity
+				if (isset($this->request->post['quantity']) && ((float)$this->request->post['quantity'] >= $product_info['minimum'])) {
+					$quantity = (float)$this->request->post['quantity'];
+				} else {
+					$quantity = $product_info['minimum'] ? $product_info['minimum'] : 1;
+				}
 
-			if (isset($this->request->post['packaging']) && ((float)$this->request->post['packaging'] >= $product_info['minimum'])) {
-				$packaging = (float)$this->request->post['packaging'];
-			} else {
-				$packaging = $product_info['minimum'] ? $product_info['minimum'] : 1;
-			}
+				if (isset($this->request->post['packaging']) && ((float)$this->request->post['packaging'] >= $product_info['minimum'])) {
+					$packaging = (float)$this->request->post['packaging'];
+				} else {
+					$packaging = $product_info['minimum'] ? $product_info['minimum'] : 1;
+				}
 
-			if (isset($this->request->post['option'])) {
-				$option = array_filter($this->request->post['option']);
-			} else {
-				$option = array();
-			}
+				if (isset($this->request->post['option'])) {
+					$option = array_filter($this->request->post['option']);
+				} else {
+					$option = array();
+				}
+			// ---
 
 			$product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
 
@@ -549,13 +551,22 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			if (!$json) {
-            if(isset($this->request->post['special_price']) && $this->request->post['special_price'] != 'false') {
-                $newProductId = $this->request->post['product_id'].'_special';
-            } else {
-                $newProductId = $this->request->post['product_id'];
-            }
+	            if(isset($this->request->post['special_price']) && $this->request->post['special_price'] != 'false') {
+	                $newProductId = $this->request->post['product_id'].'_special';
+	            } else {
+	                $newProductId = $this->request->post['product_id'];
+	            }
 
-                                
+
+	            // Check quantity weight packaging
+					if( $product_info['weight_variants'] == '' && ($product_info['weight_class_id'] == 1 || $product_info['weight_class_id'] == 9) ) {
+						$quantity = $weight_variant;
+						$weight_variant = 1;
+						$packaging = 1;
+					}
+				// ---
+
+                // Add to cart                
 				$this->cart->add($newProductId, $quantity, $packaging, $option, $recurring_id, $weight_variant);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));

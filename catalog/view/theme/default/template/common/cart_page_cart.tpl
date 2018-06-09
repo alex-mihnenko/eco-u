@@ -8,6 +8,11 @@
     <?php foreach($products as $product) { ?>
         <div class="product">
 
+            <?php
+                if( $product['weight_class_id'] == 9 && $product['weight_variants'] == '' ) { $unit = $product['weight_class']; }
+                else { $unit = 'шт.'; }
+            ?>
+
             <div class="col thumb">
                 <img src="<?php echo $product['image']; ?>" alt="" title="">
             </div>
@@ -27,9 +32,9 @@
                         ?>
                         <?php for($i = $start; $i <= $end; $i++) { ?>
                             <?php if($i == $quantity) { ?>
-                                <option value="<?php echo $i; ?>" selected="selected"><?php echo $i; ?> шт.</option>
+                                <option value="<?php echo $i; ?>" selected="selected"><?php echo $i; ?> <?php echo $unit; ?></option>
                             <?php } else { ?>
-                                <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
+                                <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $unit; ?></option>
                             <?php } ?>
                         <?php } ?>
                     </select> 

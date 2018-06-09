@@ -340,6 +340,7 @@ class ControllerCommonCart extends Controller {
             $totalPositions = 0;
             
             $data['products'] = Array();
+            
             if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
                     $this->load->model('tool/image');
                     $products = $this->cart->getProducts();
