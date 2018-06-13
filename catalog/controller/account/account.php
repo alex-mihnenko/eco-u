@@ -113,15 +113,13 @@ class ControllerAccountAccount extends Controller {
                         // Check status and payment
                             $payment_custom_field = 'undefined';
 
-                            //if( $order['order_status_id'] == $this->config->get('config_payment_status_id') ){
-                                if( isset($order['payment_custom_field']) && strpos($order['payment_custom_field'],$order['order_id'])>=0){
-                                    // ---
-                                        $payment_custom_field = $order['payment_custom_field'];
-                                    // ---
-                                }
-                            //}
-
-                            if( $order['order_status_id'] == $this->config->get('config_payment_status_id') || $order['order_status_id'] == $this->config->get('config_order_status_id') ){
+                            if( isset($order['payment_custom_field']) && strpos($order['payment_custom_field'],$order['order_id'])>=0){
+                                // ---
+                                    $payment_custom_field = $order['payment_custom_field'];
+                                // ---
+                            }
+                            
+                            if( $order['order_status_id'] != 5 && $order['order_status_id'] != 7 && $order['order_status_id'] != 20 ){
                                 $online_pay = true;
                             }
                             else { $online_pay = false; }

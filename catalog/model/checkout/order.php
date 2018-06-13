@@ -1008,6 +1008,12 @@ class ModelCheckoutOrder extends Model {
     }
 
 	public function generateUniqRbsId($order_id) {
+		$this->load->model('extension/extension');
+		$this->load->model('extension/payment/rbs');
+
+		$rbsPayment = $this->model_extension_payment_rbs->getMethod(array('country_id' => 0, 'zone_id' => 0), 0);
+
+		$this->db->query("UPDATE " . DB_PREFIX . "order SET `payment_code` = 'rbs', `payment_method` = '" . $rbsPayment['title'] . "' WHERE order_id = '" . (int)$order_id . "'");
         return $order_id.'-'.substr(md5(uniqid(rand(), true)), 0,4);
 	}
 
