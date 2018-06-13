@@ -1527,6 +1527,7 @@ class ControllerAjaxIndex extends Controller {
     public function ajaxShowMore() {
           $mode = $this->request->post['mode'];
           $target = $this->request->post['target'];
+          $parent = $this->request->post['parent'];
           $nInclude = $this->request->post['not_include'];
           $this->load->model('catalog/product');
           $this->load->model('account/user');
@@ -1534,7 +1535,7 @@ class ControllerAjaxIndex extends Controller {
           if($mode == 'asort') {
               $data['products'] = $this->model_catalog_product->getAsortProducts($target, $nInclude);
           } elseif($mode == 'catsort') {
-              $data['products'] = $this->model_catalog_product->getCatsortProducts($target, $nInclude);
+              $data['products'] = $this->model_catalog_product->getCatsortProducts($target, $nInclude, $parent);
           }
           
           if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id'])) {

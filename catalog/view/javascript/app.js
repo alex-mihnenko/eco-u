@@ -567,7 +567,7 @@ $(document).ready(function() {
 		                nInclude[nInclude.length] = $(item).data('product');
 		            });
 		            
-		            $.post('/?route=ajax/index/ajaxShowMore', { mode: $(this).data('mode'), target: $(this).data('target'), not_include: nInclude }, function(products){
+		            $.post('/?route=ajax/index/ajaxShowMore', { mode: $(this).data('mode'), target: $(this).data('target'), parent: $(this).data('parent'), not_include: nInclude }, function(products){
 		                // ---
 			                if(!pElement.hasClass('all-loaded')) {
 			                    pElement.addClass('all-loaded');

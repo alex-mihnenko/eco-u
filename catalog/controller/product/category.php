@@ -174,12 +174,51 @@ class ControllerProductCategory extends Controller {
 
 				$categories_level2 = $this->model_catalog_category->getCategories($category_id);
 	                        
-	                        
+	            // Add pseudo categories
+	            	$pseudo_subcategories = array();
+
+					$pseudo_subcategories[] = array(
+						'parent' => $category_id,
+						'id' => 'new',
+						'name' => 'Новинки',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
+	                    'total' => $this->model_catalog_product->getTotalNewProducts()-1
+					);
+
+	            	$data['categories'][] = array(
+						'id' => 'new',
+						'name' => 'Новинки',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
+	                    'sub' => $pseudo_subcategories
+					);
+
+	            	$pseudo_subcategories = array();
+
+	            	$pseudo_subcategories[] = array(
+	            		'parent' => $category_id,
+						'id' => 'sale',
+						'name' => 'Скидки',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+	                    'total' => $this->model_catalog_product->getTotalSaleProducts()-1
+					);
+
+					$data['categories'][] = array(
+						'id' => 'sale',
+						'name' => 'Скидки',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+	                    'sub' => $pseudo_subcategories
+					);
+	            // ---
+
 				foreach ($categories_level2 as $result) {
 	                            
 	                $subcategories = array();
 	                $categories_level3 = $this->model_catalog_category->getCategories($result['category_id']);
-	                
+
 	                foreach ($categories_level3 as $result3) {
 	                    $filter_data = array(
 	                            'filter_category_id'  => $result3['category_id'],
@@ -187,6 +226,7 @@ class ControllerProductCategory extends Controller {
 	                    );
 
 	                    $subcategories[] = array(
+								'parent' => $category_id,
 	                            'id' => $result3['category_id'],
 	                            'name' => $result3['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
 	                            'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result3['category_id'] . $url),
@@ -243,7 +283,7 @@ class ControllerProductCategory extends Controller {
 		            }
 		        // ---
                         
-	            // Categories
+	            // Add
 		            $iCount = 0;
 
 		            if(!$cacheRequired) foreach($data['categories'] as $category_middle) {
@@ -258,8 +298,23 @@ class ControllerProductCategory extends Controller {
 		                foreach($category_middle['sub'] as $category) {
 		                    $subcat_filter_data = $filter_data;
 		                    $subcat_filter_data['limit'] = 10;
-		                    $subcat_filter_data['filter_category_id'] = $category['id'];
-		                    $subcat_results = $this->model_catalog_product->getProducts($subcat_filter_data);
+
+		                    // Get category products
+		                    	$subcat_results = array();
+
+		                    	if( $category['id'] == 'new' ){
+		                    		$subcat_filter_data['filter_category_id'] = $category_id;
+		                    		$subcat_results = $this->model_catalog_product->getNewProducts($subcat_filter_data);
+		                    	}
+		                    	else if( $category['id'] == 'sale' ) {
+		                    		$subcat_filter_data['filter_category_id'] =$category_id;
+		                    		$subcat_results = $this->model_catalog_product->getSaleProducts($subcat_filter_data);
+		                    	}
+		                    	else {
+		                    		$subcat_filter_data['filter_category_id'] = $category['id'];
+		                    		$subcat_results = $this->model_catalog_product->getProducts($subcat_filter_data);
+		                    	}
+		                    // ---
 
 		                    foreach ($subcat_results as $result) {
 		                        if(($result['quantity'] <= 0 && $result['stock_status_id'] == 5) || $result['status'] != 1) {
@@ -304,34 +359,33 @@ class ControllerProductCategory extends Controller {
 		                        }
 
 		                        $arProducts = array(
-		                                'product_id'  => $result['product_id'],
-		                                'available_in_time' => $result['available_in_time'],
-		                                'quantity'    => $result['quantity'],
-		                                'status'      => $result['status'],
-		                                'thumb'       => $image,
-		                                'name'        => $result['name'],
-		                                'description_short' => $result['description_short'],
-		                                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')),
-		                                'price'       => $price,
-		                                'special'     => $special,
-		                                'tax'         => $tax,
-		                                'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-		                                'rating'      => $result['rating'],
-		                                'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url),
-		                                'stock_status'      => $result['stock_status'],
-		                                'stock_status_id'   => $result['stock_status_id'],
-		                                'weight_variants'   => $result['weight_variants'],
-		                                'weight_class' => $result['weight_class'],
-		                                'sticker_name' => $result['sticker']['name'],
-		                                'sticker_class' => $result['sticker']['class']
+	                                'product_id'  => $result['product_id'],
+	                                'available_in_time' => $result['available_in_time'],
+	                                'quantity'    => $result['quantity'],
+	                                'status'      => $result['status'],
+	                                'thumb'       => $image,
+	                                'name'        => $result['name'],
+	                                'description_short' => $result['description_short'],
+	                                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')),
+	                                'price'       => $price,
+	                                'special'     => $special,
+	                                'tax'         => $tax,
+	                                'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
+	                                'rating'      => $result['rating'],
+	                                'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url),
+	                                'stock_status'      => $result['stock_status'],
+	                                'stock_status_id'   => $result['stock_status_id'],
+	                                'weight_variants'   => $result['weight_variants'],
+	                                'weight_class' => $result['weight_class'],
+	                                'sticker_name' => $result['sticker']['name'],
+	                                'sticker_class' => $result['sticker']['class']
 		                        );
+
 		                        if(isset($discount_sticker)) {
 		                            $arProducts['discount_sticker'] = $discount_sticker;
 		                            unset($discount_sticker);
 		                        }
-		                        if($data['is_admin']) {
-		                                $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
-		                        }
+		                        
 		                        if($result['composite_price'] !== false) {
 		                                $arProducts['composite_price'] = json_encode($result['composite_price']);       
 		                        }

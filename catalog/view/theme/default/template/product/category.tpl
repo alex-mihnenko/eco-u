@@ -118,11 +118,16 @@
                                 
                                 <li>
                                     <a href="#l-p_<?php echo $category['id']; ?>">
-    								    <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
-                                            <?php if(!empty($category['image'])) { ?>
-                                                <object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object>
-                                            <?php } ?>
-                                        </div>
+                                        <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
+                                            <div class="category-icon" style="background-image:url('<?php echo $category["image"]; ?>');">
+                                                <?php if(!empty($category['image'])) { ?><object data="<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                            </div>
+                                        <?php } else { ?>
+        								    <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
+                                                <?php if(!empty($category['image'])) { ?><object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                            </div>
+                                        <?php } ?>
+
 
     								    <span><?php echo $category['name']; ?></span>
     							     </a>
@@ -151,11 +156,15 @@
 
                                         <div id="l-p_<?php echo $category['id'] . ('_' . $sub_index) ?>" class="rel">
                                             <?php if(!empty($subcategory['image'])) { ?>
-                                                <div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div>
+                                                <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
+                                                    <div class="big-thumb"><img src="<?php echo $subcategory['image']; ?>" alt="" style="width: 150px; height: 150px; opacity: 0.15;"></div>
+                                                <?php } else { ?>
+                                                    <div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div>
+                                                <?php } ?>
                                             <?php } ?>
 
-                                            <div class="l-p_title"><?php echo $subcategory['name']; ?></div>
-                							
+                                            <div class="l-p_title"><?php echo $subcategory['name']; ?></div>                                            
+                                            
                                             <ul class="list-letter ll-open">
                                                 <?php $iCount = 0; ?>
                                                 
@@ -274,10 +283,10 @@
                                                 <?php } ?>
                                             </ul>
 
-                                            <div class="show-more sm-lg" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
-                                            <div class="show-more sm-md" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 4) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-4); ?> продуктов</div>
-                                            <div class="show-more sm-sm" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 3) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-3); ?> продуктов</div>
-                                            <div class="show-more sm-xs" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>"  style="<?php if($lCount <= 2) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-2); ?> продуктов</div>
+                                            <div class="show-more sm-lg" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                            <div class="show-more sm-md" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>"  style="<?php if($lCount <= 4) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-4); ?> продуктов</div>
+                                            <div class="show-more sm-sm" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>"  style="<?php if($lCount <= 3) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-3); ?> продуктов</div>
+                                            <div class="show-more sm-xs" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>"  style="<?php if($lCount <= 2) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-2); ?> продуктов</div>
                                         </div>
 
                                     <?php } ?>
