@@ -52,6 +52,13 @@ while ($row = mysql_fetch_assoc($qItems)) {
 					$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.$retail_key;
 					
 					// Set data
+						// Type
+							if( $row['payment_code'] == 'rbs' ) {
+								$type = 'e-money';
+							}
+							else {$type = 'cash'; }
+						// ---
+
 						// Status
 							if( $row['order_status_id'] == 20 ) {
 								$status = 'paid';
@@ -73,6 +80,7 @@ while ($row = mysql_fetch_assoc($qItems)) {
 						$payment['amount'] = $row['total'];
 						$payment['paidAt'] = $row['date_add'];
 						$payment['comment'] = $comment;
+						$payment['type'] = $type;
 						$payment['status'] = $status;
 
 						$data['payment'] = json_encode($payment);

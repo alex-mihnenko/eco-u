@@ -1416,7 +1416,7 @@ class ControllerAjaxIndex extends Controller {
         // Create payment link
           $this->load->model('checkout/order');
 
-          $this->model_checkout_order->addDetailPayment($order_id, $this->config->get('config_payment_status_id'), true);
+          $this->model_checkout_order->addDetailPayment($order_id, $this->config->get('config_payment_status_id'), false);
           $rbsid = $this->model_checkout_order->generateUniqRbsId($order_id);
           $this->model_checkout_order->setPaymentCustomField($order_id, $rbsid);
 
