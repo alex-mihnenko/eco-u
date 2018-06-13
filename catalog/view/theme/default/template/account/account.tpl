@@ -49,7 +49,7 @@
                                     </td>
                                     <td>
                                         <?php if( $order['status_id'] != 5  && $order['status_id'] != 7 ) { ?>
-                                            <?php if( $order['payment_custom_field'] != '' && $order['payment_custom_field'] != 'undefined' && $order['payment_custom_field'] != '""' ) { ?>
+                                            <?php if( $order['online_pay'] == true ) { ?>
                                                 <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
                                             <?php } ?>
                                         <?php } else { ?>

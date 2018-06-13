@@ -120,6 +120,11 @@ class ControllerAccountAccount extends Controller {
                                     // ---
                                 }
                             //}
+
+                            if( $order['order_status_id'] == $this->config->get('config_payment_status_id') || $order['order_status_id'] == $this->config->get('config_order_status_id') ){
+                                $online_pay = true;
+                            }
+                            else { $online_pay = false; }
                         // ---
 
                         $data['orders'][] = Array(
@@ -128,7 +133,8 @@ class ControllerAccountAccount extends Controller {
                             'status' => $order['status_text'],
                             'status_id' => $order['order_status_id'],
                             'total' => $order['order_total'],
-                            'payment_custom_field' => $payment_custom_field
+                            'payment_custom_field' => $payment_custom_field,
+                            'online_pay' => $online_pay,
                         );
                     }
                 }
