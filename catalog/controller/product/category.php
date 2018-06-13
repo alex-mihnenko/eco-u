@@ -194,6 +194,7 @@ class ControllerProductCategory extends Controller {
 	                    'sub' => $pseudo_subcategories
 					);
 
+	            	/*
 	            	$pseudo_subcategories = array();
 
 	            	$pseudo_subcategories[] = array(
@@ -212,6 +213,7 @@ class ControllerProductCategory extends Controller {
 						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
 	                    'sub' => $pseudo_subcategories
 					);
+					*/
 	            // ---
 
 				foreach ($categories_level2 as $result) {
