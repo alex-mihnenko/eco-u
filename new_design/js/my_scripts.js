@@ -598,11 +598,17 @@
     for(i=0;i<slIcons.length;i++) {
         slIcons[i].onload = function(){
             for(j=0;typeof(this.contentDocument.getElementsByTagName('path')[j]) != 'undefined';j++) {
-                this.contentDocument.getElementsByTagName('path')[j].setAttribute('fill', '#ffffff');
+                if( typeof this.contentDocument.getElementsByTagName('path')[j].getAttribute('fill') != 'undefined' && this.contentDocument.getElementsByTagName('path')[j].getAttribute('fill') != 'none' ) 
+                	this.contentDocument.getElementsByTagName('path')[j].setAttribute('fill', '#ffffff');
+                else this.contentDocument.getElementsByTagName('path')[j].setAttribute('stroke', '#ffffff');
             }
             for(j=0;typeof(this.contentDocument.getElementsByTagName('polygon')[j]) != 'undefined';j++) {
-                this.contentDocument.getElementsByTagName('polygon')[j].setAttribute('fill', '#ffffff');
+                if( typeof this.contentDocument.getElementsByTagName('polygon')[j].getAttribute('fill') != 'undefined' && this.contentDocument.getElementsByTagName('polygon')[j].getAttribute('fill') != 'none' ) 
+                	this.contentDocument.getElementsByTagName('polygon')[j].setAttribute('fill', '#ffffff');
+               	else this.contentDocument.getElementsByTagName('polygon')[j].setAttribute('stroke', '#ffffff');
             }
+
+            this.contentDocument.getElementsByTagName('line')[j].setAttribute('stroke', '#ffffff');
         }
     }
 
