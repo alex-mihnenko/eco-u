@@ -82,14 +82,7 @@ class ModelCatalogProduct extends Model {
                 }
 
                 // Автоматическое присвоение/снятие стикера "Новинка"
-                //$dateAdded = strtotime($row['date_added']);
-                $datetime = explode(' ', $row['date_added']);
-                $date = explode('-', $datetime[0]);
-                $time = explode(':', $datetime[1]);
-
-                $date_added = mktime(intval($time[0]), intval($time[1]), intval($time[2]), intval($date[1]), intval($date[2]), intval($date[0]));
-
-                if($date_added > time() - 604800) {
+                if($query->row['new'] == 1) {
                     $sticker = Array(
                         'class' => 20,
                         'name' => "Новинка"
@@ -208,14 +201,7 @@ class ModelCatalogProduct extends Model {
                 if ($query->num_rows) {
                     
                         // Автоматическое присвоение/снятие стикера "Новинка"
-                    
-                        $datetime = explode(' ', $query->row['date_added']);
-                        $date = explode('-', $datetime[0]);
-                        $time = explode(':', $datetime[1]);
-
-                        $date_added = mktime(intval($time[0]), intval($time[1]), intval($time[2]), intval($date[1]), intval($date[2]), intval($date[0]));
-
-                        if($date_added > time() - 604800) {
+                        if($query->row['new'] == 1) {
                             $sticker = Array(
                                 'class' => 20,
                                 'name' => "Новинка"
@@ -464,8 +450,8 @@ class ModelCatalogProduct extends Model {
                 $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
     		}
 
-            if( $product_data['available_in_time'] == ''){
-                $product_data['available_in_time'] = $this->config->get('config_available_in_time');
+            if( $product_data[$result['product_id']]['available_in_time'] == ''){
+                $product_data[$result['product_id']]['available_in_time'] = $this->config->get('config_available_in_time');
             }
 
     		/*foreach ($query->rows as $result) {
@@ -1250,7 +1236,7 @@ class ModelCatalogProduct extends Model {
                 $sql .= " FROM " . DB_PREFIX . "product p";
             }
 
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p.date_added >= DATE(NOW()) - INTERVAL 7 DAY AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+            $sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.new = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
                     
             if (!empty($data['filter_category_id'])) {
                 if (!empty($data['filter_sub_category'])) {
@@ -1373,7 +1359,7 @@ class ModelCatalogProduct extends Model {
             $product_data = array();
 
             $query = $this->db->query($sql);
-                    
+        
             $arProductsID = array();
             foreach($query->rows as $result) {
                 $arProductsID[] = $result['product_id'];
@@ -1388,16 +1374,16 @@ class ModelCatalogProduct extends Model {
                     $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
                 }
 
-                if( $product_data['available_in_time'] == ''){
-                    $product_data['available_in_time'] = $this->config->get('config_available_in_time');
+                if( $product_data[$result['product_id']]['available_in_time'] == ''){
+                    $product_data[$result['product_id']]['available_in_time'] = $this->config->get('config_available_in_time');
                 }
             }
-                    
+            
             return $product_data;
         }
 
         public function getTotalNewProducts() {
-            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.date_added >= DATE(NOW()) - INTERVAL 7 DAY";
+            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.new = 1";
             $query = $this->db->query($sql);
             if(isset($query->row['total'])) {
                 return (int)$query->row['total'];
@@ -1564,8 +1550,8 @@ class ModelCatalogProduct extends Model {
                     $product_data[$result['product_id']]['stock_status_id'] = $result['stock_status_id'];
                 }
 
-                if( $product_data['available_in_time'] == ''){
-                    $product_data['available_in_time'] = $this->config->get('config_available_in_time');
+                if( $product_data[$result['product_id']]['available_in_time'] == ''){
+                    $product_data[$result['product_id']]['available_in_time'] = $this->config->get('config_available_in_time');
                 }
             }
                     

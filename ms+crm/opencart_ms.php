@@ -383,6 +383,7 @@ if($argv[1]=='2'){
 									viewed = '0',
 									date_added = NOW(),
 									date_modified = NOW(),
+									date_new = NOW(),
 									weight_variants = '',
 									weight_package = '',
 									shelf_life = '',
@@ -392,7 +393,8 @@ if($argv[1]=='2'){
 									composite_price = '0',
 									ultra_fresh = '0',
 									yml = '0',
-									is_weighted = '0'
+									is_weighted = '0',
+									new = '1'
 								");
 
 								$product_id=mysql_insert_id();
