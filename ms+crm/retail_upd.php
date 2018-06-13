@@ -136,7 +136,7 @@ if($_GET['type']){
 	fclose($fp);
 	
 	//Если статус заказа собран, то обновляем дату сборки в retailCRM и обновляем данные по заказу в МС
-	if($res['order']['status']=='delivering'){	
+	if($res['order']['status']=='assembling-complete'){
 		// ---	  		
 			if(!$ms_lead_id){
 					
