@@ -16,6 +16,13 @@ if($_GET['type']){
 			$lastName = $json['customer']['lastName'];
 			$email = $json['customer']['email'];
 
+			if( isset($json['customer']['personalDiscount']) ){
+				$personalDiscount = intval($json['customer']['personalDiscount']);
+			}
+			else{
+				$personalDiscount = 0;	
+			}
+
 			if( isset($json['customer']['address']['city']) ){
 				$address = $json['customer']['address']['city'].', '.$json['customer']['address']['text'];	
 			}
@@ -41,13 +48,23 @@ if($_GET['type']){
 				UPDATE `oc_customer` SET 
 				`firstname` = '$firstName',
 				`lastname` = '$lastName',
-				`email` = '$email' 
+				`email` = '$email'
 				WHERE `customer_id`=".$customer_id.";
 			" );
 
 			if( $qUpdate ){ $log[] = "Success update customer data"; }
 			else { $log[] = "Error update customer data"; }
 
+			if( $personalDiscount > 0 ) {
+				$qUpdateDiscount = mysql_query("
+					UPDATE `oc_customer` SET 
+					`discount` = '$personalDiscount'
+					WHERE `customer_id`=".$customer_id.";
+				" );
+
+				if( $qUpdateDiscount ){ $log[] = "Success update customer discount"; }
+				else { $log[] = "Error update customer discount"; }
+			}
 
 			$qUpdate = mysql_query("
 				UPDATE `oc_order` SET 
