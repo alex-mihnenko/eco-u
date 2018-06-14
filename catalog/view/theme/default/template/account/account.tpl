@@ -70,7 +70,7 @@
                         <div>
                                         <div class="current-discount">
                                             <div class="c-d_text">Текущая скидка</div>
-                                            <div class="c-d_size"><?php echo $discount_percentage; ?>%</div>
+                                            <div class="c-d_size"><?php echo intval($discount_percentage); ?>%</div>
                                         </div>
                                         <form class="form-personal">
                                                 <div class="f-p_box">
