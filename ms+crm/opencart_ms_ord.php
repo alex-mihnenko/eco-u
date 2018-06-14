@@ -237,6 +237,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
         if($discval!=0) $order['discountManualAmount']=(double)$discval;
         if($discvalproc!=0) {
         	$order['discountManualPercent']=(double)$discvalproc;
+        	
         	if( isset($couponFlag) && $couponFlag == true ) {
         		$managerCommentCouponDiscount = 'Скидка '.$order['discountManualPercent'].'% по купону';
         	}
