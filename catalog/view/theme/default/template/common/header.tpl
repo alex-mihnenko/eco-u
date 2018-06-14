@@ -42,7 +42,7 @@
 						<div class="h-menu">Меню</div>
 						<div class="hidden-menu">
 							<a href="/#l-p_35" class="h-m_link menu-cat-link">Каталог товаров</a>
-							<a href="#featured" class="h-m_link menu-cat-link" data-action="scrollto">Выгодные предложения</a>
+							<a href="#l-p_new" class="h-m_link menu-cat-link" data-action="scrollto">Новинки</a>
 							<a href="/about/#delivery" target="_blank" class="h-m_link">Доставка</a>
 							<a href="/about/#payment" target="_blank" class="h-m_link">Оплата</a>
 							<a href="/about/#return" target="_blank" class="h-m_link">Возвраты</a>

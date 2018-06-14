@@ -51,7 +51,7 @@ $(document).ready(function() {
 	// Scroll
 		$('[data-action="scrollto"]').on('click', function(e){
 			var anchor = $(this).attr('href');
-			$("html, body").animate({ scrollTop: $(anchor).offset().top });
+			$("html, body").animate({ scrollTop: $(anchor).offset().top - 100 });
 			//e.stopPropagation();
 			//e.preventDefault();
 		});
