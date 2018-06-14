@@ -1139,9 +1139,12 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         $this->load->model('checkout/order');
+
         // Check discount
             $data['discount'] = 0;
             $data['discount_percentage'] = 0;
+
+            $data['coupon'] = false;
             
             $personal_discount = 0;
             $personal_discount_percentage = 0;
@@ -1205,6 +1208,8 @@ class ControllerAjaxIndex extends Controller {
                     if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
                         $data['discount'] = $couponDiscount;
                         $data['discount_percentage'] = $couponPercentage;
+
+                        $data['coupon'] = true;
                     }
                     else{
                         if( $personal_discount_percentage > $cumulative_discount_percentage ) {
@@ -1218,7 +1223,6 @@ class ControllerAjaxIndex extends Controller {
                     }
                 // ---
             }
-
         // ---
 
         // First purchase

@@ -228,15 +228,15 @@ class ControllerCommonCart extends Controller {
                             }
                         }
 
-                        $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                        if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                        $customer_discount = intval(floor($totalCustomerOutcome/10000));
+                        if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                         
-                        $order_discount = $cumulative_discount/100;
+                        $order_discount = $customer_discount/100;
                         $basePrice = $this->cart->getTotal();
 
 
                         $cumulative_discount = floor($order_discount * $basePrice);
-                        $cumulative_discount_percentage = $cumulative_discount;
+                        $cumulative_discount_percentage = $customer_discount;
                     // ---
                 }
 
@@ -418,15 +418,15 @@ class ControllerCommonCart extends Controller {
                             }
                         }
 
-                        $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
-                        if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                        $customer_discount = intval(floor($totalCustomerOutcome/10000));
+                        if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                         
-                        $order_discount = $cumulative_discount/100;
+                        $order_discount = $customer_discount/100;
                         $basePrice = $this->cart->getTotal();
 
 
                         $cumulative_discount = floor($order_discount * $basePrice);
-                        $cumulative_discount_percentage = $cumulative_discount;
+                        $cumulative_discount_percentage = $customer_discount;
                     // ---
                 }
 
@@ -445,7 +445,7 @@ class ControllerCommonCart extends Controller {
                     // ---
                         $coupon = $this->customer->getCouponDiscount();
                         $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
-                        $couponPercentage = $coupon['discount'];
+                        $couponPercentage = intval($coupon['discount']);
 
                         if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
                             $data['discount'] = $couponDiscount;
