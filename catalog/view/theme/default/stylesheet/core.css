@@ -98,6 +98,40 @@ xxl
 	}
 /* General */
 
+/* Category */
+	.product-sale {
+		top: 14px;
+		position: relative;
+		display: block;
+		width: 100%;
+		height: auto;
+	    box-sizing: border-box;
+	    padding: 0px 76px;
+
+		font-size: 14px;
+	    color: #777777;
+	    line-height: 12px;
+	    text-decoration: line-through;
+	    text-align: right;
+	}
+
+	@media (max-width: 767px) {
+		.product-sale {
+			top: 10px;
+		    padding: 0px 31px;
+			font-size: 10px;
+		}
+	}
+
+	.p-o_right.sale .p-o_price {
+		color: #f17e46;
+	}
+
+	.p-o_right.sale .p-o_submit {
+		background-color: #f17e46;
+	}
+/* Category */
+
 /* Modals */
 	/* General */
 		.remodal {
@@ -1140,6 +1174,9 @@ xxl
 			}
 		}
 	/* Privacy */
+
+	/* Stickers */
+	/* Stickers */
 /* Components */
 
 /* Add */

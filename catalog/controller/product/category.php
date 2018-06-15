@@ -193,8 +193,7 @@ class ControllerProductCategory extends Controller {
 						'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
 	                    'sub' => $pseudo_subcategories
 					);
-
-	            	/*
+	            
 	            	$pseudo_subcategories = array();
 
 	            	$pseudo_subcategories[] = array(
@@ -213,7 +212,6 @@ class ControllerProductCategory extends Controller {
 						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
 	                    'sub' => $pseudo_subcategories
 					);
-					*/
 	            // ---
 
 				foreach ($categories_level2 as $result) {
@@ -336,9 +334,11 @@ class ControllerProductCategory extends Controller {
 		                                $price = false;
 		                        }
 
-		                        if ((float)$result['special']) {
-		                                $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+		                        if ($result['discount'] > 0) {
+		                                $discount = $result['discount'];
+		                                $special = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 		                        } else {
+		                                $discount = false;
 		                                $special = false;
 		                        }
 
@@ -354,12 +354,6 @@ class ControllerProductCategory extends Controller {
 		                                $rating = false;
 		                        }
 
-		                        if($special) {
-		                            if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
-		                            else $discount_sticker = 0;
-		                            $price = $special;
-		                        }
-
 		                        $arProducts = array(
 	                                'product_id'  => $result['product_id'],
 	                                'available_in_time' => $result['available_in_time'],
@@ -371,6 +365,7 @@ class ControllerProductCategory extends Controller {
 	                                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')),
 	                                'price'       => $price,
 	                                'special'     => $special,
+	                                'discount'     => $discount,
 	                                'tax'         => $tax,
 	                                'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 	                                'rating'      => $result['rating'],
@@ -754,11 +749,13 @@ class ControllerProductCategory extends Controller {
 											$price = false;
 										}
 
-										if ((float)$result['special']) {
-											$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-										} else {
-											$special = false;
-										}
+										if ($result['discount'] > 0) {
+				                                $discount = $result['discount'];
+				                                $special = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+				                        } else {
+				                                $discount = false;
+				                                $special = false;
+				                        }
 
 										if ($this->config->get('config_tax')) {
 											$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price'], $this->session->data['currency']);
@@ -771,12 +768,6 @@ class ControllerProductCategory extends Controller {
 										} else {
 											$rating = false;
 										}
-						                                
-						                if($special) {
-						                    if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
-						                    else $discount_sticker = 0;
-						                    $price = $special;
-						                }
 						            // ---
 
 						            // Post init
@@ -801,6 +792,7 @@ class ControllerProductCategory extends Controller {
 										'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')),
 										'price'       => $price,
 										'special'     => $special,
+										'discount'     => $discount,
 										'tax'         => $tax,
 										'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 										'rating'      => $result['rating'],

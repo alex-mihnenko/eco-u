@@ -37,18 +37,6 @@ class ControllerProductProduct extends Controller {
     		}
         // ---
 
-		// Check admin
-            $this->load->model('account/user');
-            if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id']))
-            {
-                $data['is_admin'] = true;
-            }
-            else
-            {
-                $data['is_admin'] = false;
-            }
-        // ---
-
                 
 		$data['breadcrumbs'] = array();
 
@@ -375,11 +363,13 @@ class ControllerProductProduct extends Controller {
 				$data['price'] = false;
 			}
 
-			if ((float)$product_info['special']) {
-				$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-			} else {
-				$data['special'] = false;
-			}
+			if ($product_info['discount'] > 0) {
+                    $data['discount'] = $product_info['discount'];
+                    $data['special'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+            } else {
+                    $data['discount'] = false;
+                    $data['special'] = false;
+            }
 
 			if ($this->config->get('config_tax')) {
 				$data['tax'] = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price'], $this->session->data['currency']);
@@ -538,9 +528,7 @@ class ControllerProductProduct extends Controller {
                                     $arProducts['discount_sticker'] = $discount_sticker;
                                     unset($discount_sticker);
                                 }
-                                if($data['is_admin']) {
-                                        $arProducts['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$result['product_id'];
-                                }
+        
                                 if($result['composite_price'] !== false) {
                                         $arProducts['composite_price'] = json_encode($result['composite_price']);
                                 }

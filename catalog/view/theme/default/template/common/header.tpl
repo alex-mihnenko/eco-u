@@ -226,38 +226,54 @@
 			</div>
 		</div>
 
-		<div class="remodal modal-phone modal-xs" data-remodal-id="modal-phone">
+		<div class="remodal modal-phone modal-sm" data-remodal-id="modal-phone">
 			<button data-remodal-action="close" class="remodal-close"></button>
 
-			<div class="body">
-				<div class="form">
+
+			<?php if( date('G', time()) >= 9 && date('G', time()) < 18 ) { ?>
+				<div class="body t-c_box">
+					<div class="form">
+						<div class="t-c_title" style="text-align: center; margin-bottom: 10px;">Обратный звонок</div>
+						<hr class="indent sm">
+
+						<form id="form-phone" action="/index.php" method="POST">
+							<div class="t-c_input">
+								<input type="text" placeholder="Введите номер телефона" class="input" id="phone" name="phone" style="text-align: center;" required="">
+								<span class="underline"></span>
+							</div>
+
+		                    
+		                    <div class="message-success" style="text-align: center;"></div>
+							<input type="submit" value="Заказать" class="btn">
+						</form>
+					</div>
+
+					<div class="message success">
+						<div class="wrap-table">
+							<div class="wrap-cell">
+								<img src="catalog/view/theme/default/img/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+								<br><br>
+
+								<div class="message-success"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php } else { ?>
+				<div class="body">
+					<hr class="indent lg">
+					<hr class="indent lg">
+
 					<div class="t-c_title" style="text-align: center; margin-bottom: 10px;">Наши телефоны</div>
 					<hr class="indent xs">
 					<p class="t-c_subtitle">Мы работаем без выходных<br>Принимаем звонки с 9-00 до 18-00</p>
-					<hr class="indent sm">
 
-					<!-- <form id="form-phone" action="/auth.php" method="POST">
-						<div class="t-c_input">
-							<input type="text" placeholder="Введите номер телефона" class="input" id="phone" name="phone" style="text-align: center;">
-							<span class="underline"></span>
-						</div>
-	                    
-	                    <div class="message-success" style="text-align: center;"></div>
-						<input type="submit" value="Заказать">
-					</form> -->
+					<hr class="indent lg">
+					<hr class="indent lg">
 				</div>
+			<?php } ?>
 
-				<!-- <div class="message success">
-					<div class="wrap-table">
-						<div class="wrap-cell">
-							<img src="catalog/view/theme/default/img/svg/paper-plane.svg" class="svg md" alt="paper-plane" title="paper-plane" />
-							<br><br>
 
-							<div class="message-success"></div>
-						</div>
-					</div>
-				</div> -->
-			</div>
 
 			<div class="footer-row">
 				<div class="col">

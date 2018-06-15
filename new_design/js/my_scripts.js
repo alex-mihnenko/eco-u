@@ -118,6 +118,7 @@
             $item.parents('.p-o_select').find('select').on('change', function(e){
 
                 if(!$(this).parents('.p-o_block').find('meta[itemprop="price"]').length) return;
+
                 var quantity = parseFloat($(this).parents('.p-o_block').find('.selectric .label').html());
                 var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
                 var compPrice = $(this).parents('.p-o_block').find('.composite_price').val();
@@ -133,6 +134,14 @@
                 var totalPrice = Math.round(mtpl * quantity * price);
                 if(totalPrice > 999) currencyStr = ' р';
                 $(this).parents('.p-o_block').find('.p-o_price').html(totalPrice + currencyStr);
+
+                // Sale price
+                	var saleprice = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="baseprice"]').attr('content'));
+
+                	var totalPrice = Math.round(mtpl * quantity * saleprice);
+                	if(totalPrice > 999) currencyStr = ' р';
+                	$(this).parents('.p-o_block').find('.product-sale span').html(totalPrice + currencyStr);
+                // ---
             });
 
             $item.parents('.p-o_select').find('select').trigger('change');;
@@ -169,6 +178,20 @@
                 }
                 var totalPrice = Math.round(mtpl * quantity * price);
                 $(this).parents('.c-p_right').find('.c-p_price_shadow').html(totalPrice + currencyStr);
+
+                // Sale price
+                	var saleprice = parseFloat($(this).parents('.c-p_right').find('meta[itemprop="baseprice"]').attr('content'));
+
+                	var mtpl = 1;
+	                if(typeof(compPrice) != 'undefined') {
+	                    var cpFormat = JSON.parse(compPrice);
+	                    if(cpFormat[quantity]) {
+	                        mtpl = cpFormat[quantity];
+	                    }
+	                }
+	                var totalPrice = Math.round(mtpl * quantity * saleprice);
+	                $(this).parents('.c-p_right').find('.product-sale span').html(totalPrice + currencyStr);
+                // ---
             });
 
             $item.parents('.c-p_select').find('select').trigger('change');;

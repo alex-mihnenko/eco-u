@@ -234,6 +234,12 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-special-price"><?php echo $entry_discount; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="discount" value="<?php echo $discount; ?>" placeholder="<?php echo $entry_discount; ?>" id="input-discount" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-special-price"><?php echo $entry_special_price; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="special_price" value="<?php echo $special_price; ?>" placeholder="<?php echo $entry_special_price; ?>" id="input-special-price" class="form-control" />

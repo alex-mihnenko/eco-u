@@ -622,6 +622,7 @@ class ControllerCatalogProduct extends Controller {
         $data['entry_weight_variants'] = $this->language->get('entry_weight_variants');
         $data['entry_weight_package'] = $this->language->get('entry_weight_package');
         $data['entry_shelf_life'] = $this->language->get('entry_shelf_life');
+        $data['entry_discount'] = $this->language->get('entry_discount');
         $data['entry_special_price'] = $this->language->get('entry_special_price');
         $data['entry_available_in_time'] = $this->language->get('entry_available_in_time');
         $data['entry_profitable_offer'] = $this->language->get('entry_profitable_offer');
@@ -828,6 +829,14 @@ class ControllerCatalogProduct extends Controller {
 			$data['special_price'] = $product_info['special_price'];
 		} else {
 			$data['special_price'] = '';
+		}
+
+		if (isset($this->request->post['discount'])) {
+			$data['discount'] = $this->request->post['discount'];
+		} elseif (!empty($product_info)) {
+			$data['discount'] = $product_info['discount'];
+		} else {
+			$data['discount'] = '';
 		}
                 
         if (isset($this->request->post['profitable_offer'])) {

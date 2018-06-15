@@ -36,10 +36,10 @@
                                 <?php if(isset($product['composite_price'])) { ?>
                                     <input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'>
                                 <?php } ?>
-                                
-                                <?php if(isset($product['discount_sticker'])) { ?>
-                                    <div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
-                                <?php } elseif(isset($product['sticker_class'])) { ?>
+
+                                <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
+                                    <div class="p-o_discount sticker_discount"><?php echo $product['discount']; ?>%</div>
+                                <?php } elseif($product['sticker_class']) { ?>
                                     <div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div>
                                 <?php } ?>
 
@@ -55,6 +55,10 @@
                                 </div>
 
                                 <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
+
+                                <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
+                                    <div class="product-sale"><span><?php echo $product['price']; ?></span></div>
+                                <?php } ?>
 
                                 <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
                                     <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
@@ -75,8 +79,8 @@
                                                 </select> 
                                             <?php } ?>
                                         </div>
-                                        <div class="p-o_right">
-                                            <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                        <div class="p-o_right <?php if(isset($product['discount']) && $product['discount'] > 0) { echo 'sale'; } ?>">
+                                            <meta itemprop="price" content="<?php if($product['special']) { echo intval($product['special']); } else { echo intval($product['price']); } ?>" />
                                             <meta itemprop="priceCurrency" content="RUB" />
                                             <?php if(empty($product['weight_variants'])) { ?>
                                                 <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
@@ -104,8 +108,8 @@
                                                 </select> 
                                             <?php } ?>
                                         </div>
-                                        <div class="p-o_right">
-                                            <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
+                                        <div class="p-o_right <?php if(isset($product['discount']) && $product['discount'] > 0) { echo 'sale'; } ?>">
+                                            <meta itemprop="price" content="<?php if($product['special']) { echo intval($product['special']); } else { echo intval($product['price']); } ?>" />
                                             <meta itemprop="priceCurrency" content="RUB" />
                                             <?php if(empty($product['weight_variants'])) { ?>
                                                 <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>

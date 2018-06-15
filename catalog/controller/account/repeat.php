@@ -50,7 +50,12 @@ class ControllerAccountRepeat extends Controller {
             // ---
 
 	        // Total
-	            $price = $product_info['price'];
+	            if( floatval($product_info['special_price']) > 0 ){
+					$price = $product_info['special_price'];
+				}
+				else{
+					$price = $product_info['price'];
+				}
 
 	            if($product_info['composite_price'] != false ) {
                     $cPrice = $this->config->get('config_composite_price');
@@ -62,8 +67,8 @@ class ControllerAccountRepeat extends Controller {
                     }
                 }
 
-				$product_price = ($product_info['special_price'] == 0) ? (round($price)) : (int)$product_info['special_price'];
-				$product_total = round( ($product_info['special_price'] == 0) ? ( round(($price) * $product['variant']) * $product['amount'] ) : round((int)$product_info['special_price'] * $product['variant']) * $product['amount'] );
+				$product_price = (round($price));
+				$product_total = ( round(($price) * $product['variant']) * $product['amount'] );
 	            
 	            //$product_total = $this->currency->format($product_info['price']*$product['quantity'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']);
            		$total = $total + $product_total;

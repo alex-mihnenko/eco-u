@@ -97,7 +97,8 @@ $_['entry_weight_variants']    = 'Варианты фасовки (через&nb
 $_['entry_weight_package']    = 'Вес упаковки (через&nbsp;запятую)';
 $_['entry_shelf_life']            = 'Срок хранения';
 $_['entry_available_in_time']    = 'Срок поставки';
-$_['entry_special_price']    = 'Только сейчас (спеццена)';
+$_['entry_discount']    = 'Процент скидки';
+$_['entry_special_price']    = 'Специальная цена';
 
 // Help
 $_['help_keyword']           = 'Должно быть уникальным на всю систему и без пробелов.';

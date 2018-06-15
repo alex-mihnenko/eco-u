@@ -31,7 +31,8 @@
                         <div class="c-p_left">
                                 <div class="c-p_thumb">
                                     <img src="<?php echo $popup; ?>" alt="<?php echo $heading_title; ?>" itemprop="image">
-                                    <?php if(isset($discount_sticker)) { ?><div class="c-p_discount sticker_discount">-<?php echo $discount_sticker; ?>%</div>
+
+                                    <?php if(isset($discount) && $discount > 0) { ?><div class="c-p_discount sticker_discount"><?php echo $discount; ?>%</div>
                                     <?php } elseif($sticker_class) { ?><div class="c-p_discount sticker_<?php echo $sticker_class; ?>"><?php echo $sticker_name; ?></div><?php } ?>
                                 </div>
                                 <h2 class="c-p_title c-p_title-mobile" itemprop="name"><?php echo $heading_title; ?></h2>
@@ -68,10 +69,16 @@
                                         } ?>
                                 </ul>
                                 <div class="box-a_d">
-                                        <a href="#anchor-details" class="anchor-details">Подробнее</a>
+                                    <a href="#anchor-details" class="anchor-details">Подробнее</a>
                                 </div>
+
+                                <?php if(isset($discount) && $discount > 0) { ?>
+                                    <div class="product-sale" style="text-align: left; padding: 0px;"><span><?php echo $price; ?></span></div>
+                                <?php } ?>
+
                                 <div class="size-0" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
-                                        <meta itemprop="price" content="<?php if($special) echo (int)$special; else echo (int)$price; ?>">
+                                        <meta itemprop="baseprice" content="<?php echo intval($price); ?>" />
+                                        <meta itemprop="price" content="<?php if($special) { echo intval($special); } else { echo intval($price); } ?>" />
                                         <meta itemprop="priceCurrency" content="RUB">
                                         <div class="c-p_select">
                                                 <?php if(empty($weight_variants)) { ?>
@@ -91,9 +98,9 @@
                                                 <?php } ?>
                                         </div>
                                         <?php if(empty($product['weight_variants'])) { ?>
-                                    <div class="c-p_price"><div class="c-p_price_shadow"><?php if($special !== false) echo $special; else echo $price; ?></div></div>
+                                            <div class="c-p_price"><div class="c-p_price_shadow"></div></div>
                                         <?php } else { ?>
-                            <div class="c-p_price"><div class="c-p_price_shadow"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div></div>
+                                            <div class="c-p_price"><div class="c-p_price_shadow"></div></div>
                                         <?php } ?>
                                 </div>
                                 <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
