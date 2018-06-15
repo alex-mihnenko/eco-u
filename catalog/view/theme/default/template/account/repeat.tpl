@@ -1,7 +1,6 @@
 <div class="content">
     <div class="cart-header">
-        <div class="h4">Заказ №<?php echo $order_id?></div>
-        <hr class="indent xs">
+        <hr class="indent sm">
     </div>
 
     <div class="cart-products">
@@ -44,6 +43,7 @@
 
                 <div class="col total">
                     <?php if( $instock ) { ?>
+                        <p><?php echo $product['wKey']; ?></p>
                         <p><?php echo $product['total']; ?> <span>руб.</span></p>
                     <?php } else { ?>
                         <p class="text-color-red">Нет в наличии</p>
