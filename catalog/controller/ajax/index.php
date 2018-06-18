@@ -1468,10 +1468,10 @@ class ControllerAjaxIndex extends Controller {
         // Send to Telphin
           include_once(DIR_APPLICATION . '/model/tool/teleo.php');
 
-          $response->call = call_proccessing('+'.$phone);
+          //$response->call = call_proccessing('+'.$phone);
         // --
 
-        // Send to Retail CRN
+        // Send to Retail CRM
           define('RETAILCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
           // Get CRM managers
@@ -1503,8 +1503,13 @@ class ControllerAjaxIndex extends Controller {
                 $data["task"] = json_encode($task);
               // ---
               
-              $response=$this->connectPostAPI($url,$data);
+              //$response=$this->connectPostAPI($url,$data);
             }
+        // ---
+
+        // Save callback
+            $this->load->model('tool/addon');
+            $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit);
         // ---
 
 
