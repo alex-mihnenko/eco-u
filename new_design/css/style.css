@@ -1248,11 +1248,11 @@ footer {
 	float: left;
 	width: 87px;
 	height: 33px;
-	margin: 18px 0 0 19px;
+	margin: 18px 0 0 15px;
 }
 .p-o_right {
 	float: right;
-	margin: 13px 19px 0 0;
+	margin: 13px 15px 0 0;
 }
 .p-o_price {
 	float: left;

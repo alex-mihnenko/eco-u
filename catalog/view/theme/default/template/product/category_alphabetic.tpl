@@ -58,6 +58,8 @@
 
                                 <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
                                     <div class="product-sale"><span><?php echo $product['price']; ?></span></div>
+                                <?php } else { ?>
+                                    <div class="product-sale"></div>
                                 <?php } ?>
 
                                 <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
@@ -80,12 +82,13 @@
                                             <?php } ?>
                                         </div>
                                         <div class="p-o_right <?php if(isset($product['discount']) && $product['discount'] > 0) { echo 'sale'; } ?>">
+                                            <meta itemprop="baseprice" content="<?php echo intval($product['price']); ?>" />
                                             <meta itemprop="price" content="<?php if($product['special']) { echo intval($product['special']); } else { echo intval($product['price']); } ?>" />
                                             <meta itemprop="priceCurrency" content="RUB" />
                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                <div class="p-o_price"></div>
                                             <?php } else { ?>
-                                                <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                                                <div class="p-o_price"></div>
                                             <?php } ?>
                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                             <input type="submit" value="" class="p-o_submit">
@@ -109,12 +112,13 @@
                                             <?php } ?>
                                         </div>
                                         <div class="p-o_right <?php if(isset($product['discount']) && $product['discount'] > 0) { echo 'sale'; } ?>">
+                                            <meta itemprop="baseprice" content="<?php echo intval($product['price']); ?>" />
                                             <meta itemprop="price" content="<?php if($product['special']) { echo intval($product['special']); } else { echo intval($product['price']); } ?>" />
                                             <meta itemprop="priceCurrency" content="RUB" />
                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
+                                                <div class="p-o_price"></div>
                                             <?php } else { ?>
-                                                <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
+                                                <div class="p-o_price"></div>
                                             <?php } ?>
                                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                             <div class="p-o_submit n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>

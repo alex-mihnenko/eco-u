@@ -199,7 +199,7 @@ class ControllerProductCategory extends Controller {
 	            	$pseudo_subcategories[] = array(
 	            		'parent' => $category_id,
 						'id' => 'sale',
-						'name' => 'Скидки',
+						'name' => 'Скидки дня',
 						'href' => '',
 						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
 	                    'total' => $this->model_catalog_product->getTotalSaleProducts()-1
@@ -207,7 +207,7 @@ class ControllerProductCategory extends Controller {
 
 					$data['categories'][] = array(
 						'id' => 'sale',
-						'name' => 'Скидки',
+						'name' => 'Скидки дня',
 						'href' => '',
 						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
 	                    'sub' => $pseudo_subcategories
@@ -268,9 +268,9 @@ class ControllerProductCategory extends Controller {
 
 
 					$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
-		            $catSortTime = false; //$this->cache->get('latest_category_sort');
+		            $catSortTime = $this->cache->get('latest_category_sort');
 		                        
-		            $cacheRequired = false; //$this->model_catalog_product->isCacheRequired();
+		            $cacheRequired = $this->model_catalog_product->isCacheRequired();
 
 		            if(!$catSortTime || !$cacheRequired) {
 		                $catSortTime = 0;
@@ -328,7 +328,7 @@ class ControllerProductCategory extends Controller {
 		                                $image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 		                        }
 
-		                        if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+		                        if (!$this->config->get('config_customer_price')) {
 		                                $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 		                        } else {
 		                                $price = false;
@@ -743,7 +743,7 @@ class ControllerProductCategory extends Controller {
 											$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
 										}
 
-										if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+										if (!$this->config->get('config_customer_price')) {
 											$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 										} else {
 											$price = false;
@@ -770,17 +770,6 @@ class ControllerProductCategory extends Controller {
 										}
 						            // ---
 
-						            // Post init
-						                if(isset($discount_sticker)) {
-						                    $arProducts['discount_sticker'] = $discount_sticker;
-						                    unset($discount_sticker);
-						                }
-						               
-						                if($result['composite_price'] !== false) {
-						                        $arProducts['composite_price'] = json_encode($result['composite_price']);
-						                }
-						            // ---
-
 									$arProducts = array(
 										'product_id'  => $result['product_id'],
 					                    'available_in_time' => $result['available_in_time'],
@@ -805,6 +794,17 @@ class ControllerProductCategory extends Controller {
 					                    'sticker_class' => $result['sticker']['class']
 									);
 					                
+					                // Post init
+						                if(isset($discount_sticker)) {
+						                    $arProducts['discount_sticker'] = $discount_sticker;
+						                    unset($discount_sticker);
+						                }
+						               
+						                if($result['composite_price'] !== false) {
+						                   $arProducts['composite_price'] = json_encode($result['composite_price']);
+						                }
+						            // ---
+						                
 					                $products_asorted[$alphabetSort][] = $arProducts;
 					                $products[] = $arProducts;
 								}

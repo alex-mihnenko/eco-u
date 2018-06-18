@@ -218,9 +218,13 @@
 
                                                                     <div class="p-o_short-descr" itemprop="description"><?php echo $product['description_short']; ?></div>
 
-                                                                    <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
-                                                                        <div class="product-sale"><span><?php echo $product['price']; ?></span></div>
-                                                                    <?php } ?>
+                                                                    <div class="product-sale-container">
+                                                                        <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
+                                                                            <div class="product-sale"><span>Цена без скидки: </span><span class="price"><?php echo $product['price']; ?></span></div>
+                                                                        <?php } else { ?>
+                                                                            <div class="product-sale empty"></div>
+                                                                        <?php } ?>
+                                                                    </div>
 
                                                                     <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
                                                                         <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>

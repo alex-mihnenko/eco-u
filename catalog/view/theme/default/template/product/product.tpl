@@ -68,12 +68,15 @@
                                             <?php }
                                         } ?>
                                 </ul>
+
                                 <div class="box-a_d">
                                     <a href="#anchor-details" class="anchor-details">Подробнее</a>
                                 </div>
 
                                 <?php if(isset($discount) && $discount > 0) { ?>
-                                    <div class="product-sale" style="text-align: left; padding: 0px;"><span><?php echo $price; ?></span></div>
+                                    <div class="product-sale"><span>Цена без скидки: </span><span class="price"><?php echo $price; ?></span></div>
+                                <?php } else { ?>
+                                    <div class="product-sale empty"></div>
                                 <?php } ?>
 
                                 <div class="size-0" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">

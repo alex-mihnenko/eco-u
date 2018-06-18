@@ -165,10 +165,10 @@ class Cart {
 				}
 
 				if( floatval($product_query->row['special_price']) > 0 ){
-					$price = $product_query->row['special_price'];
+					$price = floatval($product_query->row['special_price']);
 				}
 				else{
-					$price = $product_query->row['price'];
+					$price = floatval($product_query->row['price']);
 				}
 
 				// Product Discounts

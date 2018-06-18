@@ -124,6 +124,8 @@
                 var compPrice = $(this).parents('.p-o_block').find('.composite_price').val();
                 var mtpl = 1;
                 
+                console.log(compPrice);
+
                 if(typeof(compPrice) != 'undefined') {
                     var cpFormat = JSON.parse(compPrice);
                     if(cpFormat[quantity]) {
@@ -140,7 +142,7 @@
 
                 	var totalPrice = Math.round(mtpl * quantity * saleprice);
                 	if(totalPrice > 999) currencyStr = ' р';
-                	$(this).parents('.p-o_block').find('.product-sale span').html(totalPrice + currencyStr);
+                	$(this).parents('.p-o_block').find('.product-sale span.price').html(totalPrice + currencyStr);
                 // ---
             });
 
@@ -160,6 +162,14 @@
                 var totalPrice = Math.round(mtpl * quantity * price);
                 if(totalPrice > 999) currencyStr = ' р';
                 $(this).parents('.size-0').find('.m-product_price_shadow').html(totalPrice + currencyStr);
+
+                // Sale price
+                	var saleprice = parseFloat($(this).parents('.modal-product').find('input.product_baseprice').val());
+
+                	var totalPrice = Math.round(mtpl * quantity * saleprice);
+                	if(totalPrice > 999) currencyStr = ' р';
+                	$(this).parents('.modal-product').find('.product-sale span.price').html(totalPrice + currencyStr);
+                // ---
             });
 
             $item.parents('.m-product_select').find('select').trigger('change');;
@@ -190,7 +200,7 @@
 	                    }
 	                }
 	                var totalPrice = Math.round(mtpl * quantity * saleprice);
-	                $(this).parents('.c-p_right').find('.product-sale span').html(totalPrice + currencyStr);
+	                $(this).parents('.c-p_right').find('.product-sale span.price').html(totalPrice + currencyStr);
                 // ---
             });
 
