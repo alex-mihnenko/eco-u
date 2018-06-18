@@ -34,9 +34,7 @@
 
                 <?php if(!empty($product['props3']) && isset($product['props3'][0]) && !empty($product['props3'][0]) ) { ?>
                     <div class="m-product_text"><span style="line-height:2em;">О продукте:</span><br></div>
-                    
-                    <?php print_r($product['props3']);  ?>
-                    
+
                     <ul class="m-product_list">
                         <?php foreach($product['props3'] as $prop) { 
                             if(!empty($prop)) { ?> <li><?php echo $prop; ?></li> <?php } ?>
