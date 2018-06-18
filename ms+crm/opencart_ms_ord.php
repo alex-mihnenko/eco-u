@@ -19,7 +19,7 @@ $res_orders=mysql_query("
 		payment_method, customer_id, order_id, firstname, lastname, email, telephone, comment, total, 
 		order_status_id, date_added, shipping_code, shipping_postcode, shipping_city, shipping_country, 
 		shipping_address_1, shipping_address_2, delivery_time 
-	FROM oc_order WHERE customer_id>0 AND order_status_id>0 ORDER BY date_modified DESC LIMIT 0,20");
+	FROM oc_order WHERE customer_id>0 AND order_status_id>0 ORDER BY date_modified DESC LIMIT 0,30");
 
 $i=1;
 
