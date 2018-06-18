@@ -1544,12 +1544,6 @@ class ControllerAjaxIndex extends Controller {
               $data['products'] = $this->model_catalog_product->getCatsortProducts($target, $nInclude, $parent);
           }
           
-          if (isset($this->session->data['user_id']) && $this->model_account_user->isAdmin($this->session->data['user_id'])) {
-              $data['is_admin'] = true;
-          }
-          else {
-              $data['is_admin'] = false;
-          }
           $this->response->setOutput($this->load->view('product/dynamic', $data));
     }
     

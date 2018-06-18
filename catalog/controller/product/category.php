@@ -183,7 +183,7 @@ class ControllerProductCategory extends Controller {
 						'name' => 'Новинки',
 						'href' => '',
 						'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
-	                    'total' => $this->model_catalog_product->getTotalNewProducts()-1
+	                    'total' => $this->model_catalog_product->getTotalNewProducts()
 					);
 
 	            	$data['categories'][] = array(
@@ -202,7 +202,7 @@ class ControllerProductCategory extends Controller {
 						'name' => 'Скидки дня',
 						'href' => '',
 						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
-	                    'total' => $this->model_catalog_product->getTotalSaleProducts()-1
+	                    'total' => $this->model_catalog_product->getTotalSaleProducts()
 					);
 
 					$data['categories'][] = array(

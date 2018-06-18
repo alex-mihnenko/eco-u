@@ -165,7 +165,7 @@ class Cart {
 				}
 
 				if( floatval($product_query->row['special_price']) > 0 ){
-					$price = floatval($product_query->row['special_price']);
+					$price = round(floatval($product_query->row['special_price']));
 				}
 				else{
 					$price = floatval($product_query->row['price']);
