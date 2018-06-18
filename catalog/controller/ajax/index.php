@@ -1468,7 +1468,7 @@ class ControllerAjaxIndex extends Controller {
         // Send to Telphin
           include_once(DIR_APPLICATION . '/model/tool/teleo.php');
 
-          //$response->call = call_proccessing('+'.$phone);
+          $response->call = call_proccessing('+'.$phone);
         // --
 
         // Send to Retail CRM
@@ -1503,7 +1503,7 @@ class ControllerAjaxIndex extends Controller {
                 $data["task"] = json_encode($task);
               // ---
               
-              //$response=$this->connectPostAPI($url,$data);
+              $response=$this->connectPostAPI($url,$data);
             }
         // ---
 
