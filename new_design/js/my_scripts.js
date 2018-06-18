@@ -123,8 +123,6 @@
                 var price = parseFloat($(this).parents('.p-o_block').find('meta[itemprop="price"]').attr('content'));
                 var compPrice = $(this).parents('.p-o_block').find('.composite_price').val();
                 var mtpl = 1;
-                
-                console.log(compPrice);
 
                 if(typeof(compPrice) != 'undefined') {
                     var cpFormat = JSON.parse(compPrice);

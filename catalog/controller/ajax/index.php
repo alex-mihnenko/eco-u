@@ -1460,35 +1460,51 @@ class ControllerAjaxIndex extends Controller {
     public function sendCallRequest() {
         // Init
           $phone = preg_replace("/[^0-9,.]/", "", $this->request->post['phone']);
+          $roistat_visit = $this->request->post['roistat_visit'];
           $response = new stdClass();
         // ---
 
 
-        // Send request
+        // Send to Telphin
           include_once(DIR_APPLICATION . '/model/tool/teleo.php');
 
-          $response->call = call_proccessing($phone);
+          $response->call = call_proccessing('+'.$phone);
+        // --
 
-          // Email
-            // $subject = "Заказа обратного звонка eco-u.ru";
-            // $message = "
-            //   <h4> Заказ обратного звонка </h4>
-            //   <b>Номер телефона:</b> ".$phone."
-            // ";
+        // Send to Retail CRN
+          define('RETAILCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
-            // $headers = "From: noreoly@eco-u.ru\r\n";
-            // $headers .= "Reply-To: noreoly@eco-u.ru\r\n";
-            // $headers .= "MIME-Version: 1.0\r\n";
-            // $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+          // Get CRM managers
+            $managers = [];
 
-            // $to = $this->config->get('email');
+            $url = 'https://eco-u.retailcrm.ru/api/v5/users';
+            $qdata = array('apiKey' => RETAILCRM_KEY,'limit' => 100);
 
-            // if (mail($to, $subject, $message, $headers)) {
-            //     $response->status = 'Send to client '.$to;
-            // } else {
-            //     $response->status = 'Do not send to client '.$to;
-            // }
+            $response = $this->connectGetAPI($url,$qdata);
+
+            foreach ($response->users as $key => $user) {
+              if( $user->isManager == 1 ){
+                $managers[] = $user->id;
+              }
+            }
           // ---
+
+          // Set task
+            $url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RETAILCRM_KEY;
+
+            foreach ($managers as $key => $manager_id) {
+              // Set data
+                $task["site"] = "eco-u-ru";
+                $task["text"] = "ROIstat ID: ".$roistat_visit.". Обратный звонок на номер +".$phone;
+                $task["commentary"] = "ROIstat ID: ".$roistat_visit.". \nВремя заявки: ".date("H:i", time());
+                $task["datetime"] = date("Y-m-d H:i", (time()+1800) );
+                $task["phone"] = $phone;
+                $task["performerId"] = $manager_id;
+                $data["task"] = json_encode($task);
+              // ---
+              
+              $response=$this->connectPostAPI($url,$data);
+            }
         // ---
 
 
@@ -1498,6 +1514,66 @@ class ControllerAjaxIndex extends Controller {
         echo json_encode($response);
         exit;
     }
+
+    // Curl
+      public function connectPostAPI($url, $qdata, $cookie='') {
+
+        $data = http_build_query($qdata);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+        $headers = ['Content-Type: application/x-www-form-urlencoded'];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+
+        // Output
+        $output = curl_exec($ch);
+        $result = json_decode($output);
+
+        // Result
+        if( $result != null ){
+          curl_close ($ch);
+          return $result;
+        }
+        else {
+          curl_close ($ch);
+          return false;
+        }
+
+      }
+
+      public function connectGetAPI($url, $qdata) {
+
+        $data = http_build_query($qdata);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 80);
+
+        // Output
+        $output = curl_exec($ch);
+        $result = json_decode($output);
+
+        // Result
+        if( $result != null ){
+          curl_close ($ch);
+          return $result;
+        }
+        else {
+          curl_close ($ch);
+          return false;
+        }
+
+      }
+    // ---
   // ---
 
 

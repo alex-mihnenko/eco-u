@@ -13,7 +13,9 @@ var app = {
   	phone: null,
   	privacy: null
   },
-  customer: {}
+  customer: {
+  	roistat_visit: ''
+  }
 }
 
 $(document).ready(function() {
@@ -835,7 +837,7 @@ $(document).ready(function() {
 				var phone = $form.find('input[name="phone"]').val();
 
 	            if(phone != '' ) {
-	                $.post('/?route=ajax/index/sendCallRequest',{ phone: phone}, function(data){
+	                $.post('/?route=ajax/index/sendCallRequest',{ phone: phone, roistat_visit: app.customer.roistat_visit }, function(data){
 	                    // ---
 	                    	console.log(data);
 
@@ -1191,6 +1193,7 @@ $(document).ready(function() {
 			if( typeof roistat_visit != 'undefined' ){
 				// ---
 					console.log(roistat_visit);
+					app.customer.roistat_visit = roistat_visit;
 					$('body').append('<div class="roistat-visit"><p>№ '+roistat_visit+'</p></div>');
 				// ---
 			}
