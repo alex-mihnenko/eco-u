@@ -4618,7 +4618,7 @@ a.btn-back-to-cat:hover {
 	color: #777777;
     margin:5px 15px;
     line-height:1.25em;
-    height:2.5em;
+    height: 32px;
     overflow:hidden;
     text-overflow: ellipsis;
 }
