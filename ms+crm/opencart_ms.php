@@ -389,6 +389,7 @@ if($argv[1]=='2'){
 									shelf_life = '',
 									available_in_time = '',
 									special_price = '0',
+									discount = '0',
 									profitable_offer = '0',
 									composite_price = '0',
 									ultra_fresh = '0',
