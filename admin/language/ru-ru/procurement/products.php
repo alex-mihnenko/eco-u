@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Продукты для закупки';
+$_['heading_title']     = 'Список закупки';
 
 // Text
 $_['text_success']      = 'Настройки успешно изменены!';
@@ -10,11 +10,12 @@ $_['text_edit']         = 'Редактирование';
 
 // Column
 $_['column_name']       = 'Название';
-$_['column_min']        = 'Минимальное кол-во';
+$_['column_min']        = 'На закупку';
 $_['column_price']      = 'Цена';
 $_['column_action']     = 'Действие';
 
 // Entry
+$_['entry_date_added']  = 'Дата создания';
 $_['entry_name']        = 'Название';
 $_['entry_category']    = 'Категория';
 

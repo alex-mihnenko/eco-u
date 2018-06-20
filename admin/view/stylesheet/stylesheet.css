@@ -471,6 +471,10 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
     padding-bottom: 15px;
     margin-bottom: 0;
 }
+.well .form-group {
+	padding-top: 2.5px;
+    padding-bottom: 2.5px;
+}
 
 .form-group + .form-group {
     border-top: 1px solid #ededed;
@@ -644,3 +648,144 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 #filemanager .fa-folder.fa-5x {
 	font-size: 10.5em;
 }
+
+/* Custom */
+	/* Nav */
+		.navbar-brand {
+		    padding: 10px 15px;
+		}
+	/* Nav */
+
+	/* Auth */
+		#content-auth {
+			min-height: 80vh;
+
+			background: url(/catalog/view/theme/default/img/bg.jpg) no-repeat center center scroll; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+		}
+
+		#content-auth .panel-default {
+			border-top: 2px solid #749D3E;
+			border-radius: 4px;
+		}
+
+		#content-auth .panel-default .panel-heading {
+		    color: #595959;
+		    border-color: #749D3E;
+		    background: #fcfcfc;
+		}
+	/* Auth */
+
+	/* Bootstrap */
+		.well {
+			padding: 5px 10px;
+		}
+	/* Bootstrap */
+/* Custom */
+
+/* Helper classes */
+	.hidden { opacity: 0; }
+
+    .font-open-sans { font-family: 'Open Sans', sans-serif; }
+    .font-roboto { font-family: 'Roboto', sans-serif; }
+
+    .font-weight-700 { font-weight: 700; }
+    .font-weight-400 { font-weight: 400; }
+    .font-weight-300 { font-weight: 300; }
+
+    .text-color-white { color: #FFFFFF; }
+    .text-color-gray { color: #ECECEC; }
+    .text-color-black { color: #1A1A18; }
+    .text-color-green { color: #749D3E; }
+    .text-color-red { color: #d00; }
+
+    .background-color-white { background-color: #FFFFFF; }
+    .background-color-gray { background-color: #F2F2F2; }
+    .background-color-black { background-color: #1A1A18; }
+    .background-color-sea { background-color: #056686; }
+    .background-color-blue { background-color: #0081B4; }
+    .background-color-red { background-color: #DD0061; }
+    .background-color-pink { background-color: #FF0086; }
+    .background-color-yellow { background-color: #FFDA08; } 	 	 	
+
+    .text-align-left { text-align: left; }
+    .text-align-right { text-align: right; }
+    .text-align-center { text-align: center; }
+
+    .text-upper { text-transform: uppercase; }
+
+    
+    .block{ display: block !important; }
+    .inline{ display: inline !important; }
+    .inline-block{ display: inline-block !important; }
+    .justify{ width: 100% !important; }
+
+
+    .padding{ box-sizing: border-box; }
+    .padding.xxs{ padding: 0 .1rem; }
+    .padding.xs{ padding: 0 .5rem; }
+    .padding.sm{ padding: 0 1rem; }
+    .padding.md{ padding: 0 1.5rem; }
+    .padding.lg{ padding: 0 2rem; }
+    .padding.xl{ padding: 0 2.5rem; }
+    .padding.xxl{ padding: 0 3rem; }
+    .padding.no{ padding: 0 !important; }
+    .margin.no{ margin: 0 !important; }
+    .margin.xxs{ margin: 0 .1rem; }
+    .margin.xs{ margin: 0 .5rem; }
+
+
+
+    hr.indent{ border: none; background: transparent; margin: 0; padding: 0; width: 100%; }
+    hr.indent.xxs{ height: .5rem; }
+    hr.indent.xs{ height: 1rem; }
+    hr.indent.sm{ height: 2rem; }
+    hr.indent.md{ height: 3rem; }
+    hr.indent.lg{ height: 4rem; }
+    hr.indent.xl{ height: 5rem; }
+
+
+    @media (min-width: 1920px) {
+    	.hidden-xxl { display: none; }
+	}
+
+	@media (min-width: 1200px) and (max-width: 1919px) {
+		.hidden-xl { display: none; }
+	}
+
+	@media (min-width: 992px) and (max-width: 1199px) {
+		.hidden-lg { display: none; }
+	}
+	
+
+    @media (min-width: 768px) and (max-width: 991px) {
+    	.justify-md { width: 100% !important; }
+
+    	.hidden-md { display: none; }
+
+    	.text-align-left-md { text-align: left !important; }
+	    .text-align-right-md { text-align: right !important; }
+	    .text-align-center-md { text-align: center !important; }
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+    	.justify-sm { width: 100% !important; }
+
+    	.hidden-sm { display: none; }
+
+    	.text-align-left-sm { text-align: left !important; }
+	    .text-align-right-sm { text-align: right !important; }
+	    .text-align-center-sm { text-align: center !important; }
+    }
+
+    @media (max-width: 575px) {
+    	.justify-xs { width: 100% !important; }
+
+    	.text-align-left-xs { text-align: left !important; }
+	    .text-align-right-xs { text-align: right !important; }
+	    .text-align-center-xs { text-align: center !important; }
+    }
+/* Helper classes */
