@@ -590,12 +590,19 @@ class ModelCatalogProduct extends Model {
                         $this->load->model('tool/image');
                         $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
                     }
-                    if($product['special']) {
-                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-                    }
+                    
                     if(!$product['composite_price']) {
                         unset($product['composite_price']);
                     }
+
+                    if ($product['discount'] > 0) {
+                            $product['discount'] = $product['discount'];
+                            $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    } else {
+                            $product['discount'] = false;
+                            $product['special'] = false;
+                    }
+
                     $products[] = $product;
                 }
                 return $products;

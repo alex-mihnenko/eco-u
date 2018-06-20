@@ -136,8 +136,9 @@ xxl
 
 	@media (max-width: 767px) {
 		.product-sale {
-		    padding: 10px 30px;
-			font-size: 10px;
+		    padding: 5px 10px;
+			font-size: 9px;
+			height: 22px;
 		}
 	}
 

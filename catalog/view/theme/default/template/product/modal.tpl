@@ -13,7 +13,7 @@
 
                 <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
                     <div class="m-product_discount sticker_discount">
-                        <span><?php echo $product['discount']; ?>%</span>
+                        <span>-<?php echo $product['discount']; ?>%</span>
                     </div>
                 <?php } elseif($product['sticker_class']) { ?>
                     <div class="m-product_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div>

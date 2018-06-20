@@ -38,7 +38,7 @@
                                 <?php } ?>
 
                                 <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
-                                    <div class="p-o_discount sticker_discount"><?php echo $product['discount']; ?>%</div>
+                                    <div class="p-o_discount sticker_discount">-<?php echo $product['discount']; ?>%</div>
                                 <?php } elseif($product['sticker_class']) { ?>
                                     <div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div>
                                 <?php } ?>

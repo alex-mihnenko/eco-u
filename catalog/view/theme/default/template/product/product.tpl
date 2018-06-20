@@ -32,7 +32,7 @@
                                 <div class="c-p_thumb">
                                     <img src="<?php echo $popup; ?>" alt="<?php echo $heading_title; ?>" itemprop="image">
 
-                                    <?php if(isset($discount) && $discount > 0) { ?><div class="c-p_discount sticker_discount"><?php echo $discount; ?>%</div>
+                                    <?php if(isset($discount) && $discount > 0) { ?><div class="c-p_discount sticker_discount">-<?php echo $discount; ?>%</div>
                                     <?php } elseif($sticker_class) { ?><div class="c-p_discount sticker_<?php echo $sticker_class; ?>"><?php echo $sticker_name; ?></div><?php } ?>
                                 </div>
                                 <h2 class="c-p_title c-p_title-mobile" itemprop="name"><?php echo $heading_title; ?></h2>
