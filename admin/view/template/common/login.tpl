@@ -1,7 +1,8 @@
 <?php echo $header; ?>
-<div id="content">
-  <div class="container-fluid"><br />
-    <br />
+
+<div id="content-auth">
+  <div class="container-fluid">
+    <hr class="indent xl">
     <div class="row">
       <div class="col-sm-offset-4 col-sm-4">
         <div class="panel panel-default">
@@ -23,7 +24,7 @@
               <div class="form-group">
                 <label for="input-username"><?php echo $entry_username; ?></label>
                 <div class="input-group"><span class="input-group-addon"><i class="fa fa-user"></i></span>
-                  <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                  <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" autofocus />
                 </div>
               </div>
               <div class="form-group">
@@ -35,8 +36,8 @@
                 <span class="help-block"><a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a></span>
                 <?php } ?>
               </div>
-              <div class="text-right">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-key"></i> <?php echo $button_login; ?></button>
+              <div class="">
+                <button type="submit" class="btn btn-primary justify-xs justify-sm"><?php echo $button_login; ?></button>
               </div>
               <?php if ($redirect) { ?>
               <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
@@ -48,4 +49,5 @@
     </div>
   </div>
 </div>
+
 <?php echo $footer; ?>

@@ -33,13 +33,26 @@
       <div class="panel-body">
         <div class="well">
           <div class="row">
-            <div class="col-sm-6">
+            
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                <div class="input-group date">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+            </div>
+
+            <div class="col-sm-3">
               <div class="form-group">
                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
               </div>
             </div>
-            <div class="col-sm-6">
+            
+            <div class="col-sm-3">
               <div class="form-group">
                 <label class="control-label" for="input-category"><?php echo $entry_category; ?></label>
                 <select name="filter_category" id="input-category" class="form-control">
@@ -53,8 +66,13 @@
                   <?php } ?>
                 </select>
               </div>
+            </div>
 
-              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></button>
+            <div class="col-sm-3">
+              <hr class="indent xs">
+              <hr class="indent xxs">
+              <hr class="indent xxs">
+              <button type="button" id="button-filter" class="btn btn-primary justify"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></button>
             </div>
           </div>
         </div>
@@ -71,8 +89,6 @@
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
                   <td class="text-right"><?php echo $column_min; ?></td>
-                  <td class="text-right"><?php echo $column_price; ?></td>
-                  <td class="text-right"><?php echo $column_action; ?></td>
                 </tr>
               </thead>
               <tbody>
@@ -84,8 +100,6 @@
                   </td>
                   <td class="text-left"><?php echo $product['name']; ?></td>
                   <td class="text-right"><?php echo $product['quantity']; ?></td>
-                  <td class="text-right"><?php echo $product['price']; ?></td>
-                  <td class="text-right"></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
@@ -125,5 +139,17 @@ $('#button-filter').on('click', function() {
 });
 //--></script> 
 </div>
+
+
+
+
+<script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+
+<script type="text/javascript">
+  $('.date').datetimepicker({
+    pickTime: false
+  });
+</script>
 
 <?php echo $footer; ?>

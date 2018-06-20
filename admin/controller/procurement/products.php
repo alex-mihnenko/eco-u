@@ -11,6 +11,12 @@ class ControllerProcurementProducts extends Controller {
 	}
 
 	protected function getList() {
+		if (isset($this->request->get['filter_date_added'])) {
+			$filter_date_added = $this->request->get['filter_date_added'];
+		} else {
+			$filter_date_added = date("Y-m-d", time());
+		}
+
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -42,6 +48,10 @@ class ControllerProcurementProducts extends Controller {
 		}
 
 		$url = '';
+
+		if (isset($this->request->get['filter_date_added'])) {
+			$url .= '&filter_date_added=' . urlencode(html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8'));
+		}
 
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
@@ -81,6 +91,7 @@ class ControllerProcurementProducts extends Controller {
 		$data['products'] = array();
 
 		$filter_data = array(
+			'filter_date_added'  => $filter_date_added,
 			'filter_name'  => $filter_name,
 			'filter_category'  => $filter_category,
 			'sort'  => $sort,
@@ -135,6 +146,7 @@ class ControllerProcurementProducts extends Controller {
 		$data['column_price'] = $this->language->get('column_price');
 		$data['column_action'] = $this->language->get('column_action');
 
+		$data['entry_date_added'] = $this->language->get('entry_date_added');
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_category'] = $this->language->get('entry_category');
 
@@ -167,6 +179,10 @@ class ControllerProcurementProducts extends Controller {
 
 		$url = '';
 
+		if (isset($this->request->get['filter_date_added'])) {
+			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+		}
+
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 		}
@@ -189,6 +205,10 @@ class ControllerProcurementProducts extends Controller {
 	
 
 		$url = '';
+
+		if (isset($this->request->get['filter_date_added'])) {
+			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+		}
 
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
@@ -216,6 +236,7 @@ class ControllerProcurementProducts extends Controller {
 
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($result_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($result_total - $this->config->get('config_limit_admin'))) ? $result_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $result_total, ceil($result_total / $this->config->get('config_limit_admin')));
 
+		$data['filter_date_added'] = $filter_date_added;
 		$data['filter_name'] = $filter_name;
 		$data['filter_category'] = $filter_category;
 
