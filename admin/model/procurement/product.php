@@ -5,7 +5,7 @@ class ModelProcurementProduct extends Model {
 		$sql = "
 			SELECT pp.procurement_product_id, pp.product_id, pp.quantity, pp.purchased, pp.not_purchased, pd.name,  
 			pp.weight_class_id as weight_class_id, wcd.unit as weight_class,
-			pp.purchase_price, p.weight, p.image_preview as image,
+			pp.purchase_price, p.minimum, p.weight, p.image_preview as image,
 			sr.name as supplier 
 			FROM ".DB_PREFIX."procurement_product pp 
 			LEFT JOIN ".DB_PREFIX."procurement pt ON pt.procurement_id=pp.procurement_id 
@@ -62,7 +62,7 @@ class ModelProcurementProduct extends Model {
 		$sql = "
 			SELECT pp.procurement_product_id, pp.product_id, pp.quantity, pp.purchased, pp.not_purchased, pd.name,  
 			pp.weight_class_id as weight_class_id, wcd.unit as weight_class,
-			pp.purchase_price, p.weight, p.image_preview as image,
+			pp.purchase_price, p.minimum, p.weight, p.image_preview as image,
 			mr.name as manufacturer,
 			sr.name as supplier 
 			FROM ".DB_PREFIX."procurement_product pp 

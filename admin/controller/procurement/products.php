@@ -67,7 +67,7 @@ class ControllerProcurementProducts extends Controller {
 		if (isset($this->request->get['filter_supplier'])) {
 			$filter_supplier = $this->request->get['filter_supplier'];
 		} else {
-			$filter_supplier = null;
+			$filter_supplier = 'Фуд-Сити';
 		}
 
 		if (isset($this->request->get['filter_name'])) {
@@ -195,14 +195,19 @@ class ControllerProcurementProducts extends Controller {
 
 			foreach ($products as $key => $product) {
 				// ---
+					if( $product['minimum'] > $product['quantity'] ) {
+						$products[$key]['quantity'] = floatval($product['minimum']);
+					}
+					else { $products[$key]['quantity'] = floatval($product['quantity']); }
+
 					if( $product['weight_class_id'] == 1 || $product['weight_class_id'] == 2 ) {
-						$total_weight = $total_weight + (($product['weight']/1000) * $product['quantity']);
+						$total_weight = $total_weight + ((floatval($product['weight'])/1000) * $product['quantity']);
 					}
 					else{
-						$total_weight = $total_weight + ($product['weight'] * $product['quantity']);
+						$total_weight = $total_weight + (floatval($product['weight']) * $product['quantity']);
 					}
 					
-					$total_price = $$total_price + $product['purchase_price'];
+					$total_price = $total_price + floatval($product['purchase_price']);
 
 
 					$products[$key]['view'] = $this->url->link('procurement/products/edit', 'token=' . $this->session->data['token'] . '&procurement_product_id=' . $product['procurement_product_id'] . '&procurement_id=' . $procurement['procurement_id'] . $url, true);
