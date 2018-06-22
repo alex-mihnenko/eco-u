@@ -1,4 +1,7 @@
-<?php echo $header; ?><?php echo $column_left; ?>
+<?php echo $header; ?>
+
+<?php echo $column_left; ?>
+
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
@@ -13,60 +16,247 @@
       </ul>
     </div>
   </div>
+
   <div class="container-fluid">
+
     <?php if ($error_warning) { ?>
     <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     <?php } ?>
+
+    <?php if ($text_success) { ?>
+    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> <?php echo $text_success; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_form; ?></h3>
       </div>
       <div class="panel-body">
+
+        <?php if ($form == 'add') { ?>
+          <div class="well">
+
+            <div class="row">
+
+              <div class="col-sm-4">
+                <div class="form-group search-product">
+                  <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
+                  <input type="text" name="product_name" value="" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        <?php } ?>
+
+
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-marketing" class="form-horizontal">
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-name"><?php echo $entry_name; ?></label>
-            <div class="col-sm-10">
-              <input type="text" name="name" value="<?php echo $name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
-              <?php if ($error_name) { ?>
-              <div class="text-danger"><?php echo $error_name; ?></div>
-              <?php } ?>
+
+
+          <div class="row">
+
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <img src="<?php echo $product_info['image']; ?>" alt="" title="" data-placeholder="" data-target="image"/>
+              <hr class="indent sm">
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>
-            <div class="col-sm-10">
-              <textarea name="description" rows="5" placeholder="<?php echo $entry_description; ?>" id="input-description" class="form-control"><?php echo $description; ?></textarea>
+
+            <div class="col-xs-6 col-sm-6 col-md-3">
+              <h1 data-target="name"><?php echo $product_info['name']; ?></h1>
+              <h2><?php echo $text_weight_title; ?> <span data-target="weight"><?php echo intval($product_info['weight']); ?></span> <?php echo $text_weight; ?></h2>
+              <hr class="indent sm">
             </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-code"><span data-toggle="tooltip" title="<?php echo $help_code; ?>"><?php echo $entry_code; ?></span></label>
-            <div class="col-sm-10">
-              <input type="text" name="code" value="<?php echo $code; ?>" placeholder="<?php echo $entry_code; ?>" id="input-code" class="form-control" />
-              <?php if ($error_code) { ?>
-              <div class="text-danger"><?php echo $error_code; ?></div>
-              <?php } ?>
+
+            <div class="clearfix hidden-md hidden-lg hidden-xl"></div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <h2 data-target="supplier"><?php echo $product_info['supplier']; ?></h2>
+              <h2 class="h4"><?php echo $text_supplier; ?></h2>
+              <hr class="indent sm">
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-example"><span data-toggle="tooltip" title="<?php echo $help_example; ?>"><?php echo $entry_example; ?></span></label>
-            <div class="col-sm-10">
-              <input type="text" placeholder="<?php echo $entry_example; ?>" id="input-example1" class="form-control" />
-              <br />
-              <input type="text" placeholder="<?php echo $entry_example; ?>" id="input-example2" class="form-control" />
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <h2 data-target="manufacturer"><?php echo $product_info['manufacturer']; ?></h2>
+              <h2 class="h4"><?php echo $text_manufacturer; ?></h2>
+              <hr class="indent sm">
             </div>
+
           </div>
+
+          <hr>
+
+
+          <div class="row">
+
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <label class="control-label" for="input-name"><?php echo $entry_quantity; ?></label>
+              <hr class="indent xxs">
+
+              <input type="number" name="quantity" value="<?php echo $product_info['quantity']; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
+              <?php if ($error_quantity) { ?><div class="text-danger"><?php echo $error_quantity; ?></div><?php } ?>
+              <hr class="indent sm">
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <label class="control-label" for="input-name"><?php echo $entry_purchase_price; ?> (<?php echo $text_price; ?>)</label>
+              <hr class="indent xxs">
+
+              <input type="number" name="purchase_price" value="<?php echo $product_info['purchase_price']; ?>" placeholder="<?php echo $entry_purchase_price; ?>" id="input-purchase_price" class="form-control"/>
+              <hr class="indent sm">
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <label class="control-label" for="input-name"><?php echo $entry_total; ?> (<?php echo $text_price; ?>)</label>
+              <hr class="indent xxs">
+
+              <input type="number" name="total" value="<?php echo ($product_info['purchase_price']*$product_info['quantity']); ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" readonly/>
+              <hr class="indent sm">
+            </div>
+
+          </div>
+
+          <hr>
+          <hr class="indent sm">
+
+          <div class="btn-group" data-toggle="buttons" data-action="purchased">
+            <label class="btn btn-success btn-lg" data-value="1">
+              <input type="radio" name="options" id="purchased-1" autocomplete="off"> <?php echo $text_purchased; ?>
+            </label>
+            <label class="btn btn-danger btn-lg" data-value="0">
+              <input type="radio" name="options" id="purchased-0" autocomplete="off"> <?php echo $text_not_purchased; ?>
+            </label>
+          </div>
+
+          <input type="hidden" name="weight_class_id" value="<?php echo $product_info['weight_class_id']; ?>" id="input-weight_class_id" class="form-control"/>
+          <input type="hidden" name="purchased" value="<?php echo $product_info['purchased']; ?>" id="input-purchased" class="form-control"/>
+          <input type="hidden" name="not_purchased" value="<?php echo $product_info['not_purchased']; ?>" id="input-not_purchased" class="form-control"/>
+
+          <input type="hidden" name="product_id" value="<?php echo $product_info['product_id']; ?>" id="input-product_id" class="form-control"/>
+          <input type="hidden" name="procurement_id" value="<?php echo $procurement_id; ?>" id="input-procurement_id" class="form-control"/>
+
         </form>
       </div>
     </div>
   </div>
-  <script type="text/javascript"><!--
-$('#input-code').on('keyup', function() {
-	$('#input-example1').val('<?php echo $store; ?>?tracking=' + $('#input-code').val());
-	$('#input-example2').val('<?php echo $store; ?>index.php?route=common/home&tracking=' + $('#input-code').val());
-});
+</div>
 
-$('#input-code').trigger('keyup');
-//--></script></div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    // ---
+
+      $('input[name="quantity"], input[name="purchase_price"]').on('change', function(){
+        // ---
+
+          var $form = $(this).parents('form');
+
+          var quantity = parseFloat($form.find('input[name="quantity"]').val());
+          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+          
+          $form.find('input[name="total"]').val( quantity*purchase_price );
+
+        // ---
+      });
+
+
+      // Purchased
+        if( $('form').find('input[name="purchased"]').val() == 1 ){
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="1"]').addClass('active');
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="1"] input').attr('checked');
+
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="0"]').removeClass('active');
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="0"] input').removeAttr('checked');
+        }
+
+        
+        if( $('form').find('input[name="not_purchased"]').val() == 1 ){
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="0"]').addClass('active');
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="0"] input').attr('checked');
+
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="1"]').removeClass('active');
+          $('form').find('.btn-group[data-action="purchased"] label[data-value="1"] input').removeAttr('checked');
+        }
+
+
+        $('.btn-group[data-action="purchased"]').on('click', 'label', function(){
+          // ---
+
+            var $form = $(this).parents('form');
+            var $this = $(this);
+            var value = parseInt($(this).attr('data-value'));    
+
+            if( value == 1 ){
+              $form.find('input[name="purchased"]').val( 1 );
+              $form.find('input[name="not_purchased"]').val( 0 );
+            }
+            else{
+              $form.find('input[name="purchased"]').val( 0 );
+              $form.find('input[name="not_purchased"]').val( 1 );
+            }
+
+          // ---
+        });
+      // ---
+
+      // Add product
+        $('.search-product').on('click', '.dropdown-menu li', function(){
+          var $form = $('form');
+          
+          var $this = $(this);
+          var product_id = parseInt($this.attr('data-value'));
+
+          $.post('index.php?route=procurement/products/getProductForAdd&token=<?php echo $token; ?>', {product_id:product_id}, function(data){
+            // ---
+              
+              $form.find('[data-target="name"]').html(data.product.name);
+              $form.find('[data-target="supplier"]').html(data.product.supplier);
+              $form.find('[data-target="manufacturer"]').html(data.product.manufacturer);
+              $form.find('[data-target="weight"]').html(data.product.weight);
+              $form.find('[data-target="image"]').attr('src', data.product.image);
+
+
+              $form.find('input[name="weight_class_id"]').val(data.product.weight_class_id);
+              $form.find('input[name="purchased"]').val(0);
+              $form.find('input[name="not_purchased"]').val(0);
+
+              $form.find('input[name="quantity"]').val(data.product.quantity);
+              $form.find('input[name="purchase_price"]').val(data.product.purchase_price)
+              $form.find('input[name="total"]').val( data.product.quantity*data.product.purchase_price );
+              
+              $form.find('input[name="product_id"]').val(data.product.product_id);
+
+              console.log(data);
+            // ---
+          },'json');
+        });
+      // ---
+    // ---
+  });
+</script>
+
+
+
+<script type="text/javascript">
+  $('input[name=\'product_name\']').autocomplete({
+    'source': function(request, response) {
+      $.ajax({
+        url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+        dataType: 'json',
+        success: function(json) {
+          response($.map(json, function(item) {
+            return {
+              label: item['name'],
+              value: item['product_id']
+            }
+          }));
+        }
+      });
+    },
+    'select': function(item) {
+      $('input[name=\'product_name\']').val(item['label']);
+    }
+  });
+</script>
 <?php echo $footer; ?>

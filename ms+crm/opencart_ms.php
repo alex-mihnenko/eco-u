@@ -367,6 +367,7 @@ if($argv[1]=='2'){
 									manufacturer_id = '" . (int)$CNTRS[$v['country']['meta']['href']] . "',
 									shipping = '1',
 									price = '" . (float)$price . "',
+									purchase_price = '0',
 									points = '0',
 									tax_class_id = '0',
 									date_available = '0000-00-00',

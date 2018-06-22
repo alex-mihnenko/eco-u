@@ -7,6 +7,18 @@ $_['text_success']      = 'Настройки успешно изменены!';
 $_['text_list']         = 'Продукты';
 $_['text_add']          = 'Добавить';
 $_['text_edit']         = 'Редактирование';
+$_['text_default']         = 'Нет';
+$_['text_document_number']         = 'Номер документа';
+$_['text_document_date']         = 'от';
+$_['text_total_weight']         = 'Общий вес:';
+$_['text_total_price']         = 'Стоимость закупки:';
+$_['text_weight_title']         = 'Вес:';
+$_['text_weight']         = 'кг.';
+$_['text_price']         = 'руб.';
+$_['text_supplier']         = 'Поставщик';
+$_['text_manufacturer']         = 'Страна производитель';
+$_['text_purchased']         = 'Подтвредить';
+$_['text_not_purchased']         = 'Нет в наличии';
 
 // Column
 $_['column_name']       = 'Название';
@@ -16,10 +28,14 @@ $_['column_action']     = 'Действие';
 
 // Entry
 $_['entry_date_added']  = 'Дата создания';
+$_['entry_supplier']    = 'Поставщик';
 $_['entry_name']        = 'Название';
 $_['entry_category']    = 'Категория';
+$_['entry_quantity']    = 'Количество';
+$_['entry_purchase_price']    = 'Цена закупки';
+$_['entry_total']    = 'Итого';
 
-// Help
+// Button
 
 // Error
 $_['error_permission']  = 'У Вас нет прав для изменения настроек модуля Закупки!';

@@ -6,7 +6,9 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
+        <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
       </div>
+
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -31,6 +33,21 @@
         <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
       </div>
       <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2><?php echo $text_document_number; ?> #<?php echo $procurement['procurement_id']; ?></h2>
+            <h2 class="label label-default"><?php echo $text_document_date; ?> <?php echo $procurement['date_added']; ?></h2>
+            <hr class="indent sm">
+          </div>
+          
+          <div class="col-sm-6">
+            <h3><span class="h4"><?php echo $text_total_price; ?></span> <span class="label label-success"><?php echo $total_price; ?> <?php echo $text_price; ?></span></h3>
+            <h3><span class="h4"><?php echo $text_total_weight; ?></span> <span class="label label-danger"><?php echo $total_weight; ?> <?php echo $text_weight; ?></span></h3>
+            <hr class="indent sm">
+          </div>
+        </div>
+
+
         <div class="well">
           <div class="row">
             
@@ -42,6 +59,13 @@
                   <span class="input-group-btn">
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="input-name"><?php echo $entry_supplier; ?></label>
+                <input type="text" name="filter_supplier" value="<?php echo $filter_supplier; ?>" placeholder="<?php echo $entry_supplier; ?>" id="input-name" class="form-control" />
               </div>
             </div>
 
@@ -70,8 +94,6 @@
 
             <div class="col-sm-3">
               <hr class="indent xs">
-              <hr class="indent xxs">
-              <hr class="indent xxs">
               <button type="button" id="button-filter" class="btn btn-primary justify"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></button>
             </div>
           </div>
@@ -82,25 +104,38 @@
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                   <td class="text-left"><?php if ($sort == 'm.name') { ?>
                     <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
                   <td class="text-right"><?php echo $column_min; ?></td>
+                  <td style="width: 100px;"></td>
                 </tr>
               </thead>
               <tbody>
                 <?php if ($products) { ?>
                 <?php foreach ($products as $product_id => $product) { ?>
-                <tr>
-                  <td class="text-center">
-                    <input type="checkbox" name="selected[]" value="<?php echo $product_id; ?>" />
-                  </td>
-                  <td class="text-left"><?php echo $product['name']; ?></td>
-                  <td class="text-right"><?php echo $product['quantity']; ?></td>
-                </tr>
+
+                <?php if ($product[purchased]==1) { ?>
+                  <tr class="success">
+                  <?php } else if ($product[not_purchased]==1) { ?>
+                  <tr class="danger">
+                  <?php } else { ?>
+                  <tr>
+                  <?php } ?>
+
+                    <td class="text-left">
+                      <h4><?php echo $product['name']; ?></h4>
+                      <span class="label label-info"><?php if( !empty($product['supplier']) ) { echo $product['supplier']; } else { echo $text_default; } ?></span>
+                    </td>
+                    <td class="text-right"><h4><?php echo $product['quantity']; ?> <span class="label label-success"><?php echo $product['weight_class']; ?></span></h4></td>
+                    <td style="width: 100px;">
+                      <a href="<?php echo $product['view']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a>
+                      <a href="<?php echo $product['delete']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    </td>
+
+                  </tr>
                 <?php } ?>
                 <?php } else { ?>
                 <tr>
@@ -123,11 +158,13 @@
 $('#button-filter').on('click', function() {
 	url = 'index.php?route=procurement/products&token=<?php echo $token; ?>';
 	
+  var filter_date_added = $('input[name=\'filter_date_added\']').val();
+  var filter_supplier = $('input[name=\'filter_supplier\']').val();
 	var filter_name = $('input[name=\'filter_name\']').val();
   
-  if (filter_name) {
-    url += '&filter_name=' + encodeURIComponent(filter_name);
-  }
+  if (filter_date_added) { url += '&filter_date_added=' + encodeURIComponent(filter_date_added); }
+  if (filter_supplier) { url += '&filter_supplier=' + encodeURIComponent(filter_supplier); }
+  if (filter_name) { url += '&filter_name=' + encodeURIComponent(filter_name); }
 
   var filter_category = $('select[name=\'filter_category\']').val();
 	
