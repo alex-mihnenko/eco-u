@@ -60,42 +60,23 @@
 
           <div class="row">
 
-            <div class="col-xs-6 col-sm-6 col-md-1">
-              <img src="<?php echo $product_info['image']; ?>" alt="" title="" data-placeholder="" data-target="image"/>
-              <hr class="indent sm">
-            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+              <img src="<?php echo $product_info['image']; ?>" alt="" title="" data-placeholder="" data-target="image" class="hidden-xs hidden-sm" style="float: left; width: 100px; height: auto; margin: 0px 15px 0px 0px;" />
 
-            <div class="col-xs-6 col-sm-6 col-md-3">
               <h1 data-target="name"><?php echo $product_info['name']; ?></h1>
               <h2><?php echo $text_weight_title; ?> <span data-target="weight"><?php echo intval($product_info['weight']); ?></span> <?php echo $text_weight; ?></h2>
-              <hr class="indent sm">
             </div>
-
-            <div class="clearfix hidden-md hidden-lg hidden-xl"></div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4">
-              <h2 data-target="supplier"><?php echo $product_info['supplier']; ?></h2>
-              <h2 class="h4"><?php echo $text_supplier; ?></h2>
-              <hr class="indent sm">
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-4">
-              <h2 data-target="manufacturer"><?php echo $product_info['manufacturer']; ?></h2>
-              <h2 class="h4"><?php echo $text_manufacturer; ?></h2>
-              <hr class="indent sm">
-            </div>
-
           </div>
 
           <hr>
 
-
           <div class="row">
 
             <div class="col-xs-6 col-sm-6 col-md-4">
-              <label class="control-label" for="input-name"><?php echo $entry_quantity; ?></label>
+              <label class="control-label" for="input-name"><?php echo $entry_quantity; ?> (<?php echo $text_weight; ?>)</label>
               <hr class="indent xxs">
 
-              <input type="number" name="quantity" value="<?php echo $product_info['quantity']; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
+              <input type="number" name="quantity" value="<?php echo $product_info['quantity']; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control input-lg" />
               <?php if ($error_quantity) { ?><div class="text-danger"><?php echo $error_quantity; ?></div><?php } ?>
               <hr class="indent sm">
             </div>
@@ -104,7 +85,7 @@
               <label class="control-label" for="input-name"><?php echo $entry_purchase_price; ?> (<?php echo $text_price; ?>)</label>
               <hr class="indent xxs">
 
-              <input type="number" name="purchase_price" value="<?php echo $product_info['purchase_price']; ?>" placeholder="<?php echo $entry_purchase_price; ?>" id="input-purchase_price" class="form-control"/>
+              <input type="number" name="purchase_price" value="<?php echo $product_info['purchase_price']; ?>" placeholder="<?php echo $entry_purchase_price; ?>" id="input-purchase_price" class="form-control input-lg"/>
               <hr class="indent sm">
             </div>
 
@@ -112,13 +93,12 @@
               <label class="control-label" for="input-name"><?php echo $entry_total; ?> (<?php echo $text_price; ?>)</label>
               <hr class="indent xxs">
 
-              <input type="number" name="total" value="<?php echo ($product_info['purchase_price']*$product_info['quantity']); ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" readonly/>
+              <input type="number" name="total_price" value="<?php echo ($product_info['total_price']); ?>" placeholder="<?php echo $entry_total; ?>" id="input-total_price" class="form-control input-lg"/>
               <hr class="indent sm">
             </div>
 
           </div>
 
-          <hr>
           <hr class="indent sm">
 
           <div class="btn-group" data-toggle="buttons" data-action="purchased">
@@ -128,6 +108,50 @@
             <label class="btn btn-danger btn-lg" data-value="0">
               <input type="radio" name="options" id="purchased-0" autocomplete="off"> <?php echo $text_not_purchased; ?>
             </label>
+          </div>
+
+          <hr>
+
+
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <h2 class="h3"><?php echo $text_supplier; ?></h2>
+              <div data-target="supplier">
+                <select name="supplier_id" class="form-control">
+                  <?php foreach( $suppliers as $key => $supplier ) { ?>
+                    <?php if( $supplier['supplier_id'] == $product_info['supplier_id'] ) { ?>
+                      <option value="<?php echo $supplier['supplier_id'] ?>" selected><?php echo $supplier['name'] ?></option>
+                    <?php } else { ?>
+                      <option value="<?php echo $supplier['supplier_id'] ?>"><?php echo $supplier['name'] ?></option>
+                    <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+              <hr class="indent sm">
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <h2 class="h3"><?php echo $text_manufacturer; ?></h2>
+              <div data-target="manufacturer">
+                <select name="manufacturer_id" class="form-control">
+                  <?php foreach( $manufacturers as $key => $manufacturer ) { ?>
+                    <?php if( $manufacturer['manufacturer_id'] == $product_info['manufacturer_id'] ) { ?>
+                      <option value="<?php echo $manufacturer['manufacturer_id'] ?>" selected><?php echo $manufacturer['name'] ?></option>
+                    <?php } else { ?>
+                      <option value="<?php echo $manufacturer['manufacturer_id'] ?>"><?php echo $manufacturer['name'] ?></option>
+                    <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+              <hr class="indent sm">
+            </div>
+
+            <div class="col-xs-12 col-sm-12 hidden-md hidden-lg hidden-xl">
+              <img src="<?php echo $product_info['image']; ?>" alt="" title="" data-placeholder="" data-target="image" style="width: 100%; height: auto;" />
+              <hr class="indent sm">
+            </div>
+
           </div>
 
           <input type="hidden" name="weight_class_id" value="<?php echo $product_info['weight_class_id']; ?>" id="input-weight_class_id" class="form-control"/>
@@ -147,15 +171,62 @@
   $(document).ready(function(){
     // ---
 
-      $('input[name="quantity"], input[name="purchase_price"]').on('change', function(){
+      $('input[name="quantity"]').on('change', function(){
         // ---
 
           var $form = $(this).parents('form');
 
           var quantity = parseFloat($form.find('input[name="quantity"]').val());
           var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+          var total_price = parseFloat($form.find('input[name="total_price"]').val());
           
-          $form.find('input[name="total"]').val( quantity*purchase_price );
+          if( purchase_price > 0 ) {
+            $form.find('input[name="total_price"]').val( quantity*purchase_price );
+          }
+          else if( total_price > 0 ) {
+            $form.find('input[name="purchase_price"]').val( total_price/quantity );
+          }
+          
+
+        // ---
+      });
+
+      $('input[name="purchase_price"]').on('change', function(){
+        // ---
+
+          var $form = $(this).parents('form');
+
+          var quantity = parseFloat($form.find('input[name="quantity"]').val());
+          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+          var total_price = parseFloat($form.find('input[name="total_price"]').val());
+          
+          if( quantity > 0 ) {
+            $form.find('input[name="total_price"]').val( purchase_price*quantity );
+          }
+          else if( total_price > 0 ) {
+            $form.find('input[name="quantity"]').val( total_price/purchase_price );
+          }
+          
+
+        // ---
+      });
+
+      $('input[name="total_price"]').on('change', function(){
+        // ---
+
+          var $form = $(this).parents('form');
+
+          var quantity = parseFloat($form.find('input[name="quantity"]').val());
+          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+          var total_price = parseFloat($form.find('input[name="total_price"]').val());
+          
+          if( quantity > 0 ) {
+            $form.find('input[name="purchase_price"]').val( total_price/quantity );
+          }
+          else if( purchase_price > 0 ) {
+            $form.find('input[name="quantity"]').val( total_price/purchase_price );
+          }
+          
 
         // ---
       });
@@ -211,11 +282,13 @@
             // ---
               
               $form.find('[data-target="name"]').html(data.product.name);
-              $form.find('[data-target="supplier"]').html(data.product.supplier);
-              $form.find('[data-target="manufacturer"]').html(data.product.manufacturer);
               $form.find('[data-target="weight"]').html(data.product.weight);
               $form.find('[data-target="image"]').attr('src', data.product.image);
-
+              
+              $form.find('[data-target="supplier"] select').val(data.product.supplier_id);
+              $form.find('[data-target="manufacturer"] select').val(data.product.manufacturer_id);
+              console.log(data.product.supplier_id);
+              console.log(data.product.manufacturer_id);
 
               $form.find('input[name="weight_class_id"]').val(data.product.weight_class_id);
               $form.find('input[name="purchased"]').val(0);
@@ -223,7 +296,7 @@
 
               $form.find('input[name="quantity"]').val(data.product.quantity);
               $form.find('input[name="purchase_price"]').val(data.product.purchase_price)
-              $form.find('input[name="total"]').val( data.product.quantity*data.product.purchase_price );
+              $form.find('input[name="total_price"]').val( data.product.quantity*data.product.purchase_price );
               
               $form.find('input[name="product_id"]').val(data.product.product_id);
 

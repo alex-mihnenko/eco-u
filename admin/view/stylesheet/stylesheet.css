@@ -683,6 +683,15 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 		.well {
 			padding: 5px 10px;
 		}
+
+
+		.table-hover > tbody > tr.success > td {
+		    background-color: #d2fbb0;
+		}
+
+		.table-hover > tbody > tr.danger > td {
+		    background-color: #ffc7c7;
+		}
 	/* Bootstrap */
 /* Custom */
 
@@ -698,13 +707,13 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 
     .text-color-white { color: #FFFFFF; }
     .text-color-gray { color: #ECECEC; }
-    .text-color-black { color: #1A1A18; }
+    .text-color-black { color: #000000; }
     .text-color-green { color: #749D3E; }
     .text-color-red { color: #d00; }
 
     .background-color-white { background-color: #FFFFFF; }
     .background-color-gray { background-color: #F2F2F2; }
-    .background-color-black { background-color: #1A1A18; }
+    .background-color-black { background-color: #000000; }
     .background-color-sea { background-color: #056686; }
     .background-color-blue { background-color: #0081B4; }
     .background-color-red { background-color: #DD0061; }
@@ -749,22 +758,18 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 
 
     @media (min-width: 1920px) {
-    	.hidden-xxl { display: none; }
 	}
 
 	@media (min-width: 1200px) and (max-width: 1919px) {
-		.hidden-xl { display: none; }
 	}
 
 	@media (min-width: 992px) and (max-width: 1199px) {
-		.hidden-lg { display: none; }
 	}
 	
 
     @media (min-width: 768px) and (max-width: 991px) {
     	.justify-md { width: 100% !important; }
 
-    	.hidden-md { display: none; }
 
     	.text-align-left-md { text-align: left !important; }
 	    .text-align-right-md { text-align: right !important; }
@@ -774,7 +779,6 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
     @media (min-width: 576px) and (max-width: 767px) {
     	.justify-sm { width: 100% !important; }
 
-    	.hidden-sm { display: none; }
 
     	.text-align-left-sm { text-align: left !important; }
 	    .text-align-right-sm { text-align: right !important; }

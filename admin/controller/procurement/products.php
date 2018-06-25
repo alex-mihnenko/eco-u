@@ -195,6 +195,11 @@ class ControllerProcurementProducts extends Controller {
 
 			foreach ($products as $key => $product) {
 				// ---
+					// Get categories
+							$category = $this->model_procurement_product->getProductCategory($product['product_id']);
+							$products[$key]['category'] = $category['category_id'];
+					// ---
+					
 					if( $product['minimum'] > $product['quantity'] ) {
 						$products[$key]['quantity'] = floatval($product['minimum']);
 					}
@@ -207,11 +212,18 @@ class ControllerProcurementProducts extends Controller {
 						$total_weight = $total_weight + (floatval($product['weight']) * $product['quantity']);
 					}
 					
-					$total_price = $total_price + floatval($product['purchase_price']);
-
+					$total_price = $total_price + floatval($product['total_price']);
 
 					$products[$key]['view'] = $this->url->link('procurement/products/edit', 'token=' . $this->session->data['token'] . '&procurement_product_id=' . $product['procurement_product_id'] . '&procurement_id=' . $procurement['procurement_id'] . $url, true);
 					$products[$key]['delete'] = $this->url->link('procurement/products/delete', 'token=' . $this->session->data['token'] . '&procurement_product_id=' . $product['procurement_product_id'] . '&procurement_id=' . $procurement['procurement_id'] . $url, true);
+				// ---
+			}
+
+			$products_sorted = array();
+
+			foreach ($products as $key => $product) {
+				// ---
+					$products_sorted[$product['category']][] = $product;
 				// ---
 			}
 
@@ -219,6 +231,7 @@ class ControllerProcurementProducts extends Controller {
 			$data['total_price'] = $total_price;
 			
 			$data['products'] = $products;
+			$data['products_sorted'] = $products_sorted;
 		// ---
 
 		$data['add'] = $this->url->link('procurement/products/edit', 'token=' . $this->session->data['token'] . '&procurement_id=' . $procurement['procurement_id'] . $url, true);
@@ -245,11 +258,13 @@ class ControllerProcurementProducts extends Controller {
 		$data['entry_supplier'] = $this->language->get('entry_supplier');
 		$data['entry_name'] = $this->language->get('entry_name');
 		$data['entry_category'] = $this->language->get('entry_category');
+		$data['entry_total'] = $this->language->get('entry_total');
 
 		$data['button_add'] = $this->language->get('button_add');
 		$data['button_edit'] = $this->language->get('button_edit');
 		$data['button_delete'] = $this->language->get('button_delete');
 		$data['button_filter'] = $this->language->get('button_filter');
+		$data['button_mc'] = $this->language->get('button_mc');
 
 		$data['token'] = $this->session->data['token'];
 
@@ -443,13 +458,21 @@ class ControllerProcurementProducts extends Controller {
 						$this->load->model('tool/image');
 
 						if (is_file(DIR_IMAGE.$data['product_info']['image'])) {
-							$data['product_info']['image'] = $this->model_tool_image->resize($data['product_info']['image'], 100, 100);
+							$data['product_info']['image'] = $this->model_tool_image->resize($data['product_info']['image'], 800, 800);
 						} else {
-							$data['product_info']['image'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+							$data['product_info']['image'] = $this->model_tool_image->resize('no_image.png', 800, 800);
 						}
 					// ---
 				// ---
 			}
+		// ---
+
+		// Get suppliers
+			$data['suppliers'] = $this->model_procurement_product->getSuppliers();
+		// ---
+
+		// Get manufacturers
+			$data['manufacturers'] = $this->model_procurement_product->getManufacturers();
 		// ---
 
 		$data['token'] = $this->session->data['token'];
@@ -513,6 +536,35 @@ class ControllerProcurementProducts extends Controller {
 				// ---
 
 				$response->product = $product;
+			// ---
+
+
+			$response->status = 'success';
+
+	        echo json_encode($response);
+	        exit;
+		// ---
+	}
+
+	public function sendToMS(){
+		// ---
+			// Init
+				if( !isset($this->request->post['procurement_id']) ){
+					$response->status = 'error';
+			        echo json_encode($response);
+			        exit;
+				}
+		     	
+		     	$procurement_id = $this->request->post['procurement_id'];
+		     	$response = new stdClass();
+		    // ---
+
+		    // Get product
+				$this->load->model('procurement/procurement');
+
+				$result = $this->model_procurement_procurement->sendProcurement($procurement_id);
+
+				$response->result = $result;
 			// ---
 
 
