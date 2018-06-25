@@ -31,7 +31,8 @@
 	// Create procurement record
 		$q = "
 			INSERT INTO `".DB_PREFIX."procurement` SET 
-			`date_added` = NOW()
+			`date_added` = NOW(),
+			`status` = '1'
 		";
 		
 		if ($db->query($q) === TRUE) {
