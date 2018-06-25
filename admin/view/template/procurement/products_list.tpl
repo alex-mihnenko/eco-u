@@ -143,7 +143,11 @@
                         <tr class="danger">
                       <?php } ?>
                     <?php } else { ?>
-                      <tr>
+                      <?php if ( $categorytmp != $product['category'] ) { ?>
+                        <tr style="border-top: 2px solid #777;">
+                      <?php } else { ?>
+                        <tr>
+                      <?php } ?>
                     <?php } ?>
                     
                     <?php $categorytmp = $product['category']; ?>
