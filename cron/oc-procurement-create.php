@@ -32,7 +32,7 @@
 		$q = "
 			INSERT INTO `".DB_PREFIX."procurement` SET 
 			`date_added` = NOW(),
-			`status` = '1'
+			`status` = '0'
 		";
 		
 		if ($db->query($q) === TRUE) {
