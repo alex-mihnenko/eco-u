@@ -176,7 +176,7 @@
 
                       <td class="text-left">
                         <a href="<?php echo $product['view']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="block">
-                          <h4 class="text-color-black"><?php echo $product['name']; ?> <?php echo $product['category']; ?> <?php echo $product['manufacturer_id']; ?></h4>
+                          <h4 class="text-color-black"><?php echo $product['name']; ?></h4>
                           <span class="label label-info"><?php if( !empty($product['supplier']) ) { echo $product['supplier']; } else { echo $text_default; } ?></span>
                         </a>
                       </td>
