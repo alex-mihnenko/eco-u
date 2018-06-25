@@ -171,65 +171,67 @@
   $(document).ready(function(){
     // ---
 
-      $('input[name="quantity"]').on('change', function(){
-        // ---
+      // Calcilates
+        $('input[name="quantity"]').on('change', function(){
+          // ---
 
-          var $form = $(this).parents('form');
+            var $form = $(this).parents('form');
 
-          var quantity = parseFloat($form.find('input[name="quantity"]').val());
-          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
-          var total_price = parseFloat($form.find('input[name="total_price"]').val());
-          
-          if( purchase_price > 0 ) {
-            $form.find('input[name="total_price"]').val( quantity*purchase_price );
-          }
-          else if( total_price > 0 ) {
-            $form.find('input[name="purchase_price"]').val( total_price/quantity );
-          }
-          
+            var quantity = parseFloat($form.find('input[name="quantity"]').val());
+            var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+            var total_price = parseFloat($form.find('input[name="total_price"]').val());
+            
+            if( purchase_price > 0 ) {
+              $form.find('input[name="total_price"]').val( quantity*purchase_price );
+            }
+            else if( total_price > 0 ) {
+              $form.find('input[name="purchase_price"]').val( total_price/quantity );
+            }
+            
 
-        // ---
-      });
+          // ---
+        });
 
-      $('input[name="purchase_price"]').on('change', function(){
-        // ---
+        $('input[name="purchase_price"]').on('change', function(){
+          // ---
 
-          var $form = $(this).parents('form');
+            var $form = $(this).parents('form');
 
-          var quantity = parseFloat($form.find('input[name="quantity"]').val());
-          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
-          var total_price = parseFloat($form.find('input[name="total_price"]').val());
-          
-          if( quantity > 0 ) {
-            $form.find('input[name="total_price"]').val( purchase_price*quantity );
-          }
-          else if( total_price > 0 ) {
-            $form.find('input[name="quantity"]').val( total_price/purchase_price );
-          }
-          
+            var quantity = parseFloat($form.find('input[name="quantity"]').val());
+            var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+            var total_price = parseFloat($form.find('input[name="total_price"]').val());
+            
+            if( quantity > 0 ) {
+              $form.find('input[name="total_price"]').val( purchase_price*quantity );
+            }
+            else if( total_price > 0 ) {
+              $form.find('input[name="quantity"]').val( total_price/purchase_price );
+            }
+            
 
-        // ---
-      });
+          // ---
+        });
 
-      $('input[name="total_price"]').on('change', function(){
-        // ---
+        $('input[name="total_price"]').on('change', function(){
+          // ---
 
-          var $form = $(this).parents('form');
+            var $form = $(this).parents('form');
 
-          var quantity = parseFloat($form.find('input[name="quantity"]').val());
-          var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
-          var total_price = parseFloat($form.find('input[name="total_price"]').val());
-          
-          if( quantity > 0 ) {
-            $form.find('input[name="purchase_price"]').val( total_price/quantity );
-          }
-          else if( purchase_price > 0 ) {
-            $form.find('input[name="quantity"]').val( total_price/purchase_price );
-          }
-          
+            var quantity = parseFloat($form.find('input[name="quantity"]').val());
+            var purchase_price = parseFloat($form.find('input[name="purchase_price"]').val());
+            var total_price = parseFloat($form.find('input[name="total_price"]').val());
+            
+            if( quantity > 0 ) {
+              $form.find('input[name="purchase_price"]').val( total_price/quantity );
+            }
+            else if( purchase_price > 0 ) {
+              $form.find('input[name="quantity"]').val( total_price/purchase_price );
+            }
+            
 
-        // ---
-      });
+          // ---
+        });
+      // ---
 
 
       // Purchased
@@ -267,6 +269,8 @@
               $form.find('input[name="not_purchased"]').val( 1 );
             }
 
+
+            $('button[type="submit"]').trigger('click');
           // ---
         });
       // ---

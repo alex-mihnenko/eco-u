@@ -25,6 +25,22 @@ class ControllerProcurementProducts extends Controller {
 
 			$url = '';
 
+			if (isset($this->request->get['filter_date_added'])) {
+				$url .= '&filter_date_added=' . html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8');
+			}
+
+			if (isset($this->request->get['filter_supplier'])) {
+				$url .= '&filter_supplier=' . urlencode(html_entity_decode($this->request->get['filter_supplier'], ENT_QUOTES, 'UTF-8'));
+			}
+
+			if (isset($this->request->get['filter_name'])) {
+				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			}
+
+			if (isset($this->request->get['filter_category'])) {
+				$url .= '&filter_category=' . $this->request->get['filter_category'];
+			}
+
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
 			}
@@ -85,13 +101,7 @@ class ControllerProcurementProducts extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'pd.name';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
+			$sort = 'supply';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -116,14 +126,6 @@ class ControllerProcurementProducts extends Controller {
 
 		if (isset($this->request->get['filter_category'])) {
 			$url .= '&filter_category=' . $this->request->get['filter_category'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -223,7 +225,12 @@ class ControllerProcurementProducts extends Controller {
 
 			foreach ($products as $key => $product) {
 				// ---
-					$products_sorted[$product['category']][] = $product;
+					if( $sort == 'supply' ) {
+						$products_sorted[$product['manufacturer_id']][] = $product;
+					}
+					else{
+						$products_sorted[$product['category']][] = $product;
+					}
 				// ---
 			}
 
@@ -239,6 +246,9 @@ class ControllerProcurementProducts extends Controller {
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_list'] = $this->language->get('text_list');
+		$data['text_filter'] = $this->language->get('text_filter');
+		$data['text_filter_supply'] = $this->language->get('text_filter_supply');
+		$data['text_filter_category'] = $this->language->get('text_filter_category');
 		$data['text_no_results'] = $this->language->get('text_no_results');
 		$data['text_confirm'] = $this->language->get('text_confirm');
 		$data['text_default'] = $this->language->get('text_default');
@@ -288,63 +298,6 @@ class ControllerProcurementProducts extends Controller {
 			$data['selected'] = array();
 		}
 
-		$url = '';
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . html_entity_decode($this->request->get['filter_date_added']);
-		}
-
-		if (isset($this->request->get['filter_supplier'])) {
-			$url .= '&filter_supplier=' . urlencode(html_entity_decode($this->request->get['filter_supplier'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' . $this->request->get['filter_category'];
-		}
-
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$data['sort_name'] = $this->url->link('procurement/products', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, true);
-	
-
-		$url = '';
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . html_entity_decode($this->request->get['filter_date_added']);
-		}
-
-		if (isset($this->request->get['filter_supplier'])) {
-			$url .= '&filter_supplier=' . urlencode(html_entity_decode($this->request->get['filter_supplier'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' .$this->request->get['filter_category'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
 		$pagination = new Pagination();
 		$pagination->total = $result_total;
 		$pagination->page = $page;
@@ -360,8 +313,17 @@ class ControllerProcurementProducts extends Controller {
 		$data['filter_name'] = $filter_name;
 		$data['filter_category'] = $filter_category;
 
-		$data['sort'] = $sort;
-		$data['order'] = $order;
+		if ( isset($this->request->get['sort']) ) {
+			if ( $this->request->get['sort'] == 'supply' ) {
+				$data['sort'] = $this->url->link('procurement/products', 'token=' . $this->session->data['token'] . '&sort=category' . $url, true);
+			}
+			else{
+				$data['sort'] = $this->url->link('procurement/products', 'token=' . $this->session->data['token'] . '&sort=supply' . $url, true);
+			}
+		}
+		else{
+			$data['sort'] = $this->url->link('procurement/products', 'token=' . $this->session->data['token'] . '&sort=supply' . $url, true);
+		}
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -404,6 +366,22 @@ class ControllerProcurementProducts extends Controller {
 
 		// Url
 			$url = '';
+
+			if (isset($this->request->get['filter_date_added'])) {
+				$url .= '&filter_date_added=' . html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8');
+			}
+
+			if (isset($this->request->get['filter_supplier'])) {
+				$url .= '&filter_supplier=' . urlencode(html_entity_decode($this->request->get['filter_supplier'], ENT_QUOTES, 'UTF-8'));
+			}
+
+			if (isset($this->request->get['filter_name'])) {
+				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			}
+
+			if (isset($this->request->get['filter_category'])) {
+				$url .= '&filter_category=' . $this->request->get['filter_category'];
+			}
 
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];

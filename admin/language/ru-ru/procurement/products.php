@@ -5,6 +5,9 @@ $_['heading_title']     = 'Список закупки';
 // Text
 $_['text_success']      = 'Настройки успешно изменены!';
 $_['text_list']         = 'Продукты';
+$_['text_filter']         = 'Фильтр';
+$_['text_filter_supply']  = 'Поставщики';
+$_['text_filter_category'] = 'Категории';
 $_['text_add']          = 'Добавить';
 $_['text_edit']         = 'Редактирование';
 $_['text_default']         = 'Нет';
