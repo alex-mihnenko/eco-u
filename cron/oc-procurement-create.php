@@ -72,6 +72,7 @@
 								`procurement_id` = '".$procurement_id."',
 								`product_id` = '".$row_products['product_id']."',
 								`purchase_price` = '".$row_products['purchase_price']."',
+								`total_price` = '".floatval($row_products['purchase_price']*$row_products['quantity'])."',
 								`quantity` = '".$row_products['quantity']."',
 								`weight_class_id` = '".$row_products['weight_class_id']."',
 								`purchased` = '0',
