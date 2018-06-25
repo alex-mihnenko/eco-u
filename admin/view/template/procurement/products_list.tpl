@@ -48,7 +48,7 @@
 
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-xs-6 col-sm-6 col-md-6">
             <?php if ( isset($_GET['sort']) && $_GET['sort'] == 'supply' ) { ?>
               <a href="<?php echo $sort; ?>" class="btn btn-primary btn-sm"><?php echo $text_filter_category; ?></a>
             <?php } else { ?>
@@ -59,7 +59,7 @@
             <hr class="indent xs">
           </div>
 
-          <div class="col-md-6">
+          <div class="col-xs-6 col-sm-6 col-md-6">
             <a class="btn btn-primary btn-sm pull-right" role="button" data-toggle="collapse" href="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><?php echo $text_filter; ?></a>
             <hr class="indent xs">
           </div>
