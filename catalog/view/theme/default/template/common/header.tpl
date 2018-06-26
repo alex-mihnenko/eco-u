@@ -287,7 +287,6 @@
 			</div>
 		</div>
 
-
 		<div class="remodal modal-privacy modal-md" data-remodal-id="modal-privacy">
         	<button data-remodal-action="close" class="remodal-close"></button>
 
@@ -344,5 +343,12 @@
 			        	Настоящим субъект персональных данных, предоставляя их ЭКО-Ю, подтверждает достоверность указанной информации и соглашается на их обработку на указанных условиях.
 			        </p>
 	   			</div>
+	   		</div>
+	    </div> 
+
+	    <div class="remodal modal-product modal-lg" data-remodal-id="modal-product">
+        	<button data-remodal-action="close" class="remodal-close"></button>
+
+        	<div class="body">
 	   		</div>
 	    </div> 

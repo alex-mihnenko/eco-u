@@ -6,6 +6,7 @@ var app = {
     enjoyhint: null
   },
   modals: {
+  	product: null,
   	basket: null,
   	auth: null,
   	recovery: null,
@@ -680,6 +681,32 @@ $(document).ready(function() {
                 // ---
             });
 		// ---
+
+		// Product modal
+			app.modals.product = $('[data-remodal-id="modal-product"]').remodal();
+
+			$(document).on('click', '[data-product] a', function(e){
+				var $this = $(this);
+				var href = $(this).attr('href');
+				var product_id = $(this).parents('[data-product]').attr('data-product');
+
+				// Show product modal
+					if( app.size != 'xs' && app.size != 'sm' ){
+						$.post('/?route=ajax/index/getViewProduct', {product_id:product_id}, function(data){
+							// ---
+								console.log(data);
+								$('[data-remodal-id="modal-product"]').find('.body').html(data.html);
+
+								app.modals.product.open();
+								e.preventDefault();
+							// ---
+						},'json');
+						
+						e.preventDefault();
+					}
+				// ---
+			});
+		// ---
 	// ---
 
 	// Account
@@ -1024,6 +1051,12 @@ $(document).ready(function() {
 			});
 		// ---
 
+		// Product modal
+			if( app.size == 'xs' || app.size == 'sm' ){
+				app.modals.product.close();
+			}
+		// ---
+
 		// Addon
 			columnizerInit();
 		// ---
@@ -1192,7 +1225,6 @@ $(document).ready(function() {
 
 			if( typeof roistat_visit != 'undefined' ){
 				// ---
-					console.log(roistat_visit);
 					app.customer.roistat_visit = roistat_visit;
 					$('body').append('<div class="roistat-visit"><p>№ '+roistat_visit+'</p></div>');
 				// ---

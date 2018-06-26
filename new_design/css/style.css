@@ -2307,7 +2307,7 @@ footer {
 	position: relative;
 }
 .fond-box_1 {
-	padding-bottom: 100px;
+	padding-bottom: 30px;
 	background: #ffffff;
 }
 .a-p_title {
@@ -2340,12 +2340,12 @@ footer {
 	position: relative;
 }
 .a-p_thumb {
-	width: 340px;
-	height: 257px;
+	width: 100%;
+	height: auto;
 }
 .a-p_thumb img {
 	width: 100%;
-	height: 100%;
+	height: auto;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -2414,7 +2414,7 @@ footer {
 	float: left;
 	width: 52.8%;
 	box-sizing: border-box;
-	padding: 0 0 0 72px;
+	padding: 0 0 0 30px;
 }
 
 .prod-page-top{
@@ -2486,9 +2486,9 @@ footer {
 	left: 0;
 }
 .c-p_price {
-    width: 254px;
+    width: 49%;
     height: 48px;
-    margin: 24px 0px 11px 16px;
+    margin: 0 0 0 1%;
     display: inline-block;
     vertical-align: top;
     -moz-border-radius: 4px;
@@ -2518,9 +2518,9 @@ footer {
 
 
 .c-p_select {
-    width: 224px;
+    width: 49%;
     height: 48px;
-    margin: 24px 0 11px 0;
+    margin: 0 1% 0 0;
     display: inline-block;
     vertical-align: top;
     -moz-border-radius: 4px;
@@ -2533,7 +2533,8 @@ footer {
 }
 .c-p_submit {
 	display: block;
-	width: 494px;
+	width: 100%;
+	/*max-width: 494px;*/
 	height: 100%;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -4478,7 +4479,6 @@ a.btn-back-to-cat:hover {
 
 .sticker_discount {
     font-size:20px;
-    background-color:#f17e46;
 }
 .sticker_20, .sticker_22, .sticker_23, .sticker_24{
     font-size:11px !important;
@@ -5377,16 +5377,16 @@ select.ca-i_input.input-error_3 {
 	.c-p_list {
 	    margin: 0 0 15px 0;
 	}
-	.c-p_price {
+	/*.c-p_price {
 	    width: 47%;
 	    margin: 24px 0 11px 3%;
-	}
+	}*/
 	.c-p_submit {
     	width: 100%;
 	}
-	.c-p_select {
+	/*.c-p_select {
 	    width: 50%;
-	}
+	}*/
 
 	.m-basket_border {
 	    padding: 0 0 10px 0;

@@ -611,19 +611,6 @@
 			});
 	});
 	/*** **/
-    $('.c-p_submit').on( 'click', function(){
-        var sTxt = $(this).html();
-        var el = $(this);
-        if(el.hasClass("c-p_submit_submit2")) {
-        } else {
-            el.addClass('c-p_submit_submit2');
-            el.text("Добавлено в корзину");
-            setTimeout(function () {
-                el.removeClass('c-p_submit_submit2');
-                el.text(sTxt);
-            }, 2000, sTxt); // 1000 м.сек
-        }
-    });
     
     var slIcons = document.getElementsByClassName('category-icon-active');
     for(i=0;i<slIcons.length;i++) {
@@ -1028,7 +1015,7 @@
         // BindAddToCartEvents($('body'));
         // Добавление в корзину на странице товара
 
-        $('.c-p_submit').click(function(e){
+        $(document).on('click', '.c-p_submit', function(e){
             e.preventDefault();
             if($(this).hasClass('sold')) return false;
                     var pElement = $(this).parents('.c-p_right');
@@ -1056,6 +1043,20 @@
                         }
                     }, "json");
         });
+
+        $(document).on( 'click', '.c-p_submit', function(){
+	        var sTxt = $(this).html();
+	        var el = $(this);
+	        if(el.hasClass("c-p_submit_submit2")) {
+	        } else {
+	            el.addClass('c-p_submit_submit2');
+	            el.text("Добавлено в корзину");
+	            setTimeout(function () {
+	                el.removeClass('c-p_submit_submit2');
+	                el.text(sTxt);
+	            }, 2000, sTxt); // 1000 м.сек
+	        }
+	    });
 
 		// Cart function was here
 		

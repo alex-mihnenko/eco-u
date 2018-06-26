@@ -136,9 +136,8 @@ xxl
 
 	@media (max-width: 767px) {
 		.product-sale {
-		    padding: 5px 10px;
-			font-size: 9px;
-			height: 22px;
+		    padding: 10px 30px;
+			font-size: 10px;
 		}
 	}
 
@@ -206,6 +205,12 @@ xxl
 			.modal-xl {
 				width: 90%;
 				max-width: 100%;
+				overflow: hidden;
+			}
+
+			.modal-lg {
+				width: 90%;
+				max-width: 1000px;
 				overflow: hidden;
 			}
 		}
@@ -927,6 +932,18 @@ xxl
 			}
 		/* Back */
 	/* Steps */
+
+	/* Product */
+		.remodal.modal-product {
+			padding: 0;
+		}
+
+		.remodal.modal-product .body {
+			padding: 30px 0px;
+			background-color: #FFFFFF;
+			text-align: left;
+		}
+	/* Product */
 /* Modals */
 
 /* Svg */
