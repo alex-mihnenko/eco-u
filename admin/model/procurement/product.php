@@ -39,7 +39,7 @@ class ModelProcurementProduct extends Model {
 		// Sort
 			if( isset($filter['sort']) && $filter['sort'] != null ){
 				//$sql .= " ORDER BY " .$filter['sort']." ".$filter['order'];
-				$sql .= " ORDER BY supplier_id ASC";
+				//$sql .= " ORDER BY supplier_id ASC";
 			}
 		// ---
 

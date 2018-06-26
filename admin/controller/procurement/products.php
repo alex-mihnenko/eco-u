@@ -226,7 +226,7 @@ class ControllerProcurementProducts extends Controller {
 			foreach ($products as $key => $product) {
 				// ---
 					if( $sort == 'supply' ) {
-						$products_sorted[$product['manufacturer_id']][] = $product;
+						$products_sorted[$product['supplier_id']][] = $product;
 					}
 					else{
 						$products_sorted[$product['category']][] = $product;

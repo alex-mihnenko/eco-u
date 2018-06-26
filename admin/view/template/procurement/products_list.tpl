@@ -143,7 +143,7 @@
 
                 <?php $sorttmp = 0; ?>
                 <?php if ( isset($_GET['sort']) && $_GET['sort'] == 'supply' ) { ?>
-                  <?php $sortkey = 'manufacturer_id'; ?>
+                  <?php $sortkey = 'supplier_id'; ?>
                 <?php } else { ?>
                   <?php $sortkey = 'category'; ?>
                 <?php } ?>
