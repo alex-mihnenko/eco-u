@@ -12,7 +12,7 @@
 			FROM `".DB_PREFIX."order` o 
 			LEFT JOIN `" . DB_PREFIX . "order_product` op ON op.order_id = o.order_id 
 			LEFT JOIN `" . DB_PREFIX . "product` p ON p.product_id = op.product_id 
-	       	WHERE o.order_status_id = '13' AND p.quantity<0;
+	       	WHERE o.order_status_id = '12' OR o.order_status_id = '13' AND p.quantity<0;
 	    ";
 
 		$rows_products = $db->query($q);

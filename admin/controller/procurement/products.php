@@ -77,7 +77,7 @@ class ControllerProcurementProducts extends Controller {
 		if (isset($this->request->get['filter_date_added'])) {
 			$filter_date_added = $this->request->get['filter_date_added'];
 		} else {
-			$filter_date_added = date("Y-m-d", time());
+			$filter_date_added = date("Y-m-d", time()-86400);
 		}
 
 		if (isset($this->request->get['filter_supplier'])) {
