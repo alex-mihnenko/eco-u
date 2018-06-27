@@ -1,6 +1,9 @@
 <?php
 // catalog/controller/ajax/index.php
 class ControllerAjaxIndex extends Controller {
+  const RETAILCRM_KEY = 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to';
+  const MS_AUTH = 'admin@mail195:134679';
+
   // Customers
     // Registration
     public function ajaxRegisterCustomer() {
@@ -532,7 +535,6 @@ class ControllerAjaxIndex extends Controller {
       // ---
     }
   // ---
-
 
   // Orders
     // Add
@@ -1455,7 +1457,7 @@ class ControllerAjaxIndex extends Controller {
   // ---
 
   // Catalog
-     public function getViewProduct() {
+    public function getViewProduct() {
         // Init
           $product_id = $this->request->post['product_id'];
           $response = new stdClass();
@@ -1854,6 +1856,107 @@ class ControllerAjaxIndex extends Controller {
         echo json_encode($response);
         exit;
     }
+  // ---
+
+  // Widgets
+      // Chrome
+        public function chormeSetNote() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $customerId = intval($this->request->post['customerId']);
+            $noteText = $this->request->post['noteText'];
+            $response = new stdClass();
+          // ---
+
+          // Send note
+            $url = 'https://eco-u.retailcrm.ru/api/v5/customers/notes/create';
+
+            $note = array();
+            $note["text"] = $noteText;
+            $customer["id"] = $customerId;
+            $note["customer"] = $customer;
+
+            $qdata = array('apiKey' => self::RETAILCRM_KEY, 'note' => json_encode($note));
+
+            $res = $this->connectPostAPI($url,$qdata);
+
+            $response->res = $res;
+            $response->data = $qdata;
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }//...
+
+        public function chormeGetNotes() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $orderid = $this->request->post['id'];
+            $response = new stdClass();
+          // ---
+
+          // Get CRM order
+            $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$orderid;
+            $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+
+            $res = $this->connectGetAPI($url,$qdata);
+            $order = $res->order;
+
+            $response->order = $res->order;
+            $response->customer = $res->order->customer;
+          // ---
+
+          // Get customer notes
+            $customer_id = $response->customer->id;
+
+            $url = 'https://eco-u.retailcrm.ru/api/v5/customers/notes';
+
+            $filter = array();
+            $filter['customerIds'] = array();
+            $filter['customerIds'][] = $customer_id;
+            $qdata = array('apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1, 'filter' => $filter);
+
+            $res_notes = $this->connectGetAPI($url,$qdata);
+
+            $response->notes = $res_notes->notes;
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }//...
+
+        public function chormeGetStocks() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $orderid = $this->request->post['id'];
+            $orderExternalId = $this->request->post['externalId'];
+            $response = new stdClass();
+          // ---
+
+          // Get OC order products
+            $this->load->model('tool/addon');
+            
+            $order_info = $this->model_tool_addon->getOrderProducts($orderExternalId);
+
+            $response->products = $order_info;
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }//...
+      // ---
   // ---
 
   // Other

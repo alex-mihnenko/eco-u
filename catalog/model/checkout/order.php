@@ -929,6 +929,7 @@ class ModelCheckoutOrder extends Model {
     }
 
 	// --- //
+	
 	public function getOrderProducts($order_id, $order_status_id, $quantity, $filter=array()) {
 		// Crate sql
 			$sql = "
