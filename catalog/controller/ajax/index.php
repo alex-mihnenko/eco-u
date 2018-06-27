@@ -1945,9 +1945,18 @@ class ControllerAjaxIndex extends Controller {
           // Get OC order products
             $this->load->model('tool/addon');
             
-            $order_info = $this->model_tool_addon->getOrderProducts($orderExternalId);
+            $order_products = $this->model_tool_addon->getOrderProducts($orderExternalId);
 
-            $response->products = $order_info;
+            $products = array();
+
+            foreach ($order_products as $key => $product) {
+              // ---
+                if( $product['stock'] <= $product['quantity'] ){
+                  $products[] = $product;
+                }
+              // ---
+            }
+            $response->products = $products;
           // ---
 
           $response->status = 'success';
@@ -2025,7 +2034,7 @@ class ControllerAjaxIndex extends Controller {
     }
 
     // Curl
-      public function connectPostAPI($url, $qdata, $cookie='') {
+      public function connectPostAPI($url, $qdata, $auth='', $cookie='') {
 
         $data = http_build_query($qdata);
 
@@ -2035,6 +2044,10 @@ class ControllerAjaxIndex extends Controller {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
         curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if( !empty($auth) ){
+          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+          curl_setopt($ch, CURLOPT_USERPWD, $auth);
+        }
         curl_setopt($ch, CURLOPT_COOKIE, $cookie);
         $headers = ['Content-Type: application/x-www-form-urlencoded'];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -2056,7 +2069,7 @@ class ControllerAjaxIndex extends Controller {
 
       }
 
-      public function connectGetAPI($url, $qdata) {
+      public function connectGetAPI($url, $qdata, $auth='') {
 
         $data = http_build_query($qdata);
 
@@ -2064,6 +2077,10 @@ class ControllerAjaxIndex extends Controller {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        if( !empty($auth) ){
+          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+          curl_setopt($ch, CURLOPT_USERPWD, $auth);
+        }
         curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
         curl_setopt($ch, CURLOPT_TIMEOUT, 80);
 
