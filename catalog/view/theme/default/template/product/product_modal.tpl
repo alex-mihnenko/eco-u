@@ -113,30 +113,50 @@
     </section>
     <!-- END About the product -->
 
-    <div class="grid-container">
-        <hr>
-        <hr class="indent sm">
+    <?php $attributesFlag = false; ?>
+    <?php $attributesNotNull = 0; ?>
 
-        <div class="grid-row align-start">
-            <div class="grid-col col-6">
-                <!-- Product attributes -->
-                <div class="attributes">
-                    <span>Пищевая ценность:</span>
-                    <hr class="indent xs">
+    <?php foreach($attribute_groups as $aGroup) { ?>
+        <?php if($aGroup['attribute_group_id'] == '7') { ?>
 
-                    <?php foreach($attribute_groups as $aGroup) { ?>
-                        <?php if($aGroup['attribute_group_id'] == '7') { ?>
-                            <?php foreach($aGroup['attribute'] as $attribute) { ?>
-                                <div class="item">
-                                    <div><p><?php echo $attribute['name']; ?></p></div>
-                                    <div class="text-align-right"><p><b><?php echo $attribute['text']; ?></b></p></div>
-                                </div>
-                                <hr class="indent xxs">
+            <?php foreach($aGroup['attribute'] as $attribute) { ?>
+                <?php if($attribute['text'] != '0') { ?>
+                    <?php $attributesNotNull = $attributesNotNull + 1; ?>
+                <?php } ?>
+            <?php } ?>
+
+            <?php $attributesFlag = true; ?>
+        <?php } ?>
+    <?php } ?>
+
+    <?php if($attributesFlag == true && $attributesNotNull > 0 ) { ?>
+        <div class="grid-container">
+            <hr>
+            <hr class="indent sm">
+
+            <div class="grid-row align-start">
+                <div class="grid-col col-6">
+                    <!-- Product attributes -->
+                    <div class="attributes">
+                        <span>Пищевая ценность:</span>
+                        <hr class="indent xs">
+
+                        <?php foreach($attribute_groups as $aGroup) { ?>
+                            <?php if($aGroup['attribute_group_id'] == '7') { ?>
+                                <?php foreach($aGroup['attribute'] as $attribute) { ?>
+                                    <?php if($attribute['text'] != '0') { ?>
+                                        <div class="item">
+                                            <div><p><?php echo $attribute['name']; ?></p></div>
+                                            <div class="text-align-right"><p><b><?php echo $attribute['text']; ?></b></p></div>
+                                        </div>
+                                        <hr class="indent xxs">
+                                    <?php } ?>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
-                    <?php } ?>
-                <!-- END Product attributes -->
+                    <!-- END Product attributes -->
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
 </div>

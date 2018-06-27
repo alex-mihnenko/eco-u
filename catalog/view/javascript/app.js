@@ -685,7 +685,7 @@ $(document).ready(function() {
 		// Product modal
 			app.modals.product = $('[data-remodal-id="modal-product"]').remodal();
 
-			$(document).on('click', '[data-product] a', function(e){
+			$(document).on('click', '[data-product] a.p-o_thumb', function(e){
 				var $this = $(this);
 				var href = $(this).attr('href');
 				var product_id = $(this).parents('[data-product]').attr('data-product');
@@ -1024,30 +1024,30 @@ $(document).ready(function() {
 
 		// Product grid
 			$('.slider-profitable_offer .box-p_o').each(function(key,val){
-				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+				//if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
 					$(this).find('a').attr('target','_blank');
-				}
-				else {
-					$(this).find('a').removeAttr('target');
-				}
+				//}
+				//else {
+					//$(this).find('a').removeAttr('target');
+				//}
 			});
 
 			$('.tabs__block .box-p_o').each(function(key,val){
-				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+				//if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
 					$(this).find('a').attr('target','_blank');
-				}
-				else {
-					$(this).find('a').removeAttr('target');
-				}
+				//}
+				//else {
+					//$(this).find('a').removeAttr('target');
+				//}
 			});
 
 			$('.remodal .modal-product').each(function(key,val){
-				if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
+				//if( app.size == 'xs' || app.size == 'sm' || app.size == 'md' ){
 					$(this).find('a').attr('target','_blank');
-				}
-				else {
-					$(this).find('a').removeAttr('target');
-				}
+				//}
+				//else {
+					//$(this).find('a').removeAttr('target');
+				//}
 			});
 		// ---
 
