@@ -266,8 +266,8 @@
 	/*** end profitable_offer ***/
 	
 	/*** tabs catalog ***/
-	$('.tabs__block.active').animate({opacity:'1'});
-	$('.tabs__block:not(.active)').animate({opacity:'0'});
+	//$('.tabs__block.active').animate({opacity:'1'});
+	//$('.tabs__block:not(.active)').animate({opacity:'0'});
 
 	$('ul.tabs__catalog').on('click', 'li:not(.active)', function() {
         if($(this).hasClass('modal8')) {

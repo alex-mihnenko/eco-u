@@ -302,6 +302,7 @@ class ControllerProductProduct extends Controller {
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			if( $data['description'] == '' ) { $data['description'] = '<p>'.$this->config->get('config_description_default').'</p>'; }
             $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
             $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
             $data['weight_variants'] = $product_info['weight_variants'];

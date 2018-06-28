@@ -275,10 +275,10 @@ class ControllerProductCategory extends Controller {
 		            if(!$catSortTime || !$cacheRequired) {
 		                $catSortTime = 0;
 		                $results = $this->model_catalog_product->getProducts($filter_data);
-		                $data['products_asorted'] = array();
+		                //$data['products_asorted'] = array();
 		                $data['products_catsorted'] = array();
 		            } else {
-		                $data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
+		                //$data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
 		                $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
 		            }
 		        // ---
@@ -395,7 +395,7 @@ class ControllerProductCategory extends Controller {
 	            // Set cache
 		            if(!$cacheRequired) {
 		                $this->cache->set('latest_category_sort', time());
-		                $this->cache->set('category_products_asorted', serialize($data['products_asorted']));
+		                //$this->cache->set('category_products_asorted', serialize($data['products_asorted']));
 		                $this->cache->set('category_products_catsorted', serialize($data['products_catsorted']));
 		            }
 	            // ---

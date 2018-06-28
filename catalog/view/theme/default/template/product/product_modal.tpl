@@ -91,7 +91,7 @@
                         <hr class="indent md">
 
                         <?php if( $location != '' ) { ?>
-                            <div class="c-p_txt">Происхождение: <span style="font-weight:400;"><?php echo $location; ?></span></div>
+                            <div class="c-p_txt">Регион поставки: <span style="font-weight:400;"><?php echo $location; ?></span></div>
                         <?php } ?>
 
                         <?php if( $shelf_life != '' ) { ?>
@@ -154,6 +154,7 @@
                                 <?php } ?>
                             <?php } ?>
                         <?php } ?>
+                    </div>
                     <!-- END Product attributes -->
                 </div>
             </div>

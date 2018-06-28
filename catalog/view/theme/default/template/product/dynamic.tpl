@@ -6,11 +6,7 @@
             <meta itemprop="position" content="<?php echo $key; ?>" />
             <div class="box-p_o">
                     <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
-                    <?php if( $product['description']=='' ) { ?>
-                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb" data-display="disabled">
-                    <?php } else { ?>
                     <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
-                    <?php } ?>
                         <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="">
                     </a>
                     <div class="p-o_block">
@@ -19,11 +15,7 @@
                         <?php } elseif(isset($product['sticker_class'])) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
                             <div class="p-o_link">
                                     <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                    <?php if( $product['description']=='' ) { ?>
-                                    <a href="<?php echo $product['href']; ?>" itemprop="url" data-display="disabled">
-                                    <?php } else { ?>
                                     <a href="<?php echo $product['href']; ?>" itemprop="url">
-                                    <?php } ?>
                                         <?php echo $product['name']; ?>   
                                     </a> 
                             </div>

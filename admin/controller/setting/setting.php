@@ -94,6 +94,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_length_class'] = $this->language->get('entry_length_class');
 		$data['entry_weight_class'] = $this->language->get('entry_weight_class');
 		$data['entry_limit_admin'] = $this->language->get('entry_limit_admin');
+		$data['entry_description_default'] = $this->language->get('entry_description_default');
 		$data['entry_product_count'] = $this->language->get('entry_product_count');
 		$data['entry_review'] = $this->language->get('entry_review');
 		$data['entry_review_guest'] = $this->language->get('entry_review_guest');
@@ -187,6 +188,7 @@ class ControllerSettingSetting extends Controller {
 		$data['help_currency'] = $this->language->get('help_currency');
 		$data['help_currency_auto'] = $this->language->get('help_currency_auto');
 		$data['help_limit_admin'] = $this->language->get('help_limit_admin');
+		$data['help_description_default'] = $this->language->get('help_description_default');
 		$data['help_product_count'] = $this->language->get('help_product_count');
 		$data['help_review'] = $this->language->get('help_review');
 		$data['help_review_guest'] = $this->language->get('help_review_guest');
@@ -668,6 +670,12 @@ class ControllerSettingSetting extends Controller {
 			$data['config_limit_admin'] = $this->request->post['config_limit_admin'];
 		} else {
 			$data['config_limit_admin'] = $this->config->get('config_limit_admin');
+		}
+
+		if (isset($this->request->post['config_description_default'])) {
+			$data['config_description_default'] = $this->request->post['config_description_default'];
+		} else {
+			$data['config_description_default'] = $this->config->get('config_description_default');
 		}
 
 		if (isset($this->request->post['config_product_count'])) {

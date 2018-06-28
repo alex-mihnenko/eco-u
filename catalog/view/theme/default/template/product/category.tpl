@@ -2,12 +2,19 @@
     <?php echo $header; ?>
     
     <div class="big-picture">
-        <h1 class="b-p_title">Полезные продукты от А до Я<br>с доставкой на дом</h1>
+        <h1 class="b-p_title">
+            <img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю" class="logo">
+            Полезные продукты от А до Я<br>с доставкой на дом
+        </h1>
     </div>
 <!-- END Header -->
 
 <!-- Our advantages -->
-    <div class="fond-advantage" <?php if($hide_advantage) { echo 'style="display: none"'; } ?>>
+    <?php if($hide_advantage) { ?>
+        <div class="fond-advantage" style="display: none">
+    <?php } else { ?>
+        <div class="fond-advantage" >
+    <?php } ?>
         <a class="btn-close-tab" id="b-close_advantage"></a>
     	<div class="width-1418">
     		<ul class="list-advantage">
@@ -63,20 +70,22 @@
 
                     <li>
                         <a href="#l-p_<?php echo $category['id']; ?>">
-                            <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
-                                <?php if(!empty($category['image'])) { ?>
-                                <object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object>
-                                <?php } ?>
-                            </div>
+                            <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
+                                <div class="category-icon" style="background-image:url('<?php echo $category["image"]; ?>');">
+                                    <?php if(!empty($category['image'])) { ?><object data="<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                </div>
+                            <?php } else { ?>
+                                <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
+                                    <?php if(!empty($category['image'])) { ?><object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
+                                </div>
+                            <?php } ?>
+
                             <span><?php echo $category['name']; ?></span>
                         </a>
                     </li>
                     
                     <?php $cell_num++; ?>
                 <?php } ?>
-
-                <?php $addon_cell=$cell_num%4; ?>
-                <?php while($addon_cell<4){ echo "<li></li>"; $addon_cell++; } ?>
     		</ul>
     	</div>
     <!-- END Remodal -->
@@ -86,7 +95,7 @@
             <!-- /// -->
     		
             <div class="f-c_top">
-    			<div class="width-1418 clearfix">
+    			<!-- <div class="width-1418 clearfix">
     				<ul class="tabs__catalog">
     					<li class="modal9 active"><span>Каталог продуктов</span></li>
                         <li class="modal8"><span>от А до Я</span></li>
@@ -98,7 +107,7 @@
     					<input type="submit" value="" class="b-seach_submit">
                         <div class="cancel-search">&times;</div>
     				</form>
-    			</div>
+    			</div> -->
 
     			<div class="qwe2" style="display: none">
     				<div class="qwe-bg"></div>
@@ -141,8 +150,10 @@
 
             <!-- Categories products -->
     		<div class="tabs__block active" id="container-products-categories">
-    			<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9">КАТАЛОГ</div>
-    			<div class="clearfix rel">
+
+    			<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9"><i class="svg" data-src="icon-catalog.svg"></i></div>
+    			
+                <div class="clearfix rel">
 
     				<div id="contentcontainer2">
     					<div class="container">
@@ -184,11 +195,7 @@
                                                             <div class="box-p_o">
                                                                <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
                                                                 
-                                                                <?php if( $product['description']=='' ) { ?>
-                                                                <a href="<?php echo $product['href']; ?>" class="p-o_thumb" data-display="disabled">
-                                                                <?php } else { ?>
                                                                 <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
-                                                                <?php } ?>
                                                                    <img <?php if(!empty($product['thumb'])) echo 'src="/new_design/img/spinner.gif" data-src="'.$product['thumb'].'" class="b-lazy"'; else echo 'src="/image/eco_logo.jpg"'; ?> alt="<?php echo $product['name']; ?>">
                                                                 </a>
 
@@ -199,7 +206,7 @@
 
                                                                     <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
                                                                         <div class="p-o_discount sticker_discount">
-                                                                            <span>-<?php echo $product['discount']; ?>%</span>
+                                                                            <span><?php echo $product['discount']; ?>%</span>
                                                                         </div>
                                                                     <?php } elseif($product['sticker_class']) { ?>
                                                                         <div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div>
@@ -207,11 +214,7 @@
 
                                                                     <div class="p-o_link">
                                                                         <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                                                        <?php if( $product['description']=='' ) { ?>
-                                                                        <a href="<?php echo $product['href']; ?>" itemprop="url" data-display="disabled">
-                                                                        <?php } else { ?>
                                                                         <a href="<?php echo $product['href']; ?>" itemprop="url">
-                                                                        <?php } ?>
                                                                             <?php echo $product['name']; ?>
                                                                         </a>
                                                                     </div>
@@ -219,7 +222,7 @@
 
                                                                     <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
                                                                         <div class="product-sale-container">
-                                                                            <div class="product-sale"><span>Цена без скидки: </span><span class="price"><?php echo $product['price']; ?></span></div>
+                                                                            <div class="product-sale"><span>Без скидки: </span><span class="price"><?php echo $product['price']; ?></span></div>
                                                                         </div>
                                                                     <?php } else { ?>
                                                                         <div class="p-o_short-descr" itemprop="description"><?php echo $product['description_short']; ?></div>
@@ -348,7 +351,7 @@
             <!-- Searched products -->
             <div class="tabs__block" id="search-content">
                 <div class="clearfix rel"> 
-                   <div id="contentcontainer3">
+                   <div id="contentcontainer2">
                         <div class="container"></div>
                     </div>
                 </div>

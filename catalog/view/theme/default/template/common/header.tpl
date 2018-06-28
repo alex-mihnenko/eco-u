@@ -35,74 +35,61 @@
 </head>
 <body>
 	<div class="wreaper">
-		<header class="sticker" style="position:absolute;left:0;right:0;top:0;z-index:333;">
-			<div class="size-0">
-				<div class="h-box_left">
-					<div class="rel">
-						<div class="h-menu">Меню</div>
-						<div class="hidden-menu">
-							<a href="/#l-p_35" class="h-m_link menu-cat-link">Каталог товаров</a>
-							<a href="#l-p_new" class="h-m_link menu-cat-link" data-action="scrollto">Новинки</a>
-							<a href="/about/#delivery" target="_blank" class="h-m_link">Доставка</a>
-							<a href="/about/#payment" target="_blank" class="h-m_link">Оплата</a>
-							<a href="/about/#return" target="_blank" class="h-m_link">Возвраты</a>
-							<a href="/about/#contacts" target="_blank" class="h-m_link">Контакты</a>
-							<a href="/about" target="_blank" class="h-m_link">О нас</a>
-							<!-- <php foreach($categories as $category) { if($category['name']!='Косметикаа') {?> -->
-	                        <!--a href="<=$category['href']?>" class="h-m_link"><=$category['name']?></a-->
-	                    	<!-- <php }} ?> -->
-						</div>
-						<div class="b-b_phone" data-remodal-target="modal-phone"></div>
-					</div>
-				</div>
-				<div class="h-box_center">
-					<a href="/" class="b-logo">
-						<img src="/new_design/img/logo.png" alt="">
-					</a>
-					<a href="/" class="b-logo_3">
-						<img src="/new_design/img/logo_3.png" alt="">
-					</a>
-				</div>
-				<div class="h-box_right">
-	                                   
-					<div class="all-b_basket">
-						<!--
-						<a href="/cart" class="b-basket_mobile"> 
-							<div class="b-b_price"></span></div>
-							<div class="b-b_quantity">0</div>
-						</a>
-						-->
-	                    
-	                    <div class="b-basket" data-remodal-target="modal-basket">
-	                        <div class="b-b_price"></div>
-	                        <div class="b-b_quantity">0</div> 
-	                    </div>
-	                    <?php echo $cart; ?>
+		<nav>
+			<a href="/" class="logo"><img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю"></a>
 
-	                    <!--
-						<div class="hidden-basket">
-							<div class="h-b_box">
-								<div class="h-b_title">Корзина</div>
-								<div class="h-b_15">
-									<div class="cart-container">
-										
-									</div>
-									<a href="/cart" class="h-b_buy">Купить (<span class="cart-price-total">0</span> руб)</a>
-								</div>
+			<div class="grid-container">
+				<div class="grid-row">
+					<div class="grid-col col-6 align-start">
+						<div class="svg-container pointer dropdown">
+							<i class="svg" data-src="icon-menu.svg"></i>
+
+							<div class="list">
+								<a href="/#l-p_35" class="item">Каталог товаров</a>
+								<a href="#l-p_new" class="item" data-action="scrollto">Новинки</a>
+								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
+								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
+								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
+								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
+								<a href="/about" class="item" target="_blank">О нас</a>
 							</div>
-	                        <a href="/cart"><div style="width:40px;height:40px;position:absolute;top:0px;right:93px;"></div></a>
 						</div>
-						-->
 
+						<?php if(!$customer_id) { ?>
+							<div class="svg-container pointer" data-remodal-target="modal">
+								<i class="svg" data-src="icon-user.svg"></i>
+							</div>
+	                	<?php } else { ?>
+	                		<a class="svg-container pointer" href="/my-account">
+								<i class="svg" data-src="icon-user.svg"></i>
+							</a>
+	                	<?php } ?>
+
+
+						<div class="svg-container pointer" data-remodal-target="modal-phone">
+							<i class="svg" data-src="icon-phone.svg"></i>
+						</div>
 					</div>
-					<?php if(!$customer_id) { ?>
-	                    <div class="b-profile" data-remodal-target="modal">Войти</div>
-	                <?php } else { ?>
-	                    <a href="/my-account"><div class="b-profile"><?php if(!empty($customer_firstname)) echo $customer_firstname; else { ?> Личный кабинет <?php } ?></div></a>
-	                <?php } ?>
+
+					<div class="grid-col col-6 align-end">
+						<div class="svg-container pointer">
+							<div class="flex flex-row">
+								<div class="search" data-style="default">
+									<input type="text" name="search" value="" placeholder="Поиск..." />
+									<button class="btn-close btn-xs" data-action="search-close"></button>
+								</div>
+								<i class="svg" data-src="icon-search.svg" data-action="search-open"></i>
+							</div>
+						</div>
+
+						<div class="svg-container pointer cart" data-remodal-target="modal-basket">
+							<i class="svg" data-src="icon-bucket.svg"></i>
+							<span class="counter">0</span>
+						</div>
+					</div>
 				</div>
 			</div>
-		</header>
+		</nav>
 
 		<div class="remodal modal-profile modal-sm" data-remodal-id="modal">
 			<button data-remodal-action="close" class="remodal-close"></button>
@@ -351,4 +338,6 @@
 
         	<div class="body">
 	   		</div>
-	    </div> 
+	    </div>
+
+	    <?php echo $cart; ?>

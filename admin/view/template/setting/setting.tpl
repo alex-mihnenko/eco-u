@@ -377,6 +377,12 @@
                     <?php } ?>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-description-default"><span data-toggle="tooltip" title="<?php echo $help_description_default; ?>"><?php echo $entry_description_default; ?></span></label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_description_default" value="<?php echo $config_description_default; ?>" placeholder="<?php echo $entry_description_default; ?>" id="input-description-default" class="form-control" />
+                  </div>
+                </div>
               </fieldset>
               <fieldset>
                 <legend><?php echo $text_review; ?></legend>

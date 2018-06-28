@@ -15,6 +15,8 @@
     window.bodyClass = 'page_2';
 </script>
 
+<hr class="indent md">
+
 <section class="fond-white">
     <div class="width-1194 pd-29"> 
         <ul class="liTabs t_wrap t_wrap_1">
