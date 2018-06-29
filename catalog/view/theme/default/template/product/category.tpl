@@ -334,22 +334,3 @@
 <!-- Footer -->
 <?php echo $footer; ?>
 <!-- END Footer -->
-
-
-<!-- Mobile Menu -->
-    <div data-marker="subcategories-hidden" style="display: none;">
-        <?php foreach($categories as $i => $category) { ?>
-
-            <?php if(empty($category['sub'])) continue; ?>
-            <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
-
-            <?php if( $category['id'] != 'new' && $category['id'] != 'sale' ) { ?>
-                <a class="item with-icon"  href="#l-p_<?php echo $category['id']; ?>">
-                    <?php if(!empty($category['image'])) { ?><div style="background: url(/image/<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
-                    <?php echo $category['name']; ?>
-                </a>
-            <?php } ?>
-
-        <?php } ?>
-    </div>
-<!-- Mobile Menu -->

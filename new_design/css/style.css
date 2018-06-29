@@ -2332,10 +2332,10 @@ footer {
 }
 .about-product > p {
 	font-size: 16px;
-	color: #6D757B;
+	color: #868281;
 	line-height: 30px;
 	box-sizing: border-box;
-	padding: 0 29px 31px 29px;
+	padding: 0 0px 31px 0px;
 }
 .a-p_list {
 	width: 100%;
@@ -2365,12 +2365,12 @@ footer {
 .a-p_title2 {
 	font-size: 20px;
 	font-weight: 700;
-	color: #6D757B;
+	color: #585858;
 	padding: 35px 0 23px 0;
 }
 .a-p_list p {
 	font-size: 16px;
-	color: #6D757B;
+	color: #868281;
 	line-height: 30px;
 }
 /* END About the product */
@@ -2452,18 +2452,18 @@ footer {
 .c-p_title {
 	font-weight: 500;
 	font-size: 36px;
-	color: #374047;
+	color: #585858;
 	margin: 0px 0 12px 0;
 }
 .c-p_city {
 	font-size: 18px;
-	color: #374047;
+	color: #585858;
 	margin: 0 0 53px 0;
 }
 .c-p_txt {
 	font-size: 18px;
 	font-weight: 700;
-	color: #374047;
+	color: #585858;
 	margin: 0 0 22px 0;
 }
 .c-p_list {
@@ -2484,7 +2484,7 @@ footer {
 	border-bottom: 1px dashed transparent;
 }
 .c-p_list li {
-	color: #374047;
+	color: #585858;
 	padding: 0 0 14px 7px;
 	position: relative;
 }
@@ -2492,7 +2492,7 @@ footer {
 	display: block;
 	content: "-";
 	font-size: 18px;
-	color: #374047;
+	color: #585858;
 	position: absolute;
 	top: 0;
 	left: 0;

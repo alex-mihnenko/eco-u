@@ -151,6 +151,92 @@ class ControllerCommonHeader extends Controller {
 		}
 
 
+		// Get category and subcategories
+			$data['categories'] = array();
+
+			$this->load->model('catalog/category');
+			$this->load->model('catalog/product');
+			
+			$categories_level2 = $this->model_catalog_category->getCategories(28);
+                        
+            // Add pseudo categories
+            	$pseudo_subcategories = array();
+
+				$pseudo_subcategories[] = array(
+					'parent' => $category_id,
+					'id' => 'new',
+					'name' => 'Новинки',
+					'href' => '',
+					'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
+                    'total' => $this->model_catalog_product->getTotalNewProducts()
+				);
+
+            	$data['categories'][] = array(
+					'id' => 'new',
+					'name' => 'Новинки',
+					'href' => '',
+					'image' => '/catalog/view/theme/default/img/svg/icon-new.svg',
+                    'sub' => $pseudo_subcategories
+				);
+            
+            	$pseudo_subcategories = array();
+
+            	$pseudo_subcategories[] = array(
+            		'parent' => $category_id,
+					'id' => 'sale',
+					'name' => 'Скидки дня',
+					'href' => '',
+					'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+                    'total' => $this->model_catalog_product->getTotalSaleProducts()
+				);
+
+				$data['categories'][] = array(
+					'id' => 'sale',
+					'name' => 'Скидки дня',
+					'href' => '',
+					'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+                    'sub' => $pseudo_subcategories
+				);
+            // ---
+
+			foreach ($categories_level2 as $result) {
+                            
+                $subcategories = array();
+                $categories_level3 = $this->model_catalog_category->getCategories($result['category_id']);
+
+                foreach ($categories_level3 as $result3) {
+                    $filter_data = array(
+                            'filter_category_id'  => $result3['category_id'],
+                            'filter_sub_category' => true
+                    );
+
+                    $subcategories[] = array(
+							'parent' => $category_id,
+                            'id' => $result3['category_id'],
+                            'name' => $result3['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
+                            'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result3['category_id'] . $url),
+                            'image' => $result3['image'],
+                            'total' => $this->model_catalog_product->getTotalCategoryProducts($result3['category_id'])
+                    );
+                    
+                }
+
+                $filter_data = array(
+					'filter_category_id'  => $result['category_id'],
+					'filter_sub_category' => true
+				);
+                                
+				$data['categories'][] = array(
+					'id' => $result['category_id'],
+					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
+					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url),
+					'image' => $result['image'],
+                    'sub' => $subcategories
+				);
+			}
+		// ---
+
+
 		// Versions CSS
 			if( isset($this->session->data['controlversion']) ) {
 				if( $this->session->data['controlversion'] < time()-1800 ) {

@@ -55,10 +55,11 @@ $(document).ready(function() {
 
 	// Scroll
 		$('[data-action="scrollto"]').on('click', function(e){
-			var anchor = $(this).attr('href');
+			var anchor = $(this).attr('scroll-anchor');
 			$("html, body").animate({ scrollTop: $(anchor).offset().top - 100 });
-			//e.stopPropagation();
-			//e.preventDefault();
+			
+			console.log('Scroll to');
+			e.preventDefault();
 		});
 
 		$(window).scroll(function(event){
@@ -81,11 +82,6 @@ $(document).ready(function() {
 
 	// Nav
 		/* Dropdown */
-			if( $(document).find('[data-marker="subcategories-hidden"]').length > 0 ){
-				let navSubcategoriesHTML = $(document).find('[data-marker="subcategories-hidden"]').html();
-				$(document).find('.dropdown .sub-dropdown .list > .sub-list').html(navSubcategoriesHTML);
-			}
-
 			$(document).find('.dropdown .list').css('visibility', 'visible');
 			
 			$(document).on('click', '.dropdown > [data-action="toggle"]', function(){

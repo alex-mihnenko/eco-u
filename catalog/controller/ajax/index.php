@@ -1589,8 +1589,13 @@ class ControllerAjaxIndex extends Controller {
             $data['model'] = $product_info['model'];
             $data['reward'] = $product_info['reward'];
             $data['points'] = $product_info['points'];
+
+            $descriptionTmp = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+            $descriptionTmp = preg_replace("/[^A-Za-z0-9 ]/", '', strip_tags($descriptionTmp));
+
             $data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-            if( $data['description'] == '' ) { $data['description'] = '<p>'.$this->config->get('config_description_default').'</p>'; }
+            if( $descriptionTmp == '' ) { $data['description'] = '<noindex><p>'.html_entity_decode($this->config->get('config_description_default')).'</p><noindex>'; }
+            
             $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
             $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);
             $data['weight_variants'] = $product_info['weight_variants'];

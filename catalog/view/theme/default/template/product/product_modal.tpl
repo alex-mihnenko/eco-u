@@ -106,11 +106,9 @@
     <hr class="indent md">
 
     <!-- About the product -->
-    <section id="anchor-details" class="fond-box_1">
-        <div class="width-1194 about-product">
-            <?php echo $description; ?>
-        </div>
-    </section>
+    <div class="grid-container about-product">
+        <?php echo $description; ?>
+    </div>
     <!-- END About the product -->
 
     <?php $attributesFlag = false; ?>

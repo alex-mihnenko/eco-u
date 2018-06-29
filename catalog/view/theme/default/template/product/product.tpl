@@ -34,18 +34,21 @@
                 <a href="/">
                     <img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю" class="logo" style="width: 100px; height: 49px; margin-top: -12px;">
                 </a>
+                <hr class="indent sm">
             </div>
 
-            <div class="grid-row hidden-xs hidden-sm">
-                <div class="grid-col col-6">
-                    <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
-                </div>
-                
-                <div class="grid-col col-6 align-end" style="position: relative;">
-                    <a class="btn btn-sm" href="/">на главную</a>
+            <div class="hidden-xs hidden-sm">
+                <div class="grid-row">
+                    <div class="grid-col col-6">
+                        <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
+                    </div>
+                    
+                    <div class="grid-col col-6 align-end" style="position: relative;">
+                        <a class="btn btn-sm" href="/">на главную</a>
+                    </div>
+                    <hr class="indent md">
                 </div>
             </div>
-            <hr class="indent md">
 
             <div class="card-product clearfix" itemscope itemtype="http://schema.org/Product">
                 <div class="c-p_left">
@@ -54,6 +57,11 @@
 
                         <?php if(isset($discount) && $discount > 0) { ?><div class="c-p_discount sticker_discount"><?php echo $discount; ?>%</div>
                         <?php } elseif($sticker_class) { ?><div class="c-p_discount sticker_<?php echo $sticker_class; ?>"><?php echo $sticker_name; ?></div><?php } ?>
+                    </div>
+
+                    <div class="xxs-add-title text-align-center">
+                        <h2 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h2>
+                        <hr class="indent xs">
                     </div>
                 </div>
 
@@ -130,19 +138,17 @@
     </section>
     <!-- END Container  -->
 
-    <hr class="indent md">
+    <hr class="indent md hidden-xxs">
 
     <!-- About the product -->
-    <section id="anchor-details" class="fond-box_1">
-        <div class="width-1194 about-product">
-            <div class="hidden-md hidden-lg hidden-xl hidden-xxl text-align-center">
-                <h2 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h2>
-                <hr class="indent xs">
-            </div>
-
-            <?php echo $description; ?>
+    <div class="grid-container width-1194 about-product">
+        <div class="xxs-remove-title hidden-md hidden-lg hidden-xl hidden-xxl text-align-center">
+            <h2 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h2>
+            <hr class="indent xs">
         </div>
-    </section>
+
+        <?php echo $description; ?>
+    </div>
     <!-- END About the product -->
 
     <div class="width-1194 about-product">
