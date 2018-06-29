@@ -12,7 +12,7 @@
 
             <div class="p-o_block">
                 <?php if(isset($product['composite_price'])) { ?>
-                    <input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'>
+                    <input type="hidden" class="composite_price" value='<?php echo json_encode($product['composite_price']); ?>'>
                 <?php } ?>
 
                 <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
