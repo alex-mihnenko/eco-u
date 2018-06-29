@@ -109,13 +109,7 @@ $(document).ready(function() {
 				// ---
 					if( app.size != 'xs' && app.size != 'sm' ){
 						let $this = $(this).parents('.dropdown');
-
-						if( $this.attr('data-style') == 'open' ){
-							$this.attr('data-style','default');
-						}
-						else {
-							$this.attr('data-style','open');
-						}
+						$this.attr('data-style','default');
 					}
 				// ---
 			});
