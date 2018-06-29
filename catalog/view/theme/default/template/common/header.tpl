@@ -77,15 +77,16 @@
 							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
-								<a href="/#l-p_new" class="item">Каталог товаров</a>
 								<div class="item sub-dropdown">
-									<span data-action="toggle">Категории</span>
+									<span data-action="toggle">Каталог товаров</span>
 
 									<div class="list">
 										<div class="sub-list">
 										</div>
 									</div>
 								</div>
+								<a href="/#l-p_new" class="item">Новинки</a>
+								<a href="/#l-p_sale" class="item">Скидки</a>
 								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
 								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>

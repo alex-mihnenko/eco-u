@@ -33,7 +33,7 @@
   line-height: 33px;
   box-sizing: border-box;
   padding: 0 15px 0 14px;
-	color: #999D9F;
+	color: #b0aaa4;
   height: 33px;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -230,7 +230,7 @@
   font-size: 15px;
   font-weight: 700;
   padding: 5px 5px 5px 14px;
-  color: #858585;
+  color: #b0aaa4;
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
@@ -241,17 +241,17 @@
 }
 .selectric-items li.selected {
   background: #D5D5D5;
-  color: #858585;
+  color: #b0aaa4;
 }
 
 .selectric-items li.highlighted {
   background: #D5D5D5;
-  color: #858585;
+  color: #b0aaa4;
 }
 
 .selectric-items li:hover {
   background: #D5D5D5;
-  color: #858585;
+  color: #b0aaa4;
 }
 
 .selectric-items .disabled {

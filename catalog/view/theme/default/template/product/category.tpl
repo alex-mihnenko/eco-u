@@ -138,7 +138,7 @@
                                                 <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
                                                     <div class="big-thumb"><img src="<?php echo $subcategory['image']; ?>" alt="" style="width: 150px; height: 150px; opacity: 0.15;"></div>
                                                 <?php } else { ?>
-                                                    <div class="big-thumb"><img src="/image/<?php echo $subcategory['image']; ?>" alt=""></div>
+                                                    <div class="big-thumb"><img src="/image/<?php echo str_replace('.png','.svg',$subcategory['image']); ?>" alt="" style="width: 150px; height: 150px; opacity: 0.15;"></div>
                                                 <?php } ?>
                                             <?php } ?>
 
@@ -343,12 +343,7 @@
             <?php if(empty($category['sub'])) continue; ?>
             <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
 
-            <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
-                <a class="item"  href="#l-p_<?php echo $category['id']; ?>">
-                    <?php if(!empty($category['image'])) { ?><div style="background: url(<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
-                    <?php echo $category['name']; ?>
-                </a>
-            <?php } else { ?>
+            <?php if( $category['id'] != 'new' && $category['id'] != 'sale' ) { ?>
                 <a class="item"  href="#l-p_<?php echo $category['id']; ?>">
                     <?php if(!empty($category['image'])) { ?><div style="background: url(/image/<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
                     <?php echo $category['name']; ?>
