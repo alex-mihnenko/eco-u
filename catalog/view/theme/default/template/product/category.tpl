@@ -58,36 +58,6 @@
         	<ul class="list-m_a">
         	</ul>
         </div>
-
-    	<div class="remodal modal-tabs2" data-remodal-id="modal9">
-    		<ul class="list-tabs2">
-                <?php $cell_num=0; ?>
-
-                <?php foreach($categories as $i => $category) { ?>
-
-                    <?php if(empty($category['sub'])) continue; ?>
-                    <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
-
-                    <li>
-                        <a href="#l-p_<?php echo $category['id']; ?>">
-                            <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
-                                <div class="category-icon" style="background-image:url('<?php echo $category["image"]; ?>');">
-                                    <?php if(!empty($category['image'])) { ?><object data="<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
-                                </div>
-                            <?php } else { ?>
-                                <div class="category-icon" style="background-image:url('/image/<?php echo $category["image"]; ?>');">
-                                    <?php if(!empty($category['image'])) { ?><object data="/image/<?php echo $category['image']; ?>" type="image/svg+xml" class="category-icon-active"></object><?php } ?>
-                                </div>
-                            <?php } ?>
-
-                            <span><?php echo $category['name']; ?></span>
-                        </a>
-                    </li>
-                    
-                    <?php $cell_num++; ?>
-                <?php } ?>
-    		</ul>
-    	</div>
     <!-- END Remodal -->
 
     <!-- Products -->
@@ -150,8 +120,6 @@
 
             <!-- Categories products -->
     		<div class="tabs__block active" id="container-products-categories">
-
-    			<div class="button-tabs2 button-alphabetic-shadow" data-remodal-target="modal9"><i class="svg" data-src="icon-catalog.svg"></i></div>
     			
                 <div class="clearfix rel">
 
@@ -365,4 +333,28 @@
 
 <!-- Footer -->
 <?php echo $footer; ?>
-<!-- END Footer
+<!-- END Footer -->
+
+
+<!-- Mobile Menu -->
+    <div data-marker="subcategories-hidden" style="display: none;">
+        <?php foreach($categories as $i => $category) { ?>
+
+            <?php if(empty($category['sub'])) continue; ?>
+            <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
+
+            <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
+                <a class="item"  href="#l-p_<?php echo $category['id']; ?>">
+                    <?php if(!empty($category['image'])) { ?><div style="background: url(<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
+                    <?php echo $category['name']; ?>
+                </a>
+            <?php } else { ?>
+                <a class="item"  href="#l-p_<?php echo $category['id']; ?>">
+                    <?php if(!empty($category['image'])) { ?><div style="background: url(/image/<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
+                    <?php echo $category['name']; ?>
+                </a>
+            <?php } ?>
+
+        <?php } ?>
+    </div>
+<!-- Mobile Menu -->

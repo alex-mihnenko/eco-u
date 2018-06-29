@@ -80,6 +80,56 @@ $(document).ready(function() {
 	// ---
 
 	// Nav
+		/* Dropdown */
+			if( $(document).find('[data-marker="subcategories-hidden"]').length > 0 ){
+				let navSubcategoriesHTML = $(document).find('[data-marker="subcategories-hidden"]').html();
+				$(document).find('.dropdown .sub-dropdown .list > .sub-list').html(navSubcategoriesHTML);
+			}
+
+			$(document).find('.dropdown .list').css('visibility', 'visible');
+			
+			$(document).on('click', '.dropdown > [data-action="toggle"]', function(){
+				// ---
+					let $this = $(this).parents('.dropdown');
+
+					if( $this.attr('data-style') == 'open' ){
+						// ---
+							$this.attr('data-style','default');
+						// ---
+					}
+					else {
+						// ---
+							$this.attr('data-style','open');
+						// ---
+					}
+				// ---
+			});
+
+			$(document).on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
+				// ---
+					let $this = $(this).parents('.sub-dropdown');
+
+					if( $this.attr('data-style') == 'open' ){
+						// ---
+							$this.attr('data-style','default');
+						// ---
+					}
+					else {
+						// ---
+							$this.attr('data-style','open');
+						// ---
+					}
+				// ---
+			});
+			
+			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(){
+				// ---
+					let $this = $(this).parents('.dropdown');
+					$this.attr('data-style','default');
+				// ---
+			});
+		/* Dropdown */
+
 		$(document).on('click', 'nav [data-action="search-open"]', function(){
 			// ---
 				var $this = $(this);

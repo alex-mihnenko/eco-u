@@ -5,14 +5,14 @@
 <style type="text/css">
 </style>
 <g>
-	<g data-marker="first-line">
-		<path fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,7.6c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9s0.8-1.9,1.9-1.9H31C32,5.7,32.8,6.5,32.8,7.6z"/>
+	<g>
+		<path data-animation="true" data-marker="first-line" fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,7.6c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9s0.8-1.9,1.9-1.9H31C32,5.7,32.8,6.5,32.8,7.6z"/>
 	</g>
-	<g data-marker="second-line">
-		<path fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,16.9c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9c0-1,0.8-1.9,1.9-1.9H31C32,15,32.8,15.8,32.8,16.9z"/>
+	<g>
+		<path data-animation="true" data-marker="second-line" fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,16.9c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9c0-1,0.8-1.9,1.9-1.9H31C32,15,32.8,15.8,32.8,16.9z"/>
 	</g>
-	<g data-marker="third-line">
-		<path fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,26.1c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9c0-1,0.8-1.9,1.9-1.9H31 C32,24.3,32.8,25.1,32.8,26.1z"/>
+	<g>
+		<path data-animation="true" data-marker="third-line" fill="none" stroke="#E2617F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M32.8,26.1c0,1-0.8,1.9-1.9,1.9H3.1c-1,0-1.9-0.8-1.9-1.9c0-1,0.8-1.9,1.9-1.9H31 C32,24.3,32.8,25.1,32.8,26.1z"/>
 	</g>
 </g>
 </svg>

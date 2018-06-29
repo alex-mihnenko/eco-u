@@ -39,10 +39,67 @@
 			<a href="/" class="logo"><img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю"></a>
 
 			<div class="grid-container">
-				<div class="grid-row">
+				<div class="grid-row hidden-md hidden-lg hidden-xl hidden-xxl">
 					<div class="grid-col col-6 align-start">
-						<div class="svg-container pointer dropdown">
-							<i class="svg" data-src="icon-menu.svg"></i>
+						<?php if(!$customer_id) { ?>
+							<div class="svg-container pointer" data-remodal-target="modal">
+								<i class="svg" data-src="icon-user.svg"></i>
+							</div>
+	                	<?php } else { ?>
+	                		<a class="svg-container pointer" href="/my-account">
+								<i class="svg" data-src="icon-user.svg"></i>
+							</a>
+	                	<?php } ?>
+
+
+						<div class="svg-container pointer" data-remodal-target="modal-phone">
+							<i class="svg" data-src="icon-phone.svg"></i>
+						</div>
+
+						<div class="svg-container pointer">
+							<div class="flex flex-row">
+								<div class="search" data-style="default">
+									<input type="text" name="search" value="" placeholder="Поиск..." />
+									<button class="btn-close btn-xs" data-action="search-close"></button>
+								</div>
+								<i class="svg" data-src="icon-search.svg" data-action="search-open"></i>
+							</div>
+						</div>
+					</div>
+
+					<div class="grid-col col-6 align-end">
+						<div class="svg-container pointer cart" data-remodal-target="modal-basket">
+							<i class="svg" data-src="icon-bucket.svg"></i>
+							<span class="counter">0</span>
+						</div>
+
+						<div class="svg-container pointer dropdown inverse menu">
+							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
+
+							<div class="list">
+								<a href="/#l-p_new" class="item">Каталог товаров</a>
+								<div class="item sub-dropdown">
+									<span data-action="toggle">Категории</span>
+
+									<div class="list">
+										<div class="sub-list">
+										</div>
+									</div>
+								</div>
+								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
+								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
+								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
+								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
+								<a href="/about" class="item" target="_blank">О нас</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid-row hidden-xs hidden-sm">
+					<div class="grid-col col-6 align-start">
+						<div class="svg-container pointer dropdown menu">
+							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
 								<a href="/#l-p_35" class="item">Каталог товаров</a>
