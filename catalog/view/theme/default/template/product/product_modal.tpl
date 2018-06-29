@@ -35,15 +35,23 @@
                         <?php if(isset($composite_price)) { ?><input type="hidden" class="composite_price" value='<?php echo $composite_price;?>'><? } ?>
                         
                         <?php if(!empty($props3)) { ?>
-                            <div class="c-p_txt">О продукте:</div>
-                            <ul class="c-p_list" itemprop="description">
-                                <?php foreach($props3 as $prop) { ?>
-                                    <?php if(!empty($prop)) { ?><li><?php echo $prop; ?></li><?php } ?>
-                                <?php } ?>
-                            </ul>
-                        <?php } ?>
+                            <?php $props3Flag = false; ?>
 
-                        <hr class="indent xs">
+                            <?php foreach($props3 as $prop) { ?>
+                                <?php if(!empty($prop)) { $props3Flag = true; } ?>
+                            <?php } ?>
+
+                            <?php if( $props3Flag == true ) { ?>
+                                <div class="c-p_txt">О продукте:</div>
+                                <ul class="c-p_list" itemprop="description">
+                                    <?php foreach($props3 as $prop) { ?>
+                                        <?php if(!empty($prop)) { ?><li><?php echo $prop; ?></li><?php } ?>
+                                    <?php } ?>
+                                </ul>
+                                
+                                <hr class="indent xs">
+                            <?php } ?>
+                        <?php } ?>
 
                         <?php if(isset($discount) && $discount > 0) { ?>
                             <div class="product-sale"><span>Цена без скидки: </span><span class="price"><?php echo $price; ?></span></div>
