@@ -233,6 +233,12 @@ xxl
 			color: #585858;
 			line-height: 24px;
 		}
+
+		@media (max-width: 767px) {
+			.product .attributes p {
+				font-size: 14px;
+			}
+		}
 		.product .attributes p b {
 			font-weight: bold;
 		}
@@ -1304,7 +1310,7 @@ xxl
 
 		@media (max-width: 767px) {
 			.grid-container {
-				padding: 0px 5px;
+				padding: 0px 10px;
 			}
 		}
 
@@ -1619,7 +1625,7 @@ xxl
 		.dropdown.inverse .list {
 			top: 40px;
 			left: auto;
-			right: -5px;
+			right: -10px;
 		}
 
 
