@@ -74,9 +74,11 @@
 						</div>
 
 						<div class="svg-container pointer dropdown inverse menu">
-							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
+							<i data-action="toggle" tabindex="-1"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
+								<a href="/#l-p_new" class="item with-icon"> <div style="background: url(/catalog/view/theme/default/img/svg/icon-new-white.svg) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div> Новинки</a>
+								<a href="/#l-p_sale" class="item with-icon"> <div style="background: url(/catalog/view/theme/default/img/svg/icon-sale-white.svg) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div> Скидки</a>
 								<div class="item sub-dropdown">
 									<span data-action="toggle">Каталог товаров</span>
 
@@ -85,8 +87,6 @@
 										</div>
 									</div>
 								</div>
-								<a href="/#l-p_new" class="item">Новинки</a>
-								<a href="/#l-p_sale" class="item">Скидки</a>
 								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
 								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
@@ -100,11 +100,12 @@
 				<div class="grid-row hidden-xs hidden-sm">
 					<div class="grid-col col-6 align-start">
 						<div class="svg-container pointer dropdown menu">
-							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
+							<i data-action="toggle" tabindex="-1"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
-								<a href="/#l-p_35" class="item">Каталог товаров</a>
-								<a href="#l-p_new" class="item" data-action="scrollto">Новинки</a>
+								<a href="/#l-p_new" class="item">Каталог товаров</a>
+								<a href="/#l-p_new" class="item" data-action="scrollto">Новинки</a>
+								<a href="/#l-p_sale" class="item">Скидки</a>
 								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
 								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>

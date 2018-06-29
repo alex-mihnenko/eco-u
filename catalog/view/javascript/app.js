@@ -105,6 +105,21 @@ $(document).ready(function() {
 				// ---
 			});
 
+			$(document).on('focusout', '.dropdown > [data-action="toggle"]', function(){
+				// ---
+					if( app.size != 'xs' && app.size != 'sm' ){
+						let $this = $(this).parents('.dropdown');
+
+						if( $this.attr('data-style') == 'open' ){
+							$this.attr('data-style','default');
+						}
+						else {
+							$this.attr('data-style','open');
+						}
+					}
+				// ---
+			});
+
 			$(document).on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
 				// ---
 					let $this = $(this).parents('.sub-dropdown');

@@ -1829,7 +1829,6 @@ xxl
 
 			.dropdown .list .sub-dropdown .list .item {
 				display: block;
-				padding-left: 50px;
 			}
 
 			.dropdown .list .sub-dropdown .list .item {
@@ -1839,7 +1838,13 @@ xxl
 				color: #374047;
 			}
 
-			.dropdown .list .sub-dropdown .list .item .category-icon {
+
+			.dropdown .list .item.with-icon {
+				display: block;
+				padding-left: 50px;
+			}
+
+			.dropdown .list .item .category-icon {
 				display: block;
 				position: absolute;
 				top: 0px;

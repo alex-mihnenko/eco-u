@@ -344,7 +344,7 @@
             <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
 
             <?php if( $category['id'] != 'new' && $category['id'] != 'sale' ) { ?>
-                <a class="item"  href="#l-p_<?php echo $category['id']; ?>">
+                <a class="item with-icon"  href="#l-p_<?php echo $category['id']; ?>">
                     <?php if(!empty($category['image'])) { ?><div style="background: url(/image/<?php echo $category['image']; ?>) no-repeat center center scroll; -webkit-background-size: contain; -moz-background-size: contain; -o-background-size: contain; background-size: contain;" class="category-icon"></div><?php } ?>
                     <?php echo $category['name']; ?>
                 </a>
