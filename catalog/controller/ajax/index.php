@@ -1971,6 +1971,27 @@ class ControllerAjaxIndex extends Controller {
           echo json_encode($response);
           exit;
         }//...
+
+        public function chormeGetDocuments() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $response = new stdClass();
+          // ---
+
+          // Get documents
+            $documentsConfig = json_decode(file_get_contents(DIR_APPLICATION.'/addons/retailcrm/documents/config.json'));
+            
+
+            $response->documents = $documentsConfig ;
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }//...
       // ---
   // ---
 

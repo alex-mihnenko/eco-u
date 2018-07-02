@@ -1,0 +1,10 @@
+{
+	"clients_letter_one": {
+    	"name": "Письмо клиенту",
+    	"path": "clients_letter_one"
+	},
+	"clients_letter_two": {
+    	"name": "3 истории об ЭКО-Ю",
+    	"path": "clients_letter_two"
+	}
+}
