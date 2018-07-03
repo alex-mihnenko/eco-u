@@ -4,7 +4,8 @@
     <div class="big-picture">
         <h1 class="b-p_title">
             <img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю" class="logo">
-            Полезные продукты от А до Я<br>с доставкой на дом
+            <!-- Полезные продукты от А до Я<br>с доставкой на дом -->
+            c 1 по 31 июля скидки до 25%
         </h1>
     </div>
 <!-- END Header -->
