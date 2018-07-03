@@ -626,7 +626,7 @@
                	else this.contentDocument.getElementsByTagName('polygon')[j].setAttribute('stroke', '#ffffff');
             }
 
-            this.contentDocument.getElementsByTagName('line')[j].setAttribute('stroke', '#ffffff');
+            //this.contentDocument.getElementsByTagName('line')[j].setAttribute('stroke', '#ffffff');
         }
     }
 

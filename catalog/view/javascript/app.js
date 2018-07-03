@@ -180,6 +180,8 @@ $(document).ready(function() {
 		                        $('.all-l_a2').hide();
 		                        $('#container-products-categories').hide();
 		                        $('#search-content').show();
+
+		                        setTimeout(function() { bLazyPluginInit(); }, 500);
 							// ---
                     	});
 					// ---
@@ -190,6 +192,8 @@ $(document).ready(function() {
 					$('.all-l_a2').show();
 	                $('#search-content').hide();
 	                $('#container-products-categories').show();
+
+		            setTimeout(function() { bLazyPluginInit(); }, 500);
 				}
 			// ---
 		});

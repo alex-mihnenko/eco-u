@@ -1,11 +1,9 @@
-<?php
-    if(count($products) == 0) { ?>
-        <div class="search-not-found">По вашему запросу товары не найдены</div>
+<?php if(count($products) == 0) { ?>
+    <div class="search-not-found">По вашему запросу товары не найдены</div>
 <?php } ?>
+
 <ul class="list-letter search_product_list">
-    <?php foreach($products as $key => $product) { 
-        if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue;
-    ?>
+    <?php foreach($products as $key => $product) { if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue; ?>
     <li data-type="dynamic" data-product="<?php echo $product['product_id']; ?>">
         <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
                 <meta itemprop="position" content="<?php echo $key; ?>" />
@@ -18,7 +16,7 @@
 
                         <div class="p-o_block">
                                 <?php if(isset($product['composite_price'])) { ?>
-                                    <input type="hidden" class="composite_price" value='<?php echo json_encode($product['composite_price']); ?>'>
+                                    <input type="hidden" class="composite_price" value='<?php echo $product['composite_price']; ?>'>
                                 <?php } ?>
 
                                 <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
