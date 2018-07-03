@@ -16,6 +16,7 @@ class ControllerDocumentPrint extends Controller {
 						// Custom init
 							$customer_id = $this->request->get['customer_id'];
 							$order_id = $this->request->get['order_id'];
+							$document_code = $this->request->get['code'];
 						// ---
 
 						// Get customer
@@ -34,7 +35,7 @@ class ControllerDocumentPrint extends Controller {
 							$data['coupon_discount'] = '';
 							$data['coupon_end'] = '';
 
-							$coupon_info = $this->model_document_print->createCoupon($order_id, $order_info['customer_id']);
+							$coupon_info = $this->model_document_print->createCoupon($order_id, $order_info['customer_id'], $document_code);
 							
 							$data['coupon_code'] = $coupon_info['coupon_code'];
 							$data['coupon_discount'] = intval($coupon_info['coupon_discount']);

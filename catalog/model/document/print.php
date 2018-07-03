@@ -1,11 +1,11 @@
 <?php
 class ModelDocumentPrint extends Model {
-	public function createCoupon($order_id, $customer_id) {
+	public function createCoupon($order_id, $customer_id, $document_code) {
 		// Create coupon code
 			$timestart = time();
 			$timeend = $timestart+1209600;
 			
-			$coupon_code = 'C-'.$customer_id.'-'.$order_id;
+			$coupon_code = $document_code.'-'.$customer_id.'-'.$order_id;
 			$discount = 5;
 			$date_start = date('Y-m-d', $timestart);
 			$date_end = date('Y-m-d', $timeend);
