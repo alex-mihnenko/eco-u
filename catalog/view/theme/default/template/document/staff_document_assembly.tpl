@@ -123,7 +123,7 @@
   window.onload = function() {
     // ---
       setTimeout(function(){
-        //window.print();
+        window.print();
       }, 1500);
     // ---
   }
