@@ -1,10 +1,22 @@
 {
 	"clients_letter_one": {
     	"name": "Письмо клиенту",
-    	"path": "clients_letter_one"
+    	"path": "clients_letter_one",
+    	"relation": "order"
 	},
 	"clients_letter_two": {
     	"name": "3 истории об ЭКО-Ю",
-    	"path": "clients_letter_two"
+    	"path": "clients_letter_two",
+    	"relation": "order"
+	},
+	"staff_document_packing": {
+    	"name": "Список на фасовку",
+    	"path": "staff_document_packing",
+    	"relation": "all"
+	},
+	"staff_document_assembly": {
+    	"name": "Технологическая карта на сборку",
+    	"path": "staff_document_assembly",
+    	"relation": "all"
 	}
 }
