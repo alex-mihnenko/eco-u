@@ -88,30 +88,31 @@
 	    <h1 style="text-align: center;">Список на фасовку</h1>
 	    <br><br>
 
-	    <?php foreach ($categories as $keyCategory => $category) { ?>
-		    <?php if ( !empty($category) ) { ?>
-				<?php foreach ($category as $keyProduct => $product) { ?>
-					<div class="table">
-		                <table>
-		                	<thead><tr> <th><?php echo $product[0]['name']; ?></th> <th style="width: 200px; text-align: right;">На фасовку</th> </tr></thead>
 
-		                 	<tbody>
-		    					<?php $count = 1; ?>
-		    					<?php foreach ($product as $keyPacking => $packing) { ?>
-		                  			<tr>
-		                  				<td><b> #<?php echo $count; ?> </b></td>
-		                  				<td style="width: 200px; text-align: right;"><?php echo $packing['amount']; ?> x <?php echo $packing['variant']; ?> <?php echo $packing['unit']; ?></td>
-		                  			</tr>
-		    						
-		    						<?php $count++; ?>
-								<?php } ?>
-							</tbody>
-		                </table>
-		             </div>
+		<?php foreach ($packing as $keyPacking => $pack) { ?>
+			<div class="table">
+                <table>
+                	<thead><tr> <th><?php echo $pack[0]->offer->name; ?></th> <th style="width: 200px; text-align: right;">На фасовку</th> </tr></thead>
 
-		    		<br><hr><br>
-				<?php } ?>
-			<?php } ?>
+                 	<tbody>
+    					<?php $count = 1; ?>
+    					<?php foreach ($pack as $keyProduct => $product) { ?>
+                  			<tr>
+                  				<td><b> #<?php echo $count; ?> </b></td>
+                  				<td style="width: 200px; text-align: right;">
+                  					<?php foreach ($product->properties as $keyProperty => $property) { ?>
+                  						<?php echo $property->value; ?>
+									<?php } ?>
+                  				</td>
+                  			</tr>
+    						
+    						<?php $count++; ?>
+						<?php } ?>
+					</tbody>
+                </table>
+             </div>
+
+    		<br><hr><br>
 		<?php } ?>
 	</main>
 

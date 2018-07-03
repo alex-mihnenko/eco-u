@@ -1,5 +1,8 @@
 <?php
 class ControllerDocumentPrint extends Controller {
+	const RETAILCRM_KEY = 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to';
+  	const MS_AUTH = 'admin@mail195:134679';
+
 	private $error = array();
 
 	public function index() {
@@ -46,68 +49,107 @@ class ControllerDocumentPrint extends Controller {
 
 				case 'staff_document_packing':
 					// ---
-						$order_status_ids = array(13); // 13 - статус заказа "Собирается"
+						$orders = array();
 
-						$resultOrders = $this->model_document_print->getOrders($order_status_ids);
+						// Get CRM orders
+				            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+				            $qdata = array(
+				            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+				            	'filter' => array('extendedStatus' => 'assembling')
+				            );
+
+				            $result = $this->connectGetAPI($url,$qdata);
+				            $resultOrders = $result->orders;
+				        // ---
 
 
 						$packing = array();
 
 						foreach ($resultOrders as $key => $order) {
 							// ---
-								$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
+								$resultProducts = $order->items;
 								
 								foreach ($resultProducts as $key => $product) {
-									$packing[$product['product_id']][] = $product;
+									// Get CRM categories
+							            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
+							            $qdata = array(
+							            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+							            	'filter' => array('externalId' => $product->offer->externalId)
+							            );
+
+							            $result = $this->connectGetAPI($url,$qdata);
+							            $groups = array();
+
+							            foreach ($result->products[0]->groups as $key => $group) {
+							            	$groups[] = $group->id;
+							            }
+							        // ---
+
+							        // 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
+									if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
+										$packing[$product->offer->id][] = $product;
+									}
 								}
 							// ---
 						}
 
 
-						$categories = array();
-
-						foreach ($packing as $product_id => $product_packing) {
-							$category = $this->model_document_print->getProductCategory($product_id);
-
-							// 35 - Зелень | 42 - Овощи | 68 - Фркуты/Ягоды
-							if( $category['category_id'] == 35 || $category['category_id'] == 42 || $category['category_id'] == 68 ) {
-								$categories[$category['category_id']][] = $product_packing;
-							}
-						}
-
-
-						$data['categories'] = $categories;
+						$data['packing'] = $packing;
 					// ---
 				break;
 
 				case 'staff_document_assembly':
 					// ---
 						$orders = array();
-						$order_status_ids = array(13); // 13 - статус заказа "Собирается"
 
-						$resultOrders = $this->model_document_print->getOrders($order_status_ids);
+						// Get CRM orders
+				            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+				            $qdata = array(
+				            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+				            	'filter' => array('extendedStatus' => 'assembling')
+				            );
 
+				            $result = $this->connectGetAPI($url,$qdata);
+				            $resultOrders = $result->orders;
+				        // ---
+
+				        
 						foreach ($resultOrders as $key => $order) {
 							// ---
-								$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
-								$categories = array();
+								$resultProducts = $order->items;
+								$products = array();
 
 								foreach ($resultProducts as $key => $product) {
-									$category = $this->model_document_print->getProductCategory($product['product_id']);
+									// Get CRM categories
+							            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
+							            $qdata = array(
+							            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+							            	'filter' => array('externalId' => $product->offer->externalId)
+							            );
 
-									// 35 - Зелень | 42 - Овощи | 68 - Фркуты/Ягоды
-									if( $category['category_id'] == 35 || $category['category_id'] == 42 || $category['category_id'] == 68 ) {
-										$categories[$category['category_id']][] = $product;
+							            $result = $this->connectGetAPI($url,$qdata);
+							            $groups = array();
+
+							            foreach ($result->products[0]->groups as $key => $group) {
+							            	$groups[] = $group->id;
+							            }
+							        // ---
+
+									// 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
+									if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
+										$products[] = $product;
 									}
 								}
 
+								
 								$orders[] = array(
-									'order_id' => $order['order_id'],
-									'categories' => $categories
+									'order_id' => $order->number,
+									'products' => $products
 								);
 							// ---
 						}
 
+						
 						$data['orders'] = $orders;
 					// ---
 				break;
@@ -116,5 +158,73 @@ class ControllerDocumentPrint extends Controller {
 
 		$this->response->setOutput($this->load->view('document/'.$template, $data));
 	}
+
+	// Curl
+	    public function connectPostAPI($url, $qdata, $auth='', $cookie='') {
+
+	        $data = http_build_query($qdata);
+
+	        $ch = curl_init();
+	        curl_setopt($ch, CURLOPT_URL,$url);
+	        curl_setopt($ch, CURLOPT_POST, 1);
+	        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+	        curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	        if( !empty($auth) ){
+	          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+	          curl_setopt($ch, CURLOPT_USERPWD, $auth);
+	        }
+	        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+	        $headers = ['Content-Type: application/x-www-form-urlencoded'];
+	        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	        curl_setopt($ch, CURLOPT_HEADER, false);
+
+	        // Output
+	        $output = curl_exec($ch);
+	        $result = json_decode($output);
+
+	        // Result
+	        if( $result != null ){
+	          curl_close ($ch);
+	          return $result;
+	        }
+	        else {
+	          curl_close ($ch);
+	          return false;
+	        }
+
+	    }
+
+    	public function connectGetAPI($url, $qdata, $auth='') {
+
+	        $data = http_build_query($qdata);
+
+	        $ch = curl_init();
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	        if( !empty($auth) ){
+	          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+	          curl_setopt($ch, CURLOPT_USERPWD, $auth);
+	        }
+	        curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
+	        curl_setopt($ch, CURLOPT_TIMEOUT, 80);
+
+	        // Output
+	        $output = curl_exec($ch);
+	        $result = json_decode($output);
+
+	        // Result
+	        if( $result != null ){
+	          curl_close ($ch);
+	          return $result;
+	        }
+	        else {
+	          curl_close ($ch);
+	          return false;
+	        }
+
+    	}
+    // ---
 
 }

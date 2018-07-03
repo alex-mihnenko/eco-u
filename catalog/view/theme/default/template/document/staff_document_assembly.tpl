@@ -7,8 +7,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-	<link href="css/core.css" rel="stylesheet">
 	
 	<style type="text/css">
 		main {
@@ -89,27 +87,31 @@
 	    <br><br>
 
 	    <?php foreach ($orders as $keyOrder => $order) { ?>
-		    <?php if ( !empty($order['categories']) ) { ?>
-				<h4><span style="font-weight: normal;">Номер заказа:</span> IM<?php echo $order['order_id']; ?></h4>
+	    	<?php if( !empty($order['products']) ) { ?>
+		    
+				<h4><span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?></h4>
 				
 				<div class="table">
 	                <table>
 	                  <thead><tr> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th> </tr></thead>
 
 	                  <tbody>
-		    				<?php foreach ($order['categories'] as $keyCategory => $category) { ?>
-		    					<?php foreach ($category as $keyProduct => $product) { ?>
-		                  			<tr>
-		                  				<td><?php echo $product['name']; ?></td>
-		                  				<td style="width: 200px; text-align: right;"><?php echo $product['amount']; ?> x <?php echo $product['variant']; ?> <?php echo $product['unit']; ?></td>
-		                  			</tr>
-								<?php } ?>
+	    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
+	                  			<tr>
+	                  				<td><?php echo $product->offer->name; ?></td>
+	                  				<td style="width: 200px; text-align: right;">
+	                  					<?php foreach ($product->properties as $keyProperty => $property) { ?>
+	                  						<?php echo $property->value; ?>
+										<?php } ?>
+	                  				</td>
+	                  			</tr>
 							<?php } ?>
 	                  </tbody>
 	                </table>
 	             </div>
 
 	    		<br><hr><br>
+
 			<?php } ?>
 		<?php } ?>
 	</main>
