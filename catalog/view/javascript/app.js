@@ -768,6 +768,7 @@ $(document).ready(function() {
 			$('.products-grid').on('click', '.p-o_submit', function(e){
 				// ---
 	                e.preventDefault();
+
 	                var pElement = $(this).parents('.p-o_block');
 	                var product_id = pElement.find('input[name="product_id"]').val();
 	                var label = pElement.find('.selectric .label').html();
@@ -776,37 +777,67 @@ $(document).ready(function() {
 	                var weight_class = label.substr(label.indexOf(' ')+1);
 	                var weight_variant = 0;
 	                var special_price = false;
-	                if(location.pathname == '/cart') {
-	                    special_price = true;
-	                }
+
 	                pElement.find('.selectric-hide-select option').each(function(i, item) {
 	                    if($(item).html() == label) {
 	                        weight_variant = $(item).val();
 	                    }
 	                });
 
-	                console.log(label);
-	                console.log(quantity);
-	                console.log(weight_class);
+	                // Change button
+	                	pElement.find('.p-o_select, .p-o_right').hide();
+	                	pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+label+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
+	                // ---
 	                
-	                $.post('/?route=checkout/cart/add', {
-	                    product_id: product_id,
-	                    quantity: quantity,
-	                    packaging: packaging,
-	                    weight_variant: weight_variant,
-	                    special_price: special_price
-	                }, function(msg){
-	                    pElement.find('.p-o_select, .p-o_right').hide();
-	                    pElement.find('.clearfix').append('<div class="not-available clearfix basket-added"><div class="n-a_text">'+label+' в корзине</div><input type="submit" value="" class="p-o_submit2"></div>');
+	                $.post('/?route=checkout/cart/add', { product_id: product_id, quantity: quantity, packaging: packaging, weight_variant: weight_variant, special_price: special_price }, function(msg){
 	                    LoadCart();
-	                    setTimeout(function(){
-	                        pElement.find('.basket-added').remove();
-	                        pElement.find('.p-o_select, .p-o_right').show();
-	                    }, 3000, pElement);
-	                    if(location.pathname == '/cart') location.href = '/cart';
+
+	                	// Change button
+		                    setTimeout(function(){
+		                        pElement.find('.basket-added').remove();
+		                        pElement.find('.p-o_select, .p-o_right').show();
+		                    }, 3000, pElement);
+		                // ---
 	                }, "json");
                 // ---
             });
+
+            $('.card-product').on('click', '.c-p_submit', function(e){
+	            e.preventDefault();
+
+	            if($(this).hasClass('sold')) return false;
+
+                var pElement = $(this).parents('.c-p_right');
+                var product_id = pElement.find('input[name="product_id"]').val();
+                var btnTxt = pElement.find('.c-p_submit').html();
+
+                var quantity = 1;
+                var packaging = parseFloat(pElement.find('.selectric .label').html());
+                var label = pElement.find('.selectric .label').html();
+                var weight_variant = 0;
+                var special_price = false;
+
+                pElement.find('.selectric-hide-select option').each(function(i, item) {
+                    if($(item).html() == label) {
+                        weight_variant = $(item).val();
+                    }
+                });
+
+
+                // Change button
+                	pElement.find('.c-p_submit').html('Добавлено в корзину');
+                // ---
+
+                $.post('/?route=checkout/cart/add', { product_id: product_id, quantity: quantity, packaging: packaging, weight_variant:weight_variant, special_price: special_price }, function(msg){
+                    LoadCart();
+                   	
+                   	// Change button
+	                    setTimeout(function(){
+	                        pElement.find('.c-p_submit').html(btnTxt);
+	                    }, 3000, pElement);
+	                // ---
+                }, "json");
+	        });
 		// ---
 
 		// Product modal

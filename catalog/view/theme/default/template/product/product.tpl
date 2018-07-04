@@ -126,11 +126,11 @@
                     <hr class="indent xs">
 
                     <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
-                        <a href="#" class="c-p_submit">Добавить в корзину</a>
+                        <button class="c-p_submit">Добавить в корзину</button>
                     <?php } elseif($quantity <= 0 && $stock_status_id == 6) { ?>
-                        <a href="#" class="c-p_submit navl">Ожидаем поставку<?php if(!empty($available_in_time)) { ?> через <?php echo $available_in_time; } ?></a>
+                        <button class="c-p_submit navl">Ожидаем поставку<?php if(!empty($available_in_time)) { ?> через <?php echo $available_in_time; } ?></button>
                     <?php } elseif($quantity <= 0 && $stock_status_id == 5) { ?>
-                        <a href="#" class="c-p_submit sold">Нет в наличии</a>
+                        <button class="c-p_submit sold">Нет в наличии</button>
                     <?php } ?>
 
                     <hr class="indent md">

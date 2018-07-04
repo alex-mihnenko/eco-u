@@ -1013,51 +1013,6 @@
         });
 
         // BindAddToCartEvents($('body'));
-        // Добавление в корзину на странице товара
-
-        $(document).on('click', '.c-p_submit', function(e){
-            e.preventDefault();
-            if($(this).hasClass('sold')) return false;
-                    var pElement = $(this).parents('.c-p_right');
-                    var product_id = pElement.find('input[name="product_id"]').val();
-                    var quantity = 1;
-                    var packaging = parseFloat(pElement.find('.selectric .label').html());
-                    var label = pElement.find('.selectric .label').html();
-                    var special_price = true;
-                    var weight_variant = 0;
-                    pElement.find('.selectric-hide-select option').each(function(i, item) {
-                        if($(item).html() == label) {
-                            weight_variant = $(item).val();
-                        }
-                    });
-                    $.post('/?route=checkout/cart/add', {
-                        product_id: product_id,
-                        quantity: quantity,
-                        packaging: packaging,
-                        weight_variant:weight_variant
-                    }, function(msg){
-                        if(location.pathname == '/cart') {
-                            location.reload();
-                        } else {
-                            LoadCart();
-                        }
-                    }, "json");
-        });
-
-        $(document).on( 'click', '.c-p_submit', function(){
-	        var sTxt = $(this).html();
-	        var el = $(this);
-	        if(el.hasClass("c-p_submit_submit2")) {
-	        } else {
-	            el.addClass('c-p_submit_submit2');
-	            el.text("Добавлено в корзину");
-	            setTimeout(function () {
-	                el.removeClass('c-p_submit_submit2');
-	                el.text(sTxt);
-	            }, 2000, sTxt); // 1000 м.сек
-	        }
-	    });
-
 		// Cart function was here
 		
         LoadCart();
