@@ -2054,7 +2054,18 @@ xxl
 
 				.form-select .select:before,
 				.form-select .select:after {
-					display: none;
+					top: 8px;
+					left: auto;
+					width: 1px;
+					height: 4px;
+				}
+
+				.form-select .select:before {
+					right: 6px;
+				}
+
+				.form-select .select:after {
+					right: 4px;
 				}
 
 				/* Large variant */

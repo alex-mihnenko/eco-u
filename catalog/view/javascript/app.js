@@ -188,7 +188,7 @@ $(document).ready(function() {
 			// ---
 				app.search.flag = false;
 
-				setTimeout(function(){ catalogProductSearch(); }, 500);
+				setTimeout(function(){ catalogProductSearch(); }, 250);
 			// ---
 		});
 	// ---
@@ -1427,7 +1427,7 @@ $(document).ready(function() {
 		// ---
 			if( app.search.flag == false ){
 				// ---
-					if( app.search.flag == false && app.search.query.length > 2 ){
+					if( app.search.flag == false && app.search.query.length > 1 ){
 
 						app.search.flag = true;
 
