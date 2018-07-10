@@ -11,6 +11,9 @@
 	$alertsList = ["mihnenko@gmail.com"];
 
 	$log = "";
+
+	define('MS_AUTH', 'admin@mail195:134679');
+	define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 // ---
 
 
@@ -497,12 +500,6 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 $link='https://eco-u.retailcrm.ru/api/v5/customers/?apiKey='.$retail_key;
 $res=crm_query($link);
-
-
-
-
-define('MS_AUTH', 'admin@mail195:134679');
-define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
 
 function connectPostAPI($url, $qdata, $auth='', $cookie='') {
