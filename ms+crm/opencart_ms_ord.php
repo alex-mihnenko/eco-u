@@ -228,7 +228,8 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$managerCommentCouponDiscount = '';
 	    $discval=$discvalproc=0;
 	    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='coupon'");
-	    
+	    $couponFlag = false;
+
 	    list($discval)=mysql_fetch_row($resxxx);
 		
 		if(!$discval){
@@ -248,12 +249,13 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				unset( $discval);
 				//$disval=$tmpdiscval;
 				//unset($discvalproc);
-			}else 	unset( $discvalproc);
+			}else unset( $discvalproc);
 		}
 
 
-        if($discval!=0) $order['discountManualAmount']=(double)$discval;
-        if($discvalproc!=0) {
+        if( isset($discval) && $discval!=0) $order['discountManualAmount']=(double)$discval;
+
+        if( isset($discvalproc) &&  $discvalproc!=0 ) {
         	$order['discountManualPercent']=(double)$discvalproc;
         	
         	if( isset($couponFlag) && $couponFlag == true ) {
