@@ -304,7 +304,7 @@ class ControllerProductProduct extends Controller {
 			$descriptionTmp = preg_replace("/[^A-Za-z0-9 ]/", '', strip_tags($descriptionTmp));
 
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-			if( $descriptionTmp == '' ) { $data['description'] = '<noindex><p>'.html_entity_decode($this->config->get('config_description_default')).'</p><noindex>'; }
+			if( $descriptionTmp == '' ) { $data['description'] = '<noindex>'.html_entity_decode($this->config->get('config_description_default')).'<noindex>'; }
 
             $data['description_short'] = html_entity_decode($product_info['description_short'], ENT_QUOTES, 'UTF-8');
             $data['props3'] = explode(PHP_EOL, $product_info['customer_props3']);

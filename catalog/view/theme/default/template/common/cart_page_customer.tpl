@@ -77,6 +77,7 @@
         <input type="hidden" name="discount" value="<?php echo $discount; ?>">
         <input type="hidden" name="total" value="<?php echo $total; ?>">
         <input type="hidden" name="deliveryprice" value="-1">
+        <input type="hidden" name="deliverydistance" value="-1">
         <hr class="indent sm">
 
         <div class="cart-first-purchase">
@@ -93,7 +94,6 @@
             <p class="xs">Итого</p>
             <p class="h4" data-type="value"></p>
         </div>
-
 
         <button class="btn justify" type="submit">Рассчитать стоимость доставки</button>
         <hr class="indent xs">

@@ -23,6 +23,7 @@ class ControllerCommonFooter extends Controller {
 			$this->document->addScript('catalog/view/javascript/slick.min.js');
 			$this->document->addScript('catalog/view/libs/cookie/js.cookie.min.js');
 			$this->document->addScript('catalog/view/libs/enjoyhint-master/enjoyhint.js');
+			$this->document->addScript('https://api-maps.yandex.ru/2.1/?lang=ru-RU');
 
 			$this->document->addScript('catalog/view/javascript/my_scripts.js');
 			$this->document->addScript('catalog/view/javascript/app.js');

@@ -771,6 +771,7 @@ class ControllerAjaxIndex extends Controller {
 
           $total = (int)$this->request->post['total'];
           $address = $this->request->post['address'];
+          $deliverydistance = $this->request->post['deliverydistance'];
 
           $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
           
@@ -799,7 +800,7 @@ class ControllerAjaxIndex extends Controller {
 
           $response->address = null;
           $response->mkad = null;
-          $response->tobeltway = null;
+          $response->tobeltway = $deliverydistance;
 
           if( isset($result['data'][0][0]['source']) ) {
             $response->address = $result['data'][0][0]['source'];
@@ -809,10 +810,6 @@ class ControllerAjaxIndex extends Controller {
               $response->mkad = 'IN_MKAD';
           } else {
               $response->mkad = 'OUT_MKAD';
-          }
-
-          if( isset($result['data'][0][0]['beltway_distance']) ) {
-            $response->tobeltway = $result['data'][0][0]['beltway_distance'];
           }
 
           // Check

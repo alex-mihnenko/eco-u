@@ -33,6 +33,8 @@
   </div>
 <?php } ?>
 
+<div class="ya-map" id="ya-map"></div>
+
 
 
 

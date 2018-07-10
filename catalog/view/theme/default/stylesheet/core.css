@@ -535,6 +535,17 @@ xxl
 			}
 		/* Description */
 	/* Product */
+
+	/* Cart */
+		.ya-map {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 0px;
+			opacity: 0;
+			z-index: -1;
+		}
+	/* Cart */
 /* Assets */
 
 /* Modals */
@@ -912,7 +923,7 @@ xxl
 
 		/* Close */
 			.modal-basket .remodal-close {
-				top: 12px;
+				top: 3px;
 				right: 12px;
 			}
 		/* Close */
