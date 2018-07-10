@@ -8,7 +8,7 @@
 
 	$time=time();
 
-	$alertsList = ["mihnenko@gmail.com", "sales@eco-u.ru"];
+	$alertsList = ["mihnenko@gmail.com"];
 
 
 	include("../cron/_lib.php");
