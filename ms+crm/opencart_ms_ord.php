@@ -378,8 +378,9 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	//Новая сумма исключает глюки при пересчёте сложных цен
 	$discount_real = 0;
 		
-	if($discvalproc) { $discount_real=(double)$total_new*$discvalproc/100; }
-	if($discval) { $discount_real=$discval; }
+	if( isset($discvalproc) && $discvalproc) { $discount_real=(double)$total_new*$discvalproc/100; }
+	if( isset($discval) && $discval) { $discount_real=$discval; }
+
 	$discount_real = round($discount_real, 2);
 
 
