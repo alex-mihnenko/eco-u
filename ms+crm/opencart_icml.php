@@ -30,8 +30,8 @@ echo("<yml_catalog date=\"2016-12-10 22:27:15\">
 
 echo("</categories><offers>");
 
-	$res=mysql_query("select product_id,model,sku,image,price,weight_class_id,quantity,quantity,ultra_fresh from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
-	while(list($EL_ID,$model,$sku,$image,$price,$wclid,$quantity,$ultra_fresh)=mysql_fetch_row($res)){
+	$res=mysql_query("select product_id,model,sku,image,price,special_price,weight_class_id,quantity,quantity,ultra_fresh from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
+	while(list($EL_ID,$model,$sku,$image,$price,$special_price,$wclid,$quantity,$ultra_fresh)=mysql_fetch_row($res)){
 
 
 		$res2=mysql_query("select title ,unit from oc_weight_class_description where weight_class_id='$wclid'");
@@ -60,7 +60,16 @@ echo("</categories><offers>");
 		list($keyword)=mysql_fetch_row($resp);
 		//$keyword=str_replace($keyword);
 		echo("<url>http://eco-u.ru/eda/$keyword</url>");
-	 	echo("<price>$price</price>");
+
+
+		// Price
+			if( $special_price == 0 ){
+	 			echo("<price>$price</price>");
+			}
+			else{ 
+	 			echo("<price>$special_price</price>");
+			}
+	 	// ---
 
 		switch ($wunit) {
 			case 'кг':
