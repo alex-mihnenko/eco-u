@@ -445,12 +445,9 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 								foreach ($managers as $key => $manager_id) {
 									// Set data
-										$task_order['externalId'] = $order_id;
-										
 										$task['text'] = 'Заказ №'.$order_id.' не выгружен в CRM';
 										$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
 										$task['performerId'] = $manager_id;
-										$task['order'] = $task_order;
 										$data['task'] = json_encode($task);
 									// ---
 									
