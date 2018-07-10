@@ -1,11 +1,26 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+		// Styles
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/googlfonts.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/remodal.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/ecomodal.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/selectric.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/slick.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/jquery-ui.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/jquery.jscrollpane.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/suggestions.min.css');
+			$this->document->addStyle('catalog/view/libs/enjoyhint-master/enjoyhint.css');
+			
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/style.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/core.css');
+		// ---
+			
 		// Analytics
 		$this->load->model('extension/extension');
 
-                $data['customer_id'] = $this->customer->isLogged();
-                $data['customer_firstname'] = $this->customer->getFirstName();
+        $data['customer_id'] = $this->customer->isLogged();
+        $data['customer_firstname'] = $this->customer->getFirstName();
                 
 		$data['analytics'] = array();
 
@@ -234,23 +249,6 @@ class ControllerCommonHeader extends Controller {
                     'sub' => $subcategories
 				);
 			}
-		// ---
-
-
-		// Versions CSS
-			if( isset($this->session->data['controlversion']) ) {
-				if( $this->session->data['controlversion'] < time()-1800 ) {
-					unset($this->session->data['controlversion']);
-					unset($this->session->data['cssversion']);
-				}
-			}
-
-			if( !isset($this->session->data['cssversion']) ) {
-				$this->session->data['cssversion'] = 'v'.rand(1, 1000);
-				$this->session->data['controlversion'] = time();
-			}
-
-			$data['cssversion'] = $this->session->data['cssversion'];
 		// ---
 
 		return $this->load->view('common/header', $data);

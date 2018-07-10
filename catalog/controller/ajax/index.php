@@ -2164,9 +2164,10 @@ class ControllerAjaxIndex extends Controller {
           $target = $this->request->post['target'];
           $parent = $this->request->post['parent'];
           $nInclude = $this->request->post['not_include'];
+
           $this->load->model('catalog/product');
           $this->load->model('account/user');
-          $result = array();
+          
           if($mode == 'asort') {
               $data['products'] = $this->model_catalog_product->getAsortProducts($target, $nInclude);
           } elseif($mode == 'catsort') {
@@ -2465,32 +2466,19 @@ class ControllerAjaxIndex extends Controller {
         return str_replace(Array('(', ')', '+', '-', ' '), '', $telephone);
     }
     
-    public function ajaxSearchProducts() {
-        $search = $this->request->get['search'];
-        
-        $this->load->model('catalog/product');
-        $this->load->model('tool/image');
-        
-        $data['products'] = $this->model_catalog_product->searchProducts($search);
-        foreach($data['products'] as $i => $result) {
-              if(isset($result['composite_price'])) {
-                  $data['products'][$i]['composite_price'] = json_encode($result['composite_price']);
-              }
-              if ($result['image_preview']) {
-                      $image = '/image/'.$result['image_preview'];
-                      //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-              } else {
-                      $image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-              }
-              if(!empty($result['sticker']['class'])) {
-                  $data['products'][$i]['sticker_class'] = $result['sticker']['class'];
-                  $data['products'][$i]['sticker_name'] = $result['sticker']['name'];
-              }
-              $data['products'][$i]['thumb'] = $image;
-        }
-        $this->response->setOutput($this->load->view('product/search', $data));
-    }
     
+    public function ajaxSearchProducts() {
+      $search = $this->request->get['search'];
+
+      $this->load->model('catalog/product');
+      $this->load->model('account/user');
+
+      $data['products'] = $this->model_catalog_product->searchProducts($search);
+      
+      $this->response->setOutput($this->load->view('product/search', $data));
+    }
+
+
     public function ajaxGetOrderPrice() {
         $response = Array(
               'status' => 'success',

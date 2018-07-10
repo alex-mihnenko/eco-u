@@ -243,8 +243,6 @@ class ControllerProductProduct extends Controller {
 				'href' => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
 			);
 
-                        //$data['breadcrumbs'][0]['href'] .= '#prod_'.$product_id;
-
 
 			$this->document->setTitle($product_info['meta_title']);
 			$this->document->setDescription($product_info['meta_description']);
@@ -341,7 +339,6 @@ class ControllerProductProduct extends Controller {
 
 			if ($product_info['image']) {
 				$data['popup'] = '/image/'.$product_info['image'];
-                                //$data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height'));
 			} else {
 				$data['popup'] = '';
 			}
@@ -463,83 +460,8 @@ class ControllerProductProduct extends Controller {
 
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
 
-			$data['products'] = array();
 
-			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
-
-			foreach ($results as $result) {
-                if($data['product_id'] == $result['product_id'] || ($result['quantity'] <= 0 && $result['stock_status_id'] == 5)) continue;
-				
-				if ($result['image_preview']) {
-					$image = '/image/'.$result['image_preview'];
-                                        //$image = $this->model_tool_image->resize($result['image'], $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-				} else {
-					$image = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-				}
-
-				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				} else {
-					$price = false;
-				}
-
-				if ((float)$result['special']) {
-					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				} else {
-					$special = false;
-				}
-
-				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price'], $this->session->data['currency']);
-				} else {
-					$tax = false;
-				}
-
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
-                               
-                                if($special) {
-                                    if($price != 0) $discount_sticker = ceil(((float)$price - (float)$special)/(float)$price*100);
-                                    else $discount_sticker = 0;
-                                    $price = $special;
-                                }
-                                if(isset($this->request->get['path'])) $category_path = 'path=' . $this->request->get['path'];
-                                else $category_path = '';
-								$arProducts = array(
-									'product_id'  => $result['product_id'],
-				                                        'status'      => $result['status'],
-				                                        'available_in_time' => $result['available_in_time'],
-				                                        'quantity'    => $result['quantity'],
-									'thumb'       => $image,
-									'name'        => $result['name'],
-				                                        'description_short' => $result['description_short'],
-									'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get($this->config->get('config_theme') . '_product_description_length')) . '...',
-									'price'       => $price,
-									'special'     => $special,
-									'tax'         => $tax,
-									'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-									'rating'      => $result['rating'],
-									'href'        => $this->url->link('product/product', $category_path . '&product_id=' . $result['product_id'] . $url),
-				                                        'stock_status'      => $result['stock_status'],
-				                                        'stock_status_id'   => $result['stock_status_id'],
-				                                        'weight_variants'   => $result['weight_variants'],
-				                                        'weight_class' => $result['weight_class'],
-				                                        'sticker_name' => $result['sticker']['name'],
-				                                        'sticker_class' => $result['sticker']['class']
-								);
-                                if(isset($discount_sticker)) {
-                                    $arProducts['discount_sticker'] = $discount_sticker;
-                                    unset($discount_sticker);
-                                }
-        
-                                if($result['composite_price'] !== false) {
-                                        $arProducts['composite_price'] = json_encode($result['composite_price']);
-                                }
-				$data['products'][] = $arProducts;
-			}
+			$data['products'] = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
 			$data['tags'] = array();
 

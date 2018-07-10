@@ -3,7 +3,34 @@ class ControllerCommonFooter extends Controller {
 	public function index() {
 		$this->load->language('common/footer');
 
-		$data['scripts'] = $this->document->getScripts('footer');
+		// Scripts
+			$this->document->addScript('catalog/view/javascript/jquery-3.2.1.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery.maskedinput.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery.liTabs.js');
+			$this->document->addScript('catalog/view/javascript/jquery.selectric.js');
+			$this->document->addScript('catalog/view/javascript/remodal.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery-ui.min.js');
+			$this->document->addScript('catalog/view/javascript/masked-input.js');
+			$this->document->addScript('catalog/view/javascript/placeholders.min.js');
+			$this->document->addScript('catalog/view/javascript/dragend.min.js');
+			$this->document->addScript('catalog/view/javascript/styling.js');
+			$this->document->addScript('catalog/view/javascript/clamp.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery.suggestions.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery.jscrollpane.min.js');
+			$this->document->addScript('catalog/view/javascript/jquery.mousewheel.js');
+			$this->document->addScript('catalog/view/javascript/jquery.cookie.js');
+			$this->document->addScript('catalog/view/javascript/ecomodal.js');
+			$this->document->addScript('catalog/view/javascript/slick.min.js');
+			$this->document->addScript('catalog/view/libs/cookie/js.cookie.min.js');
+			$this->document->addScript('catalog/view/libs/enjoyhint-master/enjoyhint.js');
+
+			$this->document->addScript('catalog/view/javascript/my_scripts.js');
+			$this->document->addScript('catalog/view/javascript/app.js');
+		// ---
+
+		//$data['scripts'] = $this->document->getScripts('footer');
+		$data['styles'] = $this->document->getStyles();
+		$data['scripts'] = $this->document->getScripts();
 
 		$data['text_information'] = $this->language->get('text_information');
 		$data['text_service'] = $this->language->get('text_service');

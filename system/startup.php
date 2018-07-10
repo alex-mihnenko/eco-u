@@ -105,6 +105,20 @@ function library($class) {
 spl_autoload_register('library');
 spl_autoload_extensions('.php');
 
+
+
+function loadSvg($type, $src) {
+	switch ($type) {
+		case 'name':
+    		echo file_get_contents( DIR_APPLICATION.'../catalog/view/theme/default/img/svg/'.$src );
+		break;
+
+		case 'path':
+    		echo file_get_contents( DIR_APPLICATION.'../'.$src );
+		break;
+	}
+}
+
 // Engine
 require_once(modification(DIR_SYSTEM . 'engine/action.php'));
 require_once(modification(DIR_SYSTEM . 'engine/controller.php'));

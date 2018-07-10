@@ -9,7 +9,6 @@
     <!-- Container -->
     <section class="fond-white">
         <div class="width-1194 pd-29">
-            <!-- <div class="prod-page-top"></div> -->
             <hr class="indent xl">
             <hr class="indent xs">
 
@@ -39,11 +38,11 @@
 
             <div class="hidden-xs hidden-sm">
                 <div class="grid-row">
-                    <div class="grid-col col-6">
+                    <div class="grid-col col-8">
                         <h1 class="c-p_title" itemprop="name"><?php echo $heading_title; ?></h1>
                     </div>
                     
-                    <div class="grid-col col-6 align-end" style="position: relative;">
+                    <div class="grid-col col-4 align-end" style="position: relative;">
                         <a class="btn btn-sm" href="/">на главную</a>
                     </div>
                 </div>
@@ -91,39 +90,157 @@
 
 
                     <?php if(isset($discount) && $discount > 0) { ?>
-                        <div class="product-sale"><span>Цена без скидки: </span><span class="price"><?php echo $price; ?></span></div>
+                        <div class="product-sale">
+                            <span>Без скидки: </span>
+                            <span class="price">
+                                <?php
+                                    $price = floatval($price); 
+
+                                    if(empty($weight_variants)) {
+                                        $quantity=1;
+                                    }
+                                    else{
+                                        $arVariants = explode(',', $weight_variants);
+                                        $quantity=$arVariants[0];
+                                    }
+
+                                    $composit = 1;
+
+                                    $currency = ' руб';
+
+                                    if(isset($composite_price)) {
+                                        $format = (array)json_decode($composite_price);
+                                        if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                    }
+                                    
+                                    $total = round($composit * $quantity * $price);
+
+                                    if($total > 999) $currency = ' р';
+                                ?>
+                                <?php echo $total; ?> <?php echo $currency; ?>
+                            </span>
+                        </div>
+
                         <hr class="indent xs">
                     <?php } ?>
 
+
+
                     <div class="size-0" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
-                        <meta itemprop="baseprice" content="<?php echo intval($price); ?>" />
-                        <meta itemprop="price" content="<?php if($special) { echo intval($special); } else { echo intval($price); } ?>" />
-                        <meta itemprop="priceCurrency" content="RUB">
+                        <meta itemprop="baseprice" content="<?php echo floatval($price); ?>" />
+                        <meta itemprop="price" content="<?php if($special) { echo floatval($special); } else { echo floatval($price); } ?>" />
+                        <meta itemprop="priceCurrency" content="RUB" />
+
+
                         <div class="c-p_select">
-                                <?php if(empty($weight_variants)) { ?>
-                                    <select name="tech" class="tech">
+                            <?php
+                                $price = floatval($price); 
+                                if(empty($weight_variants)) {
+                                    $value=1;
+                                }
+                                else{
+                                    $arVariants = explode(',', $weight_variants);
+                                    $value=$arVariants[0];
+                                }
+                            ?>
+
+                            <?php if(empty($weight_variants)) { ?>
+                                <div class="form-select" data-custom="product-page">
+                                    <div class="select lg" data-value="<?php echo $value; ?>" data-index="1" tabindex="-1">
+                                        <div class="options">
                                             <?php for($i=1; $i<=5; $i++) { ?>
-                                                <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $weight_class; ?></option>
-                                            <? } ?>
-                                    </select> 
-                                <?php } else { ?>
-                                    <select name="tech" class="tech">
-                                            <?php 
-                                            $arVariants = explode(',', $weight_variants);
-                                            foreach($arVariants as $i => $variant) { ?>
-                                                <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $weight_class; ?></option>
-                                            <? } ?>
-                                    </select> 
-                                <?php } ?>
+                                                <?php if( $i == 1 ) { ?>
+                                                    <div class="current" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $weight_class; ?></div>
+                                                    <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>" data-style="active"><?php echo $i; ?> <?php echo $weight_class; ?></div>
+                                                <?php } else { ?>
+                                                    <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $weight_class; ?></div>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                        
+                                        <select name="tech" class="tech">
+                                            <?php for($i=1; $i<=5; $i++) { ?>
+                                                <?php if( $i == 1 ) { ?>
+                                                    <option value="<?php echo $i; ?>" selected><?php echo $i; ?> <?php echo $weight_class; ?></option>
+                                                <?php } else { ?>
+                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $weight_class; ?></option>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                </div>
+                            <?php } else { ?>
+                                <div class="form-select" data-custom="product-page">
+                                    <div class="select lg" data-value="<?php echo $value; ?>" data-index="0" tabindex="-1">
+                                        <div class="options">
+                                            <?php  $arVariants = explode(',', $weight_variants); ?>
+                                            <?php $cnt = 0; ?>
+
+                                            <?php foreach($arVariants as $i => $variant) { ?>
+                                                <?php if( $cnt == 0 ) { ?>
+                                                    <div class="current" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $weight_class; ?></div>
+                                                    <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>" data-style="active"><?php echo trim($variant); ?> <?php echo $weight_class; ?></div>
+                                                <?php } else { ?>
+                                                    <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $weight_class; ?></div>
+                                                <?php } ?>
+
+                                                <?php $cnt++; ?>
+                                            <?php } ?>
+                                        </div>
+                                        
+                                        <select name="tech" class="tech">
+                                            <?php  $arVariants = explode(',', $weight_variants); ?>
+                                            <?php $cnt = 0; ?>
+
+                                            <?php foreach($arVariants as $i => $variant) { ?>
+                                                <?php if( $cnt == 0 ) { ?>
+                                                    <option value="<?php echo trim($variant); ?>" selected><?php echo trim($variant); ?> <?php echo $weight_class; ?></option>
+                                                <?php } else { ?>
+                                                    <option value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $weight_class; ?></option>
+                                                <?php } ?>
+
+                                                <?php $cnt++; ?>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
-                        <?php if(empty($product['weight_variants'])) { ?>
-                            <div class="c-p_price"><div class="c-p_price_shadow"></div></div>
-                        <?php } else { ?>
-                            <div class="c-p_price"><div class="c-p_price_shadow"></div></div>
-                        <?php } ?>
+                      
+                        <div class="c-p_price">
+                            <div class="c-p_price_shadow">
+                                <?php
+                                    if($special) { $price = floatval($special); }
+                                    else { $price = floatval($price); }
+
+                                    if(empty($weight_variants)) {
+                                        $quantity=1;
+                                    }
+                                    else{
+                                        $arVariants = explode(',', $weight_variants);
+                                        $quantity=$arVariants[0];
+                                    }
+
+                                    $composit = 1;
+
+                                    $currency = ' руб';
+
+                                    if(isset($composite_price)) {
+                                        $format = (array)json_decode($composite_price);
+                                        if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                    }
+                                    
+
+                                    $total = round($composit * $quantity * $price);
+                                ?>
+                                <?php echo $total; ?> <?php echo $currency; ?>
+                            </div>
+                        </div>
                     </div>
 
                     <hr class="indent xs">
+
+
 
                     <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
                         <button class="c-p_submit">Добавить в корзину</button>
@@ -157,7 +274,9 @@
             <hr class="indent xs">
         </div>
 
-        <?php echo $description; ?>
+        <div class="about-product-wrapper">
+            <?php echo $description; ?>
+        </div>
     </div>
     <!-- END About the product -->
 
@@ -218,73 +337,204 @@
             <div class="width-1660">
                     <div class="p-o_title"><?php echo $text_related; ?></div>
                     <div class="slider-profitable_offer">
-                        <?php foreach ($products as $product) { 
-                            if($product['stock_status_id'] == 5 && $product['quantity'] <= 0) continue;
-                        ?> 
-                            <div>
-                                    <div class="box-p_o">
-                                        <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
-                                        <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
-                                                <img src="<?php if(!empty($product['thumb'])) echo $product['thumb']; else echo '/image/eco_logo.jpg'; ?>" alt="<?php echo $product['name']; ?>">
-                                         </a>
-                                         <div class="p-o_block">
-                                                 <?php if(isset($product['composite_price'])) { ?><input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'><? } ?>
-                                                 <?php if(isset($product['discount_sticker'])) { ?><div class="p-o_discount sticker_discount">-<?php echo $product['discount_sticker']; ?>%</div>
-                                             <?php } elseif($product['sticker_class']) { ?><div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div><?php } ?>
-                                                 <div class="p-o_link">
-                                                         <meta itemprop="name" content="<?php echo $product['name']; ?>">
-                                                         <a href="<?php echo $product['href']; ?>" itemprop="url" target="_blank"><?php echo $product['name']; ?></a> 
-                                                         <?php if($is_admin) {?><a target="_blank" href="<?php echo $product['edit_link']; ?>" class="btn btn-default admin-product-edit"><i class="fa fa-edit"></i></a><?php } ?>
-                                                 </div>
-                                                 <div class="p-o_short-descr"><?php echo $product['description_short']; ?></div>
-                                                 <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
-                                                         <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
-                                                         <div class="p-o_select">
-                                                             <?php if(empty($product['weight_variants'])) { ?>
-                                                                 <select name="tech" class="tech">
-                                                                         <?php for($i=1; $i<=5; $i++) { ?>
-                                                                             <option value="<?php echo $i; ?>"><?php echo $i; ?> шт.</option>
-                                                                         <? } ?>
-                                                                 </select> 
-                                                             <?php } else { ?>
-                                                                 <select name="tech" class="tech">
-                                                                         <?php 
-                                                                         $arVariants = explode(',', $product['weight_variants']);
-                                                                         foreach($arVariants as $i => $variant) { ?>
-                                                                             <option value="<?php echo $i; ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
-                                                                         <? } ?>
-                                                                 </select> 
-                                                             <?php } ?>
-                                                         </div>
-                                                         <div class="p-o_right">
-                                                                 <meta itemprop="price" content="<?php echo intval($product['price']); ?>" />
-                                                                 <meta itemprop="priceCurrency" content="RUB" />
-                                                                 <?php if(empty($product['weight_variants'])) { ?>
-                                                                     <div class="p-o_price"><?php if($product['price'] > 999) echo (int)$product['price'].' р'; else echo $product['price']; ?></div>
-                                                                 <?php } else { ?>
-                                                                     <div class="p-o_price"><?php $tp = (int)((float)trim($arVariants[0])*(float)$product['price']); echo $tp; ?> <?php if($tp > 999) echo ' р'; else echo ' руб'; ?></div>
-                                                                 <?php } ?>
-                                                                 <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                                                                 <input type="submit" value="" class="p-o_submit">
-                                                         </div>
-                                                         <?php } elseif($product['quantity'] <= 0 && $product['stock_status_id'] == 6) { ?>
-                                                         <div class="not-available clearfix">
-                                                                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                                                                <?php if(empty($product['weight_variants'])) { ?>
-                                                                   <input type="hidden" name="quantity" value="1">
-                                                                <?php } else {
-                                                                   $arVariants = explode(',', $product['weight_variants']); 
-                                                                   $quantity = $arVariants[0]; ?>
-                                                                       <input type="hidden" name="quantity" value="<?php echo $quantity; ?>">
+                        <?php foreach ($products as $product) { ?>
+                            <?php if($product['stock_status_id'] == 5 && $product['quantity'] <= 0) continue; ?> 
+
+                            <div data-product="<?php echo $product['product_id']; ?>">
+                                <div class="box-p_o">
+                                   <meta content="<?php echo $product['thumb']; ?>" itemprop="image">
+                                    
+                                    <!-- b-lazy -->
+                                    <a href="<?php echo $product['href']; ?>" class="p-o_thumb">
+                                        <?php if( !empty($product['thumb']) ) { ?>
+                                            <img src="<?php echo $product['thumb']; ?>" data-src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>">
+                                        <?php } else { ?>
+                                            <img src="/image/eco_logo.jpg" data-src="/image/eco_logo.jpg" alt="<?php echo $product['name']; ?>">
+                                        <?php } ?> 
+                                    </a>
+
+                                    <div class="p-o_block">
+                                        <?php if(isset($product['composite_price'])) { ?>
+                                            <input type="hidden" class="composite_price" value='<?php echo $product['composite_price']?>'>
+                                        <?php } ?>
+
+                                        <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
+                                            <div class="p-o_discount sticker_discount">
+                                                <span><?php echo $product['discount']; ?>%</span>
+                                            </div>
+                                        <?php } elseif($product['sticker_class']) { ?>
+                                            <div class="p-o_discount sticker_<?php echo $product['sticker_class']; ?>"><span><?php echo $product['sticker_name']; ?></span></div>
+                                        <?php } ?>
+
+                                        <div class="p-o_link">
+                                            <meta itemprop="name" content="<?php echo $product['name']; ?>">
+                                            <a href="<?php echo $product['href']; ?>" itemprop="url">
+                                                <?php echo $product['name']; ?>
+                                            </a>
+                                        </div>
+
+
+                                        <?php if(isset($product['discount']) && $product['discount'] > 0) { ?>
+                                            <div class="product-sale-container">
+                                                <div class="product-sale">
+                                                    <span>Без скидки: </span>
+                                                    <span class="price">
+                                                        <?php
+                                                            $price = floatval($product['price']); 
+
+                                                            if(empty($product['weight_variants'])) {
+                                                                $quantity=1;
+                                                            }
+                                                            else{
+                                                                $arVariants = explode(',', $product['weight_variants']);
+                                                                $quantity=$arVariants[0];
+                                                            }
+
+                                                            $composit = 1;
+
+                                                            $currency = ' руб';
+
+                                                            if(isset($product['composite_price'])) {
+                                                                $format = (array)json_decode($product['composite_price']);
+                                                                if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                                            }
+                                                            
+                                                            $total = round($composit * $quantity * $price);
+
+                                                            if($total > 999) $currency = ' р';
+                                                        ?>
+                                                        <?php echo $total; ?> <?php echo $currency; ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="p-o_short-descr" itemprop="description"><?php echo $product['description_short']; ?></div>
+                                        <?php } ?>
+                                        
+
+                                        <div class="clearfix" itemscope itemtype="http://schema.org/Offer" itemprop="offers">
+                                            <div class="p-o_select">
+                                                <?php
+                                                    $price = floatval($product['price']); 
+                                                    if(empty($product['weight_variants'])) {
+                                                        $value=1;
+                                                    }
+                                                    else{
+                                                        $arVariants = explode(',', $product['weight_variants']);
+                                                        $value=$arVariants[0];
+                                                    }
+                                                ?>
+
+                                                <?php if(empty($product['weight_variants'])) { ?>
+                                                    <div class="form-select" data-custom="product-grid">
+                                                        <div class="select" data-value="<?php echo $value; ?>" data-index="1" tabindex="-1">
+                                                            <div class="options">
+                                                                <?php for($i=1; $i<=5; $i++) { ?>
+                                                                    <?php if( $i == 1 ) { ?>
+                                                                        <div class="current" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></div>
+                                                                        <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>" data-style="active"><?php echo $i; ?> <?php echo $product['weight_class']; ?></div>
+                                                                    <?php } else { ?>
+                                                                        <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></div>
+                                                                    <?php } ?>
                                                                 <?php } ?>
-                                                                <input type="hidden" name="weight_class" value="<?php echo $product['weight_class']; ?>">
-                                                                <div class="n-a_text">Скоро будет</div>
-                                                                <div class="n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
+                                                            </div>
+                                                            
+                                                            <select name="tech" class="tech">
+                                                                <?php for($i=1; $i<=5; $i++) { ?>
+                                                                    <?php if( $i == 1 ) { ?>
+                                                                        <option value="<?php echo $i; ?>" selected><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
+                                                                    <?php } else { ?>
+                                                                        <option value="<?php echo $i; ?>"><?php echo $i; ?> <?php echo $product['weight_class']; ?></option>
+                                                                    <?php } ?>
+                                                                <?php } ?>
+                                                            </select> 
                                                         </div>
-                                                         <?php } ?>
-                                                 </div>
-                                         </div>
-                                 </div>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <div class="form-select" data-custom="product-grid">
+                                                        <div class="select" data-value="<?php echo $value; ?>" data-index="0" tabindex="-1">
+                                                            <div class="options">
+                                                                <?php  $arVariants = explode(',', $product['weight_variants']); ?>
+                                                                <?php $cnt = 0; ?>
+
+                                                                <?php foreach($arVariants as $i => $variant) { ?>
+                                                                    <?php if( $cnt == 0 ) { ?>
+                                                                        <div class="current" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></div>
+                                                                        <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>" data-style="active"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></div>
+                                                                    <?php } else { ?>
+                                                                        <div class="option" data-index="<?php echo $i; ?>" data-value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></div>
+                                                                    <?php } ?>
+
+                                                                    <?php $cnt++; ?>
+                                                                <?php } ?>
+                                                            </div>
+                                                            
+                                                            <select name="tech" class="tech">
+                                                                <?php  $arVariants = explode(',', $product['weight_variants']); ?>
+                                                                <?php $cnt = 0; ?>
+
+                                                                <?php foreach($arVariants as $i => $variant) { ?>
+                                                                    <?php if( $cnt == 0 ) { ?>
+                                                                        <option value="<?php echo trim($variant); ?>" selected><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                                    <?php } else { ?>
+                                                                        <option value="<?php echo trim($variant); ?>"><?php echo trim($variant); ?> <?php echo $product['weight_class']; ?></option>
+                                                                    <?php } ?>
+
+                                                                    <?php $cnt++; ?>
+                                                                <?php } ?>
+                                                            </select> 
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+
+                                            <div class="p-o_right <?php if(isset($product['discount']) && $product['discount'] > 0) { echo 'sale'; } ?>">
+                                                <meta itemprop="baseprice" content="<?php echo floatval($product['price']); ?>" />
+                                                <meta itemprop="price" content="<?php if($product['special']) { echo floatval($product['special']); } else { echo floatval($product['price']); } ?>" />
+                                                <meta itemprop="priceCurrency" content="RUB" />
+                                                
+                                                <div class="p-o_price">
+                                                    <?php
+                                                        if($product['special']) { $price = floatval($product['special']); }
+                                                        else { $price = floatval($product['price']); }
+
+                                                        if(empty($product['weight_variants'])) {
+                                                            $quantity=1;
+                                                        }
+                                                        else{
+                                                            $arVariants = explode(',', $product['weight_variants']);
+                                                            $quantity=$arVariants[0];
+                                                        }
+
+                                                        $composit = 1;
+
+                                                        $currency = ' руб';
+
+                                                        if(isset($product['composite_price'])) {
+                                                            $format = (array)json_decode($product['composite_price']);
+                                                            if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                                        }
+                                                        
+
+                                                        $total = round($composit * $quantity * $price);
+
+                                                        if($total > 999) $currency = ' р';
+                                                    ?>
+                                                    <?php echo $total; ?> <?php echo $currency; ?>
+                                                </div>
+                                                
+                                                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                                
+                                                <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
+                                                    <input type="submit" value="" class="p-o_submit">
+                                                <?php } else { ?>
+                                                    <div class="p-o_submit n-a_time" rel="tooltip" title="<?php echo $product['available_in_time']; ?>"></div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         <?php } ?>
                     </div>

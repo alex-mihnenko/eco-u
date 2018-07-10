@@ -5,7 +5,7 @@
                 <div class="f-stick">
                     <div class="clearfix">
                         <a href="/" class="logo-foot">
-                            <img src="/new_design/img/logo_2.png" alt="">
+                            <img src="catalog/view/theme/default/img/logo_2.png" alt="">
                         </a>
                         <ul class="menu-foot">
                             <!--li><a href="#">Блог Eco-u</a></li-->
@@ -31,41 +31,9 @@
         </div>
     </footer>
 
-    <script src="/new_design/js/jquery-3.2.1.min.js"></script>
-    <script src="/new_design/js/jquery.maskedinput.min.js"></script>
-
-    <script src="/new_design/js/slick.min.js"></script>
-    <script src="/new_design/js/jquery.sticky.js"></script>
-    <script src="/new_design/js/remodal.min.js"></script>
-    <!--<script src="js/jquery.dd.min.js"></script>-->
-    <script src="/new_design/js/ddscrollspy.js"></script>
-    <script src="/new_design/js/jquery.selectric.js"></script>
-    <script src="/new_design/js/jquery.columnizer.js"></script>
-    <script src="/new_design/js/jquery.liTabs.js"></script>
-    <script src="/new_design/js/jquery-ui.min.js"></script>
-    <script src="/new_design/js/datepicker-ru.js"></script>
-    <script src="/new_design/js/Sticky-kit.js"></script>
-    <!--<script src="js/sticky.min.js"></script>-->
-    <!--<script src="/new_design/js/masked-input.js"></script>-->
-    <script src="/new_design/js/placeholders.min.js"></script>
-    <script src="/new_design/js/dragend.min.js"></script>
-    <script src="/new_design/js/styling.js"></script>
-    <script src="/new_design/js/clamp.min.js"></script>
-    <script src="/new_design/js/jquery.suggestions.min.js"></script>
-    <script src="/new_design/js/jquery.jscrollpane.min.js"></script>
-    <script src="/new_design/js/blazy.min.js"></script>
-    <script src="/new_design/js/jquery.mousewheel.js"></script>
-    <script src="/new_design/js/jquery.cookie.js"></script>
-    <script src="/new_design/js/ecomodal.js"></script>
-
-
-    <!-- Libs -->
-    <script src="catalog/view/libs/cookie/js.cookie.min.js"></script>
-    <script src="catalog/view/libs/enjoyhint-master/enjoyhint.js"></script>
-
-    <!-- Core -->
-    <script src="/new_design/js/my_scripts.<?php echo $jsversion; ?>.js"></script>
-    <script src="catalog/view/javascript/app.<?php echo $jsversion; ?>.js"></script>
+    <?php foreach ($scripts as $script) { ?>
+    <script src="<?php echo $script; ?>" type="text/javascript"></script>
+    <?php } ?>
 
     <!-- Yandex.Metrika counter -->
     <script>

@@ -4,149 +4,149 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-        public function isCacheRequired() {
-            $sql = "SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP) AS time, UNIX_TIMESTAMP(MAX(date_modified)) AS modified FROM `oc_product` WHERE 1";
-            $query = $this->db->query($sql);
-            if(isset($query->row)) {
-                $currentTime = $query->row['time'];
-                $productTime = $query->row['modified'];
-                $cachedTime  = $this->cache->get('latest_category_sort');
-                
-                if($cachedTime < $currentTime - 21600) return false;
-                elseif($productTime >= $cachedTime) return false;
-                else return true;
-            }
-            else {
-                return false;
-            }
+    public function isCacheRequired() {
+        $sql = "SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP) AS time, UNIX_TIMESTAMP(MAX(date_modified)) AS modified FROM `oc_product` WHERE 1";
+        $query = $this->db->query($sql);
+        if(isset($query->row)) {
+            $currentTime = $query->row['time'];
+            $productTime = $query->row['modified'];
+            $cachedTime  = $this->cache->get('latest_category_sort');
+            
+            if($cachedTime < $currentTime - 21600) return false;
+            elseif($productTime >= $cachedTime) return false;
+            else return true;
         }
+        else {
+            return false;
+        }
+    }
         
-        public function getProductsAttributes($str_product_id) {
-                
-                $sql = "SELECT pa.product_id AS product_id, a.attribute_id AS attribute_id, a.sort_order AS sort, ad.name AS name FROM oc_attribute a JOIN oc_attribute_description ad ON a.attribute_id = ad.attribute_id JOIN oc_product_attribute pa ON pa.attribute_id = a.attribute_id WHERE a.attribute_group_id = 8 ORDER BY pa.product_id";
-                $query = $this->db->query($sql);
-                
-                $arStickers = Array(
-                    26, // Наше
-                    25, // Vegan
-                    24, // RAW
-                    23, // Конец сезона
-                    22, // Сезон
-                    21, // Скидка
-                    20, // Новинка
-                    19, // Редкость
-                    18,  // Без ГМО
-                    17,  // Organic
-                    16  // Выгодно
-                );
-                $stickers = Array();
-                
-                foreach($query->rows as $row) {
-                    if((!isset($stickers[$row['product_id']]) 
-                            || $row['sort'] < $stickers[$row['product_id']]['sort']
-                        ) && in_array($row['attribute_id'], $arStickers)) {
-                        $stickers[$row['product_id']] = Array(
-                            'class' => $row['attribute_id'],
-                            'name' => $row['name'],
-                            'sort' => $row['sort']
-                        );
-                    }
+    public function getProductsAttributes($str_product_id) {
+            
+            $sql = "SELECT pa.product_id AS product_id, a.attribute_id AS attribute_id, a.sort_order AS sort, ad.name AS name FROM oc_attribute a JOIN oc_attribute_description ad ON a.attribute_id = ad.attribute_id JOIN oc_product_attribute pa ON pa.attribute_id = a.attribute_id WHERE a.attribute_group_id = 8 ORDER BY pa.product_id";
+            $query = $this->db->query($sql);
+            
+            $arStickers = Array(
+                26, // Наше
+                25, // Vegan
+                24, // RAW
+                23, // Конец сезона
+                22, // Сезон
+                21, // Скидка
+                20, // Новинка
+                19, // Редкость
+                18,  // Без ГМО
+                17,  // Organic
+                16  // Выгодно
+            );
+            $stickers = Array();
+            
+            foreach($query->rows as $row) {
+                if((!isset($stickers[$row['product_id']]) 
+                        || $row['sort'] < $stickers[$row['product_id']]['sort']
+                    ) && in_array($row['attribute_id'], $arStickers)) {
+                    $stickers[$row['product_id']] = Array(
+                        'class' => $row['attribute_id'],
+                        'name' => $row['name'],
+                        'sort' => $row['sort']
+                    );
                 }
-                return $stickers;
+            }
+            return $stickers;
 	}
         
-        public function getProductsByID($str_product_id) {
-            $sql = "SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id IN (" . $str_product_id . ") AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-            
-            $query = $this->db->query($sql);
-            $arProdAttributes = $this->getProductsAttributes($str_product_id);
-            $products = Array();
-            if($query->num_rows > 0) foreach($query->rows as $row) {
-                $product_id = $row['product_id'];
-                if(isset($arProdAttributes[$row['product_id']])) $sticker = $arProdAttributes[$row['product_id']];
-                else $sticker = false;
+    public function getProductsByID($str_product_id) {
+        $sql = "SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id IN (" . $str_product_id . ") AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+        
+        $query = $this->db->query($sql);
+        $arProdAttributes = $this->getProductsAttributes($str_product_id);
+        $products = Array();
+        if($query->num_rows > 0) foreach($query->rows as $row) {
+            $product_id = $row['product_id'];
+            if(isset($arProdAttributes[$row['product_id']])) $sticker = $arProdAttributes[$row['product_id']];
+            else $sticker = false;
 
-                $compPrice = false;
-                if($row['composite_price'] == 1) {
-                    $arCompositePrice = $this->config->get('config_composite_price');
-                    if($row['weight_class'] == 'кг' || $row['weight_class'] == 'л') {
-                        $compPrice = $arCompositePrice;
-                    } elseif($row['weight_class'] == 'г' || $row['weight_class'] == 'мл') {
-                        $arNewCompositePrice = Array();
-                        foreach($arCompositePrice as $key => $val) {
-                            $key = $key * 1000;
-                            $arNewCompositePrice[$key] = $val;
-                        }
-                        $compPrice = $arNewCompositePrice;
+            $compPrice = false;
+            if($row['composite_price'] == 1) {
+                $arCompositePrice = $this->config->get('config_composite_price');
+                if($row['weight_class'] == 'кг' || $row['weight_class'] == 'л') {
+                    $compPrice = $arCompositePrice;
+                } elseif($row['weight_class'] == 'г' || $row['weight_class'] == 'мл') {
+                    $arNewCompositePrice = Array();
+                    foreach($arCompositePrice as $key => $val) {
+                        $key = $key * 1000;
+                        $arNewCompositePrice[$key] = $val;
                     }
+                    $compPrice = $arNewCompositePrice;
                 }
-
-                // Автоматическое присвоение/снятие стикера "Новинка"
-                if($row['new'] == 1) {
-                    $sticker = Array('class' => 20, 'name' => "Новинка");
-                }
-                else {
-                    $sticker = false;
-                }
-
-                $products[$row['product_id']] = array(
-                        'product_id'       => $row['product_id'],
-                        'available_in_time' => $row['available_in_time'],
-                        'name'             => $row['name'],
-                        'description'      => $row['description'],
-                        'available'        => $row['available'],
-                        'description_short'      => $row['description_short'],
-                        'meta_title'       => $row['meta_title'],
-                        'meta_description' => $row['meta_description'],
-                        'meta_keyword'     => $row['meta_keyword'],
-                        'tag'              => $row['tag'],
-                        'model'            => $row['model'],
-                        'sku'              => $row['sku'],
-                        'upc'              => $row['upc'],
-                        'ean'              => $row['ean'],
-                        'jan'              => $row['jan'],
-                        'isbn'             => $row['isbn'],
-                        'mpn'              => $row['mpn'],
-                        'location'         => $row['manufacturer'],
-                        'quantity'         => $row['quantity'],
-                        'stock_status'     => $row['stock_status'],
-                        'stock_status_id'  => $row['stock_status_id'],
-                        'image'            => $row['image'],
-                        'image_preview'    => $row['image_preview'],
-                        'manufacturer_id'  => $row['manufacturer_id'],
-                        'manufacturer'     => $row['manufacturer'],
-                        'price'            => $row['price'],
-                        'special_price'    => $row['special_price'],
-                        'discount'          => $row['discount'],
-                        'reward'           => $row['reward'],
-                        'points'           => $row['points'],
-                        'tax_class_id'     => $row['tax_class_id'],
-                        'date_available'   => $row['date_available'],
-                        'weight'           => $row['weight'],
-                        'weight_class_id'  => $row['weight_class_id'],
-                        'weight_variants'  => $row['weight_variants'],
-                        'weight_class'     => $row['weight_class'],
-                        'length'           => $row['length'],
-                        'width'            => $row['width'],
-                        'height'           => $row['height'],
-                        'length_class_id'  => $row['length_class_id'],
-                        'subtract'         => $row['subtract'],
-                        'rating'           => round($row['rating']),
-                        'reviews'          => $row['reviews'] ? $row['reviews'] : 0,
-                        'minimum'          => $row['minimum'],
-                        'sort_order'       => $row['sort_order'],
-                        'status'           => $row['status'],
-                        'date_added'       => $row['date_added'],
-                        'date_modified'    => $row['date_modified'],
-                        'viewed'           => $row['viewed'],
-                        'sticker'          => $sticker,
-                        'customer_props3'  => $row['customer_props3'],
-                        'composite_price'  => $compPrice,
-                        'shelf_life'       => $row['shelf_life']
-                );
             }
-            return $products;
+
+            // Автоматическое присвоение/снятие стикера "Новинка"
+            if($row['new'] == 1) {
+                $sticker = Array('class' => 20, 'name' => "Новинка");
+            }
+            else {
+                $sticker = false;
+            }
+
+            $products[$row['product_id']] = array(
+                    'product_id'       => $row['product_id'],
+                    'available_in_time' => $row['available_in_time'],
+                    'name'             => $row['name'],
+                    'description'      => $row['description'],
+                    'available'        => $row['available'],
+                    'description_short'      => $row['description_short'],
+                    'meta_title'       => $row['meta_title'],
+                    'meta_description' => $row['meta_description'],
+                    'meta_keyword'     => $row['meta_keyword'],
+                    'tag'              => $row['tag'],
+                    'model'            => $row['model'],
+                    'sku'              => $row['sku'],
+                    'upc'              => $row['upc'],
+                    'ean'              => $row['ean'],
+                    'jan'              => $row['jan'],
+                    'isbn'             => $row['isbn'],
+                    'mpn'              => $row['mpn'],
+                    'location'         => $row['manufacturer'],
+                    'quantity'         => $row['quantity'],
+                    'stock_status'     => $row['stock_status'],
+                    'stock_status_id'  => $row['stock_status_id'],
+                    'image'            => $row['image'],
+                    'image_preview'    => $row['image_preview'],
+                    'manufacturer_id'  => $row['manufacturer_id'],
+                    'manufacturer'     => $row['manufacturer'],
+                    'price'            => $row['price'],
+                    'special_price'    => $row['special_price'],
+                    'discount'          => $row['discount'],
+                    'reward'           => $row['reward'],
+                    'points'           => $row['points'],
+                    'tax_class_id'     => $row['tax_class_id'],
+                    'date_available'   => $row['date_available'],
+                    'weight'           => $row['weight'],
+                    'weight_class_id'  => $row['weight_class_id'],
+                    'weight_variants'  => $row['weight_variants'],
+                    'weight_class'     => $row['weight_class'],
+                    'length'           => $row['length'],
+                    'width'            => $row['width'],
+                    'height'           => $row['height'],
+                    'length_class_id'  => $row['length_class_id'],
+                    'subtract'         => $row['subtract'],
+                    'rating'           => round($row['rating']),
+                    'reviews'          => $row['reviews'] ? $row['reviews'] : 0,
+                    'minimum'          => $row['minimum'],
+                    'sort_order'       => $row['sort_order'],
+                    'status'           => $row['status'],
+                    'date_added'       => $row['date_added'],
+                    'date_modified'    => $row['date_modified'],
+                    'viewed'           => $row['viewed'],
+                    'sticker'          => $sticker,
+                    'customer_props3'  => $row['customer_props3'],
+                    'composite_price'  => $compPrice,
+                    'shelf_life'       => $row['shelf_life']
+            );
         }
+        return $products;
+    }
         
 	public function getProduct($product_id) {
 		$query = $this->db->query("SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
@@ -267,27 +267,27 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-        public function getTags() {
-            $query = $this->db->query("SELECT DISTINCT pd.tag AS tags FROM ".DB_PREFIX."product p, ".DB_PREFIX."product_description pd WHERE pd.tag <> '' AND (p.quantity > 0 OR p.stock_status_id <> 5) AND p.product_id = pd.product_id");
-            $result = array();
-            if($query->num_rows) {
-                foreach($query->rows as $row) {
-                    $arTags = explode(',', $row['tags']);
-                    foreach($arTags as $tag)
-                    {
-                        $tag = trim($tag);
-                        if(empty($tag)) {
-                            continue;
-                        } else {
-                            $tagLetter = mb_strtoupper(mb_substr($tag, 0, 1));
-                            $tagFormat = $tagLetter.mb_substr($tag, 1);
-                            $result[$tagFormat] = $tagFormat;
-                        }
+    public function getTags() {
+        $query = $this->db->query("SELECT DISTINCT pd.tag AS tags FROM ".DB_PREFIX."product p, ".DB_PREFIX."product_description pd WHERE pd.tag <> '' AND (p.quantity > 0 OR p.stock_status_id <> 5) AND p.product_id = pd.product_id");
+        $result = array();
+        if($query->num_rows) {
+            foreach($query->rows as $row) {
+                $arTags = explode(',', $row['tags']);
+                foreach($arTags as $tag)
+                {
+                    $tag = trim($tag);
+                    if(empty($tag)) {
+                        continue;
+                    } else {
+                        $tagLetter = mb_strtoupper(mb_substr($tag, 0, 1));
+                        $tagFormat = $tagLetter.mb_substr($tag, 1);
+                        $result[$tagFormat] = $tagFormat;
                     }
                 }
             }
-            return $result;
         }
+        return $result;
+    }
         
 	public function getProducts($data = array()) {
             
@@ -460,150 +460,238 @@ class ModelCatalogProduct extends Model {
 
 		return $product_data;
 	}
-        
-        public function searchProducts($search) {
-            $arByName = $this->db->query("SELECT product_id FROM ".DB_PREFIX."product_description WHERE name LIKE '%".$this->db->escape($search)."%'");
-            $arByShortDescription = $this->db->query("SELECT product_id FROM ".DB_PREFIX."product_description WHERE description_short LIKE '%".$this->db->escape($search)."%'");
-            $arByTag = $this->db->query("SELECT product_id FROM ".DB_PREFIX."product_description WHERE tag LIKE '%".$this->db->escape($search)."%'");
-            $items = array_merge($arByName->rows, $arByShortDescription->rows, $arByTag->rows);
+
+    public function searchProducts($search) {
+        if(!empty($search)) {
+            $sql = "SELECT pd.product_id, pd.name FROM ".DB_PREFIX."product_description pd WHERE pd.name LIKE '%".$this->db->escape($search)."%' OR pd.description_short LIKE '%".$this->db->escape($search)."%' OR pd.tag LIKE '%".$this->db->escape($search)."%' GROUP BY pd.product_id ORDER BY pd.name LIMIT 0, 100";
             
-            $result = Array();
-            foreach($items as $item) {
-                if(!isset($result[$item['product_id']])) {
-                    $arProduct = $this->getProduct($item['product_id']);
-                    if(($arProduct['quantity'] <= 0 && $arProduct['stock_status_id'] == 5) || $arProduct['status'] != 1) {
-                        continue;
-                    }
-                    $result[$item['product_id']] = $arProduct;
-                    
-                    $product_href = $this->url->link('product/product', '&product_id=' . $item['product_id']);
-                    if($_SERVER['HTTPS']) { $result[$item['product_id']]['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-                    else { $result[$item['product_id']]['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+            $query = $this->db->query($sql);
 
+            $products = array();
+
+            foreach($query->rows as $i => $row) {
+                // ---
+                $product = $this->getProduct($row['product_id']);
+
+                if ( $product !== false ) {
+                    // ---
+                        $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+
+                        $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                        if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                        else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+                        $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                        $product['sticker_name'] = $product['sticker']['name'];
+                        $product['sticker_class'] = $product['sticker']['class'];
+                        
+
+                        if ($product['image_preview']) {
+                                $product['thumb'] = '/image/'.$product['image_preview'];
+                        } else {
+                                $product['thumb'] = '';
+                        }
+
+                        if (!$this->config->get('config_customer_price')) {
+                                $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                        } else {
+                                $product['price'] = false;
+                        }
+
+                        if ($product['discount'] > 0) {
+                                $product['discount'] = $product['discount'];
+                                $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                        } else {
+                                $product['discount'] = false;
+                                $product['special'] = false;
+                        }
+
+                        if ($this->config->get('config_tax')) {
+                                $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+                        } else {
+                                $product['tax'] = false;
+                        }
+
+                        if ($this->config->get('config_review_status')) {
+                                $product['rating'] = (int)$product['rating'];
+                        } else {
+                                $product['rating'] = false;
+                        }
+
+                        if($product['special']) {
+                            $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                        }
+
+                        if(!$product['composite_price']) {
+                            unset($product['composite_price']);
+                        }
+                        else{
+                            $product['composite_price'] = json_encode($product['composite_price']);
+
+                        }
+
+                        $products[] = $product;
+                    // ---
                 }
+                // ---
             }
-            return $result;
+
+            return $products;
+        } else {
+            return false;
         }
+    }
 
-        public function getProductsByTag($tag = '') {
-            if(!empty($tag)) {
-                $tag = strtolower($tag);
-                $sql = "SELECT `product_id`, LOWER(`tag`) AS `tag` FROM `" . DB_PREFIX . "product_description` WHERE `tag` LIKE '%{$tag}%'";
-                $query = $this->db->query($sql);
-                foreach($query->rows as $i => $row) {
-                    $tags = explode(',', $row['tag']);
-                    if(!in_array($tag, $tags)) {
-                        unset($query->rows[$i]);
-                    }
-                    $product = $this->getProduct($row['product_id']);
-                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
-
-                    $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
-                    if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-                    else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
-
-                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
-                    $product['sticker_name'] = $product['sticker']['name'];
-                    $product['sticker_class'] = $product['sticker']['class'];
-                    if($product['special']) {
-                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-                    }
-                    $products[] = $product;
+    public function getProductsByTag($tag = '') {
+        if(!empty($tag)) {
+            $tag = strtolower($tag);
+            $sql = "SELECT `product_id`, LOWER(`tag`) AS `tag` FROM `" . DB_PREFIX . "product_description` WHERE `tag` LIKE '%{$tag}%'";
+            $query = $this->db->query($sql);
+            foreach($query->rows as $i => $row) {
+                $tags = explode(',', $row['tag']);
+                if(!in_array($tag, $tags)) {
+                    unset($query->rows[$i]);
                 }
-                return $products;
-            } else {
-                return false;
-            }
-        }
-        
-        public function getAsortProducts($letter, $not_include) {
-            if(!empty($letter)) {
-                $nInclude = implode(', ', $not_include);
-                $sql = "SELECT `product_id` FROM " . DB_PREFIX . "product_description pc WHERE `name` LIKE '{$letter}%' AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY pc.name LIMIT 0, 10000";
-                $query = $this->db->query($sql);
-                foreach($query->rows as $i => $row) {
-                    $product = $this->getProduct($row['product_id']);
-                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
-                    
-                    $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
-                    if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-                    else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+                $product = $this->getProduct($row['product_id']);
+                $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
 
-                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
-                    $product['sticker_name'] = $product['sticker']['name'];
-                    $product['sticker_class'] = $product['sticker']['class'];
-                    $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
-                    if ($product['image_preview']) {
+                $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+                $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                $product['sticker_name'] = $product['sticker']['name'];
+                $product['sticker_class'] = $product['sticker']['class'];
+                if($product['special']) {
+                    $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                }
+                $products[] = $product;
+            }
+            return $products;
+        } else {
+            return false;
+        }
+    }
+    
+    public function getAsortProducts($letter, $not_include) {
+        if(!empty($letter)) {
+            $nInclude = implode(', ', $not_include);
+            $sql = "SELECT `product_id` FROM " . DB_PREFIX . "product_description pc WHERE `name` LIKE '{$letter}%' AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY pc.name LIMIT 0, 10000";
+            $query = $this->db->query($sql);
+            foreach($query->rows as $i => $row) {
+                $product = $this->getProduct($row['product_id']);
+                $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+                
+                $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+                $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                $product['sticker_name'] = $product['sticker']['name'];
+                $product['sticker_class'] = $product['sticker']['class'];
+                $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
+                if ($product['image_preview']) {
+                    $product['thumb'] = '/image/'.$product['image_preview'];
+                } else {
+                    $this->load->model('tool/image');
+                    $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
+                }
+                if($product['special']) {
+                    $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                }
+                if(!$product['composite_price']) {
+                    unset($product['composite_price']);
+                }
+                $products[] = $product;
+            }
+            return $products;
+        } else {
+            return false;
+        }
+    }
+    
+    public function getCatsortProducts($category_id, $not_include, $parent=0) {
+        if(!empty($category_id)) {
+            $nInclude = implode(', ', $not_include);
+
+            if( $category_id == 'new' ){
+                $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$parent." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND new = 1 AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
+            }
+            else if( $category_id == 'sale' ){
+                $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$parent." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND special_price<> 0 AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
+            }
+            else {
+                $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
+            }
+
+            $query = $this->db->query($sql);
+
+            $products = array();
+
+            foreach($query->rows as $i => $row) {
+                $product = $this->getProduct($row['product_id']);
+                $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+
+                $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+                $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                $product['sticker_name'] = $product['sticker']['name'];
+                $product['sticker_class'] = $product['sticker']['class'];
+                
+
+                if ($product['image_preview']) {
                         $product['thumb'] = '/image/'.$product['image_preview'];
-                    } else {
-                        $this->load->model('tool/image');
-                        $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-                    }
-                    if($product['special']) {
-                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-                    }
-                    if(!$product['composite_price']) {
-                        unset($product['composite_price']);
-                    }
-                    $products[] = $product;
+                } else {
+                        $product['thumb'] = '';
                 }
-                return $products;
-            } else {
-                return false;
+
+                if (!$this->config->get('config_customer_price')) {
+                        $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                } else {
+                        $product['price'] = false;
+                }
+
+                if ($product['discount'] > 0) {
+                        $product['discount'] = $product['discount'];
+                        $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                } else {
+                        $product['discount'] = false;
+                        $product['special'] = false;
+                }
+
+                if ($this->config->get('config_tax')) {
+                        $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+                } else {
+                        $product['tax'] = false;
+                }
+
+                if ($this->config->get('config_review_status')) {
+                        $product['rating'] = (int)$product['rating'];
+                } else {
+                        $product['rating'] = false;
+                }
+
+                if($product['special']) {
+                    $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                }
+
+                if(!$product['composite_price']) {
+                    unset($product['composite_price']);
+                }
+                else{
+                    $product['composite_price'] = json_encode($product['composite_price']);
+
+                }
+
+                $products[] = $product;
             }
+            return $products;
+        } else {
+            return false;
         }
-        
-        public function getCatsortProducts($category_id, $not_include, $parent=0) {
-            if(!empty($category_id)) {
-                $nInclude = implode(', ', $not_include);
-
-                if( $category_id == 'new' ){
-                    $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$parent." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND new = 1 AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
-                }
-                else if( $category_id == 'sale' ){
-                    $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$parent." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND special_price<> 0 AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
-                }
-                else {
-                    $sql = "SELECT `product_id`, (SELECT `name` FROM ".DB_PREFIX."product_description pn WHERE pn.product_id = pc.product_id) AS `name` FROM " . DB_PREFIX . "product_to_category pc WHERE `category_id` = ".(int)$category_id." AND `product_id` NOT IN (".$nInclude.") AND product_id = (SELECT product_id FROM ".DB_PREFIX."product pd WHERE pc.product_id = pd.product_id AND status != 0 AND (stock_status_id != 5 || quantity > 0)) ORDER BY name LIMIT 0, 10000";
-                }
-
-                $query = $this->db->query($sql);
-
-                $products = array();
-
-                foreach($query->rows as $i => $row) {
-                    $product = $this->getProduct($row['product_id']);
-                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
-
-                    $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
-                    if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-                    else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
-
-                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
-                    $product['sticker_name'] = $product['sticker']['name'];
-                    $product['sticker_class'] = $product['sticker']['class'];
-                    if(isset($this->session->data['token'])) $product['edit_link'] = '/admin?route=catalog/product/edit&token='.$this->session->data['token'].'&product_id='.$product['product_id'];
-                    else $product['edit_link'] = '';
-                    if ($product['image_preview']) {
-                        $product['thumb'] = '/image/'.$product['image_preview'];
-                    } else {
-                        $this->load->model('tool/image');
-                        $product['thumb'] = $this->model_tool_image->resize('eco_logo.png', $this->config->get($this->config->get('config_theme') . '_image_product_width'), $this->config->get($this->config->get('config_theme') . '_image_product_height'));
-                    }
-                    if($product['special']) {
-                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-                    }
-                    if(!$product['composite_price']) {
-                        unset($product['composite_price']);
-                    }
-                    $products[] = $product;
-                }
-                return $products;
-            } else {
-                return false;
-            }
-        }
-        
+    }
         
 	public function getProductSpecials($data = array()) {
 		$sql = "SELECT DISTINCT ps.product_id, (SELECT AVG(rating) FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) GROUP BY ps.product_id";
@@ -785,30 +873,78 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getProductRelated($product_id) {
-		$product_data = array();
-
+	public function getProductRelated($product_id) {	
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_related pr LEFT JOIN " . DB_PREFIX . "product p ON (pr.related_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pr.product_id = '" . (int)$product_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 
         if( empty($query->rows) ){
-            // Get random
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p WHERE p.status='1' ORDER BY RAND() LIMIT 8;");
-                
-                foreach ($query->rows as $result) {
-                    $product_data[$result['product_id']] = $this->getProduct($result['product_id']);
-                }
-            // ---
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p WHERE p.status='1' ORDER BY RAND() LIMIT 8;");
         }
-        else {
-            // Get details
-        		foreach ($query->rows as $result) {
-        			$product_data[$result['related_id']] = $this->getProduct($result['related_id']);
-        		}
-            // ---
+        
+
+        $products = array();
+
+        foreach($query->rows as $i => $row) {
+            $product = $this->getProduct($row['product_id']);
+            $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+
+            $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+            if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+            else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+            $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+            $product['sticker_name'] = $product['sticker']['name'];
+            $product['sticker_class'] = $product['sticker']['class'];
+            
+
+            if ($product['image_preview']) {
+                    $product['thumb'] = '/image/'.$product['image_preview'];
+            } else {
+                    $product['thumb'] = '';
+            }
+
+            if (!$this->config->get('config_customer_price')) {
+                    $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+            } else {
+                    $product['price'] = false;
+            }
+
+            if ($product['discount'] > 0) {
+                    $product['discount'] = $product['discount'];
+                    $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+            } else {
+                    $product['discount'] = false;
+                    $product['special'] = false;
+            }
+
+            if ($this->config->get('config_tax')) {
+                    $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+            } else {
+                    $product['tax'] = false;
+            }
+
+            if ($this->config->get('config_review_status')) {
+                    $product['rating'] = (int)$product['rating'];
+            } else {
+                    $product['rating'] = false;
+            }
+
+            if($product['special']) {
+                $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+            }
+
+            if(!$product['composite_price']) {
+                unset($product['composite_price']);
+            }
+            else{
+                $product['composite_price'] = json_encode($product['composite_price']);
+
+            }
+
+            $products[] = $product;
         }
+        
+        return $products;
 
-
-		return $product_data;
 	}
 
 	public function getProductLayoutId($product_id) {
@@ -827,25 +963,25 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-        public function getTotalCategoryProducts($category_id) {
-            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id IN (SELECT pc.product_id FROM ".DB_PREFIX."product_to_category pc WHERE pc.category_id = ".(int)$category_id.")";
-            $query = $this->db->query($sql);
-            if(isset($query->row['total'])) {
-                return (int)$query->row['total'];
-            } else {
-                return 0;
-            }
+    public function getTotalCategoryProducts($category_id) {
+        $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id IN (SELECT pc.product_id FROM ".DB_PREFIX."product_to_category pc WHERE pc.category_id = ".(int)$category_id.")";
+        $query = $this->db->query($sql);
+        if(isset($query->row['total'])) {
+            return (int)$query->row['total'];
+        } else {
+            return 0;
         }
-        
-        public function getTotalLiteralProducts($literal) {
-            $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id IN (SELECT pc.product_id FROM ".DB_PREFIX."product_description pc WHERE pc.name LIKE '".$this->db->escape($literal)."%')";
-            $query = $this->db->query($sql);
-            if(isset($query->row['total'])) {
-                return (int)$query->row['total'];
-            } else {
-                return 0;
-            }
+    }
+    
+    public function getTotalLiteralProducts($literal) {
+        $sql = "SELECT DISTINCT COUNT(p.product_id) AS total FROM ".DB_PREFIX."product p WHERE p.status = 1 AND (p.quantity > 0 OR (p.quantity <= 0 AND p.stock_status_id <> 5)) AND p.product_id IN (SELECT pc.product_id FROM ".DB_PREFIX."product_description pc WHERE pc.name LIKE '".$this->db->escape($literal)."%')";
+        $query = $this->db->query($sql);
+        if(isset($query->row['total'])) {
+            return (int)$query->row['total'];
+        } else {
+            return 0;
         }
+    }
         
 	public function getTotalProducts($data = array()) {
 		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total";
@@ -971,58 +1107,113 @@ class ModelCatalogProduct extends Model {
 		}
 	}
         
-        // Получить товары с заполненным полем "спеццена"
-        public function getProductsSpecialPrice() {
-            $sql = "SELECT * FROM `" . DB_PREFIX . "product` WHERE `special_price` <> 0 AND `status` <> 0";
-            $query = $this->db->query($sql);
-            
-            $products = Array();
-            foreach($query->rows as $product) {
-                $arProduct = $this->getProduct($product['product_id']);
-                $arProduct['special_price'] = $product['special_price'];
-                $products[] = $arProduct;
-            }
-            
-            return $products;
+    // Получить товары с заполненным полем "спеццена"
+    public function getProductsSpecialPrice() {
+        $sql = "SELECT * FROM `" . DB_PREFIX . "product` WHERE `special_price` <> 0 AND `status` <> 0";
+        $query = $this->db->query($sql);
+        
+        $products = Array();
+        foreach($query->rows as $product) {
+            $arProduct = $this->getProduct($product['product_id']);
+            $arProduct['special_price'] = $product['special_price'];
+            $products[] = $arProduct;
         }
-       
-        // Получить любимые товары
-        public function getProductsPreferable() {
+        
+        return $products;
+    }
+   
+    // Получить любимые товары
+    public function getProductsPreferable() {
+        
+        $customer_id = $this->customer->getId();
+
+        $sql = "SELECT order_id FROM `".DB_PREFIX."order` WHERE customer_id = '{$customer_id}'";
+        $query = $this->db->query($sql);
+        
+        $products = array();
+
+        if( !empty($query->rows)){
+            // ---
+                $ordersStr = 'order_id IN (';
+                for($i = 0; $i<count($query->rows); $i++) {
+                    $ordersStr .= $query->rows[$i]['order_id'];
+                    if($i < count($query->rows)-1) $ordersStr .= ', '; 
+                }
+                $ordersStr .= ')';
             
-            $customer_id = $this->customer->getId();
-            $sql = "SELECT order_id FROM `".DB_PREFIX."order` WHERE customer_id = '{$customer_id}'";
-            $query = $this->db->query($sql);
-            $products = Array();
-            
-            if( !empty($query->rows)){
-                // ---
-                    $ordersStr = 'order_id IN (';
-                    for($i = 0; $i<count($query->rows); $i++) {
-                        $ordersStr .= $query->rows[$i]['order_id'];
-                        if($i < count($query->rows)-1) $ordersStr .= ', '; 
-                    }
-                    $ordersStr .= ')';
-                
-                    $sql = "SELECT product_id FROM ".DB_PREFIX."order_product WHERE {$ordersStr}";
-                    $query = $this->db->query($sql);
+                $sql = "SELECT product_id FROM ".DB_PREFIX."order_product WHERE {$ordersStr} GROUP BY product_id;";
+                $query = $this->db->query($sql);
+
+                foreach($query->rows as $i => $row) {
+                    $product = $this->getProduct($row['product_id']);
+                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+
+                    $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                    if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                    else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+
+                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                    $product['sticker_name'] = $product['sticker']['name'];
+                    $product['sticker_class'] = $product['sticker']['class'];
                     
-                    foreach($query->rows as $product) {
-                        if(!isset($arPreferable[$product['product_id']])) {
-                            $arPreferable[$product['product_id']] = true;
-                        } else {
-                            $arProduct = $this->getProduct($product['product_id']);
-                            $products[$product['product_id']] = $arProduct;
-                        }
+
+                    if ($product['image_preview']) {
+                            $product['thumb'] = '/image/'.$product['image_preview'];
+                    } else {
+                            $product['thumb'] = '';
                     }
-                // ---
-            }
-            
-            return $products;
+
+                    if (!$this->config->get('config_customer_price')) {
+                            $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    } else {
+                            $product['price'] = false;
+                    }
+
+                    if ($product['discount'] > 0) {
+                            $product['discount'] = $product['discount'];
+                            $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    } else {
+                            $product['discount'] = false;
+                            $product['special'] = false;
+                    }
+
+                    if ($this->config->get('config_tax')) {
+                            $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+                    } else {
+                            $product['tax'] = false;
+                    }
+
+                    if ($this->config->get('config_review_status')) {
+                            $product['rating'] = (int)$product['rating'];
+                    } else {
+                            $product['rating'] = false;
+                    }
+
+                    if($product['special']) {
+                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+
+                    if(!$product['composite_price']) {
+                        unset($product['composite_price']);
+                    }
+                    else{
+                        $product['composite_price'] = json_encode($product['composite_price']);
+
+                    }
+
+                    $products[] = $product;
+                } 
+            // ---
         }
+        
+        return $products;
+    }
 
 
 
     // --- //
+
+
 
     public function getProductsOrigin($data = array()) {
         $sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special";

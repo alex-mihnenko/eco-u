@@ -1,5 +1,10 @@
 <!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" itemscope itemtype="http://schema.org/WebPage">
+<!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,25 +18,17 @@
 	<?php } ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="/new_design/css/style.<?php echo $cssversion; ?>.css">
-    <link rel="stylesheet" href="/new_design/css/remodal.css">
-    <link rel="stylesheet" href="/new_design/css/ecomodal.css">
-    <link rel="stylesheet" href="/new_design/css/selectric.css">
-    <link rel="stylesheet" href="/new_design/css/slick.css">
-    <!--<link rel="stylesheet" href="/new_design/css/dd.css">-->
-
-    <link rel="stylesheet" href="/new_design/css/jquery-ui.css">
-    <link rel="stylesheet" href="/new_design/css/jquery.jscrollpane.css">
-
-    <link href="catalog/view/theme/default/stylesheet/core.<?php echo $cssversion; ?>.css" rel="stylesheet">
+    <?php foreach ($styles as $style) { ?>
+	<link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
+	<?php } ?>
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" /> -->
 
-    <!-- Libs -->
-    <link rel="stylesheet" href="catalog/view/libs/enjoyhint-master/enjoyhint.css">
+    <?php foreach ($analytics as $analytic) { ?>
+	<?php echo $analytic; ?>
+	<?php } ?>
 </head>
 <body>
 	<div class="wreaper">
@@ -43,17 +40,17 @@
 					<div class="grid-col col-6 align-start">
 						<?php if(!$customer_id) { ?>
 							<div class="svg-container pointer" data-remodal-target="modal">
-								<i class="svg" data-src="icon-user.svg"></i>
+								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
 							</div>
 	                	<?php } else { ?>
 	                		<a class="svg-container pointer" href="/my-account">
-								<i class="svg" data-src="icon-user.svg"></i>
+								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
 							</a>
 	                	<?php } ?>
 
 
 						<div class="svg-container pointer" data-remodal-target="modal-phone">
-							<i class="svg" data-src="icon-phone.svg"></i>
+							<i class="svg" data-src="icon-phone.svg"><?php loadSvg('name', 'icon-phone.svg'); ?></i>
 						</div>
 
 						<div class="svg-container pointer">
@@ -62,14 +59,14 @@
 									<input type="text" name="search" value="" placeholder="Поиск..." />
 									<button class="btn-close btn-xs" data-action="search-close"></button>
 								</div>
-								<i class="svg" data-src="icon-search.svg" data-action="search-open"></i>
+								<i class="svg" data-src="icon-search.svg" data-action="search-open"><?php loadSvg('name', 'icon-search.svg'); ?></i>
 							</div>
 						</div>
 					</div>
 
 					<div class="grid-col col-6 align-end">
 						<div class="svg-container pointer cart" data-remodal-target="modal-basket">
-							<i class="svg" data-src="icon-bucket.svg"></i>
+							<i class="svg" data-src="icon-bucket.svg"><?php loadSvg('name', 'icon-bucket.svg'); ?></i>
 							<span class="counter">0</span>
 						</div>
 
@@ -126,17 +123,17 @@
 
 						<?php if(!$customer_id) { ?>
 							<div class="svg-container pointer" data-remodal-target="modal">
-								<i class="svg" data-src="icon-user.svg"></i>
+								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
 							</div>
 	                	<?php } else { ?>
 	                		<a class="svg-container pointer" href="/my-account">
-								<i class="svg" data-src="icon-user.svg"></i>
+								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
 							</a>
 	                	<?php } ?>
 
 
 						<div class="svg-container pointer" data-remodal-target="modal-phone">
-							<i class="svg" data-src="icon-phone.svg"></i>
+							<i class="svg" data-src="icon-phone.svg"><?php loadSvg('name', 'icon-phone.svg'); ?></i>
 						</div>
 					</div>
 
@@ -147,12 +144,12 @@
 									<input type="text" name="search" value="" placeholder="Поиск..." />
 									<button class="btn-close btn-xs" data-action="search-close"></button>
 								</div>
-								<i class="svg" data-src="icon-search.svg" data-action="search-open"></i>
+								<i class="svg" data-src="icon-search.svg" data-action="search-open"><?php loadSvg('name', 'icon-search.svg'); ?></i>
 							</div>
 						</div>
 
 						<div class="svg-container pointer cart" data-remodal-target="modal-basket">
-							<i class="svg" data-src="icon-bucket.svg"></i>
+							<i class="svg" data-src="icon-bucket.svg"><?php loadSvg('name', 'icon-bucket.svg'); ?></i>
 							<span class="counter">0</span>
 						</div>
 					</div>
