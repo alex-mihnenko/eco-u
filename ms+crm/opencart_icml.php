@@ -64,10 +64,10 @@ echo("</categories><offers>");
 
 		// Price
 			if( $special_price == 0 ){
-	 			echo("<price>$price</price>");
+	 			echo("<price>".round($price)."</price>");
 			}
 			else{ 
-	 			echo("<price>$special_price</price>");
+	 			echo("<price>".round($special_price)."</price>");
 			}
 	 	// ---
 
