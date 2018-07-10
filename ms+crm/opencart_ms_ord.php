@@ -10,8 +10,6 @@
 
 	$alertsList = ["mihnenko@gmail.com"];
 
-
-	include("../cron/_lib.php");
 	$log = "";
 // ---
 
@@ -499,3 +497,76 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 $link='https://eco-u.retailcrm.ru/api/v5/customers/?apiKey='.$retail_key;
 $res=crm_query($link);
+
+
+
+
+define('MS_AUTH', 'admin@mail195:134679');
+define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
+
+
+function connectPostAPI($url, $qdata, $auth='', $cookie='') {
+	// ---
+		$data = http_build_query($qdata);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,$url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if( !empty($auth) ){
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+			curl_setopt($ch, CURLOPT_USERPWD, $auth);
+		}
+		curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+		$headers = ['Content-Type: application/x-www-form-urlencoded'];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+
+		// Output
+		$output = curl_exec($ch);
+		$result = json_decode($output);
+
+		// Result
+		if( $result != null ){
+			curl_close ($ch);
+			return $result;
+		}
+		else {
+			curl_close ($ch);
+			return false;
+		}
+	// ---
+}
+
+function connectGetAPI($url, $qdata, $auth='') {
+	// ---
+		$data = http_build_query($qdata);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		if( !empty($auth) ){
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+			curl_setopt($ch, CURLOPT_USERPWD, $auth);
+		}
+		curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 80);
+
+		// Output
+		$output = curl_exec($ch);
+		$result = json_decode($output);
+
+		// Result
+		if( $result != null ){
+			curl_close ($ch);
+			return $result;
+		}
+		else {
+			curl_close ($ch);
+			return false;
+		}
+	// ---
+}
