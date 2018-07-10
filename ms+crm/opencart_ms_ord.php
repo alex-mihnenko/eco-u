@@ -10,6 +10,8 @@
 
 	$alertsList = ["mihnenko@gmail.com", "sales@eco-u.ru"];
 
+
+	include("../cron/_lib.php");
 	$log = "";
 // ---
 
@@ -23,6 +25,21 @@ $res_orders=mysql_query("
 
 $i=1;
 
+
+// Get managers
+	$managers = [];
+
+	$url = 'https://eco-u.retailcrm.ru/api/v5/users';
+	$qdata = array('apiKey' => RCRM_KEY,'limit' => 100);
+
+	$response = connectGetAPI($url,$qdata);
+
+	foreach ($response->users as $key => $user) {
+		if( $user->isManager == 1 ){
+			$managers[] = $user->id;
+		}
+	}
+// ---
 
 // Get free shipping
 	$freeShippingTotalValue = 1000000;
@@ -404,7 +421,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			echo "<br><span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br><br>";
 			
 			if ($json['errorMsg']!='Order already exists.'){
-				// Check log
+				// Add log
 					if ( $qLogs = mysql_query("SELECT * FROM `retailCRM_errors` WHERE `id_order`=".$order_id.";") ) $nLogs = mysql_num_rows($qLogs);
 					else $nLogs = 0;
 
@@ -419,6 +436,24 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 							$log .= "ID заказа: ".$order_id." <span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br>";
 							
+							// Set task
+								$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
+
+								foreach ($managers as $key => $manager_id) {
+									// Set data
+										$task_order['externalId'] = $order_id;
+										
+										$task['text'] = 'Заказ №'.$order_id.' не выгружен в CRM';
+										$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
+										$task['performerId'] = $manager_id;
+										$task['order'] = $task_order;
+										$data['task'] = json_encode($task);
+									// ---
+									
+									$response=connectPostAPI($url,$data);
+								}
+							// ---
+
 							foreach($order["items"] as $item){
 								echo "quantity = ".$item["quantity"].", price = ".$item["initialPrice"]."<br>";
 							}
@@ -440,7 +475,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 // Send log
 	if( $log != ""){
-		// ---
+		// Send emails
 			$subject = "Ошибка отправки заказа(ов) в RetailCRM";
 		    $message = "<b>Лог ошибок:</b><br><br>".$log;
 
