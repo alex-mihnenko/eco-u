@@ -1458,7 +1458,7 @@ xxl
 			box-sizing: border-box;
 			padding: 15px 0px;
 			background-color: rgba(60, 49, 47, 0);
-			z-index: 1000;
+			z-index: 10000;
 
 			-webkit-transition: background-color .15s;
 			-moz-transition: background-color .15s;
