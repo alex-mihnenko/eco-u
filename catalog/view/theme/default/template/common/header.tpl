@@ -106,8 +106,8 @@
 
 				<div class="grid-row hidden-xs hidden-sm">
 					<div class="grid-col col-6 align-start">
-						<div class="svg-container pointer dropdown menu">
-							<i data-action="toggle" tabindex="-1"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
+						<div class="svg-container pointer dropdown menu" tabindex="-1">
+							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
 								<a href="/#l-p_35" class="item" data-action="scrollto" scroll-anchor="#l-p_35">Каталог товаров</a>

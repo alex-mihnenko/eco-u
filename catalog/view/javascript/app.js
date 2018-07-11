@@ -114,10 +114,10 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$(document).on('focusout', '.dropdown > [data-action="toggle"]', function(){
+			$(document).on('focusout', '.dropdown', function(){
 				// ---
 					if( app.size != 'xs' && app.size != 'sm' ){
-						let $this = $(this).parents('.dropdown');
+						let $this = $(this);
 						$this.attr('data-style','default');
 					}
 				// ---
