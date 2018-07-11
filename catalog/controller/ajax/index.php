@@ -801,6 +801,7 @@ class ControllerAjaxIndex extends Controller {
           $response->address = null;
           $response->mkad = null;
           $response->tobeltway = $deliverydistance;
+          $response->region = mb_strtolower($result['data'][0][0]['region']);
 
           if( isset($result['data'][0][0]['source']) ) {
             $response->address = $result['data'][0][0]['source'];
@@ -923,6 +924,12 @@ class ControllerAjaxIndex extends Controller {
                       }
                       else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
 
+                      // Fix for regions
+                        if( $response->region != 'москва' && $response->region != 'московская' ){
+                          $response->deliveryprice = 600;
+                        }
+                      // ---
+                    
                       $response->method = 'mkadout';
                     // ---
                   }
@@ -934,6 +941,13 @@ class ControllerAjaxIndex extends Controller {
                     $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
                   }
                   else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+
+
+                  // Fix for regions
+                    if( $response->region != 'москва' && $response->region != 'московская' ){
+                      $response->deliveryprice = 600;
+                    }
+                  // ---
 
                   $response->method = 'mkadout';
                 // ---

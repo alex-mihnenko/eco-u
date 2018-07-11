@@ -1415,7 +1415,7 @@ $(document).ready(function() {
     function calculateDistanceFromMKAD(callback){
     	// ---
 
-	        var startPoint = [55.75370903771494,37.61981338262558];
+	        var startPoint = [55.6851,37.5646];
 
 	        // Calculation end point
 	        	var address = $('.modal-basket [name="address"]').val();
