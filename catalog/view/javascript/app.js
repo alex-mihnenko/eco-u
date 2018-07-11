@@ -396,6 +396,7 @@ $(document).ready(function() {
 					var order_id = parseInt($form.find('[name="order_id"]').val());
 					var firstname = $form.find('[name="firstname"]').val();
 					var telephone = $form.find('[name="telephone"]').val();
+					var clear_telephone = telephone.replace(/\D/g,'');;
 					var address = $form.find('[name="address"]').val();
 					var comment = $form.find('[name="comment"]').val();
 
@@ -410,6 +411,10 @@ $(document).ready(function() {
 				// ---
 
 				// Send request
+					// Check phone
+						if( clear_telephone.length < 11 ) { $form.find('[name="telephone"]').focus(); return false; }
+					// ---
+
 					if( deliveryprice == -1 ){
 						// Get shipping price
 							$button.html('Подождите');
@@ -1309,9 +1314,9 @@ $(document).ready(function() {
 	}
 
 	function initStart(){
-		
-		$('[name="phone"]').mask("+7 (999) 999-99-99");
-		$('[name="telephone"]').mask("+7 (999) 999-99-99");
+
+		$('[name="phone"]').inputmask("mask", {"mask": "+7 (\\999) 999-99-99"});
+		$('[name="telephone"]').inputmask("mask", {"mask": "+7 (\\999) 999-99-99"});
 
 		// Handlers
 			watchEnv();

@@ -5,12 +5,10 @@ class ControllerCommonFooter extends Controller {
 
 		// Scripts
 			$this->document->addScript('catalog/view/javascript/jquery-3.2.1.min.js');
-			$this->document->addScript('catalog/view/javascript/jquery.maskedinput.min.js');
 			$this->document->addScript('catalog/view/javascript/jquery.liTabs.js');
 			$this->document->addScript('catalog/view/javascript/jquery.selectric.js');
 			$this->document->addScript('catalog/view/javascript/remodal.min.js');
 			$this->document->addScript('catalog/view/javascript/jquery-ui.min.js');
-			$this->document->addScript('catalog/view/javascript/masked-input.js');
 			$this->document->addScript('catalog/view/javascript/placeholders.min.js');
 			$this->document->addScript('catalog/view/javascript/dragend.min.js');
 			$this->document->addScript('catalog/view/javascript/styling.js');
@@ -24,6 +22,9 @@ class ControllerCommonFooter extends Controller {
 			$this->document->addScript('catalog/view/libs/cookie/js.cookie.min.js');
 			$this->document->addScript('catalog/view/libs/enjoyhint-master/enjoyhint.js');
 			$this->document->addScript('https://api-maps.yandex.ru/2.1/?lang=ru-RU');
+
+			$this->document->addScript('catalog/view/javascript/input-mask/jquery.inputmask.js');
+			$this->document->addScript('catalog/view/javascript/input-mask/inputmask.min.js');
 
 			$this->document->addScript('catalog/view/javascript/my_scripts.js');
 			$this->document->addScript('catalog/view/javascript/app.js');

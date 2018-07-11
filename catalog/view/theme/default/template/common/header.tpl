@@ -175,7 +175,7 @@
 								<span class="underline"></span>
 							</div>
 							<div class="t-c_input">
-								<input type="text" placeholder="+7 (___) ___-__-__" class="input" name="phone" required="">
+								<input type="text" placeholder="Номер телефона" class="input" name="phone" required="">
 								<span class="underline"></span>
 							</div>
 		                    
@@ -203,7 +203,7 @@
 
 					<form id="form-auth" class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
 						<div class="t-c_input">
-							<input type="tel" placeholder="+7 (___) ___-__-__" class="input" name="phone" required="">
+							<input type="tel" placeholder="Номер телефона" class="input" name="phone" required="">
 							<span class="underline"></span>
 						</div>
 						<div class="t-c_input">
@@ -233,7 +233,7 @@
 
 						<form id="form-recovery" action="/auth.php" method="POST">
 							<div class="t-c_input">
-								<input type="tel" placeholder="+7 (___) ___-__-__" class="input" name="phone" style="text-align: center;" required="">
+								<input type="tel" placeholder="Номер телефона" class="input" name="phone" style="text-align: center;" required="">
 								<span class="underline"></span>
 							</div>
 		                    
