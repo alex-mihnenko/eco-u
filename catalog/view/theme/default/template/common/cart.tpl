@@ -31,6 +31,8 @@
 
     <div class="m-basket_padding">
     </div>
+    
+    <div class="ya-map" id="ya-map"></div>
   </div>
 <?php } ?>
 

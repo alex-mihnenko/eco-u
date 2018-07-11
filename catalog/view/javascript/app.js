@@ -643,7 +643,6 @@ $(document).ready(function() {
 					var $size = parseInt($menuList.parents('.all-l_a2').attr('data-size'));
 
 				    if( e.deltaY==-1 ){
-				    	console.log('Down');
 				    	setTimeout(function(){ app.scroll.menu = false; },250);
 
 				    	if( $scroll > 1 - ($count*100 - $size*100) ){
@@ -662,7 +661,6 @@ $(document).ready(function() {
         				return;
 				    }
 				    else{
-				    	console.log('Up');
 				    	setTimeout(function(){ app.scroll.menu = false; },250);
 
 				    	if( $scroll < 0 ){
