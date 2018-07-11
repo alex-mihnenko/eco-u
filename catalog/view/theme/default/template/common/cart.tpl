@@ -18,6 +18,7 @@
       </div>  
     </div>
     
+    <div class="ya-map" id="ya-map"></div>
   </div>
 <?php } else { ?>
   <div class="remodal modal-basket" data-remodal-id="modal-basket">
@@ -33,7 +34,6 @@
   </div>
 <?php } ?>
 
-<div class="ya-map" id="ya-map"></div>
 
 
 
