@@ -1315,8 +1315,8 @@ $(document).ready(function() {
 
 	function initStart(){
 
-		$('[name="phone"]').inputmask("mask", {"mask": "+7 (\\999) 999-99-99"});
-		$('[name="telephone"]').inputmask("mask", {"mask": "+7 (\\999) 999-99-99"});
+		$('[name="phone"]').inputmask("mask", {"mask": "+7 (999) 999-99-99"});
+		$('[name="telephone"]').inputmask("mask", {"mask": "+7 (999) 999-99-99"});
 
 		// Handlers
 			watchEnv();
