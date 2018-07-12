@@ -309,6 +309,21 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 						
 						}
 
+						// Apply netcost config
+							$netCostValue = 0;
+
+							$netcost_config_list = json_decode( html_entity_decode($netCost, ENT_QUOTES, 'UTF-8') );
+
+							foreach($netcost_config_list as $key => $item) {
+								if( $weight_all > intval($item->from) && $weight_all <= intval($item->to) ) {
+									$netCostValue = intval($item->cost);
+									break;
+								}
+							}
+
+							$netCost = $netCostValue;
+						// ---
+
 						if($delivery_code=="flat") {
 							$deliveryNetCost = $netCost;
 						}

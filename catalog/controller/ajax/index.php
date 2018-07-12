@@ -838,16 +838,12 @@ class ControllerAjaxIndex extends Controller {
               if( $method['code'] == 'free' ) { $cost = (int)$this->config->get('free_total'); }
               else { $cost = (int)$this->config->get($method['code'].'_cost'); }
 
-              if( $method['code'] == 'flat' || $method['code'] == 'mkadout' ) { $netcost = (int)$this->config->get($method['code'].'_netcost'); }
-              else { $netcost = 0; }
-
               if( $method['code'] == 'mkadout' ) { $milecost = (int)$this->config->get($method['code'].'_milecost'); }
               else { $milecost = 0; }
 
               $methods[$method['code']] = array(
                 'extension_id' => $method['extension_id'],
                 'cost' => $cost,
-                'netcost' => $netcost,
                 'milecost' => $milecost,
                 'title' => $method['title']
               );

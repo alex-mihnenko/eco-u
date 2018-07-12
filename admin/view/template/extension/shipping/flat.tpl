@@ -1,4 +1,12 @@
-<?php echo $header; ?><?php echo $column_left; ?>
+<?php echo $header; ?>
+
+<style type="text/css">
+  .config-item { margin-bottom: 15px; }
+</style>
+
+<?php echo $column_left; ?>
+
+
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
@@ -34,7 +42,49 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-netcost"><?php echo $entry_netcost; ?></label>
             <div class="col-sm-10">
-              <input type="text" name="flat_netcost" value="<?php echo $flat_netcost; ?>" placeholder="<?php echo $entry_netcost; ?>" id="input-netcost" class="form-control" />
+              <input type="hidden" name="flat_netcost" value="<?php echo $flat_netcost; ?>" placeholder="<?php echo $entry_netcost; ?>" id="input-netcost" class="form-control" />
+
+              <br>
+              <div class="netcost-config-list">
+                <div class="config-items">
+                  <?php $netcost_config_list = json_decode( html_entity_decode($flat_netcost, ENT_QUOTES, 'UTF-8') ); ?>
+
+                  <?php foreach($netcost_config_list as $key => $item) { ?>
+                    <div class="row config-item">
+                      <div class="col-sm-3">
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1"><?php echo $text_from; ?></span>
+                          <input type="number" name="from" value="<?php echo $item->from ?>" class="form-control" />
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-3">
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1"><?php echo $text_to; ?></span>
+                          <input type="number" name="to" value="<?php echo $item->to ?>" class="form-control" />
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-4">
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1"><?php echo $text_cost; ?></span>
+                          <input type="number" name="cost" value="<?php echo $item->cost ?>" class="form-control" />
+                        </div>
+                      </div>
+
+                      <div class="col-sm-2">
+                        <button type="button" class="btn btn-danger pull-right" data-action="remove-netcost-item"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </div>
+                  <?php } ?>
+                </div>
+                <br>
+                
+                <div>
+                  <button type="button" class="btn btn-primary pull-right" data-action="add-netcost-item"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="form-group">
@@ -92,4 +142,74 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // ---
+      $(document).on('click', '[data-action="add-netcost-item"]', function(){
+        var $this = $(this);
+        var $container = $this.parents('.netcost-config-list').find('.config-items');
+
+        $container.append(''+
+          '<div class="row config-item">'+
+            '<div class="col-sm-3">'+
+              '<div class="input-group">'+
+                '<span class="input-group-addon" id="basic-addon1"><?php echo $text_from; ?></span>'+
+                '<input type="number" name="from" value="" class="form-control" />'+
+              '</div>'+
+            '</div>'+
+            
+            '<div class="col-sm-3">'+
+              '<div class="input-group">'+
+                '<span class="input-group-addon" id="basic-addon1"><?php echo $text_to; ?></span>'+
+                '<input type="number" name="to" value="" class="form-control" />'+
+              '</div>'+
+            '</div>'+
+            
+            '<div class="col-sm-4">'+
+              '<div class="input-group">'+
+                '<span class="input-group-addon" id="basic-addon1"><?php echo $text_cost; ?></span>'+
+                '<input type="number" name="cost" value="" class="form-control" />'+
+              '</div>'+
+            '</div>'+
+
+            '<div class="col-sm-2">'+
+              '<button type="button" class="btn btn-danger pull-right" data-action="remove-netcost-item"><i class="fa fa-trash"></i></button>'+
+            '</div>'+
+          '</div>'+
+        '');
+      });
+
+
+      $(document).on('click', '[data-action="remove-netcost-item"]', function(){
+        var $this = $(this);
+        var $item = $this.parents('.config-item');
+
+        $item.remove();
+      });
+
+
+      $('form').submit(function(){
+        // ---
+          var config = [];
+
+          $('form').find('.netcost-config-list .config-item').each(function(){
+            // ---
+              var from = $(this).find('[name="from"]').val();
+              var to = $(this).find('[name="to"]').val();
+              var cost = $(this).find('[name="cost"]').val();
+
+              config.push( {'from': from, 'to': to, 'cost': cost} );
+            // ---
+          });
+
+          $('form').find('[name="flat_netcost"]').val( JSON.stringify(config) );
+
+          return true;
+        // ---
+      });
+    // ---
+  });  
+</script>
+
 <?php echo $footer; ?> 

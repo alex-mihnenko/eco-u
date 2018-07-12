@@ -11,6 +11,9 @@ $_['thousand_point']                = '';
 
 // Text
 $_['text_yes']                      = 'Да';
+$_['text_from']                     = 'От';
+$_['text_to']                     	= 'До';
+$_['text_cost']                     = 'Стоимость';
 $_['text_no']                       = 'Нет';
 $_['text_enabled']                  = 'Включено';
 $_['text_disabled']                 = 'Отключено';
