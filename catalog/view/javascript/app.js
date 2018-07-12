@@ -59,6 +59,11 @@ $(document).ready(function() {
 		// Catalog			
 			scrollSpyCategory($(window).scrollTop());
 		// ---
+
+		$(document).on('keydown', '[name="phone"], [name="telephone"]', function(e){
+			var phone = $(this).val().replace(/\D/g,'');
+			if( (e.which == 103 || e.which == 104) && phone == '' ) { e.preventDefault();  return false; }
+		});
 	// ---
 
 	// Scroll
