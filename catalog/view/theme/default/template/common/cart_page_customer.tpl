@@ -16,7 +16,7 @@
 
             <div class="col">
                 <div class="input-group required">
-                    <input type="text" class="form-input" placeholder="Номер телефона" name="telephone" value="<?php echo $customer['phone']; ?>">
+                    <input type="text" class="form-input" placeholder="Номер телефона" name="telephone" value="<?php echo substr($customer['phone'], 1); ?>">
                 </div>
                 <hr class="indent xs">
             </div>
