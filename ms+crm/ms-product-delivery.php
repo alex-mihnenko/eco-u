@@ -61,6 +61,16 @@
 			// ---
 				$res['log'] = json_encode($log);
 				$res['mess']='Planned moment is passed';
+
+				// Check config
+					if( $config->current >= $config->count-1  ) {
+							
+						$config->current = -1;
+						$config->count = -1;
+						file_put_contents('ms-product-delivery-config.json',json_encode($config));
+					}
+				// ---
+
 				echo json_encode($res); exit;
 				exit;
 			// ---
@@ -70,6 +80,16 @@
 		// ---
 			$res['log'] = json_encode($log);
 			$res['mess']='No delivery planned date';
+
+			// Check config
+				if( $config->current >= $config->count-1  ) {
+						
+					$config->current = -1;
+					$config->count = -1;
+					file_put_contents('ms-product-delivery-config.json',json_encode($config));
+				}
+			// ---
+					
 			echo json_encode($res); exit;
 			exit;
 		// ---
