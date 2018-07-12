@@ -440,6 +440,9 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 		$json=crm_query_send($link,$senddata);
 
+		echo "retailCRM response: "; print_r($json);
+		echo "<br><br>";
+
 		if (!$json['success']) {
 			echo "<br><span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br><br>";
 			

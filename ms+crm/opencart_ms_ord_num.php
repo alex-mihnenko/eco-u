@@ -1,23 +1,20 @@
 <?php
 // Init
-	#error_reporting(E_ALL);
-	#ini_set('display_errors', '1');
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
+	header('Content-Type: text/html; charset=utf-8');
 
 	include("opencart_inc.php");
 
 	$time=time();
 
-	$alertsList = ["mihnenko@gmail.com", "sales@eco-u.ru"];
+	$alertsList = ["mihnenko@gmail.com"];
 
 	$log = "";
+
+	define('MS_AUTH', 'admin@mail195:134679');
+	define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 // ---
-
-
-if(!isset($_GET["n"])){
-	echo "No order_od";
-	exit;
-}
-$order_id = $_GET["n"];
 
 
 $res_orders=mysql_query("
@@ -25,14 +22,49 @@ $res_orders=mysql_query("
 		payment_method, customer_id, order_id, firstname, lastname, email, telephone, comment, total, 
 		order_status_id, date_added, shipping_code, shipping_postcode, shipping_city, shipping_country, 
 		shipping_address_1, shipping_address_2, delivery_time 
-	FROM oc_order WHERE `order_id` = '".$order_id."' AND customer_id>0 AND order_status_id>0 ORDER BY date_modified DESC LIMIT 0,20");
+	FROM oc_order WHERE order_id = 23517 AND customer_id>0 AND order_status_id>0 ORDER BY date_modified DESC LIMIT 0,30");
 
 $i=1;
 
-while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
+
+// Get managers
+	$managers = [];
+
+	$url = 'https://eco-u.retailcrm.ru/api/v5/users';
+	$qdata = array('apiKey' => RCRM_KEY,'limit' => 100);
+
+	$response = connectGetAPI($url,$qdata);
+
+	foreach ($response->users as $key => $user) {
+		if( $user->isManager == 1 ){
+			$managers[] = $user->id;
+		}
+	}
 // ---
 
+// Get free shipping
+	$freeShippingTotalValue = 1000000;
+
+	// Get free
+		if ( $qFreeTotal = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='free';") ) $nFreeTotal = mysql_num_rows($qFreeTotal);
+		else $nFreeTotal = 0;
+
+
+		if( $nFreeTotal>0 ){
+			// ---
+				while ($freeTotalRow = mysql_fetch_assoc($qFreeTotal)) {
+					if( $freeTotalRow['key'] == 'free_total' ) { $freeShippingTotalValue = $freeTotalRow['value']; }
+				}
+			// ---
+		}
+	// ---
+// ---
+
+while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$comm,$total,$order_status_id,$date_added,$shipping_code,$shipping_postcode,$shipping_city,
 	$shipping_country,$shipping_address_1,$shipping_address_2,$delivery_time)=mysql_fetch_row($res_orders)){
+	
+// ---
+	$orderCreatedAt = $date_added;
 	
 	// Check email
 	if($email == 'empty@localhost' || $email=='') {
@@ -49,9 +81,11 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	if(!isset($roistat_id)) $roistat_id="";
 	
 	
-	$res=mysql_query("select value from oc_order_total where code='shipping' and order_id='$order_id'");
-	list($deliveryCost)=mysql_fetch_row($res);
-	if(!isset($deliveryCost)) $deliveryCost=0;
+	// Get delivery cost
+		$res=mysql_query("select value from oc_order_total where code='shipping' and order_id='$order_id'");
+		list($deliveryCost)=mysql_fetch_row($res);
+		if(!isset($deliveryCost)) $deliveryCost=0;
+	// ---
 
 	// Customer
 		$ms_last_tmp=DateTime::createFromFormat("Y-m-d H:i:s",$date_added);
@@ -68,7 +102,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$data['firstName']=$fname;
 		$data['phone']=$phone;
 
-		if ( $qCustomers = mysql_query("SELECT * FROM `retailCRM_customers` WHERE `id_internal`='".$phone."@eco-u.ru';") ) $nCustomers = mysql_num_rows($qCustomers);
+		if ( $qCustomers = mysql_query("SELECT * FROM `retailCRM_customers` WHERE `email`='".$email."';") ) $nCustomers = mysql_num_rows($qCustomers);
 		else $nCustomers = 0;
 
 		if( $nCustomers==0 ){
@@ -105,17 +139,18 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	
 		while(list( $ms_pr_id,$msp_product_id,$opid,$quantity,$fasovka,$amount,$price)=mysql_fetch_row($resx)){
 
-			$resx2=mysql_query("select MSV.ms_id,MSV.product_option_value_id  from oc_order_option as OOO, ms_variants as MSV where MSV.product_option_value_id=OOO.product_option_value_id and OOO.order_id='$order_id' 
-				and OOO.order_product_id='$opid'");
+			$resx2=mysql_query("select MSV.ms_id,MSV.product_option_value_id  from oc_order_option as OOO, ms_variants as MSV where MSV.product_option_value_id=OOO.product_option_value_id and OOO.order_id='$order_id' and OOO.order_product_id='$opid'");
 			list( $ms_var_id, $msv_povid)=mysql_fetch_row($resx2);
+
 			/*Подсчитываем общий вес всех товаров*/
+
 			//1.Получем единицу измерения товара
-			$resx3=mysql_query("select weight_class_id,weight from oc_product  where  product_id='".(int)$msp_product_id."'");
-			list( $weight_class_id, $weight)=mysql_fetch_row($resx3);
-			//echo $quantity." ".$weight."<br>";
-			//2.Формируем вес
+			$resx3=mysql_query("select weight_class_id,weight,weight_package from oc_product where product_id='".(int)$msp_product_id."'");
+			list( $weight_class_id,$weight,$weight_package)=mysql_fetch_row($resx3);
 			
+			//2.Формируем вес
 			//Если в МС не установлен вес для весовых товаров, то берём по умолчанию 1 кг
+
 			if($weight=="0.00000000" && $weight_class_id==9){
 				$weight="1";
 			}
@@ -124,20 +159,30 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			if($weight=="0.00000000"){
 				$weight_ignore=1;
 			}
-			else 
-			{
+			else {
 				
-				if($weight_class_id==8 || $weight_class_id==2 || $weight_class_id==1 || $weight_class_id==7)
-				{
+				if($weight_class_id==8 || $weight_class_id==2 || $weight_class_id==1 || $weight_class_id==7) {
 					$weight_all=$weight_all+round(($quantity*$weight));
 					
 				}
+
 				//Если килограммы, то тоже самое но умножаем на 1000
-				if($weight_class_id==9)
-				{
+				if($weight_class_id==9) {
 					$weight_all=$weight_all+(round(($quantity*$weight)*1000));
 					
 				}
+
+				// Add package weight
+					if( $weight_package != '' ) {
+						$wpArr = (array) json_decode(html_entity_decode($weight_package));
+
+						if( isset($wpArr[$fasovka]) ) {
+							if($weight_class_id==2 || $weight_class_id==9) {
+								$weight_all=$weight_all + floatval($wpArr[$fasovka]);
+							}
+						}
+					}
+				// ---
 			}
 			
 			
@@ -145,8 +190,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			$extid=$msp_product_id;
 			if($msv_povid) $extid.="#$msv_povid";
 
-			if($quantity) $items_[$extid][]=array('quantity'=>(float)$quantity, 'amount'=>(float)$amount, 'initialPrice'=>(double)$price,
-				'fasovka'=>$fasovka);	
+			if($quantity) $items_[$extid][]=array('quantity'=>(float)$quantity, 'amount'=>(float)$amount, 'initialPrice'=>(double)$price, 'fasovka'=>$fasovka);	
 		} // while
 	// ...
 
@@ -170,25 +214,30 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 					// ---
 				}
 				
-				$newprice=round($sum/$quantity);		
+				$newprice=round($sum/$quantity,4);		
 				$items_new[]=array('offer'=>array('externalId'=>$ki),'quantity'=>(float)$quantity, 'initialPrice'=>(double)$newprice, 'properties'=>$allfasovka);
 				
 				// Sum total
-				$total_new+=$quantity*round($newprice);
+				$total_new+=$quantity*round($newprice,4);
 
 			// ---
 		}	
 	// ...
 
 	// Discount
+		$managerCommentCouponDiscount = '';
 	    $discval=$discvalproc=0;
 	    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='coupon'");
-	    
+	    $couponFlag = false;
+
 	    list($discval)=mysql_fetch_row($resxxx);
 		
 		if(!$discval){
-		    	$resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount'");
-		        list($discval)=mysql_fetch_row($resxxx);
+		    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount'");
+		    list($discval)=mysql_fetch_row($resxxx);
+		}
+		else{
+			$couponFlag = true;
 		}
 
 	    $resxxx=mysql_query("SELECT value from oc_order_total where order_id='".$order_id."' and code='discount_percentage'");
@@ -200,12 +249,19 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				unset( $discval);
 				//$disval=$tmpdiscval;
 				//unset($discvalproc);
-			}else 	unset( $discvalproc);
+			}else unset( $discvalproc);
 		}
 
 
-        if($discval!=0) $order['discountManualAmount']=(double)$discval;
-        if($discvalproc!=0) $order['discountManualPercent']=(double)$discvalproc;
+        if( isset($discval) && $discval!=0) $order['discountManualAmount']=(double)$discval;
+
+        if( isset($discvalproc) &&  $discvalproc!=0 ) {
+        	$order['discountManualPercent']=(double)$discvalproc;
+        	
+        	if( isset($couponFlag) && $couponFlag == true ) {
+        		$managerCommentCouponDiscount = 'Скидка '.$order['discountManualPercent'].'% по купону';
+        	}
+        }
     // ---
 		
     // Shipping
@@ -221,38 +277,92 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$delivery_code = $tmp[0];
 		$order['shipmentStore']='eco-u';
 		$vr=$delivery_code;
-		if($delivery_code=="mkadout")
-		{
+
+		if($delivery_code=="mkadout") {
 			$vr="mkad";
 		}
-		if($delivery_code=="free")
-		{
+		if($delivery_code=="free") {
 			$vr="flat";
 		}
-		if($delivery_code=="flat")
-		{
+		if($delivery_code=="flat") {
 			$vr="flat-pay";
 		}
 
+
+		// Get delivery net cost
+			$deliveryNetCost = 0;
+			
+			// Get current
+				if ( $qShippingNetCost = mysql_query("SELECT * FROM `oc_setting` WHERE `code`='".$delivery_code."';") ) $nShippingNetCost = mysql_num_rows($qShippingNetCost);
+				else $nShippingNetCost = 0;
+
+
+				if( $nShippingNetCost>0 ){
+					// ---
+						$mainCost = 0;
+						$netCost = 0;
+
+						while ($shippingNetCostRow = mysql_fetch_assoc($qShippingNetCost)) {
+							
+							if( $shippingNetCostRow['key'] == $delivery_code.'_cost' ) { $mainCost = $shippingNetCostRow['value']; }
+							if( $shippingNetCostRow['key'] == $delivery_code.'_netcost' ) { $netCost = $shippingNetCostRow['value']; }
+						
+						}
+
+						// Apply netcost config
+							if( $netCost != 0 ) {
+								$netCostValue = 0;
+								$weightValue = $weight_all / 1000;
+
+								$netcost_config_list = json_decode( html_entity_decode($netCost, ENT_QUOTES, 'UTF-8') );
+
+
+								foreach($netcost_config_list as $key => $item) {
+									if( $weightValue > intval($item->from) && $weightValue <= intval($item->to) ) {
+										$netCostValue = intval($item->cost);
+										break;
+									}
+								}
+
+								$netCost = $netCostValue;
+							}
+						// ---
+
+						if($delivery_code=="flat") {
+							$deliveryNetCost = $netCost;
+						}
+						else{
+							// ---
+								if( $total_new >= $freeShippingTotalValue ){
+									// Free shipping
+										$deliveryNetCost = $netCost + $deliveryCost;
+									// ---
+								}
+								else{
+									// Paided shipping
+										$deliveryNetCost = $netCost + ($deliveryCost - $mainCost);
+									// ---
+								}
+							// ---
+						}
+
+					// ---
+				}
+			// ---
+		// ---
+
+
         $order['delivery'] = array(
-            // 'code' => !empty($delivery_code) ? $delivery_code:0, //$settings['retailcrm_delivery'][$delivery_code] : '',
-             'code' => !empty($vr) ? $vr:0, //$settings['retailcrm_delivery'][$delivery_code] : '',
-            // 'service'=>array(
-            //'deliveryType' => !empty($vr) ? $vr:0, 
-			//),
-            	'cost' => (double)$deliveryCost,
-            	'address' => array(
-				//'index' => $shipping_postcode,
-				//'city' => $shipping_city,
-                'text' => $add_text
-			)
-		
-		);				
+			'code' => !empty($vr) ? $vr:0,
+			'cost' => (double)$deliveryCost,
+			'netCost' => (double)$deliveryNetCost,
+			'address' => array('text' => $add_text)
+		);
     // ---
 
     // Init
 		$link='https://eco-u.retailcrm.ru/api/v5/orders/create?apiKey='.$retail_key;
-		$order['createdAt']=$date_added;
+		$order['createdAt']=$orderCreatedAt;
 	   	$order['items']=$items_new;
 		$order['number']='IM'.$order_id;
 		if($weight_ignore==0) { $order['weight']=$weight_all; }
@@ -264,6 +374,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				
 	if($cust_id) $order['customer']['id']=$cust_id;
 	$order['customerComment']=$comm;
+	$order['managerComment']=$managerCommentCouponDiscount;
 
 	$tmpd=explode(" ",$delivery_time);
 
@@ -286,21 +397,22 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	//Новая сумма исключает глюки при пересчёте сложных цен
 	$discount_real = 0;
 		
-	if($discvalproc) { $discount_real=(double)$total_new*$discvalproc/100; }
-	if($discval) { $discount_real=$discval; }
-	$discount_real = round($discount_real, 2);
+	if( isset($discvalproc) && $discvalproc) { $discount_real=(double)$total_new*$discvalproc/100; }
+	if( isset($discval) && $discval) { $discount_real=$discval; }
 
+	$discount_real = $discount_real;
 
-	$total_pay_new=round($total_new+$deliveryCost, 2) - $discount_real;
+	$total_pay_new=round($total_new, 4) +$deliveryCost - $discount_real;
 
 	
 	if($pmethod=='e-money' && $order_status_id==20) {
 		$order['payments'][]=array('externalId'=>$order_id, 'type'=>$pmethod,'amount'=>(double)$total_pay_new, 'paidAt' => $date_added, 'status'=>'paid');
-		$order['status']="new";
 	}
 	else {
 		$order['payments'][]=array('externalId'=>$order_id, 'type'=>$pmethod,'amount'=>(double)$total_pay_new, 'paidAt' => $date_added, 'status'=>'not-paid');
 	}
+	
+	$order['status']="new";
 
 	$order['firstName']=$fname;
 	$order['phone']=$phone;
@@ -328,11 +440,14 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 		$json=crm_query_send($link,$senddata);
 
+		echo "retailCRM response: "; print_r($json);
+		echo "<br><br>";
+
 		if (!$json['success']) {
 			echo "<br><span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br><br>";
 			
 			if ($json['errorMsg']!='Order already exists.'){
-				// Check log
+				// Add log
 					if ( $qLogs = mysql_query("SELECT * FROM `retailCRM_errors` WHERE `id_order`=".$order_id.";") ) $nLogs = mysql_num_rows($qLogs);
 					else $nLogs = 0;
 
@@ -347,6 +462,21 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 							$log .= "ID заказа: ".$order_id." <span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br>";
 							
+							// Set task
+								$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
+
+								foreach ($managers as $key => $manager_id) {
+									// Set data
+										$task['text'] = 'Заказ №'.$order_id.' не выгружен в CRM';
+										$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
+										$task['performerId'] = $manager_id;
+										$data['task'] = json_encode($task);
+									// ---
+									
+									$response=connectPostAPI($url,$data);
+								}
+							// ---
+
 							foreach($order["items"] as $item){
 								echo "quantity = ".$item["quantity"].", price = ".$item["initialPrice"]."<br>";
 							}
@@ -368,7 +498,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 // Send log
 	if( $log != ""){
-		// ---
+		// Send emails
 			$subject = "Ошибка отправки заказа(ов) в RetailCRM";
 		    $message = "<b>Лог ошибок:</b><br><br>".$log;
 
@@ -392,3 +522,70 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 
 $link='https://eco-u.retailcrm.ru/api/v5/customers/?apiKey='.$retail_key;
 $res=crm_query($link);
+
+
+function connectPostAPI($url, $qdata, $auth='', $cookie='') {
+	// ---
+		$data = http_build_query($qdata);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,$url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if( !empty($auth) ){
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+			curl_setopt($ch, CURLOPT_USERPWD, $auth);
+		}
+		curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+		$headers = ['Content-Type: application/x-www-form-urlencoded'];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+
+		// Output
+		$output = curl_exec($ch);
+		$result = json_decode($output);
+
+		// Result
+		if( $result != null ){
+			curl_close ($ch);
+			return $result;
+		}
+		else {
+			curl_close ($ch);
+			return false;
+		}
+	// ---
+}
+
+function connectGetAPI($url, $qdata, $auth='') {
+	// ---
+		$data = http_build_query($qdata);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		if( !empty($auth) ){
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+			curl_setopt($ch, CURLOPT_USERPWD, $auth);
+		}
+		curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 80);
+
+		// Output
+		$output = curl_exec($ch);
+		$result = json_decode($output);
+
+		// Result
+		if( $result != null ){
+			curl_close ($ch);
+			return $result;
+		}
+		else {
+			curl_close ($ch);
+			return false;
+		}
+	// ---
+}
