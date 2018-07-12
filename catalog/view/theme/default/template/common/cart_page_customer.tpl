@@ -8,31 +8,39 @@
     <form action="index.php" method="post">
         <div class="row">
             <div class="col">
-                <input type="text" class="form-input" placeholder="Имя" name="firstname" value="<?php echo $customer['first_name']; ?>" required="">
+                <div class="input-group required">
+                    <input type="text" class="form-input" placeholder="Имя" name="firstname" value="<?php echo $customer['first_name']; ?>">
+                </div>
                 <hr class="indent xs">
             </div>
 
             <div class="col">
-                <input type="text" class="form-input" placeholder="Номер телефона" name="telephone" value="<?php echo $customer['phone']; ?>" required="">
+                <div class="input-group required">
+                    <input type="text" class="form-input" placeholder="Номер телефона" name="telephone" value="<?php echo $customer['phone']; ?>">
+                </div>
                 <hr class="indent xs">
             </div>
         </div>
 
         <div class="delivery-address-container">
-            <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
-            <select name="address" class="form-input select" required="">
-                <?php foreach($delivery_address as $address) { ?>
-                <option value="<?php echo $address['value']; ?>"><?php echo $address['value']; ?></option>
+            <div class="input-group required">
+                <?php if(isset($delivery_address) && count($delivery_address) > 0) { ?>
+                <select name="address" class="form-input select">
+                    <?php foreach($delivery_address as $address) { ?>
+                    <option value="<?php echo $address['value']; ?>"><?php echo $address['value']; ?></option>
+                    <?php } ?>
+                    <option value="0">Новый адрес доставки</option>
+                </select> 
+                <?php } else { ?>
+                <input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки">
                 <?php } ?>
-                <option value="0">Новый адрес доставки</option>
-            </select> 
-            <?php } else { ?>
-            <input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки" required="">
-            <?php } ?>
+            </div>
         </div>
         <hr class="indent xs">
         
-        <textarea class="form-input " name="comment" value="" placeholder="Комментарий к заказу"></textarea>
+        <div class="input-group">
+            <textarea class="form-input " name="comment" value="" placeholder="Комментарий к заказу"></textarea>
+        </div>
         <hr class="indent xs">
 
 

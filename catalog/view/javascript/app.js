@@ -396,7 +396,6 @@ $(document).ready(function() {
 					var order_id = parseInt($form.find('[name="order_id"]').val());
 					var firstname = $form.find('[name="firstname"]').val();
 					var telephone = $form.find('[name="telephone"]').val();
-					var clear_telephone = telephone.replace(/\D/g,'');;
 					var address = $form.find('[name="address"]').val();
 					var comment = $form.find('[name="comment"]').val();
 
@@ -410,10 +409,29 @@ $(document).ready(function() {
             		var time = $form.find('#delivery_time_m').val();
 				// ---
 
+				// Validation
+            		var validation = true;
+
+					$(this).find('.input-group.required').each(function(key,val){
+						let $this = $(this).find('.form-input');
+						let $name = $this.attr('name');
+						let $value = $this.val();
+
+						if( $name == 'phone' || $name == 'telephone' ) {
+							$value = $value.replace(/\D/g,'');
+							if( $value.length < 11 ) { $this.attr('data-style','error'); validation = false; return false; }
+							else{ $this.attr('data-style','default'); }
+						}
+						else {
+							if( $value.length < 3 ) { $this.attr('data-style','error'); validation = false; return false; }
+							else{ $this.attr('data-style','default'); }
+						}
+					});
+
+					if( !validation ){ return false; }
+				// ---
+
 				// Send request
-					// Check phone
-						if( clear_telephone.length < 11 ) { $form.find('[name="telephone"]').focus(); return false; }
-					// ---
 
 					if( deliveryprice == -1 ){
 						// Get shipping price

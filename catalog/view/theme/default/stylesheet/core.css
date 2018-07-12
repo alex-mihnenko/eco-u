@@ -1816,6 +1816,16 @@ xxl
 		    font-family: 'Roboto', sans-serif;
 		    box-shadow: none;
 		    resize: none;
+
+		    -webkit-transition: border-color .25s;
+		    -moz-transition: border-color .25s;
+		    -ms-transition: border-color .25s;
+		    -o-transition: border-color .25s;
+		    transition: border-color .25s;
+		}
+
+		.form-input[data-style="error"] {
+			border-color: #DD0000;
 		}
 
 		/* Checkbox */
