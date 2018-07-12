@@ -21,6 +21,7 @@
 
 
 	$log = [];
+	$currenttime = time();
 // ---
 
 // Set query
@@ -48,7 +49,22 @@
 		$deliveryPlannedMomentArr = explode(' ', $deliveryPlannedMomentDateTime);
 		$deliveryPlannedMoment = $deliveryPlannedMomentArr[0];
 
+		// Get UNIX time
+			$dateTmp = explode('-', $deliveryPlannedMoment);
+
+			$deliveryUnixtime = mktime(0, 0, 0, $dateTmp[1], $dateTmp[2], $dateTmp[0]);
+		// ---
+
 		$log['deliveryPlannedMoment'] = $deliveryPlannedMoment;
+
+		if( $deliveryUnixtime < $currenttime ) {
+			// ---
+				$res['log'] = json_encode($log);
+				$res['mess']='Planned moment is passed';
+				echo json_encode($res); exit;
+				exit;
+			// ---
+		}
 	}
 	else {
 		// ---
