@@ -23,8 +23,8 @@ class ControllerCommonFooter extends Controller {
 			$this->document->addScript('catalog/view/libs/enjoyhint-master/enjoyhint.js');
 			$this->document->addScript('https://api-maps.yandex.ru/2.1/?lang=ru-RU');
 
-			$this->document->addScript('catalog/view/javascript/input-mask/jquery.inputmask.js');
 			$this->document->addScript('catalog/view/javascript/input-mask/inputmask.min.js');
+			$this->document->addScript('catalog/view/javascript/input-mask/jquery.inputmask.js');
 
 			$this->document->addScript('catalog/view/javascript/my_scripts.js');
 			$this->document->addScript('catalog/view/javascript/app.js');

@@ -248,7 +248,7 @@ if($argv[1]=='2'){
 
 								mysql_query("delete from oc_url_alias where query='product_id=$product_id'");
 								mysql_query("insert into oc_url_alias set query='product_id=$product_id',keyword='".slugify($v['name'])."'");
-								mysql_query("delete from   oc_product_to_category where product_id='$product_id'");	
+								mysql_query("delete from oc_product_to_category where product_id='$product_id'");	
 						        mysql_query("insert into oc_product_to_category set category_id='$site_id' , product_id='$product_id'");
 								
 								$CHCAT=true;
@@ -293,6 +293,25 @@ if($argv[1]=='2'){
 										`manufacturer_id`='".$CNTRS[$v['country']['meta']['href']]."',
 										WHERE product_id='$product_id'
 									");
+								}
+
+
+								if ( $qDiscount = mysql_query("SELECT `discount` FROM `oc_product` WHERE `product_id`=".$product_id.";") ) $nDiscount = mysql_num_rows($qDiscount);
+								else $nDiscount = 0;
+
+								if( $nDiscount>0 ){
+									$rowDiscount = mysql_fetch_assoc($qDiscount);
+
+									$discount = $rowDiscount['discount'];
+
+									if( isset($discount) && intval($discount)>0 ){
+										$special_price = $price - ($price * (intval($discount)/100));
+
+										$qInsert = mysql_query("UPDATE `oc_product` SET `special_price`='".$special_price."' WHERE `product_id`=".$product_id.";");
+									}
+									else{
+										$special_price = 0;
+									}
 								}
 							// ---
 						}

@@ -59,11 +59,6 @@ $(document).ready(function() {
 		// Catalog			
 			scrollSpyCategory($(window).scrollTop());
 		// ---
-
-		$(document).on('keydown', '[name="phone"], [name="telephone"]', function(e){
-			var phone = $(this).val().replace(/\D/g,'');
-			if( (e.which == 103 || e.which == 104) && phone == '' ) { e.preventDefault();  return false; }
-		});
 	// ---
 
 	// Scroll
@@ -1337,9 +1332,12 @@ $(document).ready(function() {
 	}
 
 	function initStart(){
-
-		$('[name="phone"]').inputmask("mask", {"mask": "+7 (999) 999-99-99"});
-		$('[name="telephone"]').inputmask("mask", {"mask": "+7 (999) 999-99-99"});
+		$('[name="telephone"]').inputmask("+7 (g99) 999-99-99", {
+		    definitions: {'g': {validator: "[1234569]", cardinality: 1}}
+		});
+		$('[name="phone"]').inputmask("+7 (g99) 999-99-99", {
+		    definitions: {'g': {validator: "[1234569]", cardinality: 1}}
+		});
 
 		// Handlers
 			watchEnv();
