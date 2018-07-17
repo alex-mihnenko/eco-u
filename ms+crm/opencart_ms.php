@@ -449,6 +449,13 @@ if($argv[1]=='2'){
 						        mysql_query("insert into oc_product_to_store set  product_id='$product_id',store_id='0'");
 
 								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id', ms_id='".$v['id']."',del='0',purchaseprice='0'");
+
+
+								// UltraFresh
+									if( $site_id == 35 || $site_id == 36 ) {
+										mysql_query("UPDATE `oc_product` SET `ultra_fresh`=1 WHERE product_id='$product_id';");
+									}
+								// ---
 							// ---
 						}
 
