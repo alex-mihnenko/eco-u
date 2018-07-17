@@ -214,11 +214,11 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 					// ---
 				}
 				
-				$newprice=round($sum/$quantity,4);		
+				$newprice=round($sum/$quantity);		
 				$items_new[]=array('offer'=>array('externalId'=>$ki),'quantity'=>(float)$quantity, 'initialPrice'=>(double)$newprice, 'properties'=>$allfasovka);
 				
 				// Sum total
-				$total_new+=$quantity*round($newprice,4);
+				$total_new+=$quantity*round($newprice);
 
 			// ---
 		}	
@@ -310,22 +310,19 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 						}
 
 						// Apply netcost config
-							if( $netCost != 0 ) {
-								$netCostValue = 0;
-								$weightValue = $weight_all / 1000;
+							$netCostValue = 0;
+							$weightValue = $weight_all / 1000;
 
-								$netcost_config_list = json_decode( html_entity_decode($netCost, ENT_QUOTES, 'UTF-8') );
+							$netcost_config_list = json_decode( html_entity_decode($netCost, ENT_QUOTES, 'UTF-8') );
 
-
-								foreach($netcost_config_list as $key => $item) {
-									if( $weightValue > intval($item->from) && $weightValue <= intval($item->to) ) {
-										$netCostValue = intval($item->cost);
-										break;
-									}
+							foreach($netcost_config_list as $key => $item) {
+								if( $weightValue > intval($item->from) && $weightValue <= intval($item->to) ) {
+									$netCostValue = intval($item->cost);
+									break;
 								}
-
-								$netCost = $netCostValue;
 							}
+
+							$netCost = $netCostValue;
 						// ---
 
 						if($delivery_code=="flat") {
@@ -400,19 +397,19 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	if( isset($discvalproc) && $discvalproc) { $discount_real=(double)$total_new*$discvalproc/100; }
 	if( isset($discval) && $discval) { $discount_real=$discval; }
 
-	$discount_real = $discount_real;
+	$discount_real = round($discount_real, 2);
 
-	$total_pay_new=round($total_new, 4) +$deliveryCost - $discount_real;
+
+	$total_pay_new=round($total_new+$deliveryCost, 2) - $discount_real;
 
 	
 	if($pmethod=='e-money' && $order_status_id==20) {
 		$order['payments'][]=array('externalId'=>$order_id, 'type'=>$pmethod,'amount'=>(double)$total_pay_new, 'paidAt' => $date_added, 'status'=>'paid');
+		$order['status']="new";
 	}
 	else {
 		$order['payments'][]=array('externalId'=>$order_id, 'type'=>$pmethod,'amount'=>(double)$total_pay_new, 'paidAt' => $date_added, 'status'=>'not-paid');
 	}
-	
-	$order['status']="new";
 
 	$order['firstName']=$fname;
 	$order['phone']=$phone;
@@ -439,9 +436,6 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 	if($order['status']!="lost-order"){
 
 		$json=crm_query_send($link,$senddata);
-
-		echo "retailCRM response: "; print_r($json);
-		echo "<br><br>";
 
 		if (!$json['success']) {
 			echo "<br><span style='color:#ff0000'>ERROR: ".$json['errorMsg']."</span><br><br>";
