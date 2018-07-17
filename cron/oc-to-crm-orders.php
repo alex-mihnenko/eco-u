@@ -44,6 +44,7 @@
 		payment_method,
 		customer_id,
 		order_id,
+		customer_id,
 		firstname,
 		lastname,
 		email,
@@ -91,6 +92,20 @@
 			$customer['firstName'] = $row_order['firstname'];
 			$customer['lastName'] = $row_order['lastname'];
 			$customer['phone'] = $row_order['telephone'];
+
+			if( $row_order['email'] == '' && $row_order['telephone'] != '' ){
+				// ---
+					$row_order['email'] = $row_order['telephone'].'@eco-u.ru';
+
+					$q = "UPDATE `".DB_PREFIX."customer` SET `email` = '".$row_order['email']."' WHERE `customer_id`='".$row_order['customer_id']."';";
+
+					if ($db->query($q) === TRUE) {
+					    $log[] = 'OC customer ['.$row_order['customer_id'].'] has been updated';
+					} else {
+						$log[] = 'OC customer ['.$row_order['customer_id'].'] has been not updated: '.$db->error;
+					}
+				// ---
+			}
 
 
 			$q = "SELECT * FROM `retailCRM_customers` WHERE `email`='".$row_order['email']."' LIMIT 1;";
