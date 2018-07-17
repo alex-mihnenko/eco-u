@@ -30,7 +30,7 @@ echo("<yml_catalog date=\"2016-12-10 22:27:15\">
 
 echo("</categories><offers>");
 
-	$res=mysql_query("select product_id,model,sku,image,price,special_price,weight_class_id,quantity,quantity,ultra_fresh from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
+	$res=mysql_query("select product_id,model,sku,image,price,special_price,weight_class_id,quantity,ultra_fresh from oc_product");// and CP.TIMESTAMP_X>'$updfrom' //NAME 
 	while(list($EL_ID,$model,$sku,$image,$price,$special_price,$wclid,$quantity,$ultra_fresh)=mysql_fetch_row($res)){
 
 
@@ -49,6 +49,10 @@ echo("</categories><offers>");
 
 
 		echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
+		if( $ultra_fresh == 1 ) {
+			echo("<param name=\"UltraFresh\" code=\"ultrafresh\">1</param>");
+		}
+
 		$resp=mysql_query("select category_id  from oc_product_to_category  where product_id='$EL_ID'");
 		while(list($pcatid)=mysql_fetch_row($resp)){
 			echo("<categoryId>$pcatid</categoryId>");
@@ -98,42 +102,41 @@ echo("</categories><offers>");
 
 
 
-			$res5=mysql_query("select id, product_option_value_id,xmlId from ms_variants where product_id='$EL_ID'");
-			while(list($msid,$ms_povi,$xmlId2)=mysql_fetch_row($res5)){
+		$res5=mysql_query("select id, product_option_value_id,xmlId from ms_variants where product_id='$EL_ID'");
 
-				echo("<offer id=\"$EL_ID"."#$ms_povi\" productId=\"$EL_ID\" quantity=\"0\">");
+		while(list($msid,$ms_povi,$xmlId2)=mysql_fetch_row($res5)){
 
-				echo("<productName>$name</productName>");
-			 	echo("<price>$price</price>");
-				echo("<picture>$img</picture>");
-				echo("<xmlId>$xmlId#$xmlId2</xmlId>");
-				echo("<url>http://eco-u.ru/$keyword</url>");
-				echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
-				if( $ultra_fresh == 1 ) {
-					echo("<param name=\"UltraFresh\" code=\"ultrafresh\">UltraFresh</param>");
-				}
-				$ms_povi_arr=explode(",",$ms_povi);
-				$tmpchar=null;
-				foreach($ms_povi_arr as $kp=>$vp){
-					$resx=mysql_query("select  product_option_id,option_id,option_value_id from oc_product_option_value where product_id='$EL_ID' and product_option_value_id='$vp'");
-					list($poi,$oi,$ovi)=mysql_fetch_row($resx);
-					$resx=mysql_query("select name from oc_option_description where option_id='$oi'");
-					list($oiname)=mysql_fetch_row($resx);
-					$oiname2=slugify($oiname);
+			echo("<offer id=\"$EL_ID"."#$ms_povi\" productId=\"$EL_ID\" quantity=\"0\">");
 
-					$resx=mysql_query("select name from oc_option_value_description where 	option_value_id ='$ovi'");
-					list($oviname)=mysql_fetch_row($resx);
+			echo("<productName>$name</productName>");
+		 	echo("<price>$price</price>");
+			echo("<picture>$img</picture>");
+			echo("<xmlId>$xmlId#$xmlId2</xmlId>");
+			echo("<url>http://eco-u.ru/$keyword</url>");
+			echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
+		
+			$ms_povi_arr=explode(",",$ms_povi);
+			$tmpchar=null;
+			foreach($ms_povi_arr as $kp=>$vp){
+				$resx=mysql_query("select  product_option_id,option_id,option_value_id from oc_product_option_value where product_id='$EL_ID' and product_option_value_id='$vp'");
+				list($poi,$oi,$ovi)=mysql_fetch_row($resx);
+				$resx=mysql_query("select name from oc_option_description where option_id='$oi'");
+				list($oiname)=mysql_fetch_row($resx);
+				$oiname2=slugify($oiname);
 
-					echo("<param name=\"$oiname\" code=\"$oiname2\">$oviname</param>");
-					$tmpchar[]=$oviname;
-		                
-				}
-				if(count($tmpchar)>0) echo("<name>$name (".implode(",",$tmpchar).")</name>");
-				else echo("<name>$name</name>");
+				$resx=mysql_query("select name from oc_option_value_description where 	option_value_id ='$ovi'");
+				list($oviname)=mysql_fetch_row($resx);
 
-	        		echo("</offer>");
-
+				echo("<param name=\"$oiname\" code=\"$oiname2\">$oviname</param>");
+				$tmpchar[]=$oviname;
+	                
 			}
+			if(count($tmpchar)>0) echo("<name>$name (".implode(",",$tmpchar).")</name>");
+			else echo("<name>$name</name>");
+
+        		echo("</offer>");
+
+		}
 	
 	}
 
