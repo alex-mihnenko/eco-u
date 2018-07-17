@@ -118,7 +118,7 @@
 					$data['customer'] = json_encode($customer);
 
 					$response=connectPostAPI($url,$data);
-					$customer['id'] = $response['id'];
+					$customer['id'] = $response->id;
 
 					$q = "
 						INSERT INTO `retailCRM_customers` SET 
