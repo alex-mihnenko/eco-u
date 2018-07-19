@@ -129,10 +129,6 @@
                                                 
 
                                                 <?php foreach($products_catsorted[$category['id']]['sub'][$subcategory['id']] as $key => $product) { ?>
-                                                    
-                                                    <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
-                                                        <?php file_put_contents('log.txt', json_encode($product)."\n", FILE_APPEND | LOCK_EX); ?>
-                                                    <?php } ?>
 
                                                     <?php if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) { ?>
                                                         <?php $lCount--; ?>

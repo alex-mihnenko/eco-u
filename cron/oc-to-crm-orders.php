@@ -20,7 +20,6 @@
 		}
 	// ---
 
-
 	// Get free shipping
 		$free_shipping_total_value = 1000000;
 
@@ -61,7 +60,7 @@
 
 		FROM ".DB_PREFIX."order o 
 
-		WHERE o.rcrm_status='' AND o.order_status_id>0 ORDER BY o.date_modified DESC LIMIT 50;
+		WHERE o.rcrm_status='' AND o.order_id>0 AND o.order_status_id>0 ORDER BY o.date_modified DESC LIMIT 50;
     ";
 
 	$rows_order = $db->query($q);
@@ -87,12 +86,6 @@
 		// Check customer
 			$customer = [];
 
-			$customer['externalId'] = $row_order['email'];
-			$customer['email'] = $row_order['email'];
-			$customer['firstName'] = $row_order['firstname'];
-			$customer['lastName'] = $row_order['lastname'];
-			$customer['phone'] = $row_order['telephone'];
-
 			if( $row_order['email'] == '' && $row_order['telephone'] != '' ){
 				// ---
 					$row_order['email'] = $row_order['telephone'].'@eco-u.ru';
@@ -107,6 +100,13 @@
 				// ---
 			}
 
+			$customer['externalId'] = $row_order['email'];
+			$customer['email'] = $row_order['email'];
+			$customer['firstName'] = $row_order['firstname'];
+			$customer['lastName'] = $row_order['lastname'];
+			$customer['phone'] = $row_order['telephone'];
+
+
 
 			$q = "SELECT * FROM `retailCRM_customers` WHERE `email`='".$row_order['email']."' LIMIT 1;";
 			$rows_customer = $db->query($q);
@@ -118,24 +118,31 @@
 					$data['customer'] = json_encode($customer);
 
 					$response=connectPostAPI($url,$data);
-					$customer['id'] = $response->id;
 
-					$q = "
-						INSERT INTO `retailCRM_customers` SET 
-						`id_internal`='".intval($customer_internal_id)."',
-						`id_external`='".$row_order['email']."',
-						`firstname`='".$row_order['firstname']."',
-						`email`='".$row_order['email']."',
-						`dublicates`=0,
-						`created`=NOW()
-					";
-					
-					if ($db->query($q) === TRUE) {
-						$id_customer = $db->insert_id;
-					    $log[] = 'Customer '.$id_customer.' has been created';
-					} else {
-						$log[] = 'Customer has been not inserted: '.$db->error;
+					if( isset($response->success) && $response->success!= false ){
+						// ---
+							$customer['id'] = $response->id;
+
+							$q = "
+								INSERT INTO `retailCRM_customers` SET 
+								`id_internal`='".intval($customer['id'])."',
+								`id_external`='".$row_order['email']."',
+								`firstname`='".$row_order['firstname']."',
+								`email`='".$row_order['email']."',
+								`dublicates`=0,
+								`created`=NOW()
+							";
+							
+							if ($db->query($q) === TRUE) {
+								$id_customer = $db->insert_id;
+							    $log[] = 'OC/CRM Customer '.$id_customer.' has been created';
+							} else {
+								$log[] = 'OC/CRM Customer has been not inserted: '.$db->error;
+							}
+						// ---
 					}
+					
+					$log[] = 'CRM customer response: '.json_encode($response);
 				// ---
 			}
 			else{
@@ -145,7 +152,7 @@
 				$log[] = 'Customer already exist';
 			}
 
-			$log[] = 'Customer ['.$row_order['customer_id'].'] '.$row_order['firstname'].'. Internal id ['.$customer['id'].']';
+			$log[] = 'Customer ['.$row_order['customer_id'].']. Internal id ['.$customer['id'].']';
 		// ---
 
 		// Set general data
@@ -153,11 +160,14 @@
 			$order['externalId'] = $row_order['order_id'];
 			$order['createdAt'] = $row_order['date_added'];
 
-			$order['discountManualAmount'] = 0; // Will be changed -> Set discounts
-			$order['discountManualPercent'] = 0; // Will be changed -> Set discounts
+			$order['discountManualAmount'] = 0;
+			$order['discountManualPercent'] = 0;
 			$order['managerComment'] = '';
 
 			// Set discounts
+				$order_discount_manual_amount = 0;
+				$order_discount_manual_percent = 0;
+
 				$q = "SELECT * FROM `".DB_PREFIX."order_total` WHERE `order_id`='".$row_order['order_id']."' AND (`code` LIKE '%discount%' OR `code` LIKE '%coupon%');";
 				$rows_discounts = $db->query($q);
 
@@ -175,10 +185,6 @@
 							$row_discounts['code'] == 'discount_percentage' ) { $order_discount_manual_percent = floatval($row_discounts['value']);
 						}
 					}
-
-					if ( isset($order_discount_manual_amount) && !isset($order_discount_manual_percent) ) { $order['discountManualAmount'] = $order_discount_manual_amount; }
-					else if ( !isset($order_discount_manual_amount) && isset($order_discount_manual_percent) ) { $order['discountManualPercent'] = $order_discount_manual_percent; }
-					else if ( isset($order_discount_manual_amount) && isset($order_discount_manual_percent) ) { $order['discountManualPercent'] = $order_discount_manual_percent; }
 				}
 			// ---
 
@@ -199,13 +205,17 @@
 
 		// Set items
 			$items = [];
-			$items_count = 0;
-			$items_weight = 0;
+			$count = 0;
+			$weight = 0;
+
+			$totaldiscount = 0;
+			$totalproducts = 0;
+			$total = 0;
 
 			$q = "
 				SELECT 
-					op.product_id, op.name, op.quantity, op.amount, op.variant, op.price, op.total,  
-					p.date_added, p.weight, p.weight_class_id
+					op.product_id, op.name, op.quantity as quantity, op.amount as amount, op.variant as variant, op.price as price, op.total as total,  
+					p.date_added, p.weight, p.weight_class_id, p.weight_variants
 				FROM `".DB_PREFIX."order_product` op
 				LEFT JOIN `".DB_PREFIX."product` p ON p.product_id = op.product_id 
 				WHERE op.order_id='".$row_order['order_id']."';
@@ -214,62 +224,170 @@
 
 			
 			if ($rows_product->num_rows > 0) {
-				while ( $row_product = $rows_product->fetch_assoc() ) {
-					// ---
-						// Weight processing
-							if( $row_product['weight_class_id'] == 2 ){ // Gramm
-								$item_weight = $row_product['weight'] * $row_product['quantity'];
-							}
-							else if( $row_product['weight_class_id'] == 9 ){ // Kilogramm
-								$item_weight = $row_product['weight'] * 1000 * $row_product['quantity'];
-							}
-							else if( $row_product['weight_class_id'] == 1 ){ // Piece
-								$item_weight = $row_product['weight'] * $row_product['quantity'];
-							}
-							else{ 
-								$item_weight = 0;
-							}
+				// Create temp products array
+					$tmp_products = array();
 
-							$items_weight = $items_weight + $item_weight;
+					while ( $row_product = $rows_product->fetch_assoc() ) {
 						// ---
+						    if( !isset($tmp_products[$row_product['product_id']])){
+						      // ---
+						        $tmp_products[$row_product['product_id']] = array(
+						          'name' => $row_product['name'],
+						          'weight_class_id' => $row_product['weight_class_id'],
+						          'weight_variants' => $row_product['weight_variants'],
+						          'weight_variant' => $row_product['variant'],
+						          'weight' => $row_product['weight'],
+						          'packing' => array()
+						        );
 
-						// Price
-							$item_price = floatval($row_product['total']) * ( 1/floatval($row_product['quantity']) );
+						        $tmp_products[$row_product['product_id']]['packing'][] = array(
+						          'total' => $row_product['total'],
+						          'price' => $row_product['price'],
+						          'quantity' => $row_product['quantity'],
+						          'amount' => $row_product['amount']
+						        );
+						      // ---
+						    }
+						    else{
+						      // ---
+						        $tmp_products[$row_product['product_id']]['packing'][] = array(
+						          'total' => $row_product['total'],
+						          'price' => $row_product['price'],
+						          'quantity' => $row_product['quantity'],
+						          'amount' => $row_product['amount']
+						        );
+						      // ---
+						    }
 						// ---
+					}
+				// ---
 
+				// Create fixed products array
+					$fix_products = array();
+
+					foreach ($tmp_products as $product_id => $product) {
+						// ---
+						    // Calculates
+						      $product_total = 0;
+						      $product_price = 0;
+						      $product_quantity = 0;
+						      $product_amount = 0;
+						      $product_discount_price = 0;
+						      $product_discount_total = 0;
+						      
+						      foreach ($product['packing'] as $key_pack => $pack) {
+						        $product_quantity = $product_quantity + $pack['quantity'];
+						        $product_amount = $product_amount + $pack['amount'];
+						        $product_total = $product_total + $pack['total'];
+						        $product_price = $product_price + $pack['price'];
+						      }
+						      
+						      // Set price
+						        if( $product['weight_class_id'] == 1 ){ // Piece
+						          $product_price = $product_total / $product_amount;
+						        }
+						        else{
+						          $product_price = $product_total / $product_quantity;
+						        }
+						      // ---
+
+						      // Set discount
+						        if( isset($order_discount_manual_percent) ){
+						          if( $product['weight_class_id'] == 1 ){ // Piece
+						            $product_discount_price = ($product_total / $product_amount) * ($order_discount_manual_percent/100);
+						            $product_discount_total = $product_discount_price * $product_amount;
+						          }
+						          else{
+						            $product_discount_price = ($product_total / $product_quantity) * ($order_discount_manual_percent/100);
+						            $product_discount_total = $product_discount_price * $product_quantity;
+						          }
+						        }
+						      // ---
+						    // ---
+
+						    // Total
+						        // Weight
+						          if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramms OR Kilogramms
+						    		$weight = $weight + ($product_quantity * 1000);
+						          }
+						          else if( $product['weight_class_id'] == 1 ){ // Piece
+						          	if( $product['weight'] == 0 ){ $weight = $weight + 1000; }
+						    		else{ $weight = $weight + ($product_quantity * $product['weight']); }
+						          }
+						        // ---
+
+						    	$totalproducts = $totalproducts + $product_total;
+						    	$totaldiscount = $totaldiscount + $product_discount_total;
+						    // ---
+
+						    $fix_products[] = array(
+						      'product_id' => $product_id,
+						      'name' => $product['name'],
+						      'price' => $product_price,
+						      'total' => $product_total,
+						      'quantity' => $product_quantity,
+						      'amount' => $product_amount,
+						      'discount_price' => $product_discount_price,
+						      'discount_total' => $product_discount_total,
+						      'packing' => $product['packing'],
+						      'weight_class_id' => $product['weight_class_id'],
+						      'weight_variants' => $product['weight_variants'],
+						      'variant' => $product['weight_variant'],
+						      'weight' => $product['weight'],
+						    );
+					  	// ---
+					}
+				// ---
+
+				// Add items
+					foreach ($fix_products as $key => $product) {
 						// Properties
-							$item_properties = array();
+							$properties = array();
+							$properties_count = 1;
 
-							if( $row_product['weight_class_id'] == 2 || $row_product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
-								$item_properties[] = array('name' => 'Фасовка', 'value' => $row_product['variant'].' кг. X '.$row_product['amount']);
-							}
-							else if( $row_product['weight_class_id'] == 1 ){ // Piece
-								$item_properties[] = array('name' => 'Фасовка', 'value' => $row_product['amount'].' шт.');
-							}
+							foreach ($product['packing'] as $key_pack => $pack) {
+								// ---
+									if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['quantity'].' кг. X '.$pack['amount']);
+									}
+									else if( $product['weight_class_id'] == 1 ){ // Piece
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт.');
+									}
+
+									$properties_count++;
+								// ---
+						    }
 						// ---
 
 						$items[] = array(
-							'initialPrice'=> $item_price,
-							'createdAt'=>$row_product['date_added'],
-							'quantity'=>floatval($row_product['quantity']),
-							'properties'=>$item_properties,
+							'initialPrice'=> $product['price'],
+							'discountManualAmount'=> 0,
+							'discountManualPercent'=> $order_discount_manual_percent,
+							'quantity'=>$product['quantity'],
+							'properties'=>$properties,
 							'offer' => array(
-								'externalId'=>$row_product['product_id']
+								'externalId'=>$product['product_id']
 							),
-							'productName'=>$row_product['name'],
+							'productName'=>$product['name'],
 						);
 
-						$items_count++;
-					// ---
-				}
+						$count++;
+					}
+				// ---
 			}
 
 			$order['items'] = $items;
-			$order['weight'] = $items_weight;
+			$log[] = 'Items:'.json_encode($items);
 
-			$log[] = 'Has been added '.$items_count.' items';
-			$log[] = 'Items weight '.$items_weight.' gramms';
-			$log[] = 'Items total '.$row_order['total'];
+			$order['weight'] = $weight;
+
+			$totaldiscount = round($totaldiscount,2);
+			$totalproducts = round($totalproducts,2);
+			
+			$log[] = 'Has been added: '.$count.' items';
+			$log[] = 'Items weight: '.$weight.' gramms';
+			$log[] = 'Items total: '.$totalproducts;
+			$log[] = 'Items discount: '.$totaldiscount;
 		// ---
 
 		// Set delivery
@@ -321,7 +439,7 @@
 					// Ceck netcost config
 						if( $this_netcost != 0 ) {
 							$netcost_value = 0;
-							$weight_value = $items_weight / 1000;
+							$weight_value = $weight / 1000;
 
 							$netcost_config_list = json_decode( html_entity_decode($this_netcost, ENT_QUOTES, 'UTF-8') );
 
@@ -362,51 +480,37 @@
 			// Date and Time 
 				$delivery_date = '';
 
-				$delivery_time_tmp = explode(' ', $row_order['delivery_time']);
+				if( $row_order['delivery_time'] ){
+					$delivery_time_tmp = explode(' ', $row_order['delivery_time']);
 
-				$delivery_date_tmp = explode('.', $delivery_time_tmp[0]);
-				$delivery_time_tmp = explode('-', $delivery_time_tmp[1]);
+					$delivery_date_tmp = explode('.', $delivery_time_tmp[0]);
+					$delivery_time_tmp = explode('-', $delivery_time_tmp[1]);
 
-
-				$delivery_date = $delivery_date_tmp[2].'-'.$delivery_date_tmp[1].'-'.$delivery_date_tmp[0];
-				$delivery_time_form = $delivery_time_tmp[0];
-				$delivery_time_to = $delivery_time_tmp[1];
-				$delivery_time_custom = $delivery_time_tmp[0].'-'.$delivery_time_tmp[1];
+					$delivery_date = $delivery_date_tmp[2].'-'.$delivery_date_tmp[1].'-'.$delivery_date_tmp[0];
+					$delivery_time_form = $delivery_time_tmp[0];
+					$delivery_time_to = $delivery_time_tmp[1];
+					$delivery_time_custom = $delivery_time_tmp[0].'-'.$delivery_time_tmp[1];
+				} 
 			// ---
 
 			$delivery = array(
 				'code' => $delivery_code,
 				'cost' => $delivery_cost,
 				'netCost' => $delivery_netcost,
-				'date' => $delivery_date,
-				'time' => array('from' => $delivery_time_form, 'to' => $delivery_time_to, 'custom' => $delivery_time_custom),
 				'address' => array('text' => $row_order['shipping_address_1']),
 				'shipmentStore' => 'eco-u'
 			);
 
+			if( $row_order['delivery_time'] ){
+				$delivery['date'] = $delivery_date;
+				$delivery['time'] = array('from' => $delivery_time_form, 'to' => $delivery_time_to, 'custom' => $delivery_time_custom);
+			}
+
 			$order['delivery'] = $delivery;
-		// ---
 
-		// Set payments
-			// Amount
-				$amount = $row_order['total'];
-			// ---
 
-			// Type
-				if( $row_order['payment_code'] == 'rbs' ) { $type = 'e-money'; }
-				else { $type = 'cash'; }
-			// ---
-
-			$payments = array();
-
-			if( $type == 'e-money' && $row_order['payment_code'] == 20 ) {
-				$payments[] = array('externalId' => $row_order['order_id'], 'amount' => $amount, 'paidAt' => $row_order['date_added'], 'type' => $type, 'status' => 'paid');
-			}
-			else {
-				$payments[] = array('externalId' => $row_order['order_id'], 'amount' => $amount, 'paidAt' => $row_order['date_added'], 'type' => $type, 'status' => 'not-paid');
-			}
-
-			$order['payments'] = $payments;
+			$total = round($totalproducts - $totaldiscount,2) + $delivery_cost;
+			$log[] = 'Total: '.$total;
 		// ---
 
 		// Set custom
@@ -419,7 +523,6 @@
 			}
 		// ---
 
-
 		// Send CRM order and OC update
 			$url='https://eco-u.retailcrm.ru/api/v5/orders/create?apiKey='.RCRM_KEY;
 			$data = array(
@@ -430,20 +533,125 @@
 			$response=connectPostAPI($url,$data);
 
 			if( isset($response->success) && $response->success!= false ){
-				$log[] = '#SUCCESS order ['.$response->id.'] has been created';
+				// ---
+					$log[] = '#SUCCESS order ['.$response->id.'] has been created';
+					
+					$q = "UPDATE `".DB_PREFIX."order` SET `rcrm_status` = 'sended' WHERE `order_id`='".$row_order['order_id']."';";
+
+					if ($db->query($q) === TRUE) {
+					    $log[] = 'OC order ['.$row_order['order_id'].'] has been updated';
+					} else {
+						$log[] = 'OC order ['.$row_order['order_id'].'] has been not updated: '.$db->error;
+					}
+
+					// Create payment
+						// Amount
+							$amount = floatval($row_order['total']);
+						// ---
+
+						// Type
+							if( $row_order['payment_code'] == 'rbs' ) { $type = 'e-money'; }
+							else { $type = 'cash'; }
+						// ---
+
+						$payment = array();
+
+
+						if( $type == 'e-money' && $row_order['payment_code'] == 20 ) {
+							$payment = array(
+								'externalId' => $row_order['order_id'],
+								'amount' => $amount,
+								'paidAt' => $row_order['date_added'],
+								'order' => array(
+									'id' => $response->id,
+									'externalId' => $row_order['order_id'],
+									'number' => 'IM'.$row_order['order_id']
+								),
+								'type' => $type,
+								'status' => 'paid'
+							);
+						}
+						else {
+							$payment = array(
+								'externalId' => $row_order['order_id'],
+								'amount' => $amount,
+								'paidAt' => $row_order['date_added'],
+								'order' => array(
+									'id' => $response->id,
+									'externalId' => $row_order['order_id'],
+									'number' => 'IM'.$row_order['order_id']
+								),
+								'type' => $type,
+								'status' => 'not-paid'
+							);
+						}
+
+
+						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
+						$data = array(
+							'site' => 'eco-u-ru',
+							'payment' => json_encode($payment)
+						);
+
+						$response=connectPostAPI($url,$data);
+
+						$log[] = 'Payment status '.json_encode($response);
+						$log[] = 'Items payment '.$amount;
+					// ---
+				// ---
 			}
 			else{
+				if( $response->errorMsg == 'Order already exists.' ){
+					// ---
+						$q = "UPDATE `".DB_PREFIX."order` SET `rcrm_status` = 'sended' WHERE `order_id`='".$row_order['order_id']."';";
+
+						if ($db->query($q) === TRUE) {
+						    $log[] = 'OC order ['.$row_order['order_id'].'] has been updated';
+						} else {
+							$log[] = 'OC order ['.$row_order['order_id'].'] has been not updated: '.$db->error;
+						}
+					// ---
+				}
+				else{
+					// ---
+						// Add log
+							$q = "SELECT * FROM `retailCRM_errors` WHERE `id_order`=order_id='".$row_order['order_id'].";";
+							$rows_log = $db->query($q);
+
+							
+							if ($rows_log->num_rows == 0) {
+								// ---
+									$q = "INSERT INTO `retailCRM_errors` SET `id_order`='".$row_order['order_id']."', `id_externalid`='IM".$row_order['order_id']."', `message`='".$response->errorMsg."';";
+
+									if ($db->query($q) === TRUE) {
+									    $log[] = 'OC error log has been inserted';
+									} else {
+										$log[] = 'OC error log has been not inserted: '.$db->error;
+									}
+
+
+									// Set task to managers
+										$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
+
+										foreach ($managers as $key => $manager_id) {
+											// Set data
+												$task['text'] = 'Заказ №'.$row_order['order_id'].' не выгружен в CRM';
+												$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
+												$task['performerId'] = $manager_id;
+												$data['task'] = json_encode($task);
+											// ---
+											
+											$response=connectPostAPI($url,$data);
+										}
+									// ---
+								// ---
+							}
+						// ---
+					// ---
+				}
+
 				$log[] = '#ERROR message: '.$response->errorMsg;
 				if( isset($response->errors) ) { $log[] = '#ERROR details: '.json_encode($response->errors); }
-			}
-
-
-			$q = "UPDATE `".DB_PREFIX."order` SET `rcrm_status` = 'sended' WHERE `order_id`='".$row_order['order_id']."';";
-
-			if ($db->query($q) === TRUE) {
-			    $log[] = 'OC order ['.$row_order['order_id'].'] has been updated';
-			} else {
-				$log[] = 'OC order ['.$row_order['order_id'].'] has been not updated: '.$db->error;
 			}
 
 			$log[] = '#END [IM'.$row_order['order_id'].'] - complete';

@@ -875,42 +875,34 @@ class ModelCheckoutOrder extends Model {
 
 	public function setDelivery($order_id, $customer_id, $data, $new_order_status = 1) {
         $order_data = $this->getOrder($order_id);
-        $order_data['total'] = $data['price'];
-        $order_data['payment_address_1'] = $data['address'];
+        $order_data['total'] = $this->session->data['total'];
+        $order_data['payment_address_1'] = $this->session->data['shipping_address_1'];
         $order_data['comment'] = $data['comment'];
         $order_data['payment_method'] = $data['payment_method'];
         $order_data['delivery_time'] = $data['delivery_time'];
         $order_data['delivery_interval'] = $data['delivery_interval'];
         
-	      
         $order_data['shipping_code'] = $this->session->data['shipping_code'];
         $order_data['shipping_method'] = $this->session->data['shipping_method'];
-        $order_data['shipping_address_1'] = $data['address'];
-        
-
-        // Subtotal
-        	$sub_total = $order_data['total'];
-        // ---
-            
-        $total = $order_data['total'] + $this->session->data['shipping_price'] - $data['discount'];
-        $order_data['total'] = $total;
+        $order_data['shipping_address_1'] = $this->session->data['shipping_address_1'];
 
         @$this->editOrder($order_id, $order_data);
         $this->addOrderHistory($order_id, $new_order_status);
 
-        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'shipping', '{$this->session->data['shipping_method']}', '{$this->session->data['shipping_price']}', '2')");
-        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'sub_total', 'Сумма', '{$sub_total}', '1')");
-        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'total', 'Итого', '{$total}', '10')");
+        $this->db->query("DELETE FROM ".DB_PREFIX."order_total WHERE order_id = '" . (int)$order_id . "'");
+
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".(int)$order_id."', 'shipping', '".$this->session->data['shipping_method']."', '".$this->session->data['shipping_price']."', '2')");
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".(int)$order_id."', 'sub_total', 'Сумма', '".$this->session->data['subtotal']."', '1')");
+        $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".(int)$order_id."', 'total', 'Итого', '".$this->session->data['total']."', '10')");
         
-        if( $data['coupon'] == true  ){
-        	if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'coupon', 'Скидка по купону', '{$data['discount']}', '2')");
-        	if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
+        if( $this->session->data['coupon'] == true  ){
+        	if(isset($this->session->data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'coupon', 'Скидка по купону', '".$this->session->data['discount']."', '2')");
+        	if(isset($this->session->data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount_percentage', 'Процент скидки', '".$this->session->data['discount_percentage']."', '2')");
         }
         else {
-        	if(isset($data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount', 'Скидка', '{$data['discount']}', '2')");
-        	if(isset($data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_total_id, order_id, code, title, value, sort_order) VALUES (NULL, '{$order_id}', 'discount_percentage', 'Процент скидки', '{$data['discount_percentage']}', '2')");
+        	if(isset($this->session->data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount', 'Скидка', '".$this->session->data['discount']."', '2')");
+        	if(isset($this->session->data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount_percentage', 'Процент скидки', '".$this->session->data['discount_percentage']."', '2')");
         }
-        
         
         return true;
     }

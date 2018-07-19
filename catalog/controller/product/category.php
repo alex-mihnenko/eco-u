@@ -268,9 +268,9 @@ class ControllerProductCategory extends Controller {
 
 
 					$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
-		            $catSortTime = false; //$this->cache->get('latest_category_sort');
+		            $catSortTime = $this->cache->get('latest_category_sort');
 		                        
-		            $cacheRequired = false; //$this->model_catalog_product->isCacheRequired();
+		            $cacheRequired = $this->model_catalog_product->isCacheRequired();
 
 		            if(!$catSortTime || !$cacheRequired) {
 		                $catSortTime = 0;

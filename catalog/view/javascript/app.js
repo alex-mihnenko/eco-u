@@ -442,7 +442,7 @@ $(document).ready(function() {
             					// ---
             						var deliverydistance = parseInt($form.find('[name="deliverydistance"]').val());
 
-									$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, deliverydistance: deliverydistance, date: date, time: time, comment: comment }, function(data){
+									$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, deliverydistance: deliverydistance, date: date, time: time, comment: comment }, function(data){
 					                	// ---
 					                		if( typeof yaCounter33704824 != 'undefined' ){
 						                        yaCounter33704824.reachGoal('checkout-delivery');
@@ -468,8 +468,8 @@ $(document).ready(function() {
 
 						                            $form.find('.cart-shipping-price [data-type="value"]').html(data.deliveryprice+' рублей');
 
-						                            var newtotal = total+data.deliveryprice-discount;
-						                            var newtotal_string = newtotal.toString();;
+						                            var newtotal = data.total;
+						                            var newtotal_string = Math.floor(newtotal).toString();
 
 						                            // Check curency
 						                            	var currency = 'рублей';
@@ -512,7 +512,7 @@ $(document).ready(function() {
 							$button.attr('disabled','true');
 							$button.attr('type','button');
 
-							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, total: total, deliveryprice: deliveryprice, date: date, time: time, comment: comment }, function(data){
+							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, date: date, time: time, comment: comment }, function(data){
 			                	// ---
 			                		if( typeof yaCounter33704824 != 'undefined' ){
 										yaCounter33704824.reachGoal('checkout-confim');

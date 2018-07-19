@@ -775,6 +775,14 @@ class ControllerAjaxIndex extends Controller {
 
           $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
           
+
+          $this->load->model('account/customer');
+          $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+          if( !empty($customer) ) {
+            $customer_id = $customer['customer_id'];
+          }
+
           $response = new stdClass();
         // ---
 
@@ -872,8 +880,6 @@ class ControllerAjaxIndex extends Controller {
           $response->deliveryprice = null;
           $response->method = null;
 
-
-
           // Inside
           if( $response->mkad == 'IN_MKAD' ){
             // ---
@@ -970,189 +976,13 @@ class ControllerAjaxIndex extends Controller {
           $this->session->data['shipping_method'] = $quote['quote'][$response->method]['title'];
         // ---
 
-        // First purchase
-          $now = time();
-
-          $first_purchase = intval($this->config->get('config_first_purchase'));
-          $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
-          $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
-          $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
-
-          if ( $this->config->get('config_first_purchase_date_start') != '' && $this->config->get('config_first_purchase_date_end') != '' ) {
-            // ---
-              $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
-              $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
-              $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
-
-              $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
-              
-              $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
-              $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
-              $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
-              $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
-            // ---
-          }
-          else {
-            $first_purchase_date_start = $now-86400;
-            $first_purchase_date_end = $now-86400;
-          }
-          
-          if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
-            // ---
-              // Check first purchase
-                $this->load->model('account/customer');
-                $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
-
-                $customer_first_purchase = false;
-
-                if( empty($customer) ) {
-                  // ---
-                    $customer_first_purchase = true;
-                  // ---
-                }
-                else {
-                  // Check orders
-                    $customer_id = $customer['customer_id'];
-
-                    $this->load->model('checkout/order');
-                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                    
-                    if( $orders == false ){ $customer_first_purchase = true; }
-                  // ---
-                }
-              // ---
-
-              if( $customer_first_purchase == true ) {
-                $response->first_purchase = true;
-
-                // Calculate purchase discount
-                  $total = floatval($this->cart->getTotal());
-                  $totalOne = floatval($first_purchase_discount);
-                  $totalTwo = round($total * ($first_purchase_discount_percent/100));
-
-                  if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
-                  else { $response->first_purchase_discount = $totalTwo; }
-                // ---
-
-                if( $first_purchase_free_delivery == 1 ){
-                  $response->deliveryprice = 0;
-                  $this->session->data['shipping_price'] = 0;
-                }
-              }
-              else {
-                $response->first_purchase = false;
-              }
-            // ---
-          }
-        // ---
-
-        // Response
-        $response->order_id = $order_id;
-        $response->status = 'success';
-        $response->message = 'Цена доставки получена';
-        $response->session = $this->session;
-
-        echo json_encode($response);
-        exit;
-      // ---
-    }
-    
-    // Confirm and go to payment
-    public function ajaxConfirmOrder() {
-      // ---
-
-        // Init
-          $firstname = $this->request->post['firstname'];
-          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
-
-          $total = (int)$this->request->post['total'];
-          $address = $this->request->post['address'];
-          $comment = $this->request->post['comment'];
-          
-          $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
-
-          $payment_method = $this->request->post['payment_method'];
-          $payment_code = $this->request->post['payment_code'];
-
-          $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
-          $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
-
-          $response = new stdClass();
-
-          // Check
-            if( $order_id == 0 ) {
-              // ---
-                $response->status = 'error';
-                $response->message = 'Заказ не найден';
-                echo json_encode($response);
-                exit;
-              // ---
-            }
-          // ---
-        // ---
-        
-        // Check customer
-          $this->load->model('account/customer');
-          $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
-
-          if( empty($customer) ) {
-            // Create new customer
-              $password = $this->model_account_customer->generatePassword();
-
-              $customer_data = array(
-                'firstname' => $firstname,
-                'lastname' => '',
-                'email' => '',
-                'telephone' => $telephone,
-                'fax' => '',
-                'password' => $password,
-                'address_1' => $address
-              );
-
-              $customer_id = $this->model_account_customer->addCustomer($customer_data);
-            // ---
-
-            // SMS alert
-              $this->load->model('sms/confirmation');
-              $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
-              $this->model_sms_confirmation->sendSMS($telephone, $message);
-            // ---
-          }
-          else{
-            // ---
-              $customer_id = $customer['customer_id'];
-
-              // Add new address
-                $addresses = $this->model_account_customer->getAddresses($customer_id);
-
-                if( $addresses == false ) {
-                  $this->customer->setAddress(0,$address,$customer_id);
-                }
-              // ---
-
-            // ---
-          }
-        // ---
-            
-        // Set data
-          $data = Array(
-              'price' => $total,
-              'address' => $this->session->data['shipping_address_1'],
-              'comment' => $comment,
-              'delivery_price' => $this->session->data['shipping_price'],
-              'delivery_time' => $strDateTime,
-              'delivery_interval' => $strDeliveryInterval,
-              'payment_method' => $payment_method,
-              'mkad' => $response->mkad
-          );
-        // ---
-
-        $this->load->model('checkout/order');
-
         // Check discount
+            unset($this->session->data['discount']);
+            unset($this->session->data['discount_percentage']);
+            unset($this->session->data['coupon']);
+
             $data['discount'] = 0;
             $data['discount_percentage'] = 0;
-
             $data['coupon'] = false;
             
             $personal_discount = 0;
@@ -1232,9 +1062,16 @@ class ControllerAjaxIndex extends Controller {
                     }
                 // ---
             }
+
+            $this->session->data['discount'] = $data['discount'];
+            $this->session->data['discount_percentage'] = $data['discount_percentage'];
+            $this->session->data['coupon'] = $data['coupon'];
         // ---
 
         // First purchase
+          unset($this->session->data['first_purchase']);
+          unset($this->session->data['first_purchase_discount']);
+
           $now = time();
 
           $first_purchase = intval($this->config->get('config_first_purchase'));
@@ -1294,17 +1131,8 @@ class ControllerAjaxIndex extends Controller {
                   $totalOne = floatval($first_purchase_discount);
                   $totalTwo = round($total * ($first_purchase_discount_percent/100));
 
-                  if( $totalOne >= $totalTwo ){
-                    $response->first_purchase_discount = $totalOne;
-                    $response->first_purchase_discount_percent = round( (100 * $totalOne)/$total );
-                  }
-                  else {
-                    $response->first_purchase_discount = $totalTwo;
-                    $response->first_purchase_discount_percent = $first_purchase_discount_percent;
-                  }
-
-                  $data['discount'] = $response->first_purchase_discount;
-                  $data['discount_percentage'] = $response->first_purchase_discount_percent;
+                  if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
+                  else { $response->first_purchase_discount = $totalTwo; }
                 // ---
 
                 if( $first_purchase_free_delivery == 1 ){
@@ -1317,12 +1145,240 @@ class ControllerAjaxIndex extends Controller {
               }
             // ---
           }
+
+
+          $this->session->data['first_purchase'] = $first_purchase;
+          $this->session->data['first_purchase_discount'] = $first_purchase_discount;
+        // ---
+
+        // Get total
+          unset($this->session->data['subtotal']);
+          unset($this->session->data['total']);
+
+          $cart_products = $this->cart->getProducts();
+          
+          $totalproducts = 0;
+          $totaldiscount = 0;
+
+          // Create temp products array
+            $tmp_products = array();
+
+            foreach ($cart_products as $key => $product) {
+              // ---
+                if( !isset($tmp_products[$product['product_id']])){
+                  // ---
+                    $tmp_products[$product['product_id']] = array(
+                      'name' => $product['name'],
+                      'weight_class' => $product['weight_class'],
+                      'weight_class_id' => $product['weight_class_id'],
+                      'weight_variant' => $product['weight_variant'],
+                      'weight_variants' => $product['weight_variants'],
+                      'width' => $product['width'],
+                      'packing' => array()
+                    );
+
+                    $tmp_products[$product['product_id']]['packing'][] = array(
+                      'total' => $product['total'],
+                      'price' => $product['price'],
+                      'quantity' => $product['packaging'],
+                      'amount' => $product['quantity']
+                    );
+                  // ---
+                }
+                else{
+                  // ---
+                    $tmp_products[$product['product_id']]['packing'][] = array(
+                      'total' => $product['total'],
+                      'price' => $product['price'],
+                      'quantity' => $product['packaging'],
+                      'amount' => $product['quantity']
+                    );
+                  // ---
+                }
+              // ---
+            }
+          // ---
+
+          // Create fixed products array
+            $fix_products = array();
+
+            foreach ($tmp_products as $product_id => $product) {
+              // ---
+                // Calculates
+                  $product_total = 0;
+                  $product_price = 0;
+                  $product_quantity = 0;
+                  $product_amount = 0;
+                  $product_discount_price = 0;
+                  $product_discount_total = 0;
+                  
+                  foreach ($product['packing'] as $key_pack => $pack) {
+                    $product_quantity = $product_quantity + $pack['quantity'];
+                    $product_amount = $product_amount + $pack['amount'];
+                    $product_total = $product_total + $pack['total'];
+                    $product_price = $product_price + $pack['price'];
+
+                  }
+                  
+                  // Set price
+                    if( $product['weight_class_id'] == 1 ){ // Piece
+                      $product_price = $product_total / $product_amount;
+                    }
+                    else{
+                      $product_price = $product_total / $product_quantity;
+                    }
+                  // ---
+
+                  // Set discount
+                    if( isset($data['discount_percentage']) ){
+                      if( $product['weight_class_id'] == 1 ){ // Piece
+                        $product_discount_price = ($product_total / $product_amount) * ($data['discount_percentage']/100);
+                        $product_discount_total = $product_discount_price * $product_amount;
+                      }
+                      else{
+                        $product_discount_price = ($product_total / $product_quantity) * ($data['discount_percentage']/100);
+                        $product_discount_total = $product_discount_price * $product_quantity;
+                      }
+                    }
+                  // ---
+                // ---
+
+                // Total
+                  $totalproducts = $totalproducts + $product_total;
+                  $totaldiscount = $totaldiscount + $product_discount_total;
+                // ---
+
+                $fix_products[] = array(
+                  'product_id' => $product_id,
+                  'name' => $product['name'],
+                  'price' => $product_price,
+                  'total' => $product_total,
+                  'quantity' => $product_quantity,
+                  'amount' => $product_amount,
+                  'discount_price' => $product_discount_price,
+                  'discount_total' => $product_discount_total,
+                  'packing' => $product['packing'],
+                  'weight_class' => $product['weight_class'],
+                  'weight_class_id' => $product['weight_class_id'],
+                  'weight_variant' => $product['weight_variant'],
+                  'weight_variants' => $product['weight_variants'],
+                  'width' => $product['width'],
+                );
+              // ---
+            }
+          // ---
+
+          $response->totaldiscount = round($totaldiscount,2);
+
+          $this->session->data['subtotal'] = round($totalproducts,2);
+          $this->session->data['total'] = round($totalproducts - $totaldiscount,2) + $this->session->data['shipping_price'];
+          
+          $response->subtotal = $this->session->data['subtotal'];
+          $response->total = $this->session->data['total'];
+        // ---
+
+        // Response
+        $response->order_id = $order_id;
+        $response->status = 'success';
+        $response->message = 'Цена доставки получена';
+
+        echo json_encode($response);
+        exit;
+      // ---
+    }
+    
+    // Confirm and go to payment
+    public function ajaxConfirmOrder() {
+      // ---
+
+        // Init
+          $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+
+          $firstname = $this->request->post['firstname'];
+          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+
+          $payment_method = $this->request->post['payment_method'];
+          $comment = $this->request->post['comment'];
+          
+          $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
+          $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
+
+          $response = new stdClass();
+
+          // Check
+            if( $order_id == 0 ) {
+              // ---
+                $response->status = 'error';
+                $response->message = 'Заказ не найден';
+                echo json_encode($response);
+                exit;
+              // ---
+            }
+          // ---
+        // ---
+        
+        // Check customer
+          $this->load->model('account/customer');
+          $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+          if( empty($customer) ) {
+            // Create new customer
+              $password = $this->model_account_customer->generatePassword();
+
+              $customer_data = array(
+                'firstname' => $firstname,
+                'lastname' => '',
+                'email' => $telephone.'@eco-u.ru',
+                'telephone' => $telephone,
+                'fax' => '',
+                'password' => $password,
+                'address_1' => $this->session->data['shipping_address_1']
+              );
+
+              $customer_id = $this->model_account_customer->addCustomer($customer_data);
+            // ---
+
+            // SMS alert
+              $this->load->model('sms/confirmation');
+              $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
+              $this->model_sms_confirmation->sendSMS($telephone, $message);
+            // ---
+          }
+          else{
+            // ---
+              $customer_id = $customer['customer_id'];
+
+              // Add new address
+                $addresses = $this->model_account_customer->getAddresses($customer_id);
+
+                if( $addresses == false ) {
+                  $this->customer->setAddress(0,$this->session->data['shipping_address_1'],$customer_id);
+                }
+              // ---
+
+            // ---
+          }
+        // ---
+
+        $this->load->model('checkout/order');
+
+        // Set order data
+          $data = Array(
+              'delivery_time' => $strDateTime,
+              'delivery_interval' => $strDeliveryInterval,
+              'payment_method' => $payment_method,
+              'comment' => $comment,
+              //'mkad' => $response->mkad
+          );
         // ---
 
         // Checkout
-          $this->model_checkout_order->setPayment($order_id, $payment_code);
+          $this->model_checkout_order->setPayment($order_id, $this->request->post['payment_code']);
 
-          $payment_method_online = $payment_code == 'cod' ? false : true;
+          $payment_method_online = $this->request->post['payment_code'] == 'cod' ? false : true;
+          
+          $response->subtotal = $this->session->data['subtotal'];
+          $response->total = $this->session->data['total'];
           
           if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
             // ---
