@@ -650,7 +650,7 @@
 					// ---
 				}
 
-				$log[] = '#ERROR message: '.$response;
+				$log[] = '#ERROR message: '.json_encode($response);
 				if( isset($response->errors) ) { $log[] = '#ERROR details: '.json_encode($response->errors); }
 			}
 
