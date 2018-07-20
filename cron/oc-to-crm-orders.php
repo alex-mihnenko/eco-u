@@ -615,7 +615,7 @@
 				else{
 					// ---
 						// Add log
-							$q = "SELECT * FROM `retailCRM_errors` WHERE `id_order`='".$row_order['order_id'].";";
+							$q = "SELECT * FROM `retailCRM_errors` WHERE `id_order`='".$row_order['order_id']."';";
 							$rows_log = $db->query($q);
 
 							
