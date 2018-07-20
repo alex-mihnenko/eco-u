@@ -377,9 +377,6 @@
 						$count++;
 					}
 				// ---
-
-				print_r($items);
-				exit;
 			}
 
 			$order['items'] = $items;
