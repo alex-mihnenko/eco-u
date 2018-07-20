@@ -560,10 +560,16 @@ class ControllerAjaxIndex extends Controller {
               
               // For pieces
                 if($product['weight_class_id'] == 1) {
-
-                  if( $product['quantity'] > $product['packaging'] ) { $data['products'][$i]['amount'] = $product['quantity']; $data['products'][$i]['quantity'] = 1; }
-                  else if( $product['quantity'] < $product['packaging'] ) { $data['products'][$i]['amount'] = $product['packaging']; $data['products'][$i]['quantity'] = 1; }
-                  
+                  if( $product['quantity'] > $product['packaging'] ) {
+                    $data['products'][$i]['varian'] = 1;
+                    $data['products'][$i]['amount'] = 1;
+                    $data['products'][$i]['quantity'] = $product['quantity'];
+                  }
+                  else if( $product['quantity'] < $product['packaging'] ) {
+                    $data['products'][$i]['varian'] = 1;
+                    $data['products'][$i]['amount'] = 1;
+                    $data['products'][$i]['quantity'] = $product['packaging'];
+                  }
                 }
               // ---
 
