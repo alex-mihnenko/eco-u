@@ -36,6 +36,7 @@ var app = {
 $(document).ready(function() {
 	// Init
 		initStart();
+		initAuth();
 
 		// EnjoyHint
 			if( $('.qwe').find('.list-products').length > 0 ){
@@ -1350,6 +1351,21 @@ $(document).ready(function() {
 	    	checkHash();
 	    // ---
 
+	}
+
+	function initAuth(){
+		$.post('.?route=ajax/index/isCustomerLogged', {}, function(data){
+			// ---
+				if( data.status == true ){
+					$('a[data-marker="auth-button"]').removeAttr('data-remodal-target');
+					$('a[data-marker="auth-button"]').attr('href','/my-account');
+				}
+				else {
+					$('a[data-marker="auth-button"]').attr('data-remodal-target','modal');
+					$('a[data-marker="auth-button"]').attr('href','#auth');
+				}
+			// ---
+		},'json');
 	}
 // ---
 

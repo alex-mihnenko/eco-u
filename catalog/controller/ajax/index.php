@@ -534,6 +534,26 @@ class ControllerAjaxIndex extends Controller {
         exit;
       // ---
     }
+
+    public function isCustomerLogged(){
+      // Init
+        $customer_id = $this->customer->isLogged();
+        
+        $response = new stdClass();
+      // ---
+      
+      // Chech
+        if( !$customer_id ) { $status = false; }
+        else { $status = true; }
+      // ---
+
+      // Response
+      $response->status = $status;
+      
+      echo json_encode($response);
+      exit;
+
+    }
   // ---
 
   // Orders

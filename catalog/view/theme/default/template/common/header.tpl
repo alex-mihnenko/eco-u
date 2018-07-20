@@ -38,16 +38,10 @@
 			<div class="grid-container">
 				<div class="grid-row hidden-md hidden-lg hidden-xl hidden-xxl">
 					<div class="grid-col col-6 align-start">
-						<?php if(!$customer_id) { ?>
-							<div class="svg-container pointer" data-remodal-target="modal">
-								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
-							</div>
-	                	<?php } else { ?>
-	                		<a class="svg-container pointer" href="/my-account">
-								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
-							</a>
-	                	<?php } ?>
-
+		
+                		<a class="svg-container pointer" href="#empty" data-marker="auth-button">
+							<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
+						</a>
 
 						<div class="svg-container pointer" data-remodal-target="modal-phone">
 							<i class="svg" data-src="icon-phone.svg"><?php loadSvg('name', 'icon-phone.svg'); ?></i>
@@ -121,15 +115,9 @@
 							</div>
 						</div>
 
-						<?php if(!$customer_id) { ?>
-							<div class="svg-container pointer" data-remodal-target="modal">
-								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
-							</div>
-	                	<?php } else { ?>
-	                		<a class="svg-container pointer" href="/my-account">
-								<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
-							</a>
-	                	<?php } ?>
+						<a class="svg-container pointer" href="#empty" data-marker="auth-button">
+							<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
+						</a>
 
 
 						<div class="svg-container pointer" data-remodal-target="modal-phone">
