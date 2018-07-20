@@ -2236,7 +2236,7 @@ class ControllerAjaxIndex extends Controller {
           } elseif($mode == 'catsort') {
               $data['products'] = $this->model_catalog_product->getCatsortProducts($target, $nInclude, $parent);
           }
-          
+
           $this->response->setOutput($this->load->view('product/dynamic', $data));
     }
     

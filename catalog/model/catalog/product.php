@@ -155,6 +155,8 @@ class ModelCatalogProduct extends Model {
         $sort = false;
         $attribute_groups = $this->getProductAttributes($product_id);
 
+        $sql = "SELECT DISTINCT *, pd.customer_props3 AS customer_props3, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
         foreach($attribute_groups as $group) {
             if($group['attribute_group_id'] == '8') {
                 foreach($group['attribute'] as $attribute) {
@@ -627,66 +629,74 @@ class ModelCatalogProduct extends Model {
             $query = $this->db->query($sql);
 
             $products = array();
-
+            
             foreach($query->rows as $i => $row) {
-                $product = $this->getProduct($row['product_id']);
-                $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
+                // ---
+                    $product = $this->getProduct($row['product_id']);
 
-                $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
-                if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-                else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+                    if( $product != false ){
+                        // ---
+                            $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
 
-                $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
-                $product['sticker_name'] = $product['sticker']['name'];
-                $product['sticker_class'] = $product['sticker']['class'];
-                
+                            $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                            if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                            else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
 
-                if ($product['image_preview']) {
-                        $product['thumb'] = '/image/'.$product['image_preview'];
-                } else {
-                        $product['thumb'] = '';
-                }
+                            $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                            $product['sticker_name'] = $product['sticker']['name'];
+                            $product['sticker_class'] = $product['sticker']['class'];
+                            
 
-                if (!$this->config->get('config_customer_price')) {
-                        $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                } else {
-                        $product['price'] = false;
-                }
+                            if ($product['image_preview']) {
+                                    $product['thumb'] = '/image/'.$product['image_preview'];
+                            } else {
+                                    $product['thumb'] = '';
+                            }
 
-                if ($product['discount'] > 0) {
-                        $product['discount'] = $product['discount'];
-                        $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                } else {
-                        $product['discount'] = false;
-                        $product['special'] = false;
-                }
+                            if (!$this->config->get('config_customer_price')) {
+                                    $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                            } else {
+                                    $product['price'] = false;
+                            }
 
-                if ($this->config->get('config_tax')) {
-                        $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
-                } else {
-                        $product['tax'] = false;
-                }
+                            if ($product['discount'] > 0) {
+                                    $product['discount'] = $product['discount'];
+                                    $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                            } else {
+                                    $product['discount'] = false;
+                                    $product['special'] = false;
+                            }
 
-                if ($this->config->get('config_review_status')) {
-                        $product['rating'] = (int)$product['rating'];
-                } else {
-                        $product['rating'] = false;
-                }
+                            if ($this->config->get('config_tax')) {
+                                    $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+                            } else {
+                                    $product['tax'] = false;
+                            }
 
-                if($product['special']) {
-                    $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-                }
+                            if ($this->config->get('config_review_status')) {
+                                    $product['rating'] = (int)$product['rating'];
+                            } else {
+                                    $product['rating'] = false;
+                            }
 
-                if(!$product['composite_price']) {
-                    unset($product['composite_price']);
-                }
-                else{
-                    $product['composite_price'] = json_encode($product['composite_price']);
+                            if($product['special']) {
+                                $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                            }
 
-                }
+                            if(!$product['composite_price']) {
+                                unset($product['composite_price']);
+                            }
+                            else{
+                                $product['composite_price'] = json_encode($product['composite_price']);
 
-                $products[] = $product;
+                            }
+
+                            $products[] = $product;
+                        // ---
+                    }
+                // ---
             }
+
             return $products;
         } else {
             return false;
@@ -885,62 +895,67 @@ class ModelCatalogProduct extends Model {
 
         foreach($query->rows as $i => $row) {
             $product = $this->getProduct($row['product_id']);
-            $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
 
-            $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
-            if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
-            else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
+            if( $product != false ){
+                // ---
+                    $product['attribute_groups'] = $this->getProductAttributes($row['product_id']);
 
-            $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
-            $product['sticker_name'] = $product['sticker']['name'];
-            $product['sticker_class'] = $product['sticker']['class'];
-            
+                    $product_href = $this->url->link('product/product', '&product_id=' . $row['product_id']);
+                    if($_SERVER['HTTPS']) { $product['href'] = str_replace(HTTPS_SERVER, HTTPS_SERVER.'eda/', $product_href); }
+                    else { $product['href'] = str_replace(HTTP_SERVER, HTTP_SERVER.'eda/', $product_href); }
 
-            if ($product['image_preview']) {
-                    $product['thumb'] = '/image/'.$product['image_preview'];
-            } else {
-                    $product['thumb'] = '';
+                    $product['props3'] = explode(PHP_EOL, $product['customer_props3']);
+                    $product['sticker_name'] = $product['sticker']['name'];
+                    $product['sticker_class'] = $product['sticker']['class'];
+                    
+
+                    if ($product['image_preview']) {
+                            $product['thumb'] = '/image/'.$product['image_preview'];
+                    } else {
+                            $product['thumb'] = '';
+                    }
+
+                    if (!$this->config->get('config_customer_price')) {
+                            $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    } else {
+                            $product['price'] = false;
+                    }
+
+                    if ($product['discount'] > 0) {
+                            $product['discount'] = $product['discount'];
+                            $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    } else {
+                            $product['discount'] = false;
+                            $product['special'] = false;
+                    }
+
+                    if ($this->config->get('config_tax')) {
+                            $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
+                    } else {
+                            $product['tax'] = false;
+                    }
+
+                    if ($this->config->get('config_review_status')) {
+                            $product['rating'] = (int)$product['rating'];
+                    } else {
+                            $product['rating'] = false;
+                    }
+
+                    if($product['special']) {
+                        $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
+                    }
+
+                    if(!$product['composite_price']) {
+                        unset($product['composite_price']);
+                    }
+                    else{
+                        $product['composite_price'] = json_encode($product['composite_price']);
+
+                    }
+
+                    $products[] = $product;
+                // ---
             }
-
-            if (!$this->config->get('config_customer_price')) {
-                    $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-            } else {
-                    $product['price'] = false;
-            }
-
-            if ($product['discount'] > 0) {
-                    $product['discount'] = $product['discount'];
-                    $product['special'] = $this->currency->format($this->tax->calculate($product['special_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-            } else {
-                    $product['discount'] = false;
-                    $product['special'] = false;
-            }
-
-            if ($this->config->get('config_tax')) {
-                    $product['tax'] = $this->currency->format((float)$product['special'] ? $product['special'] : $product['price'], $this->session->data['currency']);
-            } else {
-                    $product['tax'] = false;
-            }
-
-            if ($this->config->get('config_review_status')) {
-                    $product['rating'] = (int)$product['rating'];
-            } else {
-                    $product['rating'] = false;
-            }
-
-            if($product['special']) {
-                $product['discount_sticker'] = ceil(((float)$product['price'] - (float)$product['special'])/(float)$product['price']*100);
-            }
-
-            if(!$product['composite_price']) {
-                unset($product['composite_price']);
-            }
-            else{
-                $product['composite_price'] = json_encode($product['composite_price']);
-
-            }
-
-            $products[] = $product;
         }
         
         return $products;
