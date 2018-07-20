@@ -354,7 +354,7 @@
 										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['quantity'].' кг. X '.$pack['amount']);
 									}
 									else if( $product['weight_class_id'] == 1 ){ // Piece
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт.');
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт. X '.$pack['quantity']);
 									}
 
 									$properties_count++;
@@ -377,6 +377,9 @@
 						$count++;
 					}
 				// ---
+
+				print_r($items);
+				exit;
 			}
 
 			$order['items'] = $items;
