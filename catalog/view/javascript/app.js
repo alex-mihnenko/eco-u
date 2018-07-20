@@ -822,20 +822,18 @@ $(document).ready(function() {
 				var product_id = $(this).parents('[data-product]').attr('data-product');
 
 				// Show product modal
-					if( app.size != 'xs' && app.size != 'sm' ){
-						$.post('/?route=ajax/index/getViewProduct', {product_id:product_id}, function(data){
-							// ---
-								console.log(data);
-								$('[data-remodal-id="modal-product"]').find('.body').html(data.html);
+					$.post('/?route=ajax/index/getViewProduct', {product_id:product_id}, function(data){
+						// ---
+							console.log(data);
+							$('[data-remodal-id="modal-product"]').find('.body').html(data.html);
 
 
-								app.modals.product.open();
-								e.preventDefault();
-							// ---
-						},'json');
-						
-						e.preventDefault();
-					}
+							app.modals.product.open();
+							e.preventDefault();
+						// ---
+					},'json');
+					
+					e.preventDefault();
 				// ---
 			});
 		// ---
