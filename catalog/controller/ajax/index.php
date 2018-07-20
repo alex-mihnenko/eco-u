@@ -557,21 +557,6 @@ class ControllerAjaxIndex extends Controller {
               }
 
               $data['products'][$i]['quantity'] = $product['quantity']*$product['packaging'];
-              
-              // For pieces
-                if($product['weight_class_id'] == 1) {
-                  if( $product['quantity'] > $product['packaging'] ) {
-                    $data['products'][$i]['varian'] = 1;
-                    $data['products'][$i]['amount'] = 1;
-                    $data['products'][$i]['quantity'] = $product['quantity'];
-                  }
-                  else if( $product['quantity'] < $product['packaging'] ) {
-                    $data['products'][$i]['varian'] = 1;
-                    $data['products'][$i]['amount'] = 1;
-                    $data['products'][$i]['quantity'] = $product['packaging'];
-                  }
-                }
-              // ---
 
               $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
           }
