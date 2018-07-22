@@ -100,7 +100,7 @@
 				// ---
 			}
 
-			$customer['externalId'] = $row_order['email'];
+			//$customer['externalId'] = $row_order['email'];
 			$customer['email'] = $row_order['email'];
 			$customer['firstName'] = $row_order['firstname'];
 			$customer['lastName'] = $row_order['lastname'];
@@ -119,7 +119,7 @@
 
 					$response=connectPostAPI($url,$data);
 
-					if( isset($response->success) && $response->success!= false ){
+					if( isset($response->success) && $response->success!= false && isset($response->id) ){
 						// ---
 							$customer['id'] = $response->id;
 
@@ -142,10 +142,9 @@
 						// ---
 					}
 					else{
-						
+						$log[] = 'OC/CRM Customer has been not created: '.json_encode($response);
 					}
 					
-					$log[] = 'CRM customer response: '.json_encode($response);
 				// ---
 			}
 			else{
@@ -351,10 +350,10 @@
 							foreach ($product['packing'] as $key_pack => $pack) {
 								// ---
 									if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['quantity'].' кг. X '.$pack['amount']);
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['variant'].' кг. X '.$pack['amount']);
 									}
 									else if( $product['weight_class_id'] == 1 ){ // Piece
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт. X '.$pack['quantity']);
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт.');
 									}
 
 									$properties_count++;

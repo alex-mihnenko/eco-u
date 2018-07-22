@@ -790,7 +790,6 @@ class ControllerAjaxIndex extends Controller {
           $firstname = $this->request->post['firstname'];
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
-          $total = (int)$this->request->post['total'];
           $address = $this->request->post['address'];
           $deliverydistance = $this->request->post['deliverydistance'];
 
@@ -892,111 +891,6 @@ class ControllerAjaxIndex extends Controller {
           }
         // ---
 
-        // Calculate delivery
-          unset($this->session->data['shipping_price']);
-          unset($this->session->data['shipping_code']);
-          unset($this->session->data['shipping_address_1']);
-          unset($this->session->data['shipping_method']);
-
-          $response->deliveryprice = null;
-          $response->method = null;
-
-          // Inside
-          if( $response->mkad == 'IN_MKAD' ){
-            // ---
-              if ( isset($response->methods['free']) ){
-                // ---
-                  if( $total >= $response->methods['free']['cost'] ){
-                    $response->deliveryprice = 0;
-                    $response->method = 'free';
-                  }
-                  else{
-                    $response->deliveryprice = $response->methods['flat']['cost'];
-                    $response->method = 'flat';
-                  }
-                // ---
-              }
-              else{
-                // ---
-                  $response->deliveryprice = $response->methods['flat']['cost'];
-                  $response->method = 'flat';
-                // ---
-              }
-            // ---
-          }
-          // Outside
-          else {
-            // ---
-              if ( isset($response->methods['free']) ){
-                // ---
-                  if( $total >= $response->methods['free']['cost'] ){
-                    // ---
-                      if( $response->tobeltway != null ){
-                        $response->deliveryprice = (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
-                      }
-                      else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
-
-
-                      $response->method = 'mkadout';
-                    // ---
-                  }
-                  else{
-                    // ---
-                      if( $response->tobeltway != null ){
-                        $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
-                      }
-                      else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
-
-                      // Fix for regions
-                        if( $response->region != 'москва' && $response->region != 'московская' ){
-                          $response->deliveryprice = 600;
-                        }
-                      // ---
-                    
-                      $response->method = 'mkadout';
-                    // ---
-                  }
-                // ---
-              }
-              else{
-                // ---
-                  if( $response->tobeltway != null ){
-                    $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
-                  }
-                  else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
-
-
-                  // Fix for regions
-                    if( $response->region != 'москва' && $response->region != 'московская' ){
-                      $response->deliveryprice = 600;
-                    }
-                  // ---
-
-                  $response->method = 'mkadout';
-                // ---
-              }
-            // ---
-          }
-
-          // Check
-          if( $response->deliveryprice === null ) {
-            // ---
-              $response->status = 'error';
-              $response->message = 'No delivery price';
-              echo json_encode($response);
-              exit;
-            // ---
-          }
-
-          $this->load->model('extension/shipping/' . $response->method);
-          $quote = $this->{'model_extension_shipping_' . $response->method}->getQuote(array('zone_id' => 0, 'country_id' => 0));
-
-          $this->session->data['shipping_price'] = $response->deliveryprice;
-          $this->session->data['shipping_code'] = $response->method;
-          $this->session->data['shipping_address_1'] =  $response->address;
-          $this->session->data['shipping_method'] = $quote['quote'][$response->method]['title'];
-        // ---
-
         // Check discount
             unset($this->session->data['discount']);
             unset($this->session->data['discount_percentage']);
@@ -1089,90 +983,7 @@ class ControllerAjaxIndex extends Controller {
             $this->session->data['coupon'] = $data['coupon'];
         // ---
 
-        // First purchase
-          unset($this->session->data['first_purchase']);
-          unset($this->session->data['first_purchase_discount']);
-
-          $now = time();
-
-          $first_purchase = intval($this->config->get('config_first_purchase'));
-          $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
-          $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
-          $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
-
-          if ( $this->config->get('config_first_purchase_date_start') != '' && $this->config->get('config_first_purchase_date_end') != '' ) {
-            // ---
-              $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
-              $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
-              $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
-
-              $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
-              
-              $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
-              $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
-              $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
-              $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
-            // ---
-          }
-          else {
-            $first_purchase_date_start = $now-86400;
-            $first_purchase_date_end = $now-86400;
-          }
-          
-          if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
-            // ---
-              // Check first purchase
-                $this->load->model('account/customer');
-                $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
-
-                $customer_first_purchase = false;
-
-                if( empty($customer) ) {
-                  // ---
-                    $customer_first_purchase = true;
-                  // ---
-                }
-                else {
-                  // Check orders
-                    $customer_id = $customer['customer_id'];
-
-                    $this->load->model('checkout/order');
-                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                    
-                    if( $orders == false ){ $customer_first_purchase = true; }
-                  // ---
-                }
-              // ---
-
-              if( $customer_first_purchase == true ) {
-                $response->first_purchase = true;
-
-                // Calculate purchase discount
-                  $total = floatval($this->cart->getTotal());
-                  $totalOne = floatval($first_purchase_discount);
-                  $totalTwo = round($total * ($first_purchase_discount_percent/100));
-
-                  if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
-                  else { $response->first_purchase_discount = $totalTwo; }
-                // ---
-
-                if( $first_purchase_free_delivery == 1 ){
-                  $response->deliveryprice = 0;
-                  $this->session->data['shipping_price'] = 0;
-                }
-              }
-              else {
-                $response->first_purchase = false;
-              }
-            // ---
-          }
-
-
-          $this->session->data['first_purchase'] = $first_purchase;
-          $this->session->data['first_purchase_discount'] = $first_purchase_discount;
-        // ---
-
-        // Get total
+        // Get subtotal
           unset($this->session->data['subtotal']);
           unset($this->session->data['total']);
 
@@ -1292,9 +1103,199 @@ class ControllerAjaxIndex extends Controller {
           $response->totaldiscount = round($totaldiscount,2);
 
           $this->session->data['subtotal'] = round($totalproducts,2);
-          $this->session->data['total'] = round($totalproducts - $totaldiscount,2) + $this->session->data['shipping_price'];
-          
           $response->subtotal = $this->session->data['subtotal'];
+        // ---
+
+        // Calculate delivery
+          unset($this->session->data['shipping_price']);
+          unset($this->session->data['shipping_code']);
+          unset($this->session->data['shipping_address_1']);
+          unset($this->session->data['shipping_method']);
+
+          $response->deliveryprice = null;
+          $response->method = null;
+
+          // Inside
+          if( $response->mkad == 'IN_MKAD' ){
+            // ---
+              if ( isset($response->methods['free']) ){
+                // ---
+                  if( $this->session->data['subtotal'] >= $response->methods['free']['cost'] ){
+                    $response->deliveryprice = 0;
+                    $response->method = 'free';
+                  }
+                  else{
+                    $response->deliveryprice = $response->methods['flat']['cost'];
+                    $response->method = 'flat';
+                  }
+                // ---
+              }
+              else{
+                // ---
+                  $response->deliveryprice = $response->methods['flat']['cost'];
+                  $response->method = 'flat';
+                // ---
+              }
+            // ---
+          }
+          // Outside
+          else {
+            // ---
+              if ( isset($response->methods['free']) ){
+                // ---
+                  if( $this->session->data['subtotal'] >= $response->methods['free']['cost'] ){
+                    // ---
+                      if( $response->tobeltway != null ){
+                        $response->deliveryprice = (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
+                      }
+                      else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+
+
+                      $response->method = 'mkadout';
+                    // ---
+                  }
+                  else{
+                    // ---
+                      if( $response->tobeltway != null ){
+                        $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
+                      }
+                      else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+
+                      // Fix for regions
+                        if( $response->region != 'москва' && $response->region != 'московская' ){
+                          $response->deliveryprice = 600;
+                        }
+                      // ---
+                    
+                      $response->method = 'mkadout';
+                    // ---
+                  }
+                // ---
+              }
+              else{
+                // ---
+                  if( $response->tobeltway != null ){
+                    $response->deliveryprice = (int)$response->methods['mkadout']['cost'] + (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
+                  }
+                  else $response->deliveryprice = (int)$response->methods['mkadout']['cost'];
+
+
+                  // Fix for regions
+                    if( $response->region != 'москва' && $response->region != 'московская' ){
+                      $response->deliveryprice = 600;
+                    }
+                  // ---
+
+                  $response->method = 'mkadout';
+                // ---
+              }
+            // ---
+          }
+
+          // Check
+          if( $response->deliveryprice === null ) {
+            // ---
+              $response->status = 'error';
+              $response->message = 'No delivery price';
+              echo json_encode($response);
+              exit;
+            // ---
+          }
+
+          $this->load->model('extension/shipping/' . $response->method);
+          $quote = $this->{'model_extension_shipping_' . $response->method}->getQuote(array('zone_id' => 0, 'country_id' => 0));
+
+          $this->session->data['shipping_price'] = $response->deliveryprice;
+          $this->session->data['shipping_code'] = $response->method;
+          $this->session->data['shipping_address_1'] =  $response->address;
+          $this->session->data['shipping_method'] = $quote['quote'][$response->method]['title'];
+        // ---
+
+        // First purchase
+          unset($this->session->data['first_purchase']);
+          unset($this->session->data['first_purchase_discount']);
+
+          $now = time();
+
+          $first_purchase = intval($this->config->get('config_first_purchase'));
+          $first_purchase_discount = intval($this->config->get('config_first_purchase_discount'));
+          $first_purchase_discount_percent = intval($this->config->get('config_first_purchase_discount_percent'));
+          $first_purchase_free_delivery = intval($this->config->get('config_first_purchase_free_delivery'));
+
+          if ( $this->config->get('config_first_purchase_date_start') != '' && $this->config->get('config_first_purchase_date_end') != '' ) {
+            // ---
+              $config_full_date_start_arr = explode('T', $this->config->get('config_first_purchase_date_start'));
+              $config_date_start_arr = explode('-', $config_full_date_start_arr[0]);
+              $config_time_start_arr = explode(':', $config_full_date_start_arr[1]);
+
+              $first_purchase_date_start = mktime(intval($config_time_start_arr[0]), intval($config_time_start_arr[1]), 0, intval($config_date_start_arr[1]), intval($config_date_start_arr[2]), intval($config_date_start_arr[0]));
+              
+              $config_full_date_end_arr = explode('T', $this->config->get('config_first_purchase_date_end'));
+              $config_date_end_arr = explode('-', $config_full_date_end_arr[0]);
+              $config_time_end_arr = explode(':', $config_full_date_end_arr[1]);
+              $first_purchase_date_end = mktime(intval($config_time_end_arr[0]), intval($config_time_end_arr[1]), 0, intval($config_date_end_arr[1]), intval($config_date_end_arr[2]), intval($config_date_end_arr[0]));
+            // ---
+          }
+          else {
+            $first_purchase_date_start = $now-86400;
+            $first_purchase_date_end = $now-86400;
+          }
+          
+          if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
+            // ---
+              // Check first purchase
+                $this->load->model('account/customer');
+                $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+                $customer_first_purchase = false;
+
+                if( empty($customer) ) {
+                  // ---
+                    $customer_first_purchase = true;
+                  // ---
+                }
+                else {
+                  // Check orders
+                    $customer_id = $customer['customer_id'];
+
+                    $this->load->model('checkout/order');
+                    $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                    
+                    if( $orders == false ){ $customer_first_purchase = true; }
+                  // ---
+                }
+              // ---
+
+              if( $customer_first_purchase == true ) {
+                $response->first_purchase = true;
+
+                // Calculate purchase discount
+                  $total = floatval($this->cart->getTotal());
+                  $totalOne = floatval($first_purchase_discount);
+                  $totalTwo = round($total * ($first_purchase_discount_percent/100));
+
+                  if( $totalOne >= $totalTwo ){ $response->first_purchase_discount = $totalOne; }
+                  else { $response->first_purchase_discount = $totalTwo; }
+                // ---
+
+                if( $first_purchase_free_delivery == 1 ){
+                  $response->deliveryprice = 0;
+                  $this->session->data['shipping_price'] = 0;
+                }
+              }
+              else {
+                $response->first_purchase = false;
+              }
+            // ---
+          }
+
+
+          $this->session->data['first_purchase'] = $first_purchase;
+          $this->session->data['first_purchase_discount'] = $first_purchase_discount;
+        // ---
+
+        // Get total
+          $this->session->data['total'] = round($totalproducts - $totaldiscount,2) + $this->session->data['shipping_price'];
           $response->total = $this->session->data['total'];
         // ---
 
