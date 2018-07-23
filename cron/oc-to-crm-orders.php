@@ -515,9 +515,6 @@
 			$log[] = 'Total: '.$total;
 		// ---
 
-		print_r($delivery);
-		exit;
-
 		// Set custom
 			$q = "SELECT * FROM `".DB_PREFIX."order_roistat` WHERE order_id='".$row_order['order_id']."' LIMIT 1;";
 			$rows_roistat = $db->query($q);
