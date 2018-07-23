@@ -108,7 +108,7 @@
 
 
 
-			$q = "SELECT * FROM `retailCRM_customers` WHERE `email`='".$row_order['email']."' LIMIT 1;";
+			$q = "SELECT * FROM `rcrm_customers` WHERE `email`='".$row_order['email']."' LIMIT 1;";
 			$rows_customer = $db->query($q);
 
 
@@ -124,7 +124,7 @@
 							$customer['id'] = $response->id;
 
 							$q = "
-								INSERT INTO `retailCRM_customers` SET 
+								INSERT INTO `rcrm_customers` SET 
 								`id_internal`='".intval($customer['id'])."',
 								`id_external`='".$row_order['email']."',
 								`firstname`='".$row_order['firstname']."',
@@ -617,13 +617,13 @@
 				else{
 					// ---
 						// Add log
-							$q = "SELECT * FROM `retailCRM_errors` WHERE `id_order`='".$row_order['order_id']."';";
+							$q = "SELECT * FROM `rcrm_errors` WHERE `id_order`='".$row_order['order_id']."';";
 							$rows_log = $db->query($q);
 
 							
 							if ($rows_log->num_rows == 0) {
 								// ---
-									$q = "INSERT INTO `retailCRM_errors` SET `id_order`='".$row_order['order_id']."', `id_externalid`='IM".$row_order['order_id']."', `message`='".$response->errorMsg."';";
+									$q = "INSERT INTO `rcrm_errors` SET `id_order`='".$row_order['order_id']."', `id_externalid`='IM".$row_order['order_id']."', `message`='".$response->errorMsg."';";
 
 									if ($db->query($q) === TRUE) {
 									    $log[] = 'OC error log has been inserted';
@@ -631,19 +631,45 @@
 										$log[] = 'OC error log has been not inserted: '.$db->error;
 									}
 
-
 									// Set task to managers
 										$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
 
+										// Create commonID
+											$commonId = uniqid();
+											$taskText = 'Заказ №'.$row_order['order_id'].' не выгружен в CRM - ['.$commonId.']';
+										// ---
+
 										foreach ($managers as $key => $manager_id) {
 											// Set data
-												$task['text'] = 'Заказ №'.$row_order['order_id'].' не выгружен в CRM';
+												$task['text'] = $taskText;
 												$task['datetime'] = date('Y-m-d H:i', (time()+3600) );
 												$task['performerId'] = $manager_id;
 												$data['task'] = json_encode($task);
 											// ---
 											
 											$response=connectPostAPI($url,$data);
+
+											if( isset($response->success) && $response->success!= false && isset($response->id) ){
+												// Save task
+													$q = "
+														INSERT INTO `rcrm_tasks` SET 
+														`commonId`='".$commonId."', 
+														`internalId`='".$response->id."', 
+														`orderNumber`='".$row_order['order_id']."', 
+														`customer`='".$customer['id']."', 
+														`text`='".$taskText."', 
+														`status`='performing', 
+														`processed`='0'
+													;";
+
+													if ($db->query($q) === TRUE) {
+													    $log[] = 'OC task log has been created';
+													} else {
+														$log[] = 'OC task log has been not created: '.$db->error;
+													}
+												// ---
+											}
+
 										}
 									// ---
 								// ---

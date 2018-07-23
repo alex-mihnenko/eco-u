@@ -102,7 +102,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 		$data['firstName']=$fname;
 		$data['phone']=$phone;
 
-		if ( $qCustomers = mysql_query("SELECT * FROM `retailCRM_customers` WHERE `email`='".$email."';") ) $nCustomers = mysql_num_rows($qCustomers);
+		if ( $qCustomers = mysql_query("SELECT * FROM `rcrm_customers` WHERE `email`='".$email."';") ) $nCustomers = mysql_num_rows($qCustomers);
 		else $nCustomers = 0;
 
 		if( $nCustomers==0 ){
@@ -112,7 +112,7 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 				$res=crm_query_send($link,$senddata);
 
 				$qInsert = mysql_query("
-					INSERT INTO `retailCRM_customers` SET 
+					INSERT INTO `rcrm_customers` SET 
 					`id_internal`='".(int)$res['id']."',
 					`id_external`='".$email."',
 					`firstname`='".$fname."',
@@ -442,13 +442,13 @@ while(list($payment_method,$customer_id,$order_id,$fname,$lname,$email,$phone,$c
 			
 			if ($json['errorMsg']!='Order already exists.'){
 				// Add log
-					if ( $qLogs = mysql_query("SELECT * FROM `retailCRM_errors` WHERE `id_order`=".$order_id.";") ) $nLogs = mysql_num_rows($qLogs);
+					if ( $qLogs = mysql_query("SELECT * FROM `rcrm_errors` WHERE `id_order`=".$order_id.";") ) $nLogs = mysql_num_rows($qLogs);
 					else $nLogs = 0;
 
 					if( $nLogs==0 ){
 						// ---
 							$qInsert = mysql_query("
-								INSERT INTO `retailCRM_errors` SET 
+								INSERT INTO `rcrm_errors` SET 
 								`id_order`='".$order_id."',
 								`id_externalid`='IM".$order_id."',
 								`message`='".$json['errorMsg']."'
