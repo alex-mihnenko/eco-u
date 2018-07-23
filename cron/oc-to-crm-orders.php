@@ -350,7 +350,7 @@
 							foreach ($product['packing'] as $key_pack => $pack) {
 								// ---
 									if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['variant'].' кг. X '.$pack['amount']);
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $product['variant'].' кг. X '.$pack['amount']);
 									}
 									else if( $product['weight_class_id'] == 1 ){ // Piece
 										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт.');
