@@ -8,7 +8,7 @@ include(__DIR__."/../config.php");
 
     mysql_query("SET NAMES 'utf8'");
 
-    $AUTH_DATA='admin@mail195:134679';
+    $AUTH_DATA='admin@mail195:b41fd841edc5';
 
     $retail_key='AuNf4IgJFHTmZQu7PwTKuPNQch5v03to';
 

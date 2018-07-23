@@ -16,7 +16,7 @@
 	$log = [];
 
 
-	define('MS_AUTH', 'admin@mail195:134679');
+	define('MS_AUTH', 'admin@mail195:b41fd841edc5');
 	define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
 

@@ -2,7 +2,7 @@
 // catalog/controller/ajax/index.php
 class ControllerAjaxIndex extends Controller {
   const RETAILCRM_KEY = 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to';
-  const MS_AUTH = 'admin@mail195:134679';
+  const MS_AUTH = 'admin@mail195:b41fd841edc5';
 
   // Customers
     // Registration
@@ -2114,22 +2114,51 @@ class ControllerAjaxIndex extends Controller {
             }
           // ---
 
-          // Set task
+
+          // Set task to managers
             $url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RETAILCRM_KEY;
+
+            // Create commonID
+              $commonId = uniqid();
+              $taskText = "ROIstat ID: ".$roistat_visit.". Обратный звонок на номер +".$phone." [".$commonId."]";
+              $commentaryText = "ROIstat ID: ".$roistat_visit.". \nВремя заявки: ".date("H:i", time());
+            // ---
 
             foreach ($managers as $key => $manager_id) {
               // Set data
-                $task["site"] = "eco-u-ru";
-                $task["text"] = "ROIstat ID: ".$roistat_visit.". Обратный звонок на номер +".$phone;
-                $task["commentary"] = "ROIstat ID: ".$roistat_visit.". \nВремя заявки: ".date("H:i", time());
+                $task['text'] = $taskText;
+                $task["commentary"] = $commentaryText;
                 $task["datetime"] = date("Y-m-d H:i", (time()+1800) );
                 $task["phone"] = $phone;
                 $task["performerId"] = $manager_id;
-                $data["task"] = json_encode($task);
+                $data['task'] = json_encode($task);
               // ---
               
-              $response=$this->connectPostAPI($url,$data);
+              $response=connectPostAPI($url,$data);
+
+              if( isset($response->success) && $response->success!= false && isset($response->id) ){
+                // Save task
+                  $q = "
+                    INSERT INTO `rcrm_tasks` SET 
+                    `commonId`='".$commonId."', 
+                    `internalId`='".$response->id."', 
+                    `orderNumber`='', 
+                    `customer`='', 
+                    `text`='".$taskText."', 
+                    `status`='performing', 
+                    `processed`='0'
+                  ;";
+
+                  if ($db->query($q) === TRUE) {
+                      $log[] = 'OC task log has been created';
+                  } else {
+                    $log[] = 'OC task log has been not created: '.$db->error;
+                  }
+                // ---
+              }
+
             }
+          // ---
         // ---
 
         // Save callback

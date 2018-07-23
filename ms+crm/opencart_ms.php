@@ -567,7 +567,8 @@ if($argv[1]=='3'){
 			$link="https://online.moysklad.ru/api/remap/1.1/report/stock/all?stockMode=all&limit=$limit&offset=$offset";//&updatedFrom=".$updfrom;
 			//store.id
 			$json=ms_query($link);
-
+			print_r($json);
+			
 			foreach($json['rows'] as $k=>$v){
 				$url=parse_url($v['meta']['href']);
 

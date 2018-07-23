@@ -2,8 +2,6 @@
 
 include("opencart_inc.php");
 
-$order_nubmer=21059;
-
 if(is_numeric($_GET["n"])){
 	$order_nubmer = $_GET["n"];
 	echo"!!!".$order_nubmer;

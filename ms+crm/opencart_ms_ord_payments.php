@@ -14,7 +14,7 @@
 
 	$db->set_charset("utf8");
 
-	define('AUTH_DATA', 'admin@mail195:134679');
+	define('AUTH_DATA', 'admin@mail195:b41fd841edc5');
 	define('RETAILCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
 
