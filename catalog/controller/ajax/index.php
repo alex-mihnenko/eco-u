@@ -1118,22 +1118,14 @@ class ControllerAjaxIndex extends Controller {
           // Inside
           if( $response->mkad == 'IN_MKAD' ){
             // ---
+              $response->deliveryprice = $response->methods['flat']['cost'];
+              $response->method = 'flat';
+
               if ( isset($response->methods['free']) ){
                 // ---
                   if( $this->session->data['subtotal'] >= $response->methods['free']['cost'] ){
                     $response->deliveryprice = 0;
-                    $response->method = 'free';
                   }
-                  else{
-                    $response->deliveryprice = $response->methods['flat']['cost'];
-                    $response->method = 'flat';
-                  }
-                // ---
-              }
-              else{
-                // ---
-                  $response->deliveryprice = $response->methods['flat']['cost'];
-                  $response->method = 'flat';
                 // ---
               }
             // ---
