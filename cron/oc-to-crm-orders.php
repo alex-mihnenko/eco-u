@@ -439,7 +439,7 @@
 					}
 
 					// Ceck netcost config
-						if( $this_netcost != 0 ) {
+						if( !empty($this_netcost) ) {
 							$netcost_value = 0;
 							$weight_value = $weight / 1000;
 
@@ -514,6 +514,9 @@
 			$total = round($totalproducts - $totaldiscount,2) + $delivery_cost;
 			$log[] = 'Total: '.$total;
 		// ---
+
+		print_r($delivery);
+		exit;
 
 		// Set custom
 			$q = "SELECT * FROM `".DB_PREFIX."order_roistat` WHERE order_id='".$row_order['order_id']."' LIMIT 1;";
