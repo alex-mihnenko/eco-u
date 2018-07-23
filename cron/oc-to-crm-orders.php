@@ -237,7 +237,6 @@
 						          'name' => $row_product['name'],
 						          'weight_class_id' => $row_product['weight_class_id'],
 						          'weight_variants' => $row_product['weight_variants'],
-						          'weight_variant' => $row_product['variant'],
 						          'weight' => $row_product['weight'],
 						          'packing' => array()
 						        );
@@ -246,7 +245,8 @@
 						          'total' => $row_product['total'],
 						          'price' => $row_product['price'],
 						          'quantity' => $row_product['quantity'],
-						          'amount' => $row_product['amount']
+						          'amount' => $row_product['amount'],
+						          'variant' => $row_product['variant']
 						        );
 						      // ---
 						    }
@@ -256,7 +256,8 @@
 						          'total' => $row_product['total'],
 						          'price' => $row_product['price'],
 						          'quantity' => $row_product['quantity'],
-						          'amount' => $row_product['amount']
+						          'amount' => $row_product['amount'],
+						          'variant' => $row_product['variant']
 						        );
 						      // ---
 						    }
@@ -334,7 +335,6 @@
 						      'packing' => $product['packing'],
 						      'weight_class_id' => $product['weight_class_id'],
 						      'weight_variants' => $product['weight_variants'],
-						      'variant' => $product['weight_variant'],
 						      'weight' => $product['weight'],
 						    );
 					  	// ---
@@ -350,10 +350,10 @@
 							foreach ($product['packing'] as $key_pack => $pack) {
 								// ---
 									if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $product['variant'].' кг. X '.$pack['amount']);
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['variant'].' кг. X '.$pack['amount']);
 									}
 									else if( $product['weight_class_id'] == 1 ){ // Piece
-										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт.');
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт. X '.$pack['variant']);
 									}
 
 									$properties_count++;

@@ -568,7 +568,7 @@ class ControllerAjaxIndex extends Controller {
           foreach($data['products'] as $i => $product) {
               if(empty($product['weight_variants'])) {
                   $data['products'][$i]['amount'] = round($product['quantity']*$product['packaging']);
-                  $data['products'][$i]['variant'] = 1;
+                  $data['products'][$i]['variant'] = $product['packaging'];
               } else {
                   $arWeightVariants = explode(',', $product['weight_variants']);
                   $data['products'][$i]['amount'] = round(($product['quantity']*$product['packaging'])/$arWeightVariants[$product['weight_variant']]);
