@@ -219,8 +219,8 @@ while ( $row = $result->fetch_assoc() ) {
 								INSERT INTO `rcrm_tasks` SET 
 								`commonId`='".$commonId."', 
 								`internalId`='".$response->id."', 
-								`orderNumber`='".$row_order['order_id']."', 
-								`customer`='".$customer['id']."', 
+								`orderNumber`='".$row['order_id']."', 
+								`customer`='', 
 								`text`='".$taskText."', 
 								`status`='performing', 
 								`processed`='0'
