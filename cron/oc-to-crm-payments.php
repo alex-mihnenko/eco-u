@@ -41,15 +41,12 @@ while ( $row = $result->fetch_assoc() ) {
 
 			$response=connectGetAPI($url,$data);
 
-			if( isset($response->success) && $response->success!= false && isset($response->id) ){
-				foreach ($response->order->payments as $key => $val) {
-					$paymentId = $val->id;
-					$paymentType = $val->type;
-					break;
-				}
-			}
-			else{
-				continue;
+			if( isset($response->success) && $response->success == false ){ continue; }
+			
+			foreach ($response->order->payments as $key => $val) {
+				$paymentId = $val->id;
+				$paymentType = $val->type;
+				break;
 			}
 		// ---
 
