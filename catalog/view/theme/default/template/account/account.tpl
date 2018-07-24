@@ -32,6 +32,7 @@
                                 <th>Дата</th>
                                 <th>Статус</th>
                                 <th>Сумма</th>
+                                <th></th>
                             </tr>
 
 
@@ -47,7 +48,7 @@
                                         <?php } ?>
                                     </td>
                                     <td>
-                                        <p><?php echo (int)$order['total']; ?> руб.</p>
+                                        <p><?php echo round($order['total'],2); ?> руб.</p>
                                     </td>
                                     <td>
                                         <?php if( $order['status_id'] != 5  && $order['status_id'] != 7 ) { ?>

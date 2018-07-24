@@ -39,7 +39,7 @@ class ControllerExtensionPaymentRbs extends Controller {
 
         $this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($order_id ? $order_id : $this->session->data['order_id']);
-        $amount = (int) $order_info['total'] * 100;
+        $amount = $order_info['total'] * 100;
         $return_url = $this->url->link('extension/payment/rbs/callback');
 
         $this->initializeRbs();
