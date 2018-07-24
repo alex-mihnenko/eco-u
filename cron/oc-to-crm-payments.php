@@ -21,8 +21,9 @@
 	// ---
 // ---
 
+
 // Get payments
-	$q = "SELECT * FROM `".DB_PREFIX."order_payments` WHERE `processed`=0 ORDER BY date_add DESC LIMIT 50;";
+	$q = "SELECT * FROM `".DB_PREFIX."order_payments` WHERE `processed`=0 ORDER BY date_add ASC LIMIT 50;";
 	$result = $db->query($q);
 
 	if ($result->num_rows == 0) {
@@ -40,10 +41,15 @@ while ( $row = $result->fetch_assoc() ) {
 
 			$response=connectGetAPI($url,$data);
 
-			foreach ($response->order->payments as $key => $val) {
-				$paymentId = $val->id;
-				$paymentType = $val->type;
-				break;
+			if( isset($response->success) && $response->success!= false && isset($response->id) ){
+				foreach ($response->order->payments as $key => $val) {
+					$paymentId = $val->id;
+					$paymentType = $val->type;
+					break;
+				}
+			}
+			else{
+				continue;
 			}
 		// ---
 
