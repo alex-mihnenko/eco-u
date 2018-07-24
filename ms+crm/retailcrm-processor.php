@@ -67,7 +67,7 @@
 			// ---
 
 			// Check db customer
-	            $q = "SELECT * FROM `retailCRM_customers` WHERE `id_external`='".$c_externalId."' AND `email`='".$c_email."';";
+	            $q = "SELECT * FROM `rcrm_customers` WHERE `id_external`='".$c_externalId."' AND `email`='".$c_email."';";
 	            
 	            $dbcustomer = $db->query($q);
 
@@ -97,7 +97,7 @@
 
 				// Save customer
 					$q = "
-						INSERT INTO `retailCRM_customers`
+						INSERT INTO `rcrm_customers`
 						(`id_internal`, `id_external`, `firstname`, `email`, `dublicates`, `created`)
 						values
 						(

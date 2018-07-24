@@ -25,7 +25,7 @@
 
 
 // Check db customer
-    $q = "SELECT * FROM `retailCRM_customers` WHERE `dublicates`>0;";
+    $q = "SELECT * FROM `rcrm_customers` WHERE `dublicates`>0;";
     
     $dbcustomer = $db->query($q);
 
