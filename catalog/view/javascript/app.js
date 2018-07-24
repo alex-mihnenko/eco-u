@@ -37,6 +37,7 @@ $(document).ready(function() {
 	// Init
 		initStart();
 		initAuth();
+		initParams();
 
 		// EnjoyHint
 			if( $('.qwe').find('.list-products').length > 0 ){
@@ -1367,6 +1368,26 @@ $(document).ready(function() {
 			// ---
 		},'json');
 	}
+
+	function initParams(){
+		// ---
+			// Payments
+				var payment = getUrlParam('payment');
+
+				if( payment == 'rbs-success' ){
+					var order_id = getUrlParam('order_id');
+					var $modal = $('[data-remodal-id="modal-payment"]');
+					
+					$modal.find('.message-success').html('Заказ №'+order_id+' успешно оплачен!');
+					$modal.find('.success .message-success').show();
+	                $modal.find('.success').fadeIn('fast');
+
+					var modalPayment = $('[data-remodal-id="modal-payment"]').remodal();
+					modalPayment.open();
+				}
+			// ---
+		// ---
+	}
 // ---
 
 // Cart
@@ -1763,5 +1784,14 @@ $(document).ready(function() {
 				$('.b-accordion').find('.b-accordion_title[data-marker="'+hash+'"]').trigger('click');
 			},1000);
 		}
+	}
+
+
+	function getUrlParam(param){
+	  param = param.replace(/([\[\](){}*?+^$.\\|])/g, "\\$1");
+	  var regex = new RegExp("[?&]" + param + "=([^&#]*)");
+	  var url   = decodeURIComponent(window.location.href);
+	  var match = regex.exec(url);
+	  return match ? match[1] : "";
 	}
 // ---

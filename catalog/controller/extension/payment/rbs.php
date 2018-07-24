@@ -76,9 +76,9 @@ class ControllerExtensionPaymentRbs extends Controller {
 
     /**
      * Колбек для возвращения покупателя из ПШ в магазин.
+     * Пример http://eco-u.ru/index.php?route=extension/payment/rbs/callback&orderId=31be534e-bbec-7e5e-31be-534e0014f8d6&lang=ru
      */
     public function callback() {
-
         if (isset($this->request->get['orderId'])) {
             $orderId= $this->request->get['orderId'];
         } else {
@@ -103,7 +103,7 @@ class ControllerExtensionPaymentRbs extends Controller {
                 $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_paid_status_id'));
 
                 $this->session->data['success_order_id'] = $order_number;
-                $this->response->redirect($this->url->link('common/home', '', true));
+                $this->response->redirect($this->url->link('common/home', 'payment=rbs-success&order_id='.$order_number, true));
             } else {
                 $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_nopaid_status_id'));
                 $this->response->redirect($this->url->link('checkout/failure', '', true));

@@ -394,4 +394,23 @@
 	   		</div>
 	    </div>
 
+	    <div class="remodal modal-payment modal-sm" data-remodal-id="modal-payment">
+			<button data-remodal-action="close" class="remodal-close"></button>
+
+			<div class="body">
+
+				<div class="message success">
+					<div class="wrap-table">
+						<div class="wrap-cell">
+							<img src="catalog/view/theme/default/img/svg/check-square.svg" class="svg md" alt="paper-plane" title="paper-plane" />
+							<hr class="indent md">
+
+							<div class="message-success"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
 	    <?php echo $cart; ?>
