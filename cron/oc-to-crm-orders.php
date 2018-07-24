@@ -60,7 +60,7 @@
 
 		FROM ".DB_PREFIX."order o 
 
-		WHERE o.rcrm_status='' AND o.order_id>0 AND o.order_status_id>0 ORDER BY o.date_modified DESC LIMIT 50;
+		WHERE o.rcrm_status<>'sended' AND o.order_id>0 AND o.order_status_id>0 ORDER BY o.date_modified DESC LIMIT 50;
     ";
 
 	$rows_order = $db->query($q);
