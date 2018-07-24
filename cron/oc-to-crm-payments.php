@@ -184,7 +184,6 @@ while ( $row = $result->fetch_assoc() ) {
 				// ---
 			}
 
-
 			// Set task to managers
 				$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
 
@@ -194,7 +193,7 @@ while ( $row = $result->fetch_assoc() ) {
 					if( $row['order_status_id'] == 20 ) {
 						$taskText = 'Заказ №'.$row['order_id'].' - Оплачен - ['.$commonId.']';
 					}
-					if( $row['order_status_id'] == 21 ) {
+					else if( $row['order_status_id'] == 21 ) {
 						$taskText = 'Заказ №'.$row['order_id'].' - Не оплачен - ['.$commonId.']';
 					}
 					else{
