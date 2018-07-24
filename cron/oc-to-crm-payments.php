@@ -36,7 +36,7 @@ while ( $row = $result->fetch_assoc() ) {
 	// ---
 		// Get paymentId
 			$url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$row['order_id'];
-			$data = array('apiKey' => RETAILCRM_KEY,'by' => 'externalId','externalId' => $row['order_id']);
+			$data = array('apiKey' => RCRM_KEY,'by' => 'externalId','externalId' => $row['order_id']);
 
 			$response=connectGetAPI($url,$data);
 
@@ -73,7 +73,7 @@ while ( $row = $result->fetch_assoc() ) {
 			if( isset($paymentId) ){
 				if( $paymentType == $type ){
 					// Edit payment		
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.RETAILCRM_KEY;
+						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.RCRM_KEY;
 						
 						// Set data
 							$data['by'] = 'id';
@@ -106,7 +106,7 @@ while ( $row = $result->fetch_assoc() ) {
 				}
 				else {
 					// Delete payment
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/delete?apiKey='.RETAILCRM_KEY;
+						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/delete?apiKey='.RCRM_KEY;
 						$data['id'] = $paymentId;
 
 						$response=connectPostAPI($url,$data);
@@ -116,7 +116,7 @@ while ( $row = $result->fetch_assoc() ) {
 					// ---
 
 					// Create payment
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RETAILCRM_KEY;
+						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
 						
 						// Set data
 							$order['externalId'] = $row['order_id'];
@@ -151,7 +151,7 @@ while ( $row = $result->fetch_assoc() ) {
 			}
 			else{
 				// Create payment
-					$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RETAILCRM_KEY;
+					$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
 					
 					// Set data
 						$order['externalId'] = $row['order_id'];
