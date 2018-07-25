@@ -547,7 +547,6 @@
 					}
 
 					// Create payment
-						/*
 						// Amount
 							$amount = floatval($row_order['total']);
 						// ---
@@ -590,17 +589,20 @@
 						}
 
 
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
-						$data = array(
-							'site' => 'eco-u-ru',
-							'payment' => json_encode($payment)
-						);
+						if( $type == 'cash' ) {
+							// ---
+								$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
+								$data = array(
+									'site' => 'eco-u-ru',
+									'payment' => json_encode($payment)
+								);
 
-						$response=connectPostAPI($url,$data);
+								$response=connectPostAPI($url,$data);
 
-						$log[] = 'Payment status '.json_encode($response);
-						$log[] = 'Items payment '.$amount;
-						*/
+								$log[] = 'Payment status '.json_encode($response);
+								$log[] = 'Items payment '.$amount;
+							// ---
+						}
 					// ---
 				// ---
 			}
