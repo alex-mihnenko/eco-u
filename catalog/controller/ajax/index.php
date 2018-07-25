@@ -820,6 +820,8 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         // Get sipping area
+          unset($this->session->data['order_comment']);
+
           $this->load->model('dadata/index');
           
           $structure = array("ADDRESS");
@@ -828,8 +830,19 @@ class ControllerAjaxIndex extends Controller {
 
           $response->address = null;
           $response->mkad = null;
-          $response->tobeltway = $deliverydistance;
+
+          if( $deliverydistance == -1 ){
+            if( isset($result['data'][0][0]['beltway_distance']) ) {
+              $response->tobeltway = intval($result['data'][0][0]['beltway_distance']);
+              $this->session->data['order_comment'] = 'P.S.: Проверить! Рассчет стоимости доставки произведен не точно.';
+            }
+          }
+          else{
+            $response->tobeltway = $deliverydistance;
+          }
+
           $response->region = mb_strtolower($result['data'][0][0]['region']);
+          $response->dadata = $result['data'];
 
           if( isset($result['data'][0][0]['source']) ) {
             $response->address = $result['data'][0][0]['source'];
@@ -1312,8 +1325,12 @@ class ControllerAjaxIndex extends Controller {
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
           $payment_method = $this->request->post['payment_method'];
+
           $comment = $this->request->post['comment'];
-          
+          if(isset($this->session->data['order_comment'])){
+            $comment .= $this->session->data['order_comment'];
+          }
+
           $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
           $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];
 
