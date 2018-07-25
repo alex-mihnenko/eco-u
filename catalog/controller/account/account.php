@@ -110,19 +110,51 @@ class ControllerAccountAccount extends Controller {
                     foreach($orders as $order) {
                         $date = new DateTime($order['date_added']);
 
-                        // Check status and payment
-                            $payment_custom_field = 'undefined';
+                        // Check paid and surcharge
+                            // Get order success paymants
+                                $paid = false;
+                                $surcharge = false;
+                                $total_paid = 0;
 
-                            if( isset($order['payment_custom_field']) && strpos($order['payment_custom_field'],$order['order_id'])>=0){
-                                // ---
-                                    $payment_custom_field = $order['payment_custom_field'];
-                                // ---
-                            }
+                                $paymants = $this->model_checkout_order->getOrderPayments($order['order_id'], 20);
+
+                                if($paymants !== false) {
+                                    foreach($paymants as $paymant) {
+                                        $total_paid = $total_paid + $paymant['total'];
+                                    }
+                                }
+
+                                if( $total_paid == $order['order_total'] ) {
+                                    // ---
+                                        $paid = true;
+                                    // ---
+                                }
+                                else {
+                                    // ---
+                                        if( $total_paid == 0 ) {
+                                            $paid = false;
+                                            $surcharge = false;
+                                        }
+                                        else {
+                                            $paid = false;
+                                            $surcharge = true;
+                                        }
+                                    // ---
+                                }
+                            // ---
+
+                            // $payment_custom_field = 'undefined';
+
+                            // if( isset($order['payment_custom_field']) && strpos($order['payment_custom_field'],$order['order_id'])>=0){
+                            //     // ---
+                            //         $payment_custom_field = $order['payment_custom_field'];
+                            //     // ---
+                            // }
                             
-                            if( $order['order_status_id'] != 5 && $order['order_status_id'] != 7 && $order['order_status_id'] != 20 ){
-                                $online_pay = true;
-                            }
-                            else { $online_pay = false; }
+                            // if( $order['order_status_id'] != 5 && $order['order_status_id'] != 7 && $order['order_status_id'] != 20 ){
+                            //     $online_pay = true;
+                            // }
+                            // else { $online_pay = false; }
                         // ---
 
                         $data['orders'][] = Array(
@@ -132,7 +164,10 @@ class ControllerAccountAccount extends Controller {
                             'status_id' => $order['order_status_id'],
                             'total' => $order['order_total'],
                             'payment_custom_field' => $payment_custom_field,
-                            'online_pay' => $online_pay,
+                            'paid' => $paid,
+                            'surcharge' => $surcharge,
+                            'total_paid' => $total_paid,
+                            'paymants' => $paymants,
                         );
                     }
                 }

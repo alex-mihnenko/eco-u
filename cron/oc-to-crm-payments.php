@@ -23,7 +23,7 @@
 
 
 // Get payments
-	$q = "SELECT * FROM `".DB_PREFIX."order_payments` WHERE `processed`=0 ORDER BY date_add ASC LIMIT 50;";
+	$q = "SELECT * FROM `".DB_PREFIX."order_payments` WHERE `processed`=0 AND `order_status_id`=20 ORDER BY date_add ASC LIMIT 50;";
 	$result = $db->query($q);
 
 	if ($result->num_rows == 0) {
@@ -46,6 +46,7 @@ while ( $row = $result->fetch_assoc() ) {
 			foreach ($response->order->payments as $key => $val) {
 				$paymentId = $val->id;
 				$paymentType = $val->type;
+				$paymentStatus = $val->status;
 				break;
 			}
 		// ---
@@ -56,14 +57,8 @@ while ( $row = $result->fetch_assoc() ) {
 				else { $type = 'cash'; }
 			// ---
 
-			// Status
-				if( $row['order_status_id'] == 20 ) {
-					$status = 'paid';
-				}
-				else if( $row['order_status_id'] == 21 ) {
-					$status = 'fail';
-				}
-				else { $status = 'not-paid'; }
+			// Status paid or not-paid
+				$status = 'paid';
 			// ---
 
 			// Comment
@@ -73,41 +68,8 @@ while ( $row = $result->fetch_assoc() ) {
 		// ---
 
 		// Processing
-			if( isset($paymentId) ){
-				if( $paymentType == $type ){
-					// Edit payment		
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.RCRM_KEY;
-						
-						// Set data
-							$data['by'] = 'id';
-
-							$payment['externalId'] = $row['id_paymant'];
-							$payment['amount'] = $row['total'];
-							$payment['paidAt'] = $row['date_add'];
-							$payment['comment'] = $comment;
-							$payment['type'] = $type;
-							$payment['status'] = $status;
-
-							$data['payment'] = json_encode($payment);
-						// ---
-
-						$response=connectPostAPI($url,$data);
-
-						if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error edit '.json_encode($response); }
-						else { $log[] = '['.$row['id_paymant'].']: success edit'; }
-
-						// Set proccessed
-							$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
-
-							if ($db->query($q) === TRUE) {
-							    $log[] = '['.$row['id_paymant'].']: success update db';
-							} else {
-							    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
-							}
-						// ---
-					// ---
-				}
-				else {
+			if( isset($paymentId) ){ // if isset payment
+				if( $paymentType == 'cash' && $paymentStatus == 'not-paid' ){
 					// Delete payment
 						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/delete?apiKey='.RCRM_KEY;
 						$data['id'] = $paymentId;
@@ -117,75 +79,78 @@ while ( $row = $result->fetch_assoc() ) {
 						if (!$response->success)  { $log[] = 'Error delete ['.$row['id_paymant'].'] '.json_encode($response); }
 						else { $log[] = 'Success delete ['.$row['id_paymant'].'] '; }
 					// ---
-
-					// Create payment
-						$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
-						
-						// Set data
-							$order['externalId'] = $row['order_id'];
-
-							$payment['externalId'] = $row['id_paymant'];
-							$payment['amount'] = $row['total'];
-							$payment['paidAt'] = $row['date_add'];
-							$payment['comment'] = $comment;
-							$payment['type'] = $type;
-							$payment['status'] = $status;
-							$payment['order'] =  $order;
-
-							$data['payment'] = json_encode($payment);
-						// ---
-
-						$response=connectPostAPI($url,$data);
-
-						if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error create '.json_encode($response); }
-						else { $log[] = '['.$row['id_paymant'].']: success create'; }
-
-						// Set proccessed
-							$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
-
-							if ($db->query($q) === TRUE) {
-							    $log[] = '['.$row['id_paymant'].']: success update db';
-							} else {
-							    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
-							}
-						// ---
-					// ---
 				}
 			}
-			else{
-				// Create payment
-					$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
-					
-					// Set data
-						$order['externalId'] = $row['order_id'];
 
-						$payment['externalId'] = $row['id_paymant'];
-						$payment['amount'] = $row['total'];
-						$payment['paidAt'] = $row['date_add'];
-						$payment['comment'] = $comment;
-						$payment['type'] = $type;
-						$payment['status'] = $status;
-						$payment['order'] =  $order;
 
-						$data['payment'] = json_encode($payment);
-					// ---
+			// Create payment
+				$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/create?apiKey='.RCRM_KEY;
+				
+				// Set data
+					$order['externalId'] = $row['order_id'];
 
-					$response=connectPostAPI($url,$data);
+					$payment['externalId'] = $row['id_paymant'];
+					$payment['amount'] = $row['total'];
+					$payment['paidAt'] = $row['date_add'];
+					$payment['comment'] = $comment;
+					$payment['type'] = $type;
+					$payment['status'] = $status;
+					$payment['order'] =  $order;
 
-					if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error create '.json_encode($response); }
-					else { $log[] = '['.$row['id_paymant'].']: success create'; }
-
-					// Set proccessed
-						$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
-
-						if ($db->query($q) === TRUE) {
-						    $log[] = '['.$row['id_paymant'].']: success update db';
-						} else {
-						    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
-						}
-					// ---
+					$data['payment'] = json_encode($payment);
 				// ---
-			}
+
+				$response=connectPostAPI($url,$data);
+
+				if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error create '.json_encode($response); }
+				else { $log[] = '['.$row['id_paymant'].']: success create'; }
+
+				// Set proccessed
+					$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
+
+					if ($db->query($q) === TRUE) {
+					    $log[] = '['.$row['id_paymant'].']: success update db';
+					} else {
+					    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
+					}
+				// ---
+			// ---
+
+
+			/*
+			// Edit payment		
+				$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.RCRM_KEY;
+				
+				// Set data
+					$data['by'] = 'id';
+
+					$payment['externalId'] = $row['id_paymant'];
+					$payment['amount'] = $row['total'];
+					$payment['paidAt'] = $row['date_add'];
+					$payment['comment'] = $comment;
+					$payment['type'] = $type;
+					$payment['status'] = $status;
+
+					$data['payment'] = json_encode($payment);
+				// ---
+
+				$response=connectPostAPI($url,$data);
+
+				if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error edit '.json_encode($response); }
+				else { $log[] = '['.$row['id_paymant'].']: success edit'; }
+
+				// Set proccessed
+					$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
+
+					if ($db->query($q) === TRUE) {
+					    $log[] = '['.$row['id_paymant'].']: success update db';
+					} else {
+					    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
+					}
+				// ---
+			// ---
+			*/
+
 
 			// Set task to managers
 				$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;
@@ -193,15 +158,7 @@ while ( $row = $result->fetch_assoc() ) {
 				// Create commonID
 					$commonId = uniqid();
 					
-					if( $row['order_status_id'] == 20 ) {
-						$taskText = 'Заказ №'.$row['order_id'].' - Оплачен - ['.$commonId.']';
-					}
-					else if( $row['order_status_id'] == 21 ) {
-						$taskText = 'Заказ №'.$row['order_id'].' - Не оплачен - ['.$commonId.']';
-					}
-					else{
-						$taskText = 'Заказ №'.$row['order_id'].' - Ошибка оплаты - ['.$commonId.']';
-					}
+					$taskText = 'Заказ №'.$row['order_id'].' - Оплачен - ['.$commonId.']';
 				// ---
 
 				foreach ($managers as $key => $manager_id) {

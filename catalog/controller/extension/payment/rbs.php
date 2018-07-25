@@ -25,13 +25,12 @@ class ControllerExtensionPaymentRbs extends Controller {
      * Переадресация покупателя при успешной регистрации.
      * Вывод ошибки при неуспешной регистрации.
      */
-    public function payment($order_id = 0) {
+    public function payment($order_id = 0, $payment_total = 0) {
         if (!$order_id && $this->request->server['REQUEST_METHOD'] != 'POST') {
             return;
         }
 
         $order_number = $order_id ? $order_id : $this->session->data['order_id'];
-        
         if( strpos('-', $order_number) !== false ){
             $order_id_tmp = explode('-', $order_number);
             $order_id = intval($order_id_tmp[0]);
@@ -39,19 +38,25 @@ class ControllerExtensionPaymentRbs extends Controller {
 
         $this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($order_id ? $order_id : $this->session->data['order_id']);
-        $amount = $order_info['total'] * 100;
+        
+        if ( $payment_total ) { $amount = $payment_total  * 100; }
+        else { $amount = $this->request->post['payment_total']  * 100; }
+
         $return_url = $this->url->link('extension/payment/rbs/callback');
 
         $this->initializeRbs();
         $response = $this->rbs->register_order($order_number, $amount, $return_url);
+
         if($order_id) {
             $this->session->data['payment_order_id'] = $order_id;
+
             if (isset($response['errorCode'])) {
                 return array('error' => $response['errorMessage']);
             } else {
-                return array('redirect' => $response['formUrl']);
+                return array('redirect' => $response['formUrl'], 'orderId' => $response['orderId']);
             }
         }
+
         if (isset($response['errorCode'])) {
             $this->document->setTitle($this->language->get('error_title'));
 
@@ -85,27 +90,30 @@ class ControllerExtensionPaymentRbs extends Controller {
             die('Illegal Access');
         }
 
-        $order_number = 0;
-        
-        if(isset($this->session->data['payment_order_id'])) {
-            //$order_number = $this->session->data['payment_order_id'];
+        // Get order number
+            $order_number = 0;
+
             $this->load->model('checkout/order');
-            $order_number = $this->model_checkout_order->getOrderIdByUniqRbsId($this->session->data['payment_order_id']);
-        }
+            $order_number = $this->model_checkout_order->getOrderIdByUniqRbsId($orderId);
+            $payment_total = $this->model_checkout_order->getPaymentTotalByUniqRbsId($orderId);
+        // ---
+        
 
         $order_info = $this->model_checkout_order->getOrder($order_number);
+
         if ($order_info) {
             $this->initializeRbs();
             
             $response = $this->rbs->get_order_status($orderId);
+
             if(($response['errorCode'] == 0) && (($response['orderStatus'] == 1) || ($response['orderStatus'] == 2))) {
-                $this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_paid_status_id'));
-                $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_paid_status_id'));
+                //$this->model_checkout_order->addOrderHistory($order_number, $this->config->get('config_paid_status_id'));
+                $this->model_checkout_order->addDetailPayment($order_number, $orderId, $this->config->get('config_paid_status_id'), false, $payment_total);
 
                 $this->session->data['success_order_id'] = $order_number;
                 $this->response->redirect($this->url->link('common/home', 'payment=rbs-success&order_id='.$order_number, true));
             } else {
-                $this->model_checkout_order->addDetailPayment($order_number, $this->config->get('config_nopaid_status_id'));
+                $this->model_checkout_order->addDetailPayment($order_number, $orderId, $this->config->get('config_nopaid_status_id'), false, $payment_total);
                 $this->response->redirect($this->url->link('checkout/failure', '', true));
             }
         }

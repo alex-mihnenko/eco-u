@@ -92,11 +92,15 @@ class ModelCheckoutOrder extends Model {
         $query = $this->db->query("UPDATE ".DB_PREFIX."order SET payment_code = '".$this->db->escape($code)."' WHERE order_id = '".(int)$order_id."'");
     }
 
-    public function addDetailPayment($order_id, $order_status_id, $processed = false) {
+    public function addDetailPayment($order_id, $uniqid, $order_status_id, $processed = false, $total) {
     	// Payment
     		$order = $this->getOrder($order_id);
+    		
+    		$payment_total = $total;
+			$payment_method = $order['payment_method'];
+			$payment_code = $order['payment_code'];
 
-    		$this->db->query("INSERT INTO " . DB_PREFIX . "order_payments SET order_id = '" . $order_id. "', order_status_id = '" . $order_status_id . "', total = '" . $order['total'] . "', payment_method = '" . $order['payment_method'] . "', payment_code = '" . $order['payment_code'] . "', date_add = NOW(), processed  = '" . $processed . "';");
+    		$this->db->query("INSERT INTO " . DB_PREFIX . "order_payments SET id_paymant_uniq = '" . $uniqid. "', order_id = '" . $order_id. "', order_status_id = '" . $order_status_id . "', total = '" . $payment_total . "', payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', date_add = NOW(), processed  = '" . $processed . "';");
     	// ---
     }
         
@@ -991,6 +995,18 @@ class ModelCheckoutOrder extends Model {
         }
 	}
 
+	public function getOrderPayments($order_id, $order_status_id){
+		$sql = "SELECT * FROM `" . DB_PREFIX . "order_payments` WHERE `order_id` = '" . (int)$order_id . "' AND `order_status_id` = '" . (int)$order_status_id . "'";
+
+		$query = $this->db->query($sql);
+
+        if($query->rows) {
+            return $query->rows;
+        } else {
+            return false;
+        }
+	}
+
 	public function setCustomer($order_id, $customer_id) {
 		$this->db->query("UPDATE " . DB_PREFIX . "order SET customer_id = '" . (int)$customer_id . "' WHERE order_id = '" . (int)$order_id . "'");
         return true;
@@ -1016,8 +1032,13 @@ class ModelCheckoutOrder extends Model {
         return $order_id.'-'.substr(md5(uniqid(rand(), true)), 0,4);
 	}
 
-	public function getOrderIdByUniqRbsId($payment_custom_field) {
-		$query = $this->db->query("SELECT `order_id` FROM `" . DB_PREFIX . "order` WHERE `payment_custom_field` = '" . $payment_custom_field . "'");
+	public function getOrderIdByUniqRbsId($id_paymant_uniq) {
+		$query = $this->db->query("SELECT `order_id` FROM `" . DB_PREFIX . "order_payments` WHERE `id_paymant_uniq` = '" . $id_paymant_uniq . "'");
         return $query->row['order_id'];
+	}
+
+	public function getPaymentTotalByUniqRbsId($id_paymant_uniq) {
+		$query = $this->db->query("SELECT `total` FROM `" . DB_PREFIX . "order_payments` WHERE `id_paymant_uniq` = '" . $id_paymant_uniq . "'");
+        return $query->row['total'];
 	}
 }

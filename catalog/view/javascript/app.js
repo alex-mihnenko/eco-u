@@ -1043,7 +1043,24 @@ $(document).ready(function() {
 				// ---
 					$order_id = $(this).attr('data-order-id');
 
-					$.post('.?route=ajax/index/rbsPostPayment', {order_id:$order_id}, function(data){
+					$.post('.?route=ajax/index/rbsPostPayment', {order_id:$order_id, action: 'payment'}, function(data){
+						// ---
+							console.log(data.redirect);
+							document.location = data.redirect;
+						// ---
+					},'json');
+
+					e.preventDefault();
+				// ---
+			});
+		// ---
+
+		// Surcharge
+			$('[data-action="rbs-surcharge"]').on('click', function(e){
+				// ---
+					$order_id = $(this).attr('data-order-id');
+
+					$.post('.?route=ajax/index/rbsPostPayment', {order_id:$order_id, action:'surcharge'}, function(data){
 						// ---
 							console.log(data.redirect);
 							document.location = data.redirect;

@@ -1394,7 +1394,7 @@ class ControllerAjaxIndex extends Controller {
           $response->subtotal = $this->session->data['subtotal'];
           $response->total = $this->session->data['total'];
           
-          if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, ($payment_method_online ? 16 : 1))) {
+          if($this->model_checkout_order->setDelivery($order_id, $customer_id, $data, 1)) {
             // ---
 
               // Set customer
@@ -1402,13 +1402,12 @@ class ControllerAjaxIndex extends Controller {
 
               if($payment_method_online) {
                 // ---
-                  // Add paymant detail
-                  $this->model_checkout_order->addDetailPayment($order_id, $this->config->get('config_payment_status_id'), true);
-
+                  $this->request->post['payment_total'] = $this->session->data['total'];
                   $rbsid = $this->model_checkout_order->generateUniqRbsId($order_id);
-                  $this->model_checkout_order->setPaymentCustomField($order_id, $rbsid);
 
                   $results = $this->load->controller('extension/payment/rbs/payment', $rbsid);
+                  
+                  $this->model_checkout_order->addDetailPayment($order_id, $results['orderId'], $this->config->get('config_payment_status_id'), true, $this->session->data['total']);
                   $response->payment = $results;
                   
                   if( isset($results['redirect']) ) {
@@ -1444,7 +1443,7 @@ class ControllerAjaxIndex extends Controller {
               } else {
                 // ---
                   // Add paymant detail
-                  $this->model_checkout_order->addDetailPayment($order_id, 1, true);
+                  $this->model_checkout_order->addDetailPayment($order_id, $order_id.'-'.$this->request->post['payment_code'], $this->config->get('config_order_status_id'), true, $this->session->data['total']);
 
                   // Clear cart
                   $this->cart->clear();
@@ -1492,31 +1491,86 @@ class ControllerAjaxIndex extends Controller {
       // ---
         // Init
           $order_id = $this->request->post['order_id'];
+          $action = $this->request->post['action'];
 
           $response = new stdClass();
         // ---
 
         // Create payment link
           $this->load->model('checkout/order');
-
           $rbsid = $this->model_checkout_order->generateUniqRbsId($order_id);
-          
-          $this->model_checkout_order->addDetailPayment($order_id, $this->config->get('config_payment_status_id'), false);
-          $this->model_checkout_order->setPaymentCustomField($order_id, $rbsid);
 
-          $results = $this->load->controller('extension/payment/rbs/payment', $rbsid);
-          $response->payment = $results;
-          
-          if( isset($results['redirect']) ) {
-            $response->redirect = $results['redirect'];
-          }
-          else {
-            // ---
-              $response->status = 'error';
-              $response->message = 'Не удалось сформировать ссылку для оплаты';
-              echo json_encode($response);
-              exit;
-            // ---
+          switch ($action) {
+            case 'payment':
+              // ---
+                // Get total
+                  $total = 0;
+                  $order = $this->model_checkout_order->getOrder($order_id);
+
+                   $total = $order['total'];
+
+                  $this->request->post['payment_total'] = $total;
+                // ---
+
+                $results = $this->load->controller('extension/payment/rbs/payment', $rbsid);
+
+                $this->model_checkout_order->addDetailPayment($order_id, $results['orderId'], $this->config->get('config_payment_status_id'), false, $total);
+                $response->payment = $results;
+                
+                if( isset($results['redirect']) ) {
+                  $response->redirect = $results['redirect'];
+                }
+                else {
+                  // ---
+                    $response->status = 'error';
+                    $response->message = 'Не удалось сформировать ссылку для оплаты';
+                    echo json_encode($response);
+                    exit;
+                  // ---
+                }
+              // ---
+            break;
+
+            case 'surcharge':
+              // ---
+                // Get total
+                  $total = 0;
+                  $total_surchage = 0;
+
+                  $order = $this->model_checkout_order->getOrder($order_id);
+                  $paymants = $this->model_checkout_order->getOrderPayments($order_id, 20);
+
+                  if($paymants !== false) {
+                      foreach($paymants as $paymant) {
+                          $total = $total + $paymant['total'];
+                      }
+                  }
+
+                  if( $total < $order['total'] ){
+                    $total_surchage = $order['total'] - $total;
+                  }
+
+                  $this->request->post['payment_total'] = $total_surchage;
+                // ---
+
+                $results = $this->load->controller('extension/payment/rbs/payment', $rbsid);
+
+                $this->model_checkout_order->addDetailPayment($order_id, $results['orderId'], $this->config->get('config_payment_status_id'), false, $total_surchage);
+                $response->payment = $results;
+                
+                if( isset($results['redirect']) ) {
+                  $response->redirect = $results['redirect'];
+                }
+                else {
+                  // ---
+                    $response->status = 'error';
+                    $response->message = 'Не удалось сформировать ссылку для оплаты';
+                    echo json_encode($response);
+                    exit;
+                  // ---
+                }
+              // ---
+            break;
           }
         // ---
 
