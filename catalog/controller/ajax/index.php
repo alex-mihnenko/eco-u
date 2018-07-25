@@ -1197,6 +1197,9 @@ class ControllerAjaxIndex extends Controller {
             // ---
           }
 
+          $customer_id = $this->customer->isLogged();
+          if( $customer_id == 8478 ){ $response->deliveryprice = 0; }
+
           // Check
           if( $response->deliveryprice === null ) {
             // ---
@@ -2469,10 +2472,10 @@ class ControllerAjaxIndex extends Controller {
         );
         if(!$this->customer->getCouponDiscount()) {
               $data['discount'] = $this->cart->getOrderDiscount();
-  			if(isset($this->session->data['personal_discount'])) {
-  				$personalPercentage = (int)$this->session->data['personal_discount'];
-  				$data['discount_percentage'] = $personalPercentage;
-  			}
+        if(isset($this->session->data['personal_discount'])) {
+          $personalPercentage = (int)$this->session->data['personal_discount'];
+          $data['discount_percentage'] = $personalPercentage;
+        }
           } else {
               if(isset($this->session->data['personal_discount'])) {
                   $personalDiscount = floor($this->session->data['personal_discount']/100*$this->cart->getTotal());

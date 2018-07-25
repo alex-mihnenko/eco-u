@@ -547,6 +547,7 @@
 					}
 
 					// Create payment
+						/*
 						// Amount
 							$amount = floatval($row_order['total']);
 						// ---
@@ -599,6 +600,7 @@
 
 						$log[] = 'Payment status '.json_encode($response);
 						$log[] = 'Items payment '.$amount;
+						*/
 					// ---
 				// ---
 			}
