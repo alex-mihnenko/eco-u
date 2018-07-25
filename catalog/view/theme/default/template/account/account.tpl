@@ -51,15 +51,18 @@
                                         <p><?php echo round($order['total'],2); ?> руб.</p>
                                     </td>
                                     <td>
-                                        <?php if( $order['paid'] == true ) { ?>
+                                        <?php if( $order['status_id'] == 5 || $order['status_id'] == 7 ) { ?>
                                             <a href="#repeat-<?php echo $order['order_id']; ?>" class="btn btn-bordered btn-sm" data-action="order-repeat" data-order-id="<?php echo $order['order_id']; ?>">Повторить</a>
                                         <?php } else { ?>
-                                            <?php if( $order['surcharge'] == true ) { ?>
-                                                <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-surcharge" data-order-id="<?php echo $order['order_id']; ?>">Доплатить</a>
-                                            <?php } else { ?>
-                                                <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                            <?php if( $order['paid'] == false ) { ?>
+                                                <?php if( $order['surcharge'] == true ) { ?>
+                                                    <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-surcharge" data-order-id="<?php echo $order['order_id']; ?>">Доплатить</a>
+                                                <?php } else { ?>
+                                                    <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                                <?php } ?>
                                             <?php } ?>
                                         <?php } ?>
+
                                     </td>
                                 </tr>
                             <?php } ?>

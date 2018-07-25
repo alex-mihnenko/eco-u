@@ -1197,9 +1197,6 @@ class ControllerAjaxIndex extends Controller {
             // ---
           }
 
-          $customer_id = $this->customer->isLogged();
-          if( $customer_id == 8478 ){ $response->deliveryprice = 0; }
-
           // Check
           if( $response->deliveryprice === null ) {
             // ---

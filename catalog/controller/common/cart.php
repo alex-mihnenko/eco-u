@@ -375,9 +375,6 @@ class ControllerCommonCart extends Controller {
                     }
                     
                     $data['error_total'] = floor($totalPrice) < 1000;
-                    
-                    $customer_id = $this->customer->isLogged();
-                    if( $customer_id == 8478 ){ $data['error_total'] = false; }
 
                     $data['islogged'] = $this->customer->isLogged();
                     $data['total'] = number_format(floor($totalPrice), 0, '.', ' ');
