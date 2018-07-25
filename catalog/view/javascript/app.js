@@ -1494,6 +1494,16 @@ $(document).ready(function() {
     function calculateDistanceFromMKAD(callback){
     	// ---
 
+    		if( typeof ymaps == 'undefined' ) {
+    			// ---
+    				var deliverydistance = 0;
+					$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+
+    				callback();
+    			// ---
+    		}
+
+
 	        var startPoint = [55.7533,37.6225]; // Moscow geo center
 
 	        // Calculation end point
