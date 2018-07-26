@@ -889,7 +889,10 @@ class ModelCheckoutOrder extends Model {
         $order_data['shipping_code'] = $this->session->data['shipping_code'];
         $order_data['shipping_method'] = $this->session->data['shipping_method'];
         $order_data['shipping_address_1'] = $this->session->data['shipping_address_1'];
-        $order_data['shipping_custom_field'] = $this->session->data['shipping_custom_field'];
+
+        if( isset($this->session->data['shipping_custom_field']) && !empty($this->session->data['shipping_custom_field']) ){
+        	$order_data['shipping_custom_field'] = $this->session->data['shipping_custom_field'];
+        }
 
         @$this->editOrder($order_id, $order_data);
         $this->addOrderHistory($order_id, $new_order_status);
