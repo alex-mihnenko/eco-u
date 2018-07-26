@@ -820,7 +820,7 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         // Get sipping area
-          unset($this->session->data['order_comment']);
+          unset($this->session->data['shipping_custom_field']);
 
           $this->load->model('dadata/index');
           
@@ -834,7 +834,7 @@ class ControllerAjaxIndex extends Controller {
           if( $deliverydistance == -1 ){
             if( isset($result['data'][0][0]['beltway_distance']) ) {
               $response->tobeltway = intval($result['data'][0][0]['beltway_distance']);
-              $this->session->data['order_comment'] = 'P.S.: Проверить! Рассчет стоимости доставки произведен не точно.';
+              $this->session->data['shipping_custom_field'] = 'Внимание! Расчет стоимости доставки произведен не точно. Необходима проверка.';
             }
           }
           else{
@@ -1327,9 +1327,6 @@ class ControllerAjaxIndex extends Controller {
           $payment_method = $this->request->post['payment_method'];
 
           $comment = $this->request->post['comment'];
-          if(isset($this->session->data['order_comment'])){
-            $comment .= $this->session->data['order_comment'];
-          }
 
           $strDateTime = 'Дата и время доставки: '.$this->request->post['date'].' '.$this->request->post['time'].PHP_EOL;
           $strDeliveryInterval = $this->request->post['date'].' '.$this->request->post['time'];

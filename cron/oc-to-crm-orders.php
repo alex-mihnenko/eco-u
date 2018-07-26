@@ -56,6 +56,7 @@
 		shipping_address_1,
 		shipping_method,
 		shipping_code,
+		shipping_custom_field,
 		delivery_time
 
 		FROM ".DB_PREFIX."order o 
@@ -162,9 +163,11 @@
 			$order['externalId'] = $row_order['order_id'];
 			$order['createdAt'] = $row_order['date_added'];
 
+			$order['managerComment'] = '';
+			if( $row_order['shipping_custom_field'] != '' ) { $order['managerComment'] .= $row_order['shipping_custom_field']."\n"; }
+
 			$order['discountManualAmount'] = 0;
 			$order['discountManualPercent'] = 0;
-			$order['managerComment'] = '';
 
 			// Set discounts
 				$order_discount_manual_amount = 0;
@@ -181,7 +184,7 @@
 						}
 						else if( $row_discounts['code'] == 'coupon' ) {
 							$order_discount_manual_amount = floatval($row_discounts['value']);
-							$order['managerComment'] = 'Скидка '.$row_discounts['value'].' по купону';
+							$order['managerComment'] .= "Скидка ".$row_discounts['value']." по купону\n";
 						}
 						else if(
 							$row_discounts['code'] == 'discount_percentage' ) { $order_discount_manual_percent = floatval($row_discounts['value']);
