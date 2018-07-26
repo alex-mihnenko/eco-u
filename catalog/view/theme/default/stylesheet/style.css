@@ -2349,7 +2349,7 @@ footer {
     font-weight: 700;
     line-height: 32px;
     box-sizing: border-box;
-    padding: 20px 0px;
+    padding: 40px 0px 20px;
     color: #585858;
 }
 
@@ -2362,6 +2362,11 @@ footer {
     padding: 0px 0px 31px 0px;
 }
 
+.about-product b,
+.about-product strong {
+    font-weight: bold;
+}
+
 .about-product ul > li {
     font-size: 16px;
     color: #585858;
@@ -2370,6 +2375,20 @@ footer {
     padding: 0px 0px 20px 0px;
     list-style: circle;
     margin-left: 40px;
+}
+
+.about-product a,
+.about-product a:active {
+    font-size: 16px;
+    color: #739d3d;
+    line-height: 26px;
+    box-sizing: border-box;
+    padding: 0px 0px 31px 0px;
+    text-decoration: underline;
+}
+
+.about-product a:hover {
+    text-decoration: none;
 }
 
 .a-p_list {
@@ -6188,6 +6207,13 @@ select.ca-i_input.input-error_3 {
 	}
 
 	.about-product ul > li {
+	    font-size: 14px;
+	    line-height: 22px;
+	    padding: 0 0px 15px 0px;
+	}
+
+	.about-product a,
+	.about-product a:active {
 	    font-size: 14px;
 	    line-height: 22px;
 	    padding: 0 0px 15px 0px;
