@@ -141,7 +141,12 @@ xxl
 
 		.products-grid .subcategory {
 			box-sizing: border-box;
-			padding: 0px 0px 80px;
+			padding: 0px;
+		}
+
+		.products-grid .subcategory > .rel {
+			box-sizing: border-box;
+			padding: 0px 0px 60px;
 		}
 
 		/*Product*/
