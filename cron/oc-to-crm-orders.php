@@ -355,6 +355,9 @@
 									if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
 										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['variant'].' кг. X '.$pack['amount']);
 									}
+									else if( $product['weight_class_id'] == 7 ){ // Liter
+										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['variant'].' л. X '.$pack['amount']);
+									}
 									else if( $product['weight_class_id'] == 1 ){ // Piece
 										$properties[] = array('name' => 'Фасовка '.$properties_count, 'value' => $pack['amount'].' шт. X '.$pack['variant']);
 									}
