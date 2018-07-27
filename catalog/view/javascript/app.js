@@ -241,7 +241,7 @@ $(document).ready(function() {
 		// ...
 
 		// Input address
-			$(document).on('keyup change paste', '.modal-basket [name="address"]', function(){
+			$(document).on('keyup change paste', '.modal-basket input[name="address"]', function(){
 				// ---
 					var $this = $(this);
 					var $form = $(this).parents('form');
@@ -249,11 +249,6 @@ $(document).ready(function() {
 
 					var address = $(this).val();
 					var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
-
-					if( $this.hasClass('select') ) {
-						$this.parents('.delivery-address-container').html('<input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки" required="">');
-						initSuggestionsDadata();
-					}
 
 					if( deliveryprice != 0 ){
                         $form.find('[name="deliveryprice"]').val('-1');
@@ -268,6 +263,33 @@ $(document).ready(function() {
                         $form.find('button[type="submit"]').html('Рассчитать стоимость доставки');
 					}
 				// ---
+			});
+
+			$(document).on('change', '.modal-basket select[name="address"]', function(){
+				var $this = $(this);
+				var $form = $(this).parents('form');
+				var $modal = $(this).parents('.remodal');
+
+				var address = $(this).val();
+				var deliveryprice = parseInt($form.find('[name="deliveryprice"]').val());
+
+				if( address == 0 ) {
+					$this.parents('.delivery-address-container').html('<input type="text" class="form-input text-align-center text-align-left-xs input" name="address" value="" placeholder="Адрес доставки" required="">');
+					initSuggestionsDadata();
+				}
+
+				if( deliveryprice != 0 ){
+                    $form.find('[name="deliveryprice"]').val('-1');
+
+                    $form.find('.cart-shipping-price .h4').html('');
+                    $form.find('.cart-total-price .h4').html('');
+
+                    $form.find('.cart-shipping-price').hide();
+                    $form.find('.cart-total-price').hide();
+
+
+                    $form.find('button[type="submit"]').html('Рассчитать стоимость доставки');
+				}
 			});
 		// ...
 
@@ -395,7 +417,6 @@ $(document).ready(function() {
 					var $modal = $(this).parents('.remodal');
 					var $button = $(this).find('button[type="submit"]');
 
-					var order_id = parseInt($form.find('[name="order_id"]').val());
 					var firstname = $form.find('[name="firstname"]').val();
 					var telephone = $form.find('[name="telephone"]').val();
 					var address = $form.find('[name="address"]').val();
@@ -434,7 +455,6 @@ $(document).ready(function() {
 				// ---
 
 				// Send request
-
 					if( deliveryprice == -1 ){
 						// Get shipping price
 							$button.html('Подождите');
@@ -445,7 +465,7 @@ $(document).ready(function() {
             					// ---
             						var deliverydistance = parseInt($form.find('[name="deliverydistance"]').val());
 
-									$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, deliverydistance: deliverydistance, date: date, time: time, comment: comment }, function(data){
+									$.post('/?route=ajax/index/ajaxGetDeliveryPrice', { firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, deliverydistance: deliverydistance, date: date, time: time, comment: comment }, function(data){
 					                	// ---
 					                		if( typeof yaCounter33704824 != 'undefined' ){
 						                        yaCounter33704824.reachGoal('checkout-delivery');
@@ -454,10 +474,6 @@ $(document).ready(function() {
 
 					                        if(data.status == 'success') {
 					                        	// ---
-						                            if((data.order_id !== undefined) && (data.order_id > 0)) {
-						                                $form.find('[name="order_id"]').val(data.order_id);
-						                            }
-
 						                            if( data.first_purchase == true ){
 						                            	discount = data.first_purchase_discount;
 						                            	$form.find('[name="discount"]').val(discount);
@@ -466,7 +482,6 @@ $(document).ready(function() {
 						                            	$form.find('.cart-first-purchase').show();
 						                            }
 
-						                            $form.find('[name="address"]').val(data.address);
 						                            $form.find('[name="deliveryprice"]').val(data.deliveryprice);
 
 						                            $form.find('.cart-shipping-price [data-type="value"]').html(data.deliveryprice+' рублей');
@@ -515,7 +530,7 @@ $(document).ready(function() {
 							$button.attr('disabled','true');
 							$button.attr('type','button');
 
-							$.post('/?route=ajax/index/ajaxConfirmOrder', { order_id: order_id, firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, date: date, time: time, comment: comment }, function(data){
+							$.post('/?route=ajax/index/ajaxConfirmOrder', { firstname: firstname, telephone: telephone, address: address, payment_method: payment_method, payment_code: payment_code, date: date, time: time, comment: comment }, function(data){
 			                	// ---
 			                		if( typeof yaCounter33704824 != 'undefined' ){
 										yaCounter33704824.reachGoal('checkout-confim');
@@ -1126,6 +1141,58 @@ $(document).ready(function() {
 				// ---
 			});
 		// ---
+
+		// Profile
+			$('.f-p_submit').click(function(){
+	            var addresses = [];
+	            $('input[data-name="customer_address"].f-p_input').each(function(i, item, arr){
+	                var address_id = $(item).attr('data-target-id');
+	                console.log(address_id);
+	                if(parseInt(address_id) <= 0) {
+	                    address_id = 0;
+	                }
+	                addresses[addresses.length] = {
+	                    value: $(item).val(),
+	                    address_id: address_id
+	                }
+	            });
+	            var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
+	            var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
+	            var email = $('input[data-name="customer_email"].f-p_input').val();
+	            var email_hidden = $('input[data-name="customer_email_virtual"].f-p_input').val();
+	            if($('#myId1').prop('checked') && (!email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) || email.match(/^[0-9]+\@eco\-u\.ru/i)) {
+	                $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
+	                $('html, body').animate({
+	                    scrollTop: '0px'
+	                }, 'fast');
+	                return false;
+	            } 
+	            if(email_hidden && email == '') {
+	                email = email_hidden;
+	            }
+	            var newsletter = $('#myId1').prop('checked') ? 1 : 0;
+	            $.post('/?route=ajax/index/ajaxSetCustomerData', {
+	                addresses: addresses,
+	                firstname: firstname,
+	                telephone: telephone,
+	                email: email,
+	                newsletter: newsletter
+	            }, function(msg){
+	                if(msg.status == 'success') {
+	                    msg.dadata.forEach(function(item, i, arr){
+	                        $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
+	                    });
+	                    $('.f-p_input').removeClass('input-error_2');
+	                    $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
+	                    setTimeout(function(){
+	                        $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
+	                    }, 3000);
+	                } else {
+	                    
+	                }
+	            }, "json");
+	        });
+		// ---
 	// ---
 
 	// Components
@@ -1411,7 +1478,7 @@ $(document).ready(function() {
 // Cart
 	function initSuggestionsDadata(){
 		// ---
-			$('.modal-basket [name="address"]').suggestions({
+			$('.modal-basket input[name="address"]').suggestions({
                 token: "a4ad0e938bf22c2ffbf205a4935ef651fc92ed52",
                 type: "ADDRESS",
                 count: 5,

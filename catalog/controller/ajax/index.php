@@ -565,6 +565,7 @@ class ControllerAjaxIndex extends Controller {
           // Основные данные заказа
           $data['products'] = $this->cart->getProducts();
           $total = 0;
+
           foreach($data['products'] as $i => $product) {
               if(empty($product['weight_variants'])) {
                   $data['products'][$i]['amount'] = round($product['quantity']*$product['packaging']);
@@ -581,9 +582,7 @@ class ControllerAjaxIndex extends Controller {
               $total += ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
           }
           $data['total'] = $total;
-          
-          $is_guest = false;
-          
+              
           $data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
           $data['store_id'] = $this->config->get('config_store_id');
           $data['store_name'] = $this->config->get('config_name');
@@ -732,11 +731,12 @@ class ControllerAjaxIndex extends Controller {
                       }
                   }
 
-                $order_total = Array(
-                    'value' => $total_price,
-                    'title' => "#{$order_id} ({$coupon['code']})"
-                );
-                $data['total'] = $total_price;
+                  $order_total = Array(
+                      'value' => $total_price,
+                      'title' => "#{$order_id} ({$coupon['code']})"
+                  );
+                  $data['total'] = $total_price;
+                // ---
                 
                 if(!$this->customer->getCouponDiscount()) {
                     $data['discount'] = $this->cart->getOrderDiscount();
@@ -755,15 +755,14 @@ class ControllerAjaxIndex extends Controller {
                 $this->model_extension_total_coupon->confirm($order_info, $order_total);
                 $this->model_checkout_order->editOrder($order_id, $data);
                 $this->model_checkout_order->addOrderHistory($order_id, 1);
-              }
+            }
+
             $json = Array('status' => 'success', 'orderId' => $order_id);
           } else {
             $json = Array('status' => 'error');
           }
           
-          if($return) {
-            return $order_id;
-          }
+          if($return) { return $order_id; }
           
           $this->response->setOutput(json_encode($json));
     }
@@ -793,9 +792,6 @@ class ControllerAjaxIndex extends Controller {
           $address = $this->request->post['address'];
           $deliverydistance = $this->request->post['deliverydistance'];
 
-          $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : false;
-          
-
           $this->load->model('account/customer');
           $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
 
@@ -804,19 +800,8 @@ class ControllerAjaxIndex extends Controller {
           }
 
           $response = new stdClass();
-        // ---
 
-        // Create order
-          if($order_id !== false && !$order_id) {
-            $order_id = (int)$this->ajaxAddOrder(true);
-          }
-        // ---
-        
-        // Roistat
           $this->load->model('checkout/order');
-
-          $order_roistat_visit_id = array_key_exists('roistat_visit', $_COOKIE) ? $_COOKIE['roistat_visit'] : "неизвестно";
-          $this->model_checkout_order->addRoistatVisitId($order_id, $order_roistat_visit_id);
         // ---
 
         // Get sipping area
@@ -1305,7 +1290,6 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         // Response
-        $response->order_id = $order_id;
         $response->status = 'success';
         $response->message = 'Цена доставки получена';
 
@@ -1319,8 +1303,6 @@ class ControllerAjaxIndex extends Controller {
       // ---
 
         // Init
-          $order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
-
           $firstname = $this->request->post['firstname'];
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
@@ -1333,18 +1315,18 @@ class ControllerAjaxIndex extends Controller {
 
           $response = new stdClass();
 
-          // Check
-            if( $order_id == 0 ) {
-              // ---
-                $response->status = 'error';
-                $response->message = 'Заказ не найден';
-                echo json_encode($response);
-                exit;
-              // ---
-            }
-          // ---
+          $this->load->model('checkout/order');
         // ---
         
+        // Create order
+          $order_id = (int)$this->ajaxAddOrder(true);
+        // ---
+        
+        // Roistat
+          $order_roistat_visit_id = array_key_exists('roistat_visit', $_COOKIE) ? $_COOKIE['roistat_visit'] : "неизвестно";
+          $this->model_checkout_order->addRoistatVisitId($order_id, $order_roistat_visit_id);
+        // ---
+
         // Check customer
           $this->load->model('account/customer');
           $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
@@ -1387,8 +1369,6 @@ class ControllerAjaxIndex extends Controller {
             // ---
           }
         // ---
-
-        $this->load->model('checkout/order');
 
         // Set order data
           $data = Array(

@@ -33,8 +33,7 @@ class ModelCheckoutOrder extends Model {
     
 	public function addOrder($data) {
         // Заглушка для total в oc_order
-        if(!isset($data['total'])) 
-        {
+        if(!isset($data['total'])) {
             $total = 0;
 
             foreach ($this->cart->getProducts() as $product) {
