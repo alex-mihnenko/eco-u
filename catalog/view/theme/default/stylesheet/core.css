@@ -1547,6 +1547,12 @@ xxl
 
 	.svg > img {
 		width: inherit;
+		height: inherit;
+	}
+
+	.svg > svg {
+		width: inherit;
+		height: inherit;
 	}
 
 	.svg.logo {
@@ -1566,6 +1572,10 @@ xxl
 		top: 0rem;
 		width: 100px;
 		height: 100px;
+	}
+
+	.svg.logout {
+		width: 24px;
 	}
 
 	.svg-settings {

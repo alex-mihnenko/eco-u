@@ -20,42 +20,46 @@ class ControllerAccountLogout extends Controller {
 			$this->response->redirect($this->url->link('account/logout', '', true));
 		}
 
-		$this->load->language('account/logout');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+        $this->response->redirect($this->url->link('common/home'));
 
-		$data['breadcrumbs'] = array();
+		// $this->load->language('account/logout');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
+		// $this->document->setTitle($this->language->get('heading_title'));
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_account'),
-			'href' => $this->url->link('account/account', '', true)
-		);
+		// $data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_logout'),
-			'href' => $this->url->link('account/logout', '', true)
-		);
+		// $data['breadcrumbs'][] = array(
+		// 	'text' => $this->language->get('text_home'),
+		// 	'href' => $this->url->link('common/home')
+		// );
 
-		$data['heading_title'] = $this->language->get('heading_title');
+		// $data['breadcrumbs'][] = array(
+		// 	'text' => $this->language->get('text_account'),
+		// 	'href' => $this->url->link('account/account', '', true)
+		// );
 
-		$data['text_message'] = $this->language->get('text_message');
+		// $data['breadcrumbs'][] = array(
+		// 	'text' => $this->language->get('text_logout'),
+		// 	'href' => $this->url->link('account/logout', '', true)
+		// );
 
-		$data['button_continue'] = $this->language->get('button_continue');
+		// $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['continue'] = $this->url->link('common/home');
+		// $data['text_message'] = $this->language->get('text_message');
 
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['column_right'] = $this->load->controller('common/column_right');
-		$data['content_top'] = $this->load->controller('common/content_top');
-		$data['content_bottom'] = $this->load->controller('common/content_bottom');
-		$data['footer'] = $this->load->controller('common/footer');
-		$data['header'] = $this->load->controller('common/header');
+		// $data['button_continue'] = $this->language->get('button_continue');
 
-		$this->response->setOutput($this->load->view('common/success', $data));
+		// $data['continue'] = $this->url->link('common/home');
+
+		// $data['column_left'] = $this->load->controller('common/column_left');
+		// $data['column_right'] = $this->load->controller('common/column_right');
+		// $data['content_top'] = $this->load->controller('common/content_top');
+		// $data['content_bottom'] = $this->load->controller('common/content_bottom');
+		// $data['footer'] = $this->load->controller('common/footer');
+		// $data['header'] = $this->load->controller('common/header');
+
+		// $this->response->setOutput($this->load->view('common/success', $data));
 	}
 }

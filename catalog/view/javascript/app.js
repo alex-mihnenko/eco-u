@@ -1463,10 +1463,17 @@ $(document).ready(function() {
 				if( data.status == true ){
 					$('a[data-marker="auth-button"]').removeAttr('data-remodal-target');
 					$('a[data-marker="auth-button"]').attr('href','/my-account');
+
+					if( window.location.pathname == '/my-account' ){
+						$('a[data-marker="auth-button"').css('display','none');
+						$('a[data-marker="logout-button"]').css('display','block');
+					}
 				}
 				else {
 					$('a[data-marker="auth-button"]').attr('data-remodal-target','modal');
 					$('a[data-marker="auth-button"]').attr('href','#auth');
+
+					$('a[data-marker="logout-button"]').css('display','none');
 				}
 			// ---
 		},'json');

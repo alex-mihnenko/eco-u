@@ -43,6 +43,10 @@
 							<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
 						</a>
 
+						<a class="svg-container pointer" href="<?php echo $logout; ?>" data-marker="logout-button" style="display: none;">
+							<i class="svg logout" data-src="icon-logout.svg"><?php loadSvg('name', 'icon-logout.svg'); ?></i>
+						</a>
+
 						<div class="svg-container pointer" data-remodal-target="modal-phone">
 							<i class="svg" data-src="icon-phone.svg"><?php loadSvg('name', 'icon-phone.svg'); ?></i>
 						</div>
@@ -117,6 +121,10 @@
 
 						<a class="svg-container pointer" href="#empty" data-marker="auth-button">
 							<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
+						</a>
+
+						<a class="svg-container pointer" href="<?php echo $logout; ?>" data-marker="logout-button" style="display: none;">
+							<i class="svg logout" data-src="icon-logout.svg"><?php loadSvg('name', 'icon-logout.svg'); ?></i>
 						</a>
 
 
