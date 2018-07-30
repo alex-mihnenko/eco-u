@@ -47,11 +47,7 @@
                     else { $instock = false; }
                 ?>
 
-                <?php if( $instock ) { ?>
                 <div class="col thumb">
-                <?php } else { ?>
-                <div class="col thumb none">
-                <?php } ?>
                     <img src="<?php echo $product['image']; ?>" alt="" title="">
                 </div>
 
