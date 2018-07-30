@@ -94,6 +94,7 @@ class ModelAccountOrder extends Model {
 				'currency_value'          => $order_query->row['currency_value'],
 				'date_modified'           => $order_query->row['date_modified'],
 				'date_added'              => $order_query->row['date_added'],
+				'delivery_time'           => $order_query->row['delivery_time'],
 				'ip'                      => $order_query->row['ip']
 			);
 		} else {
@@ -143,6 +144,12 @@ class ModelAccountOrder extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 
 		return $query->rows;
+	}
+
+	public function getOrderStatus($order_status_id) {
+		$query = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "';");
+
+		return $query->row['name'];
 	}
 
 	public function getOrderHistories($order_id) {

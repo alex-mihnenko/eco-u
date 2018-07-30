@@ -434,106 +434,131 @@ class ControllerAjaxIndex extends Controller {
       // ---
     }
 
-    // Get order
-    public function getCustomerOrder() {
-      // ---
-        // Init
-          $order_id = $this->request->post['order_id'];
-          
-          $response = new stdClass();
+    // About order
+       public function getAboutOrderModal() {
         // ---
+          // Init
+            $order_id = $this->request->post['order_id'];
+            
+            $response = new stdClass();
+          // ---
 
-        // Get
-          $options['order_id'] = $order_id;
+          // Get
+            $options['order_id'] = intval($order_id);
+            
+            $response->order_id = $order_id;
+            $response->html = $this->load->controller('account/order',$options);
+          // ---
+
+          // Response
+          $response->status = 'success';
           
-          $response->order_id = $order_id;
-          $response->html = $this->load->controller('account/repeat',$options);
+          echo json_encode($response);
+          exit;
         // ---
-
-        // Response
-        $response->status = 'success';
-        
-        echo json_encode($response);
-        exit;
-      // ---
-    }
+      }
+    // ---
 
     // Reorder
-    public function repeatCustomerOrder() {
-      // ---
-        // Init
-          $order_id = $this->request->post['order_id'];
-          
-          $response = new stdClass();
+      public function getReorderModal() {
         // ---
+          // Init
+            $order_id = $this->request->post['order_id'];
+            
+            $response = new stdClass();
+          // ---
 
-        // Get
-          $this->load->model('account/order');
-          $this->load->model('catalog/product');
+          // Get
+            $options['order_id'] = $order_id;
+            
+            $response->order_id = $order_id;
+            $response->html = $this->load->controller('account/repeat',$options);
+          // ---
 
-          $products = $this->model_account_order->getOrderProducts($order_id);
+          // Response
+          $response->status = 'success';
+          
+          echo json_encode($response);
+          exit;
+        // ---
+      }
 
-          $response->count = 0;
+      public function repeatCustomerOrder() {
+        // ---
+          // Init
+            $order_id = $this->request->post['order_id'];
+            
+            $response = new stdClass();
+          // ---
 
-          foreach ($products as $product) {
-            // ---
-              $product_info = $this->model_catalog_product->getProduct($product['product_id']);
+          // Get
+            $this->load->model('account/order');
+            $this->load->model('catalog/product');
 
-              $product_id = $product['product_id'];
-              $quantity = $product['amount'];
-              $packaging = $product['variant'];
+            $products = $this->model_account_order->getOrderProducts($order_id);
+
+            $response->count = 0;
+
+            foreach ($products as $product) {
+              // ---
+                $product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
+                $product_id = $product['product_id'];
+                $quantity = $product['amount'];
+                $packaging = $product['variant'];
 
 
-              if ($product_info) {
-                // ---
-                  // In stock calculate
-                  if( $product_info['quantity'] > 0 && $product_info['status'] == 1 ) { $instock = true; }
-                  else if ( $product_info['quantity'] <= 0 && $product_info['status'] == 1 && ($product_info['stock_status_id'] == 7 || $product_info['stock_status_id'] == 6) ) { $instock = true; }
-                  else { $instock = false; }
+                if ($product_info) {
+                  // ---
+                    // In stock calculate
+                    if( $product_info['quantity'] > 0 && $product_info['status'] == 1 ) { $instock = true; }
+                    else if ( $product_info['quantity'] <= 0 && $product_info['status'] == 1 && ($product_info['stock_status_id'] == 7 || $product_info['stock_status_id'] == 6) ) { $instock = true; }
+                    else { $instock = false; }
 
-                  if ( $instock ) {
-                    // ---
-                      if($product_info['weight_variants'] !== '') {
-                        $weightVariants = explode(',', $product_info['weight_variants']);
-                        $weight_variant = array_search($product['variant'], $weightVariants);
-                      } else {
-                        $weight_variant = 1;
-                      }
+                    if ( $instock ) {
+                      // ---
+                        if($product_info['weight_variants'] !== '') {
+                          $weightVariants = explode(',', $product_info['weight_variants']);
+                          $weight_variant = array_search($product['variant'], $weightVariants);
+                        } else {
+                          $weight_variant = 1;
+                        }
 
-                      $option = array();
+                        $option = array();
 
-                      $recurring_id = 0;
-                                             
-                      $this->cart->add($product_id, $quantity, $packaging, $option, $recurring_id, $weight_variant);
+                        $recurring_id = 0;
+                                               
+                        $this->cart->add($product_id, $quantity, $packaging, $option, $recurring_id, $weight_variant);
 
-                      $response->report[$product_id] = array('quantity' => $quantity, 'packaging' => $packaging, 'option' => $option, 'recurring_id' => $recurring_id, 'weight_variant' => $weight_variant);
-                      
-                      $response->count++;
-                    // ---
-                  }
-                // ---
-              }
-            // ---
+                        $response->report[$product_id] = array('quantity' => $quantity, 'packaging' => $packaging, 'option' => $option, 'recurring_id' => $recurring_id, 'weight_variant' => $weight_variant);
+                        
+                        $response->count++;
+                      // ---
+                    }
+                  // ---
+                }
+              // ---
+            }
+
+            $response->order_id = $order_id;
+          // ---
+
+          // Response
+          if( $response->count > 0 ) {
+            $response->status = 'success';
+            $response->message = 'Товары добавлены в корзину.<br>Вы можете продолжить<br>оформление заказа.';
+          }
+          else {
+            $response->status = 'error';
+            $response->message = 'Нет товаров для добавления в корзину';
           }
 
-          $response->order_id = $order_id;
+          
+          echo json_encode($response);
+          exit;
         // ---
-
-        // Response
-        if( $response->count > 0 ) {
-          $response->status = 'success';
-          $response->message = 'Товары добавлены в корзину.<br>Вы можете продолжить<br>оформление заказа.';
-        }
-        else {
-          $response->status = 'error';
-          $response->message = 'Нет товаров для добавления в корзину';
-        }
-
-        
-        echo json_encode($response);
-        exit;
-      // ---
-    }
+      }
+    // ---
 
     public function isCustomerLogged(){
       // Init

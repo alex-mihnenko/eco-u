@@ -551,6 +551,116 @@ xxl
 			z-index: -1;
 		}
 	/* Cart */
+
+	/* Account */
+		/* Order about */
+			.table-history tr > td {
+				cursor: pointer;
+			}
+
+			.table-history tr > td:last-child {
+				cursor: default;
+			}
+
+			/* Status */
+				.remodal.modal-order-about .order-status {
+					display: block;
+					font-size: 14px;
+    				line-height: 24px;
+				}
+
+				.remodal.modal-order-about .order-status span:last-child {
+					color: #374047;
+				}
+
+				.remodal.modal-order-about .order-status span:last-child i.svg {
+					display: inline-block;
+					top: 2px;
+					width: 16px;
+					height: 16px;
+					margin: 0px 0px 0px 30px;
+				}
+			/* Status */
+
+			/* Delivery */
+				.remodal.modal-order-about .delivery {
+					display: table;
+					width: 100%;
+					height: auto;
+					box-sizing: border-box;
+					padding: 15px 0px;
+					border-top: 1px solid #e2e2e2;
+				}
+
+				.remodal.modal-order-about .delivery .col {
+					display: table-cell;
+					vertical-align: middle;
+					text-align: left;
+				}
+
+				.remodal.modal-order-about .delivery .col.thumb {
+				    width: 80px;
+				    height: 80px;
+				    text-align: center;
+				}
+
+				.remodal.modal-order-about .delivery .col.thumb .svg {
+					width: 60px;
+					height: 60px;
+				}
+
+				.remodal.modal-order-about .delivery .col.about {
+				    width: 64%;
+				    box-sizing: border-box;
+				    padding: 0px 30px;
+				}
+
+				.remodal.modal-order-about .delivery p {
+				    display: block;
+				    padding: 0;
+				    font-size: 15px;
+				    line-height: 18px;
+				    font-weight: 500;
+				    color: #868281;
+				}
+
+				.remodal.modal-order-about .delivery p.xs {
+				    font-size: 14px;
+				    line-height: 24px;
+				    font-weight: 300;
+				    color: #767B81;
+				    box-sizing: border-box;
+				    padding: 0 0 5px;
+				}
+
+				@media (max-width: 478px) {
+					.remodal.modal-order-about .delivery .col.thumb {
+					    width: 40px;
+					    height: 40px;
+					}
+
+					.remodal.modal-order-about .delivery .col.thumb .svg {
+						width: 40px;
+						height: 40px;
+					}
+
+					.remodal.modal-order-about .delivery .col.about {
+					    padding: 0px 15px;
+					}
+
+					.remodal.modal-order-about .delivery p {
+					    font-size: 12px;
+					    line-height: 16px;
+					}
+
+					.remodal.modal-order-about .delivery p.xs {
+					    font-size: 10px;
+					    line-height: 14px;
+					}
+				}
+			/* Delivery */
+		/* Order about */
+	/* Account */
 /* Assets */
 
 /* Modals */
@@ -1076,6 +1186,7 @@ xxl
 
 				@media (max-width: 575px) {
 					.remodal .cart-products .product .col.about {
+						width: 64%;
 						padding: 15px;
 					}
 				}

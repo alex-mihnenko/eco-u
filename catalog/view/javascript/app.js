@@ -863,6 +863,7 @@ $(document).ready(function() {
 		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();
 
 		app.modals.repeat = $('[data-remodal-id="modal-repeat"]').remodal();
+		app.modals.orderAbout = $('[data-remodal-id="modal-order-about"]').remodal();
 
 		$('.remodal').on('focus', '.input-error_1 input', function(){
 			$(this).parents('.remodal').find('.t-c_input').removeClass('input-error_1');
@@ -1088,12 +1089,29 @@ $(document).ready(function() {
 			});
 		// ---
 
+		// About order
+			$('[data-action="order-about"]').on('click', function(e){
+				// ---
+					$order_id = $(this).parents('[data-order-id]').attr('data-order-id');
+
+					$.post('.?route=ajax/index/getAboutOrderModal', {order_id:$order_id}, function(data){
+						// ---
+							$('[data-remodal-id="modal-order-about"]').find('.body').html(data.html);
+							app.modals.orderAbout.open();
+						// ---
+					},'json');
+
+					e.preventDefault();
+				// ---
+			});
+		// ---
+
 		// Repeat
 			$('[data-action="order-repeat"]').on('click', function(e){
 				// ---
 					$order_id = $(this).attr('data-order-id');
 
-					$.post('.?route=ajax/index/getCustomerOrder', {order_id:$order_id}, function(data){
+					$.post('.?route=ajax/index/getReorderModal', {order_id:$order_id}, function(data){
 						// ---
 							$('[data-remodal-id="modal-repeat"]').find('.body').html(data.html);
 							app.modals.repeat.open();

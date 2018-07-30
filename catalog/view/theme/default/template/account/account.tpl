@@ -1,5 +1,13 @@
 <?php echo $header; ?>
 
+<div class="remodal modal-order-about" data-remodal-id="modal-order-about">
+    <button data-remodal-action="close" class="remodal-close"></button>
+
+    <div class="body">
+    </div>
+</div>
+
+
 <div class="remodal modal-repeat" data-remodal-id="modal-repeat">
     <button data-remodal-action="close" class="remodal-close"></button>
 
@@ -37,17 +45,17 @@
 
 
                             <?php foreach($orders as $order) { ?>
-                                <tr>
-                                    <td class="t-h_number">№ <?php echo $order['order_id']; ?></td>
-                                    <td class="t-h_width"><?php echo $order['date']; ?></td>
-                                    <td class="t-h_width">
+                                <tr data-order-id="<?php echo $order['order_id']; ?>">
+                                    <td class="t-h_number" data-action="order-about">№ <?php echo $order['order_id']; ?></td>
+                                    <td class="t-h_width" data-action="order-about"><?php echo $order['date']; ?></td>
+                                    <td class="t-h_width" data-action="order-about">
                                         <?php if( $order['status_id'] != 7 ) { ?>
                                             <p class="text-color-green"><?php echo $order['status']; ?></p>
                                         <?php } else { ?>
                                             <p class="text-color-red"><?php echo $order['status']; ?></p>
                                         <?php } ?>
                                     </td>
-                                    <td>
+                                    <td data-action="order-about">
                                         <p><?php echo round($order['total'],2); ?> руб.</p>
                                     </td>
                                     <td>
