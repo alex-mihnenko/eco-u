@@ -26,6 +26,10 @@ class ControllerAccountOrder extends Controller {
 						if( $total['code'] == 'shipping' ) {
 							$data['shipping_total'] = round($total['value']);
 						}
+
+						if( $total['code'] == 'total' ) {
+							$data['total'] = round($total['value']);
+						}
 					// ---
 				}
 			// ---
@@ -42,7 +46,7 @@ class ControllerAccountOrder extends Controller {
 				$data['order_status_text'] = $this->model_account_order->getOrderStatus($order_info['order_status_id']);
 			// ---
 
-			// Delivery time 31.07.2018 15:00-20:00
+			// Delivery time
 				$delivery_time_arr = explode(' ', $order_info['delivery_time']);
 				$delivery_date_arr = explode('.', $delivery_time_arr[0]);
 
@@ -53,7 +57,6 @@ class ControllerAccountOrder extends Controller {
 
 
 
-    	$total = 0;
 		$products = $this->model_account_order->getOrderProducts($options['order_id']);
 
 		foreach ($products as $product) {
@@ -112,8 +115,6 @@ class ControllerAccountOrder extends Controller {
 
 				$product_price = (round($price));
 				$product_total = ( round(($price) * $product['variant']) * $product['amount'] );
-	            
-           		$total = $total + $product_total;
             // ---
 
 			$data['products'][] = array(
@@ -132,8 +133,6 @@ class ControllerAccountOrder extends Controller {
 				'return'   => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], true)
 			);
 		}
-
-		$data['total'] = $total;
 
         return $this->load->view('account/order_about',$data);
     }
