@@ -28,7 +28,7 @@ class ControllerAccountOrder extends Controller {
 						}
 
 						if( $total['code'] == 'total' ) {
-							$data['total'] = round($total['value']);
+							$data['total'] = round($total['value'],2);
 						}
 					// ---
 				}
