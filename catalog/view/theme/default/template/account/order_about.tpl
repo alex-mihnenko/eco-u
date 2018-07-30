@@ -56,9 +56,7 @@
                 </div>
 
                 <div class="col quantity text-align-left-xs text-align-left-sm">
-                    <?php if( $instock ) { ?>
-                        <p><?php echo $product['quantity']; ?> <span><?php echo $product['weight_class']; ?></span></p>
-                    <?php } ?>
+                    <p><?php echo $product['quantity']; ?> <span><?php echo $product['weight_class']; ?></span></p>
 
                     <div class="total">
                         <hr class="indent xxs">
