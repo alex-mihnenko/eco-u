@@ -19,7 +19,8 @@ class ControllerAccountOrder extends Controller {
 
 			// Totals
 				$order_totals = $this->model_account_order->getOrderTotals($options['order_id']);
-				$data['order_totals'] = 0;
+				$data['total'] = 0;
+				$data['discount'] = 0;
 
 				foreach ($order_totals as $key => $total) {
 					// ---
@@ -29,6 +30,10 @@ class ControllerAccountOrder extends Controller {
 
 						if( $total['code'] == 'total' ) {
 							$data['total'] = round($total['value'],2);
+						}
+
+						if( $total['code'] == 'discount' ) {
+							$data['discount'] = round($total['value'],2);
 						}
 					// ---
 				}

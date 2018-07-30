@@ -61,9 +61,7 @@
             <div class="col">
                 <select id="delivery_date_m" name="tech" class="tech ca-i_input">
                     <?php foreach($delivery_date as $date) { ?>
-                        <?php if( $date['format'] != '30.04.2018' && $date['format'] != '01.05.2018' && $date['format'] != '09.05.2018' ) { ?>
-                            <option value="<?php echo $date['format'] ?>"><?php echo $date['text']; ?></option>
-                        <?php } ?>
+                        <option value="<?php echo $date['format'] ?>"><?php echo $date['text']; ?></option>
                     <?php } ?>
                 </select> 
                 <hr class="indent xs">

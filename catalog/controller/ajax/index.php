@@ -938,7 +938,7 @@ class ControllerAjaxIndex extends Controller {
                     $basePrice = $this->cart->getTotal();
                     $order_discount = $customer_discount/100;
 
-                    $personal_discount = floor($order_discount * $basePrice);
+                    $personal_discount = $order_discount * $basePrice;
                     $personal_discount_percentage = $customer_discount;
                 // ---
 
@@ -953,14 +953,14 @@ class ControllerAjaxIndex extends Controller {
                         }
                     }
 
-                    $customer_discount = intval(floor($totalCustomerOutcome/10000));
+                    $customer_discount = $totalCustomerOutcome/10000;
                     if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                     
                     $order_discount = $customer_discount/100;
                     $basePrice = $this->cart->getTotal();
 
 
-                    $cumulative_discount = floor($order_discount * $basePrice);
+                    $cumulative_discount = $order_discount * $basePrice;
                     $cumulative_discount_percentage = $customer_discount;
                 // ---
             }
@@ -979,7 +979,7 @@ class ControllerAjaxIndex extends Controller {
             } else {
                 // ---
                     $coupon = $this->customer->getCouponDiscount();
-                    $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
+                    $couponDiscount = $coupon['discount']/100*$this->cart->getTotal();
                     $couponPercentage = $coupon['discount'];
 
                     if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {

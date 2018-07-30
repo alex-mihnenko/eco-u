@@ -92,7 +92,7 @@
 
                 <p class="xs message-error"></p>
             <?php } else { ?>
-                <p class="text-color-green">Ваша скидка <?php echo intval($discount) ?> руб.</p>
+                <p class="text-color-green">Ваша скидка <?php echo round($discount,2) ?> руб.</p>
             <?php } ?>
         </div>
         <hr class="indent xs">

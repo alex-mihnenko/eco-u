@@ -93,6 +93,12 @@
     <div class="cart-footer text-align-center">
         <hr class="indent sm">
 
+
+        <?php if( $discount > 0 ) { ?>
+            <p class="text-color-green">Ваша скидка <?php echo round($discount,2); ?> руб.</p>
+        <?php } ?>
+        <hr class="indent xs">
+
         <p class="xs">Стоимость заказа</p>
 
         <?php $totalend = intval(substr($total, -2)); ?>
