@@ -66,17 +66,13 @@
 
                     <div class="total">
                         <hr class="indent xxs">
-                        <p><?php echo $product['total']; ?> <span>руб.</span></p>
+                        <p><?php echo round($product['total']); ?> <span>руб.</span></p>
                     </div>
                 </div>
 
                 <div class="col total">
-                    <?php if( $instock ) { ?>
-                        <p><?php echo $product['wKey']; ?></p>
-                        <p><?php echo $product['total']; ?> <span>руб.</span></p>
-                    <?php } else { ?>
-                        <p class="text-color-red">Нет в наличии</p>
-                    <?php } ?>
+                    <p><?php echo $product['wKey']; ?></p>
+                    <p><?php echo round($product['total']); ?> <span>руб.</span></p>
                 </div>
             </div>
         <?php } ?>

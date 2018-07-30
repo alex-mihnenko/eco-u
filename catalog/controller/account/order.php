@@ -95,28 +95,6 @@ class ControllerAccountOrder extends Controller {
 	            }
             // ---
 
-	        // Total
-	            if( floatval($product_info['special_price']) > 0 ){
-					$price = $product_info['special_price'];
-				}
-				else{
-					$price = $product_info['price'];
-				}
-
-	            if($product_info['composite_price'] != false ) {
-                    $cPrice = $this->config->get('config_composite_price');
-                    $wVariants = explode(',', $product_info['weight_variants']);
-                    $wKey = array_search($product['variant'], $wVariants);
-
-                    if(isset($wVariants[$wKey]) && isset($cPrice[$wVariants[$wKey]])) {
-                        $price = round(round($price * $cPrice[$wVariants[$wKey]]*$wVariants[$wKey])/$wVariants[$wKey]);
-                    }
-                }
-
-				$product_price = (round($price));
-				$product_total = ( round(($price) * $product['variant']) * $product['amount'] );
-            // ---
-
 			$data['products'][] = array(
 				'image'    => $image,
 				'name'     => $product_info['name'],
@@ -128,8 +106,8 @@ class ControllerAccountOrder extends Controller {
 				'weight_class' => $product_info['weight_class'],
 				'weight_variant' => $product_info['weight_variant'],
 				'option'   => $option_data,
-				'price'    => $product_price,
-				'total'    => $product_total,
+				'price'    => $product['price'],
+				'total'    => $product['total'],
 				'return'   => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], true)
 			);
 		}

@@ -988,7 +988,7 @@ class ModelCheckoutOrder extends Model {
         if($query->rows) {
         	foreach ($query->rows as $key => $product) {
         		// ---
-        			$results[] = array('order_id'=>$product['order_id'], 'product_id'=>$product['product_id'], 'name'=>$product['name'], 'price'=>$product['price'], 'quantity'=>$product['amount'], 'image'=>$product['image']);
+        			$results[] = array('order_id'=>$product['order_id'], 'product_id'=>$product['product_id'], 'name'=>$product['name'], 'price'=>$product['price'], 'total'=>$product['total'], 'quantity'=>$product['amount'], 'image'=>$product['image']);
         		// ---
         	}
 
