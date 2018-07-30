@@ -556,6 +556,17 @@ xxl
 		/* Order about */
 			.table-history tr > td {
 				cursor: pointer;
+				background-color: #FFFFFF;
+
+				-webkit-transition: background-color .25s;
+				-moz-transition: background-color .25s;
+				-ms-transition: background-color .25s;
+				-o-transition: background-color .25s;
+				transition: background-color .25s;
+			}
+
+			.table-history tr:hover > td {
+				background-color: #f3f0eb;
 			}
 
 			.table-history tr > td:last-child {
