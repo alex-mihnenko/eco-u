@@ -128,7 +128,7 @@ if($_GET['type']){
 	// ---
 
 	//Ищем ID заказа в МоёмCкладе
-	$resx=mysql_query("select ms_id,demand_id from ms_leads where retailcrm_id='$num'");
+	$resx=mysql_query("SELECT ms_customer_order_id,ms_demand_id from ms_demand WHERE order_id='$num' AND completed=1 AND deleted=0 LIMIT 1;");
 	list($ms_lead_id,$ms_demand_id)=mysql_fetch_row($resx);
 	
 	//Если статус заказа собран, то обновляем дату сборки в retailCRM и обновляем данные по заказу в МС
@@ -166,8 +166,6 @@ if($_GET['type']){
 						deleted=0,
 						completed=0
 					;");
-
-					file_put_contents('log-ms-demand.txt', $num." : mysql error : ".mysql_error()."\n\n", FILE_APPEND | LOCK_EX);
 				// ---
 
 				if("IM".$krt['order']['externalId']==$krt['order']['number']) {
@@ -249,13 +247,9 @@ if($_GET['type']){
 			$fp = fopen("retail_upd.log", 'a+');
 			
 			if(!$ms_lead_id) $ms_lead_id=$VMS['id'];
-		
-			fwrite($fp, "ms_lead_id=".$ms_lead_id."\n\n"."VMS=".json_encode($VMS, JSON_PRETTY_PRINT)."\n\n");
 			
 			$ms_data=null;
 			$POS=ms_query($VMS['positions']['meta']['href']);
-
-			fwrite($fp, "POS=".json_encode($POS, JSON_PRETTY_PRINT)."\n\n");
 
 			foreach($POS['rows'] as $kp=>$vp){
 				$vp['reserve']=0;
@@ -265,10 +259,6 @@ if($_GET['type']){
 			
 			$link='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id;
 			$json = ms_query_send($link, $ms_data, 'PUT');
-
-			
-			fwrite($fp, "RESERVE 0:\n\n MS_DATA".json_encode($ms_data, JSON_PRETTY_PRINT)."\n\n JSON".json_encode($json, JSON_PRETTY_PRINT)."\n".$link);
-			fclose($fp);
 
 			if($ms_demand_id){					
 				$link = "https://online.moysklad.ru/api/remap/1.1/entity/demand/$ms_demand_id";
