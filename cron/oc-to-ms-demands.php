@@ -10,7 +10,7 @@
 		* 
 		FROM ms_demand msd 
 
-		WHERE msd.complete = 0 ORDER BY msd.demand_id ASC;
+		WHERE msd.completed = 0 ORDER BY msd.demand_id ASC;
     ";
 
 	$rows_demand = $db->query($q);
@@ -33,7 +33,7 @@
 				$log[] = '#Start ['.$row_demand['demand_id'].'] from '.$row_demand['date_added'];
 
 				// Delete MS demand
-					$q = "SELECT * FROM ms_demand msd WHERE msd.order_id = '".$row_demand['order_id']."' AND msd.delete = 0 AND msd.complete = 1 ORDER BY msd.demand_id ASC;";
+					$q = "SELECT * FROM ms_demand msd WHERE msd.order_id = '".$row_demand['order_id']."' AND msd.deleted = 0 AND msd.completed = 1 ORDER BY msd.demand_id ASC;";
 
 					$rows_demand_completed = $db->query($q);
 
@@ -46,7 +46,7 @@
 
 								/* DEBUG */ file_put_contents('log-ms-demand.txt', $row_demand_completed['order_id']." : entity/demand/delete : ".json_encode($resoponseDemandDelete)."\n\n", FILE_APPEND | LOCK_EX);
 								
-								$q = "UPDATE `ms_demand` SET `delete` = '1' WHERE `demand_id`='".$row_demand_completed['demand_id']."';";
+								$q = "UPDATE `ms_demand` SET `deleted` = '1' WHERE `demand_id`='".$row_demand_completed['demand_id']."';";
 
 								if ($db->query($q) === TRUE) {
 								    $log[] = 'OC demand ['.$row_demand_completed['demand_id'].'] has been deleted and updated';
@@ -77,7 +77,7 @@
 
 				// Update OC demand
 					if( isset($resoponseDemandPost['id']) ) {
-						$q = "UPDATE `ms_demand` SET `ms_demand_id` = '".$resoponseDemandPost['id']."', `complete` = '1' WHERE `demand_id`='".$row_demand['demand_id']."';";
+						$q = "UPDATE `ms_demand` SET `ms_demand_id` = '".$resoponseDemandPost['id']."', `completed` = '1' WHERE `demand_id`='".$row_demand['demand_id']."';";
 
 						if ($db->query($q) === TRUE) {
 						    $log[] = 'OC demand ['.$row_demand['demand_id'].'] has been updated';
