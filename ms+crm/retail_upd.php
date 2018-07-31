@@ -130,15 +130,10 @@ if($_GET['type']){
 	//Ищем ID заказа в МоёмCкладе
 	$resx=mysql_query("select ms_id,demand_id from ms_leads where retailcrm_id='$num'");
 	list($ms_lead_id,$ms_demand_id)=mysql_fetch_row($resx);
-
-	$fp = fopen("retail_upd.log", 'a+');
-	fwrite($fp, "\n Отработал. Статус заказа: ".$res['order']['status']." \n");
-	fclose($fp);
 	
 	//Если статус заказа собран, то обновляем дату сборки в retailCRM и обновляем данные по заказу в МС
 	if($res['order']['status']=='assembling-complete'){
-		// ---	  		
-			if(!$ms_lead_id){
+			//if(!$ms_lead_id){
 					
 				$order=null;
 				$shipmentDate=date("Y-m-d",time());
@@ -154,31 +149,61 @@ if($_GET['type']){
 	            $ms_lead_id=$VMS['id'];
 				$ms_data = $json = NULL;
 				$ms_data['customerOrder']["meta"] = array(
-					"href" => $ms_lead_id_meta,//'https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id,
+					"href" => $ms_lead_id_meta,
 					"type" => 'customerorder',
 					"mediaType" => 'application/json'
 				);
 
 
-				$fp = fopen("retail_upd.log", 'a+');
-			    fwrite($fp, "\n retail -ms log: ".json_encode($ms_data)."\n");
-				fclose($fp);
-					
-				$link2='https://online.moysklad.ru/api/remap/1.1/entity/customerorder?search='.$num;
-				$json2 = ms_query($link2);
-				$fp = fopen("retail_upd.log", 'a+');
-			    fwrite($fp, "\n timeffff: ".date("d.m.Y H:i:s").json_encode($json2)."count=".count($json2['rows'][0]['demands']).'-'.$num."\n");
-				fclose($fp);
-				
-				
-				$resx2=mysql_query("select count(*) as kol from ms_test where numb='$num' ");
-				$mass2=mysql_fetch_row($resx2);
+				// Create demand task
+					$qInsertDemand = mysql_query("
+						INSERT INTO ms_demand SET 
+						ms_demand_id='',
+						ms_customer_order_id='".$ms_lead_id."',
+						order_id='".$num."',
+						customer_order_data='".json_encode($ms_data)."',
+						date_added='".time()."',
+						delete='0',
+						complete='0'
+					;");
+				// ---
 
+				if("IM".$krt['order']['externalId']==$krt['order']['number']) {
+					$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/?filter=name=IM'.$num;
+				}
+				else {
+					$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/?filter=name='.$krt['order']['number'];
+				}
+
+				$json3 = ms_query($link3);
+
+				$ms_lead_id3=$json3['rows'][0]['id'];
+				$POS3=ms_query($json3['rows'][0]['positions']['meta']['href']);
+
+				foreach($POS3['rows'] as $kp3=>$vp3){
+					$vp3['reserve']=0;
+					$ms_data3['positions'][]=$vp3;
+				}
+				
+				$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id3;
+				$json3 = ms_query_send($link3, $ms_data3, 'PUT');
+
+
+				//$link2='https://online.moysklad.ru/api/remap/1.1/entity/customerorder?search='.$num;
+				//$json2 = ms_query($link2);
+
+			
+				//$resx2=mysql_query("select count(*) as kol from ms_test where numb='$num' ");
+				//$mass2=mysql_fetch_row($resx2);
+
+				/*
 				if($mass2[0]==0) {
 					$json=null;
 					$link = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new";
 					$json = ms_query_send($link, $ms_data, 'PUT');
 					mysql_query("insert into ms_test set numb='$num'");
+
+					file_put_contents('log-ms-demand.txt', $num." : entity/demand/new : ".json_encode($json)."\n", FILE_APPEND | LOCK_EX);
 				
 					if("IM".$krt['order']['externalId']==$krt['order']['number']) {
 						$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/?filter=name=IM'.$num;
@@ -194,36 +219,27 @@ if($_GET['type']){
 
 					foreach($POS3['rows'] as $kp3=>$vp3){
 						$vp3['reserve']=0;
-						//$vp['shipped']=0;
-						$ms_data3['positions'][]=$vp3;	
+						$ms_data3['positions'][]=$vp3;
 					}
 					
 					$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id3;
 					$json3 = ms_query_send($link3, $ms_data3, 'PUT');
 				
-				
-				
-					/**/
-					
-					
-					
-					$fp = fopen("retail_upd.log", 'a+');
-				       fwrite($fp, "\n time: ".date("d.m.Y H:i:s").json_encode($json2)."count=".count($json2['rows'][0]['demands']).'-'.$num."\n");
-					fclose($fp);
-					
-					
-					$fp = fopen("retail_upd.log", 'a+');
-				   	fwrite($fp, "\n query demand: ".json_encode($json)."\n");
-					fclose($fp);
+			
 
 					$link = "https://online.moysklad.ru/api/remap/1.1/entity/demand";
 							
 					$json = ms_query_send($link, $json, 'POST');
 
+					file_put_contents('log-ms-demand.txt', $num." : entity/demand : ".json_encode($json)."\n\n", FILE_APPEND | LOCK_EX);
 					
-					if($json['id']) mysql_query("insert into ms_leads set retailcrm_id='$num', ms_id ='$ms_lead_id',demand_id='".$json['id']."'");
-				}
-			}
+					if( isset($json['id']) ) {
+						$qInsertDemand = mysql_query("INSERT INTO ms_leads SET shop_id=0, ms_id='".$ms_lead_id."', demand_id='".$json['id']."', retailcrm_id='".$num."';");
+					}
+
+					file_put_contents('log-ms-demand.txt', $num." : mysql error : ".mysql_error()."\n\n", FILE_APPEND | LOCK_EX);
+				} */
+			//}
 		// ---
 	}
 	else if($res['order']['status']=='cancel-other'){

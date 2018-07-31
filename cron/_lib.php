@@ -55,6 +55,76 @@
 		// ---
 	}
 
+	function connectDeleteAPI($url, $qdata, $auth='', $cookie='') {
+		// ---
+			$data = http_build_query($qdata);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL,$url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");  
+			curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			if( !empty($auth) ){
+				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+				curl_setopt($ch, CURLOPT_USERPWD, $auth);
+			}
+			curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+			$headers = ['Content-Type: application/x-www-form-urlencoded'];
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+
+			// Output
+			$output = curl_exec($ch);
+			$result = json_decode($output);
+
+			// Result
+			if( $result != null ){
+				curl_close ($ch);
+				return $result;
+			}
+			else {
+				curl_close ($ch);
+				return false;
+			}
+		// ---
+	}
+
+	function connectPutAPI($url, $qdata, $auth='', $cookie='') {
+		// ---
+			$data = http_build_query($qdata);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL,$url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");  
+			curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			if( !empty($auth) ){
+				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+				curl_setopt($ch, CURLOPT_USERPWD, $auth);
+			}
+			curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+			$headers = ['Content-Type: application/x-www-form-urlencoded'];
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+
+			// Output
+			$output = curl_exec($ch);
+			$result = json_decode($output);
+
+			// Result
+			if( $result != null ){
+				curl_close ($ch);
+				return $result;
+			}
+			else {
+				curl_close ($ch);
+				return false;
+			}
+		// ---
+	}
+
 	function connectGetAPI($url, $qdata, $auth='') {
 		// ---
 			$data = http_build_query($qdata);
