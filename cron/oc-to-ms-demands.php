@@ -10,7 +10,7 @@
 		* 
 		FROM ms_demand msd 
 
-		WHERE msd.completed = 0 ORDER BY msd.demand_id ASC;
+		WHERE msd.order_id > 0 AND msd.completed = 0 ORDER BY msd.date_added ASC;
     ";
 
 	$rows_demand = $db->query($q);
@@ -42,7 +42,7 @@
 							// ---
 								$urlDemandDelete = 'https://online.moysklad.ru/api/remap/1.1/entity/demand/'.$row_demand_completed['ms_demand_id'];
 								$dataDemandDelete = array();
-								$resoponseDemandDelete = connectDeleteAPI($urlDemandDelete, $dataDemandDelete, MS_AUTH);
+								$resoponseDemandDelete = connectMSAPI($urlDemandDelete, $dataDemandDelete, 'DELETE', MS_AUTH);
 
 								/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand_completed['order_id']." : entity/demand/delete : ".json_encode($resoponseDemandDelete)."\n\n", FILE_APPEND | LOCK_EX);
 								
@@ -60,9 +60,15 @@
 
 				// Get MS template
 					$urlDemandPut = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new";
-					$dataDemandPut = (array)json_decode($row_demand['customer_order_data']);
 
-					$resoponseDemandPut = connectPutAPI($urlDemandPut, $dataDemandPut, MS_AUTH);
+					$dataDemandPut = array();
+					$dataDemandPut['customerOrder']["meta"] = array(
+						"href" => $row_demand['customer_order_data'],
+						"type" => 'customerorder',
+						"mediaType" => 'application/json'
+					);
+
+					$resoponseDemandPut = connectMSAPI($urlDemandPut, json_encode($dataDemandPut), 'PUT', MS_AUTH);
 
 					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : entity/demand/new : ".json_encode($resoponseDemandPut)."\n", FILE_APPEND | LOCK_EX);
 				// ---
@@ -70,14 +76,14 @@
 				// Create MS demand
 					$urlDemandPost = "https://online.moysklad.ru/api/remap/1.1/entity/demand";
 
-					$resoponseDemandPost = connectPostAPI($urlDemandPost, $resoponseDemandPut, MS_AUTH);
+					$resoponseDemandPost = connectMSAPI($urlDemandPost, json_encode($resoponseDemandPut), 'POST', MS_AUTH);
 					
 					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : entity/demand : ".json_encode($resoponseDemandPost)."\n\n", FILE_APPEND | LOCK_EX);
 				// ---
 
 				// Update OC demand
-					if( isset($resoponseDemandPost['id']) ) {
-						$q = "UPDATE `ms_demand` SET `ms_demand_id` = '".$resoponseDemandPost['id']."', `completed` = '1' WHERE `demand_id`='".$row_demand['demand_id']."';";
+					if( isset($resoponseDemandPost->id) ) {
+						$q = "UPDATE `ms_demand` SET `ms_demand_id` = '".$resoponseDemandPost->id."', `completed` = '1' WHERE `demand_id`='".$row_demand['demand_id']."';";
 
 						if ($db->query($q) === TRUE) {
 						    $log[] = 'OC demand ['.$row_demand['demand_id'].'] has been updated';

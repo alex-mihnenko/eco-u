@@ -161,7 +161,7 @@ if($_GET['type']){
 						ms_demand_id='',
 						ms_customer_order_id='".$ms_lead_id."',
 						order_id='".$num."',
-						customer_order_data='".json_encode($ms_data)."',
+						customer_order_data='".$ms_lead_id_meta."',
 						date_added='".time()."',
 						deleted=0,
 						completed=0
