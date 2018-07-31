@@ -163,8 +163,8 @@ if($_GET['type']){
 						order_id='".$num."',
 						customer_order_data='".json_encode($ms_data)."',
 						date_added='".time()."',
-						delete='0',
-						complete='0'
+						delete=0,
+						complete=0
 					;");
 
 					file_put_contents('log-ms-demand.txt', $num." : mysql error : ".mysql_error()."\n\n", FILE_APPEND | LOCK_EX);
