@@ -166,6 +166,8 @@ if($_GET['type']){
 						delete='0',
 						complete='0'
 					;");
+
+					file_put_contents('log-ms-demand.txt', $num." : mysql error : ".mysql_error()."\n\n", FILE_APPEND | LOCK_EX);
 				// ---
 
 				if("IM".$krt['order']['externalId']==$krt['order']['number']) {
