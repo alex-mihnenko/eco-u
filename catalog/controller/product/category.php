@@ -194,24 +194,24 @@ class ControllerProductCategory extends Controller {
 	                    'sub' => $pseudo_subcategories
 					);
 	            
-	    //         	$pseudo_subcategories = array();
+	            	$pseudo_subcategories = array();
 
-	    //         	$pseudo_subcategories[] = array(
-	    //         		'parent' => $category_id,
-					// 	'id' => 'sale',
-					// 	'name' => 'Скидки дня',
-					// 	'href' => '',
-					// 	'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
-	    //                 'total' => $this->model_catalog_product->getTotalSaleProducts()
-					// );
+	            	$pseudo_subcategories[] = array(
+	            		'parent' => $category_id,
+						'id' => 'sale',
+						'name' => 'Скидки дня',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+	                    'total' => $this->model_catalog_product->getTotalSaleProducts()
+					);
 
-					// $data['categories'][] = array(
-					// 	'id' => 'sale',
-					// 	'name' => 'Скидки дня',
-					// 	'href' => '',
-					// 	'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
-	    //                 'sub' => $pseudo_subcategories
-					// );
+					$data['categories'][] = array(
+						'id' => 'sale',
+						'name' => 'Скидки дня',
+						'href' => '',
+						'image' => '/catalog/view/theme/default/img/svg/icon-sale.svg',
+	                    'sub' => $pseudo_subcategories
+					);
 	            // ---
 
 				foreach ($categories_level2 as $result) {
