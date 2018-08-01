@@ -1367,7 +1367,7 @@ class ControllerAjaxIndex extends Controller {
                 'telephone' => $telephone,
                 'fax' => '',
                 'password' => $password,
-                'address_1' => $this->session->data['shipping_address_1']
+                //'address_1' => $this->session->data['shipping_address_1']
               );
 
               $customer_id = $this->model_account_customer->addCustomer($customer_data);
@@ -1384,11 +1384,10 @@ class ControllerAjaxIndex extends Controller {
               $customer_id = $customer['customer_id'];
 
               // Add new address
-                $addresses = $this->model_account_customer->getAddresses($customer_id);
-
-                if( $addresses == false ) {
-                  $this->customer->setAddress(0,$this->session->data['shipping_address_1'],$customer_id);
-                }
+                // $addresses = $this->model_account_customer->getAddresses($customer_id);
+                // if( $addresses == false ) {
+                //   $this->customer->setAddress(0,$this->session->data['shipping_address_1'],$customer_id);
+                // }
               // ---
 
             // ---
