@@ -817,23 +817,23 @@ class ControllerAjaxIndex extends Controller {
           $address = $this->request->post['address'];
           $deliverydistance = $this->request->post['deliverydistance'];
 
+          $response = new stdClass();
+
+
+          $this->load->model('checkout/order');
           $this->load->model('account/customer');
+          $this->load->model('dadata/index');
+
           $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
 
           if( !empty($customer) ) {
             $customer_id = $customer['customer_id'];
           }
-
-          $response = new stdClass();
-
-          $this->load->model('checkout/order');
         // ---
 
         // Get sipping area
           unset($this->session->data['shipping_custom_field']);
 
-          $this->load->model('dadata/index');
-          
           $structure = array("ADDRESS");
           $record = array($address);
           $result = $this->model_dadata_index->cleanRecord($structure, $record);
@@ -865,14 +865,15 @@ class ControllerAjaxIndex extends Controller {
           }
 
           // Check
-          if( $response->address == null || $response->mkad == null ) {
-            // ---
-              $response->status = 'error';
-              $response->message = 'Не удалось поулчить адрес доставки';
-              echo json_encode($response);
-              exit;
-            // ---
-          }
+            if( $response->address == null || $response->mkad == null ) {
+              // ---
+                $response->status = 'error';
+                $response->message = 'Не удалось поулчить адрес доставки';
+                echo json_encode($response);
+                exit;
+              // ---
+            }
+          // --
         // ---
 
         // Get shipping methods
@@ -1224,6 +1225,17 @@ class ControllerAjaxIndex extends Controller {
           $this->session->data['shipping_code'] = $response->method;
           $this->session->data['shipping_address_1'] =  $response->address;
           $this->session->data['shipping_method'] = $quote['quote'][$response->method]['title'];
+
+          // Get customer address
+            if( isset($customer_id) && isset($response->dadata[0][0]['street']) ){
+              $customer_address_by_street = $this->model_account_customer->getCustomerAddressByStreet($customer_id, $response->dadata[0][0]['street']);
+
+              if( $customer_address_by_street != false ){
+                $this->session->data['shipping_address_1'] = $customer_address_by_street['address_1'];
+                $response->address = $customer_address_by_street['address_1'];
+              }
+            }
+          // ---
         // ---
 
         // First purchase
@@ -1259,7 +1271,6 @@ class ControllerAjaxIndex extends Controller {
           if( $first_purchase == 1 && $first_purchase_date_start <= $now && $first_purchase_date_end >= $now ){
             // ---
               // Check first purchase
-                $this->load->model('account/customer');
                 $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
 
                 $customer_first_purchase = false;

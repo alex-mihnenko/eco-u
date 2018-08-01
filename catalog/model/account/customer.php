@@ -209,5 +209,15 @@ class ModelAccountCustomer extends Model {
 
     public function generatePassword() {
         return rand(0,9).''.rand(0,9).''.rand(0,9).''.rand(0,9).''.rand(0,9).''.rand(0,9);
+    }
+
+    public function getCustomerAddressByStreet($customer_id, $steet) {
+    	$query = $this->db->query("SELECT address_id, customer_id, address_1 FROM `" . DB_PREFIX . "address` WHERE customer_id = ".(int)$customer_id." AND address_1 LIKE '%".$steet."%';");
+
+    	if($query->row) {
+            return array('address_id' => $query->row['address_id'], 'address_1' => $query->row['address_1'] );
+        } else {
+            return false;
+        }
     } 
 }
