@@ -2056,7 +2056,7 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
-        }//...
+        }
 
         public function chormeGetNotes() {
           header("Access-Control-Allow-Origin: *");
@@ -2097,7 +2097,7 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
-        }//...
+        }
 
         public function chormeGetStocks() {
           header("Access-Control-Allow-Origin: *");
@@ -2130,7 +2130,7 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
-        }//...
+        }
 
         public function chormeGetDocuments() {
           header("Access-Control-Allow-Origin: *");
@@ -2151,7 +2151,7 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
-        }//...
+        }
 
         public function chormeSetAddress() {
           header("Access-Control-Allow-Origin: *");
@@ -2276,7 +2276,78 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
-        }//...
+        }
+
+        public function chormeGetCouriers() {
+          // ---
+            header("Access-Control-Allow-Origin: *");
+
+            // Init
+              $response = new stdClass();
+            // ---
+
+            // Get CRM order
+              $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+              $qdata = array(
+                'apiKey' => self::RETAILCRM_KEY,
+                'by' => 'id',
+                'limit' => '100',
+                'filter' => array(
+                  'deliveryDateFrom' => date('Y-m-d', time()),
+                  'deliveryDateTo' => date('Y-m-d', time()),
+                  'extendedStatus' => array('send-to-delivery')
+                )
+              );
+
+              $res = $this->connectGetAPI($url,$qdata);
+
+              $response->res = $res;
+              $response->orders = $res->orders;
+            // ---
+
+            // Create crouriers
+              $couriers = array();
+
+              foreach ($response->orders as $key => $order) {
+                // ---
+                  if( isset($order->delivery->data->courierId) ){
+                    // ---
+
+                      if( !isset($couriers[$order->delivery->data->courierId]) ){
+                        // ---
+                          $couriers[$order->delivery->data->courierId] = array(
+                            'firstName' => $order->delivery->data->firstName,
+                            'phone' => $order->delivery->data->phone->number,
+                            'orders' => array()
+                          );
+                        // ---
+                      }
+
+                      // Add order data
+                        $courier_order = array(
+                          'number' => $order->number,
+                          'totalSumm' => floatval($order->totalSumm),
+                          'deliveryNetCost' => floatval($order->delivery->netCost)
+                        );
+
+                        $couriers[$order->delivery->data->courierId]['orders'][] = $courier_order;
+                      // ---
+
+                    // ---
+                  }
+                // ---
+              }
+              
+              $response->couriers = $couriers;
+            // ---
+
+            $response->status = 'success';
+            $response->message = 'Успешно';
+
+            echo json_encode($response);
+            exit;
+          // ---
+        }
       // ---
   // ---
 
