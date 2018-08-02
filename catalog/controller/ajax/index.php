@@ -2152,6 +2152,131 @@ class ControllerAjaxIndex extends Controller {
           echo json_encode($response);
           exit;
         }//...
+
+        public function chormeSetAddress() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $customerId = intval($this->request->post['customerId']);
+            $custom_field_code = $this->request->post['code'];
+            $response = new stdClass();
+          // ---
+
+          // Get customer
+              $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId;
+              $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+
+              $res = $this->connectGetAPI($url,$qdata);
+
+              if( isset($res->customer) ) {
+                // ---
+                  $customer = $res->customer;
+
+                  $customerData = array();
+                  $customerAddress = array();
+                  $customerCustomFields = array();
+
+
+                  if( isset($customer->address) ){
+                    // ---
+                      // Set main address
+                        $address = '';
+
+                        if( !isset($customer->address->text) ){
+                          // Region and City
+                          if( isset($customer->address->cityType) ) { $address .= $customer->address->cityType.' '; }
+                          else if( isset($customer->address->region) ) { $address .= $customer->address->region.', '; }
+                          if( isset($customer->address->city) ) { $address .= $customer->address->city.', '; }
+
+                          // Street
+                          if( isset($customer->address->streetType) ) { $address .= $customer->address->streetType.' '; }
+                          if( isset($customer->address->street) ) { $address .= $customer->address->street.', '; }
+
+                          // Add
+                          if( isset($customer->address->building) ) { $address .= 'д. '.$customer->address->building.', '; }
+                          if( isset($customer->address->flat) ) { $address .= 'кв./офис '.$customer->address->flat.', '; }
+                          if( isset($customer->address->block) ) { $address .= 'под. '.$customer->address->block.', '; }
+                          if( isset($customer->address->floor) ) { $address .= 'эт. '.$customer->address->floor.', '; }
+
+                          // Fix
+                          $address = mb_substr($address,0,mb_strlen($address)-2);
+                        }
+                        else {
+                          $address = $customer->address->text;
+                        }
+                      // ---
+
+                      // Set additional addresses
+                        if( isset($customer->customFields->addition_address_first) ){
+                          $customerCustomFields['addition_address_first'] = $customer->customFields->addition_address_first;
+                        }
+                        if( isset($customer->customFields->addition_address_second) ){
+                          $customerCustomFields['addition_address_second'] = $customer->customFields->addition_address_second;
+                        }
+                        if( isset($customer->customFields->addition_address_third) ){
+                          $customerCustomFields['addition_address_third'] = $customer->customFields->addition_address_third;
+                        }
+                      // ---
+                      
+                      // Change
+                        if( $custom_field_code == 'addition_address_first' ) {
+                            $customerAddress['text'] = $customerCustomFields['addition_address_first'];
+                            $customerCustomFields['addition_address_first'] = $address;
+                        }
+
+                        if( $custom_field_code == 'addition_address_second' ) {
+                            $customerAddress['text'] = $customerCustomFields['addition_address_second'];
+                            $customerCustomFields['addition_address_second'] = $address;
+                        }
+
+                        if( $custom_field_code == 'addition_address_third' ) {
+                            $customerAddress['text'] = $customerCustomFields['addition_address_third'];
+                            $customerCustomFields['addition_address_third'] = $address;
+                        }
+                      // ---
+
+
+                      // Clear main address
+                        $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+
+                        $qdata = array(
+                          'apiKey' => self::RETAILCRM_KEY,
+                          'by' => 'id',
+                          'customer' => json_encode(array('address' => array()))
+                        );
+
+                        $res = $this->connectPostAPI($url, $qdata);
+                      // ---
+                      
+                      $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+
+                      $customerData = array(
+                        'address' => $customerAddress,
+                        'customFields' => $customerCustomFields
+                      );
+
+                      $qdata = array(
+                        'apiKey' => self::RETAILCRM_KEY,
+                        'by' => 'id',
+                        'customer' => json_encode($customerData)
+                      );
+
+                      $res = $this->connectPostAPI($url, $qdata);
+
+                      $response->res = $res;
+                      $response->data = $customerData;
+                    // ---
+                  }
+                // ---
+              }
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }//...
       // ---
   // ---
 
