@@ -1,4 +1,6 @@
 ﻿<?php
+$_GET['id'] = 19024;
+
 // Init
 	include("../_lib.php");
 
@@ -33,7 +35,15 @@
 		// ---
 	}
 
-	$order = $result->order;
+	if( $order->status != 'confim' ){
+		// ---
+			$log[] = 'Order status not confirm';
+
+			$res['log'] = $log;
+			$res['mess']='Success';
+			echo json_encode($res); exit;
+		// ---
+	}
 // ---
 
 // Proccessing
@@ -119,9 +129,8 @@
 								$customerCustomFields = array();
 
 
-								if( !isset($customer->address->text) ){
+								if( !isset($customer->address) ){
 									// ---
-										//$customerAddress['index'] = '';
 										if( isset($order->delivery->address->countryIso) ) { $customerAddress['countryIso'] = $order->delivery->address->countryIso; }
 										if( isset($order->delivery->address->region) ) { $customerAddress['region'] = $order->delivery->address->region; }
 										if( isset($order->delivery->address->regionId) ) { $customerAddress['regionId'] = $order->delivery->address->regionId; }
@@ -138,47 +147,33 @@
 										if( isset($order->delivery->address->block) ) { $customerAddress['block'] = $order->delivery->address->block; }
 										if( isset($order->delivery->address->house) ) { $customerAddress['house'] = $order->delivery->address->house; }
 										if( isset($order->delivery->address->metro) ) { $customerAddress['metro'] = $order->delivery->address->metro; }
-										//$customerAddress['notes'] = '';
+
+										$customerData = array(
+											'address' => $customerAddress
+										);
 									// ---
 								}
 								else {
-									// Set main address
-										if( isset($customer->address->countryIso) ) { $customerAddress['countryIso'] = $customer->address->countryIso; }
-										if( isset($customer->address->region) ) { $customerAddress['region'] = $customer->address->region; }
-										if( isset($customer->address->regionId) ) { $customerAddress['regionId'] = $customer->address->regionId; }
-										if( isset($customer->address->city) ) { $customerAddress['city'] = $customer->address->city; }
-										if( isset($customer->address->cityId) ) { $customerAddress['cityId'] = $customer->address->cityId; }
-										if( isset($customer->address->cityType) ) { $customerAddress['cityType'] = $customer->address->cityType; }
-										if( isset($customer->address->street) ) { $customerAddress['street'] = $customer->address->street; }
-										if( isset($customer->address->streetId) ) { $customerAddress['streetId'] = $customer->address->streetId; }
-										if( isset($customer->address->streetType) ) { $customerAddress['streetType'] = $customer->address->streetType; }
-										if( isset($customer->address->building) ) { $customerAddress['building'] = $customer->address->building; }
-										if( isset($customer->address->flat) ) { $customerAddress['flat'] = $customer->address->flat; }
-										if( isset($customer->address->intercomCode) ) { $customerAddress['intercomCode'] = $customer->address->intercomCode; }
-										if( isset($customer->address->floor) ) { $customerAddress['floor'] = $customer->address->floor; }
-										if( isset($customer->address->block) ) { $customerAddress['block'] = $customer->address->block; }
-										if( isset($customer->address->house) ) { $customerAddress['house'] = $customer->address->house; }
-										if( isset($customer->address->metro) ) { $customerAddress['metro'] = $customer->address->metro; }
-									// ---
-
-									if( !isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) ){
+									if( !isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
 										$customerCustomFields['addition_address_first'] = $address;
 									}
-									else if( isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) ){
+									else if( isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
 										$customerCustomFields['addition_address_second'] = $address;
 									}
 									else {
 										$customerCustomFields['addition_address_third'] = $address;
 									}
+
+									$customerData = array(
+										'customFields' => $customerCustomFields
+									);
 								}
+
 
 
 								$url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer->id.'/edit';
 
-								$customerData = array(
-									'address' => $customerAddress,
-									'customFields' => $customerCustomFields
-								);
+								
 
 								$data = array(
 									'apiKey' => RCRM_KEY,
