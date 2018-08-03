@@ -274,6 +274,7 @@
 	// ---
 // ---
 
+/* DEBUG */ file_put_contents('crm-change-customer-log.txt', $row_customer['customer_id']." : ".date('d.m.Y H:i:s')." : ".json_encode($log)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;

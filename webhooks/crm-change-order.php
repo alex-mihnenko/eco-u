@@ -196,6 +196,7 @@
 	// ---
 // ---
 
+/* DEBUG */ file_put_contents('crm-change-order-log.txt', $row_order['order_id']." : ".date('d.m.Y H:i:s')." : ".json_encode($log)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;
