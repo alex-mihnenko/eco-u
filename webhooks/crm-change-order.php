@@ -1,6 +1,4 @@
 ﻿<?php
-$_GET['id'] = 19024;
-
 // Init
 	include("../_lib.php");
 
