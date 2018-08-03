@@ -1,5 +1,5 @@
 <?php
-
+exit;
 include("opencart_inc.php");
 
 $log = [];

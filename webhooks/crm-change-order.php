@@ -89,7 +89,7 @@
 				// ---
 			}
 		// ---
-
+			
 		// Save address
 			$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$address."';";
 			$rows_address = $db->query($q);
@@ -97,33 +97,19 @@
 			if ($rows_address->num_rows == 0 && !empty($address) ) {
 				// To OC
 					$q = "
-						INSERT INTO `".DB_PREFIX."address` ( 
-							`customer_id`,
-							`firstname`,
-							`lastname`,
-							`company`,
-							`address_1`,
-							`address_2`,
-							`city`,
-							`postcode`,
-							`country_id`,
-							`zone_id`,
-							`custom_field`
-						) 
-						values (
-							'".$row_order['customer_id']."',
-							'".$row_order['firstname']."',
-							'".$row_order['lastname']."',
-							'',
-							'".$address."',
-							'',
-							'',
-							'',
-							'0',
-							'0',
-							''
-						)
-					;";
+						INSERT INTO `".DB_PREFIX."address` SET 
+						`customer_id` = '".$row_order['customer_id']."',
+						`firstname` = '".$row_order['firstname']."',
+						`lastname` = '".$row_order['lastname']."',
+						`company` = '',
+						`address_1` = '".$address."',
+						`address_2` = '',
+						`city` = '',
+						`postcode` = '',
+						`country_id` = '0',
+						`zone_id` = '0',
+						`custom_field` = ''
+					";
 					
 					if ($db->query($q) === TRUE) {
 					    $log[] = 'OC customer address ['.$row_order['customer_id'].'] has been inserted';
