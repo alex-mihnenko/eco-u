@@ -2325,14 +2325,14 @@ class ControllerAjaxIndex extends Controller {
 
                       // Add order data
                         // Check payment status
-                          $payment = 'cash';
+                          $payment_status = 'cash';
 
                           if( isset($order->payments) ) {
                             // ---
                               foreach ($order->payments as $key => $payment) {
                                 // ---
                                   if( $payment->type == 'e-money' ) {
-                                    $payment = 'e-money';
+                                    $payment_status = 'e-money';
                                   }
                                 // ---
                               }
@@ -2344,7 +2344,7 @@ class ControllerAjaxIndex extends Controller {
                           'number' => $order->number,
                           'totalSumm' => floatval($order->totalSumm),
                           'deliveryNetCost' => floatval($order->delivery->netCost),
-                          'payment' => $payment
+                          'payment' => $payment_status
                         );
 
                         $couriers[$order->delivery->data->courierId]['orders'][] = $courier_order;
