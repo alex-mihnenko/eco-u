@@ -1,5 +1,7 @@
 ﻿<?php
 // Init
+	header("Access-Control-Allow-Origin: *");
+	
 	include("../_lib.php");
 
 	header('Content-Type: text/html; charset=utf-8');
