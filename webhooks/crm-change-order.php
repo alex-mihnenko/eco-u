@@ -33,6 +33,8 @@
 		// ---
 	}
 
+	$order = $result->order;
+	
 	if( $order->status != 'confim' ){
 		// ---
 			$log[] = 'Order status not confirm';
