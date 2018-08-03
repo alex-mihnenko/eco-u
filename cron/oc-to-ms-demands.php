@@ -44,7 +44,7 @@
 								$dataDemandDelete = array();
 								$resoponseDemandDelete = connectMSAPI($urlDemandDelete, $dataDemandDelete, 'DELETE', MS_AUTH);
 
-								/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand_completed['order_id']." : entity/demand/delete : ".json_encode($resoponseDemandDelete)."\n\n", FILE_APPEND | LOCK_EX);
+								/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand_completed['order_id']." : ".date('d.m.Y H:i:s')." : entity/demand/delete : ".json_encode($resoponseDemandDelete)."\n\n", FILE_APPEND | LOCK_EX);
 								
 								$q = "UPDATE `ms_demand` SET `deleted` = '1' WHERE `demand_id`='".$row_demand_completed['demand_id']."';";
 
@@ -70,7 +70,7 @@
 
 					$resoponseDemandPut = connectMSAPI($urlDemandPut, json_encode($dataDemandPut), 'PUT', MS_AUTH);
 
-					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : entity/demand/new : ".json_encode($resoponseDemandPut)."\n", FILE_APPEND | LOCK_EX);
+					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : ".date('d.m.Y H:i:s')." : entity/demand/new : ".json_encode($resoponseDemandPut)."\n", FILE_APPEND | LOCK_EX);
 				// ---
 
 				// Create MS demand
@@ -78,7 +78,7 @@
 
 					$resoponseDemandPost = connectMSAPI($urlDemandPost, json_encode($resoponseDemandPut), 'POST', MS_AUTH);
 					
-					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : entity/demand : ".json_encode($resoponseDemandPost)."\n\n", FILE_APPEND | LOCK_EX);
+					/* DEBUG */ file_put_contents('../ms+crm/log-ms-demand.txt', $row_demand['order_id']." : ".date('d.m.Y H:i:s')." : entity/demand : ".json_encode($resoponseDemandPost)."\n\n", FILE_APPEND | LOCK_EX);
 				// ---
 
 				// Update OC demand
