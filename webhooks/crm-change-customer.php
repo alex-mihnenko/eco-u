@@ -53,11 +53,19 @@
 	// ---
 
 	// Save customer data
+		$firstName = '';
+		$lastName = '';
+		$email = '';
+
+		if( isset($customer->firstName) ) { $firstName = $customer->firstName;  }
+		if( isset($customer->lastName) ) { $lastName = $customer->lastName;  }
+		if( isset($customer->email) ) { $email = $customer->email;  }
+
 		$q = "
 			UPDATE `".DB_PREFIX."customer` SET 
-			`firstname` = '".$customer->firstName."', 
-			`lastname` = '".$customer->lastName."', 
-			`email` = '".$customer->email."' 
+			`firstname` = '".$firstName."', 
+			`lastname` = '".$lastName."', 
+			`email` = '".$email."' 
 			WHERE `customer_id`='".$row_customer['customer_id']."'
 		;";
 
@@ -111,9 +119,9 @@
 	// Update orders data
 		$q = "
 			UPDATE `".DB_PREFIX."order` SET 
-			`firstname` = '".$customer->firstName."', 
-			`lastname` = '".$customer->lastName."', 
-			`email` = '".$customer->email."' 
+			`firstname` = '".$firstName."', 
+			`lastname` = '".$lastName."', 
+			`email` = '".$email."' 
 			WHERE `customer_id`='".$row_customer['customer_id']."'
 		;";
 
@@ -139,23 +147,29 @@
 			// ---
 				$address = '';
 
-				// Region and City
-				if( isset($customer->address)->cityType) ) { $address .= $customer->address)->cityType.' '; }
-				else if( isset($customer->address)->region) ) { $address .= $customer->address)->region.', '; }
-				if( isset($customer->address)->city) ) { $address .= $customer->address)->city.', '; }
+				
+				if( !isset($customer->address->text) ){
+					// Region and City
+					if( isset($customer->address->cityType) ) { $address .= $customer->address->cityType.' '; }
+					else if( isset($customer->address->region) ) { $address .= $customer->address->region.', '; }
+					if( isset($customer->address->city) ) { $address .= $customer->address->city.', '; }
 
-				// Street
-				if( isset($customer->address)->streetType) ) { $address .= $customer->address)->streetType.' '; }
-				if( isset($customer->address)->street) ) { $address .= $customer->address)->street.', '; }
+					// Street
+					if( isset($customer->address->streetType) ) { $address .= $customer->address->streetType.' '; }
+					if( isset($customer->address->street) ) { $address .= $customer->address->street.', '; }
 
-				// Add
-				if( isset($customer->address)->building) ) { $address .= 'д. '.$customer->address)->building.', '; }
-				if( isset($customer->address)->flat) ) { $address .= 'кв./офис '.$customer->address)->flat.', '; }
-				if( isset($customer->address)->block) ) { $address .= 'под. '.$customer->address)->block.', '; }
-				if( isset($customer->address)->floor) ) { $address .= 'эт. '.$customer->address)->floor.', '; }
+					// Add
+					if( isset($customer->address->building) ) { $address .= 'д. '.$customer->address->building.', '; }
+					if( isset($customer->address->flat) ) { $address .= 'кв./офис '.$customer->address->flat.', '; }
+					if( isset($customer->address->block) ) { $address .= 'под. '.$customer->address->block.', '; }
+					if( isset($customer->address->floor) ) { $address .= 'эт. '.$customer->address->floor.', '; }
 
-				// Fix
-				$address = mb_substr($address,0,mb_strlen($address)-2);
+					// Fix
+					$address = mb_substr($address,0,mb_strlen($address)-2);
+				}
+				else {
+					$address = $customer->address->text;
+				}
 
 				$q = "
 					INSERT INTO `".DB_PREFIX."address` SET 
@@ -255,6 +269,7 @@
 						}
 					// ---
 				}
+			// ---
 		}
 	// ---
 // ---
