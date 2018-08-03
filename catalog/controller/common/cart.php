@@ -418,7 +418,7 @@ class ControllerCommonCart extends Controller {
                             }
                         }
 
-                        $customer_discount = $totalCustomerOutcome/10000;
+                        $customer_discount = floor($totalCustomerOutcome/10000);
                         if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                         
                         $order_discount = $customer_discount/100;

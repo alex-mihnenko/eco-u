@@ -954,7 +954,7 @@ class ControllerAjaxIndex extends Controller {
                         }
                     }
 
-                    $customer_discount = $totalCustomerOutcome/10000;
+                    $customer_discount = floor($totalCustomerOutcome/10000);
                     if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                     
                     $order_discount = $customer_discount/100;
@@ -981,7 +981,7 @@ class ControllerAjaxIndex extends Controller {
                 // ---
                     $coupon = $this->customer->getCouponDiscount();
                     $couponDiscount = $coupon['discount']/100*$this->cart->getTotal();
-                    $couponPercentage = $coupon['discount'];
+                    $couponPercentage = round($coupon['discount']);
 
                     if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
                         $data['discount'] = $couponDiscount;
@@ -2367,6 +2367,7 @@ class ControllerAjaxIndex extends Controller {
           $response->call = call_proccessing('+'.$phone);
         // --
 
+        /*
         // Send to Retail CRM
           define('RETAILCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
 
@@ -2374,7 +2375,7 @@ class ControllerAjaxIndex extends Controller {
             $managers = [];
 
             $url = 'https://eco-u.retailcrm.ru/api/v5/users';
-            $qdata = array('apiKey' => RETAILCRM_KEY,'limit' => 100);
+            $qdata = array('apiKey' => self::RETAILCRM_KEY,'limit' => 100);
 
             $response = $this->connectGetAPI($url,$qdata);
 
@@ -2405,7 +2406,7 @@ class ControllerAjaxIndex extends Controller {
                 $data['task'] = json_encode($task);
               // ---
               
-              $response=connectPostAPI($url,$data);
+              $response=$this->connectPostAPI($url,$data);
 
               if( isset($response->success) && $response->success!= false && isset($response->id) ){
                 // Save task
@@ -2431,7 +2432,8 @@ class ControllerAjaxIndex extends Controller {
             }
           // ---
         // ---
-
+        */
+            
         // Save callback
             $this->load->model('tool/addon');
             $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit);
