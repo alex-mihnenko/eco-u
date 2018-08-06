@@ -2143,7 +2143,7 @@ class ControllerAjaxIndex extends Controller {
             $documentsConfig = json_decode(file_get_contents(DIR_APPLICATION.'/addons/retailcrm/documents/config.json'));
             
 
-            $response->documents = $documentsConfig ;
+            $response->documents = $documentsConfig;
           // ---
 
           $response->status = 'success';

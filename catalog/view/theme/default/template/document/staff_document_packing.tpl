@@ -89,31 +89,64 @@
 	    <br><br>
 
 
-		<?php foreach ($packing as $keyPacking => $pack) { ?>
-			<div class="table">
-                <table>
-                	<thead><tr> <th><?php echo $pack[0]->offer->name; ?></th> <th style="width: 200px; text-align: right;">На фасовку</th> </tr></thead>
+	    <!-- Retail CRM -->
+		    <!--
+			<php foreach ($packing as $keyPacking => $pack) { ?>
+				<div class="table">
+	                <table>
+	                	<thead><tr> <th><php echo $pack[0]->offer->name; ?></th> <th style="width: 200px; text-align: right;">На фасовку</th> </tr></thead>
 
-                 	<tbody>
-    					<?php $count = 1; ?>
-    					<?php foreach ($pack as $keyProduct => $product) { ?>
-                  			<tr>
-                  				<td><b> #<?php echo $count; ?> </b></td>
-                  				<td style="width: 200px; text-align: right;">
-                  					<?php foreach ($product->properties as $keyProperty => $property) { ?>
-                  						<?php echo $property->value; ?>
-									<?php } ?>
-                  				</td>
-                  			</tr>
-    						
-    						<?php $count++; ?>
-						<?php } ?>
-					</tbody>
-                </table>
-             </div>
+	                 	<tbody>
+	    					<php $count = 1; ?>
+	    					<php foreach ($pack as $keyProduct => $product) { ?>
+	                  			<tr>
+	                  				<td><b> #<php echo $count; ?> </b></td>
+	                  				<td style="width: 200px; text-align: right;">
+	                  					<php foreach ($product->properties as $keyProperty => $property) { ?>
+	                  						<php echo $property->value; ?>
+										<php } ?>
+	                  				</td>
+	                  			</tr>
+	    						
+	    						<php $count++; ?>
+							<php } ?>
+						</tbody>
+	                </table>
+	             </div>
 
-    		<br><hr><br>
-		<?php } ?>
+	    		<br><hr><br>
+			<php } ?>
+			-->
+	    <!-- Retail CRM -->
+
+
+	    <!-- Opencart -->
+	    	<?php foreach ($packing as $keyPacking => $pack) { ?>
+				<div class="table">
+	                <table>
+	                	<thead><tr> <th><?php echo $pack[0]['name']; ?></th> <th style="width: 200px; text-align: right;">На фасовку</th> </tr></thead>
+
+	                 	<tbody>
+	    					<?php $count = 1; ?>
+	    					<?php foreach ($pack as $keyProduct => $product) { ?>
+	                  			<tr>
+	                  				<td>
+	                  					<b> #<?php echo $count; ?> </b>
+	                  				</td>
+	                  				<td style="width: 200px; text-align: right;">
+	                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
+	                  				</td>
+	                  			</tr>
+	    						
+	    						<?php $count++; ?>
+							<?php } ?>
+						</tbody>
+	                </table>
+	             </div>
+
+	    		<br><hr><br>
+			<?php } ?>
+	    <!-- Opencart -->
 	</main>
 
 </body>

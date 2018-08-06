@@ -86,34 +86,70 @@
 	    <h1 style="text-align: center;">Технологическая карта на сборку</h1>
 	    <br><br>
 
-	    <?php foreach ($orders as $keyOrder => $order) { ?>
-	    	<?php if( !empty($order['products']) ) { ?>
-		    
-				<h4><span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?></h4>
-				
-				<div class="table">
-	                <table>
-	                  <thead><tr> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th> </tr></thead>
+	    <!-- Retail CRM -->
+	    	<!--
+		    <php foreach ($orders as $keyOrder => $order) { ?>
+		    	<php if( !empty($order['products']) ) { ?>
+			    
+					<h4><span style="font-weight: normal;">Номер заказа: </span><php echo $order['order_id']; ?></h4>
+					
+					<div class="table">
+		                <table>
+		                  <thead><tr> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th> </tr></thead>
 
-	                  <tbody>
-	    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
-	                  			<tr>
-	                  				<td><?php echo $product->offer->name; ?></td>
-	                  				<td style="width: 200px; text-align: right;">
-	                  					<?php foreach ($product->properties as $keyProperty => $property) { ?>
-	                  						<?php echo $property->value; ?>
-										<?php } ?>
-	                  				</td>
-	                  			</tr>
-							<?php } ?>
-	                  </tbody>
-	                </table>
-	             </div>
+		                  <tbody>
+		    					<php foreach ($order['products'] as $keyProduct => $product) { ?>
+		                  			<tr>
+		                  				<td><php echo $product->offer->name; ?></td>
+		                  				<td style="width: 200px; text-align: right;">
+		                  					<php foreach ($product->properties as $keyProperty => $property) { ?>
+		                  						<php echo $property->value; ?>
+											<php } ?>
+		                  				</td>
+		                  			</tr>
+								<php } ?>
+		                  </tbody>
+		                </table>
+		             </div>
 
-	    		<br><hr><br>
+		    		<br><hr><br>
 
+				<php } ?>
+			<php } ?>
+			-->
+	    <!-- Retail CRM -->
+
+	    <!-- Opencart -->
+		    <?php foreach ($orders as $keyOrder => $order) { ?>
+		    	
+		    	<?php if( !empty($order['products']) ) { ?>
+			    
+					<h4><span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?></h4>
+					
+					<div class="table">
+		                <table>
+		                  <thead><tr> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th> </tr></thead>
+
+		                  <tbody>
+		    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
+		                  			<tr>
+		                  				<td>
+		                  					<?php echo $product['name']; ?>
+		                  				</td>
+		                  				<td style="width: 200px; text-align: right;">
+		                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
+		                  				</td>
+		                  			</tr>
+								<?php } ?>
+		                  </tbody>
+		                </table>
+		             </div>
+
+		    		<br><hr><br>
+
+				<?php } ?>
 			<?php } ?>
-		<?php } ?>
+	    <!-- Opencart -->
 	</main>
 
 </body>

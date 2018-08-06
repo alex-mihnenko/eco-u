@@ -8,6 +8,7 @@ class ControllerDocumentPrint extends Controller {
 	public function index() {
 		// ---
 			$this->load->model('document/print');
+
 			// Init
 				$template = $this->request->get['template'];
 			// ---
@@ -49,108 +50,197 @@ class ControllerDocumentPrint extends Controller {
 
 				case 'staff_document_packing':
 					// ---
-						$orders = array();
+						// retailCRM
+							/*$orders = array();
 
-						// Get CRM orders
-				            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
-				            $qdata = array(
-				            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
-				            	'filter' => array('extendedStatus' => 'assembling')
-				            );
+							// Get CRM orders
+					            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+					            $qdata = array(
+					            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+					            	'filter' => array('extendedStatus' => 'assembling')
+					            );
 
-				            $result = $this->connectGetAPI($url,$qdata);
-				            $resultOrders = $result->orders;
-				        // ---
+					            $result = $this->connectGetAPI($url,$qdata);
+					            $resultOrders = $result->orders;
+					        // ---
 
 
-						$packing = array();
+							$packing = array();
 
-						foreach ($resultOrders as $key => $order) {
-							// ---
-								$resultProducts = $order->items;
-								
-								foreach ($resultProducts as $key => $product) {
-									// Get CRM categories
-							            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
-							            $qdata = array(
-							            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
-							            	'filter' => array('externalId' => $product->offer->externalId)
-							            );
+							foreach ($resultOrders as $key => $order) {
+								// ---
+									$resultProducts = $order->items;
+									
+									foreach ($resultProducts as $key => $product) {
+										// Get CRM categories
+								            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
+								            $qdata = array(
+								            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+								            	'filter' => array('externalId' => $product->offer->externalId)
+								            );
 
-							            $result = $this->connectGetAPI($url,$qdata);
-							            $groups = array();
+								            $result = $this->connectGetAPI($url,$qdata);
+								            $groups = array();
 
-							            foreach ($result->products[0]->groups as $key => $group) {
-							            	$groups[] = $group->id;
-							            }
-							        // ---
+								            foreach ($result->products[0]->groups as $key => $group) {
+								            	$groups[] = $group->id;
+								            }
+								        // ---
 
-							        // 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
-									if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
-										$packing[$product->offer->id][] = $product;
+								        // 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
+										if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
+											$packing[$product->offer->id][] = $product;
+										}
 									}
-								}
-							// ---
-						}
+								// ---
+							}
 
 
-						$data['packing'] = $packing;
+							$data['packing'] = $packing; */
+						// ---
+
+						// Opencart
+							$orders = array();
+
+							$this->load->model('document/print');
+							
+							
+							// Get orders
+								$resultOrders = $this->model_document_print->getOrders(array(13));
+					        // ---
+
+							$packing = array();
+
+							foreach ($resultOrders as $key => $order) {
+								// ---
+									$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
+									
+									foreach ($resultProducts as $key => $product) {
+										// Get categories
+											$resultCategories = $this->model_document_print->getProductCategory($product['product_id']);
+											
+											$groups = array();
+
+								            foreach ($resultCategories as $key => $category) {
+								            	$groups[] = $category['category_id'];
+								            }
+								        // ---
+
+								        // 35/36 - Зелень | 42/44 - Овощи | 68/69 - Фркуты/Ягоды
+										if( in_array(35, $groups) || in_array(36, $groups) || in_array(42, $groups) || in_array(44, $groups) || in_array(68, $groups) || in_array(69, $groups) ) {
+											$packing[$product['product_id']][] = $product;
+										}
+									}
+								// ---
+							}
+
+
+							$data['packing'] = $packing;
+						// ---
 					// ---
 				break;
 
 				case 'staff_document_assembly':
 					// ---
-						$orders = array();
+						// retailCRM
+							/*$orders = array();
 
-						// Get CRM orders
-				            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
-				            $qdata = array(
-				            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
-				            	'filter' => array('extendedStatus' => 'assembling')
-				            );
+							// Get CRM orders
+					            $url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+					            $qdata = array(
+					            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+					            	'filter' => array('extendedStatus' => 'assembling')
+					            );
 
-				            $result = $this->connectGetAPI($url,$qdata);
-				            $resultOrders = $result->orders;
-				        // ---
+					            $result = $this->connectGetAPI($url,$qdata);
+					            $resultOrders = $result->orders;
+					        // ---
 
-				        
-						foreach ($resultOrders as $key => $order) {
-							// ---
-								$resultProducts = $order->items;
-								$products = array();
+					        
+							foreach ($resultOrders as $key => $order) {
+								// ---
+									$resultProducts = $order->items;
+									$products = array();
 
-								foreach ($resultProducts as $key => $product) {
-									// Get CRM categories
-							            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
-							            $qdata = array(
-							            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
-							            	'filter' => array('externalId' => $product->offer->externalId)
-							            );
+									foreach ($resultProducts as $key => $product) {
+										// Get CRM categories
+								            $url = 'https://eco-u.retailcrm.ru/api/v5/store/products';
+								            $qdata = array(
+								            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => 1,
+								            	'filter' => array('externalId' => $product->offer->externalId)
+								            );
 
-							            $result = $this->connectGetAPI($url,$qdata);
-							            $groups = array();
+								            $result = $this->connectGetAPI($url,$qdata);
+								            $groups = array();
 
-							            foreach ($result->products[0]->groups as $key => $group) {
-							            	$groups[] = $group->id;
-							            }
-							        // ---
+								            foreach ($result->products[0]->groups as $key => $group) {
+								            	$groups[] = $group->id;
+								            }
+								        // ---
 
-									// 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
-									if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
-										$products[] = $product;
+										// 55/57/58 - Зелень | 54 - Овощи | 47 - Фркуты/Ягоды
+										if( in_array(55, $groups) || in_array(57, $groups) || in_array(58, $groups) || in_array(54, $groups) || in_array(47, $groups) ) {
+											$products[] = $product;
+										}
 									}
-								}
 
-								
-								$orders[] = array(
-									'order_id' => $order->number,
-									'products' => $products
-								);
-							// ---
-						}
+									
+									$orders[] = array(
+										'order_id' => $order->number,
+										'products' => $products
+									);
+								// ---
+							}
 
-						
-						$data['orders'] = $orders;
+							
+							$data['orders'] = $orders;*/
+						// ---
+
+
+						// Opencart
+							$orders = array();
+
+							$this->load->model('document/print');
+
+							// Get orders
+								$resultOrders = $this->model_document_print->getOrders(array(13));
+					        // ---
+
+					        
+							foreach ($resultOrders as $key => $order) {
+								// ---
+									$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
+
+									$products = array();
+
+									foreach ($resultProducts as $key => $product) {
+										// Get categories
+											$resultCategories = $this->model_document_print->getProductCategory($product['product_id']);
+											
+											$groups = array();
+
+								            foreach ($resultCategories as $key => $category) {
+								            	$groups[] = $category['category_id'];
+								            }
+								        // ---
+								            
+										// 35/36 - Зелень | 42/44 - Овощи | 68/69 - Фркуты/Ягоды
+										if( in_array(35, $groups) || in_array(36, $groups) || in_array(42, $groups) || in_array(44, $groups) || in_array(68, $groups) || in_array(69, $groups) ) {
+											$products[] = $product;
+										}
+									}
+
+									
+									$orders[] = array(
+										'order_id' => $order['order_id'],
+										'products' => $products
+									);
+								// ---
+							}
+
+							
+							$data['orders'] = $orders;
+						// ---
 					// ---
 				break;
 			}

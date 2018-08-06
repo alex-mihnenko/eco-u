@@ -52,6 +52,8 @@ class ModelDocumentPrint extends Model {
 			foreach ($order_status_ids as $key => $order_status_id) {
 				$sql .= " AND order_status_id = '" . $order_status_id . "'";
 			}
+			
+			$sql .= " ORDER BY `order_id` DESC";
 
 			$orders = $this->db->query($sql);
 
@@ -90,7 +92,7 @@ class ModelDocumentPrint extends Model {
 			if(isset($query->num_rows) && $query->num_rows>0) {
 				// ---
 					$sql = "
-						SELECT *
+						SELECT ptc.category_id
 						FROM ".DB_PREFIX."product_to_category ptc 
 						LEFT JOIN ".DB_PREFIX."category c ON ptc.category_id = c.category_id 
 						WHERE ptc.product_id = '".$product_id."' AND c.parent_id = '".$query->row['category_id']."'
@@ -99,7 +101,7 @@ class ModelDocumentPrint extends Model {
 
 					$query = $this->db->query($sql);
 
-					return $query->row;
+					return $query->rows;
 				// ---
 			}
 			else {
