@@ -84,6 +84,7 @@
 
 	<main>
 	    <h1 style="text-align: center;">Технологическая карта на сборку</h1>
+	    <h2 style="text-align: center;"><?php echo date('d.m.Y'); ?> <span style="font-weight: normal;"><?php echo date('H:i'); ?></span></h2>
 	    <br><br>
 
 	    <!-- Retail CRM -->
@@ -120,52 +121,60 @@
 	    <!-- Retail CRM -->
 
 	    <!-- Opencart -->
+	    	<?php $count_orders = 1; ?>
+
 		    <?php foreach ($orders as $keyOrder => $order) { ?>
 		    	
 		    	<?php if( !empty($order['products']) ) { ?>
-			    
-					<h4><span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?></h4>
-					
-					<div class="table">
-						<?php $count = 1; ?>
-						<?php $count_cols = 1; ?>
+
+			    	<div style="page-break-inside:avoid;">
+						<h4>
+							<span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?>
+							<span style="float: right; font-weight: normal;"><?php echo $count_orders; ?> из <?php echo count($orders); ?></span>
+						</h4>
 						
-						<?php $cols = 2; ?>
+						<div class="table">
+			                <table>
+			                  <thead><tr>
+			                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
+			                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
+			                  </tr></thead>
 
-		                <table>
-		                  <thead><tr>
-		                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
-		                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
-		                  </tr></thead>
+			                  <tbody>
+			                  		<?php $count = 1; ?>
+									<?php $count_cols = 1; ?>
+									
+									<?php $cols = 2; ?>
 
-		                  <tbody>
-		                  		<tr>
-			    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
+			                  		<tr>
+				    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
 
-		                  				<?php if( $count_cols > $cols  ) { ?>
-											<?php $count_cols = 1; ?>
-		                  					</tr><tr>
+			                  				<?php if( $count_cols > $cols  ) { ?>
+												<?php $count_cols = 1; ?>
+			                  					</tr><tr>
+											<?php } ?>
+
+				                  				<td>
+				                  					<?php echo $count; ?>
+				                  				</td>
+				                  				<td>
+				                  					<?php echo $product['name']; ?>
+				                  				</td>
+				                  				<td style="width: 200px; text-align: right;">
+				                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
+				                  				</td>
+											<?php $count_cols++; ?>
+											<?php $count++; ?>
 										<?php } ?>
+			                  		</tr>
+			                  </tbody>
+			                </table>
+			            </div>
 
-			                  				<td>
-			                  					<?php echo $count; ?>
-			                  				</td>
-			                  				<td>
-			                  					<?php echo $product['name']; ?>
-			                  				</td>
-			                  				<td style="width: 200px; text-align: right;">
-			                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
-			                  				</td>
-										<?php $count_cols++; ?>
-										<?php $count++; ?>
-									<?php } ?>
-		                  		</tr>
-		                  </tbody>
-		                </table>
-		             </div>
+		    			<br><hr><br>
+			        </div>
 
-		    		<br><hr><br>
-
+			        <?php $count_orders++; ?>
 				<?php } ?>
 			<?php } ?>
 	    <!-- Opencart -->
