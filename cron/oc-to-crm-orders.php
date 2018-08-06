@@ -453,7 +453,7 @@
 
 
 							foreach($netcost_config_list as $key => $item) {
-								if( $weight_value > intval($item->from) && $weight_value <= intval($item->to) ) {
+								if( $weight_value >= intval($item->from) && $weight_value < intval($item->to) ) {
 									$netcost_value = intval($item->cost);
 									break;
 								}
