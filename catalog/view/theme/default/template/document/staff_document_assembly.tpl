@@ -64,6 +64,13 @@
 			    vertical-align: top;
 			    border: 1px solid #dee2e6;
 			}
+
+			/* Compact */
+				.table.compact tr th:nth-child(3),
+				.table.compact tr td:nth-child(3){
+					border-right: 15px solid #dee2e6;
+				}
+			/* Compact */
 		/* Table */
 
 		/* Helper */
@@ -133,7 +140,7 @@
 							<span style="float: right; font-weight: normal;"><?php echo $count_orders; ?> из <?php echo count($orders); ?></span>
 						</h4>
 						
-						<div class="table">
+						<div class="table compact">
 			                <table>
 			                  <thead><tr>
 			                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>

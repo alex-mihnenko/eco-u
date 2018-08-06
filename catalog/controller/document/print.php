@@ -231,10 +231,9 @@ class ControllerDocumentPrint extends Controller {
 									}
 
 									
-									$orders[] = array(
-										'order_id' => $order['order_id'],
-										'products' => $products
-									);
+									if( !empty($products) ){
+										$orders[] = array( 'order_id' => $order['order_id'], 'products' => $products );
+									}
 								// ---
 							}
 
