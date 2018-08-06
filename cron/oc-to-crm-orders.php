@@ -109,7 +109,7 @@
 
 
 
-			$q = "SELECT * FROM `rcrm_customers` WHERE `email`='".$row_order['email']."' LIMIT 1;";
+			$q = "SELECT * FROM `rcrm_customers` WHERE `email` LIKE'".$row_order['email']."' OR `email` LIKE '".$row_order['telephone']."' LIMIT 1;";
 			$rows_customer = $db->query($q);
 
 
