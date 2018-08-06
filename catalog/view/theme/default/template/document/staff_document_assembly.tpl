@@ -127,20 +127,39 @@
 					<h4><span style="font-weight: normal;">Номер заказа: </span><?php echo $order['order_id']; ?></h4>
 					
 					<div class="table">
+						<?php $count = 1; ?>
+						<?php $count_cols = 1; ?>
+						
+						<?php $cols = 2; ?>
+
 		                <table>
-		                  <thead><tr> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th> </tr></thead>
+		                  <thead><tr>
+		                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
+		                  	<th>#</th> <th>Название</th> <th style="width: 200px; text-align: right;">В заказ</th>
+		                  </tr></thead>
 
 		                  <tbody>
-		    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
-		                  			<tr>
-		                  				<td>
-		                  					<?php echo $product['name']; ?>
-		                  				</td>
-		                  				<td style="width: 200px; text-align: right;">
-		                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
-		                  				</td>
-		                  			</tr>
-								<?php } ?>
+		                  		<tr>
+			    					<?php foreach ($order['products'] as $keyProduct => $product) { ?>
+
+		                  				<?php if( $count_cols > $cols  ) { ?>
+											<?php $count_cols = 1; ?>
+		                  					</tr><tr>
+										<?php } ?>
+
+			                  				<td>
+			                  					<?php echo $count; ?>
+			                  				</td>
+			                  				<td>
+			                  					<?php echo $product['name']; ?>
+			                  				</td>
+			                  				<td style="width: 200px; text-align: right;">
+			                  					<?php echo $product['variant']; ?> <?php echo $product['unit']; ?> x <?php echo $product['amount']; ?>
+			                  				</td>
+										<?php $count_cols++; ?>
+										<?php $count++; ?>
+									<?php } ?>
+		                  		</tr>
 		                  </tbody>
 		                </table>
 		             </div>
