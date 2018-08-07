@@ -2383,77 +2383,10 @@ class ControllerAjaxIndex extends Controller {
 
           $response->call = call_proccessing('+'.$phone);
         // --
-
-        /*
-        // Send to Retail CRM
-          define('RETAILCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
-
-          // Get CRM managers
-            $managers = [];
-
-            $url = 'https://eco-u.retailcrm.ru/api/v5/users';
-            $qdata = array('apiKey' => self::RETAILCRM_KEY,'limit' => 100);
-
-            $response = $this->connectGetAPI($url,$qdata);
-
-            foreach ($response->users as $key => $user) {
-              if( $user->isManager == 1 ){
-                $managers[] = $user->id;
-              }
-            }
-          // ---
-
-
-          // Set task to managers
-            $url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RETAILCRM_KEY;
-
-            // Create commonID
-              $commonId = uniqid();
-              $taskText = "ROIstat ID: ".$roistat_visit.". Обратный звонок на номер +".$phone." [".$commonId."]";
-              $commentaryText = "ROIstat ID: ".$roistat_visit.". \nВремя заявки: ".date("H:i", time());
-            // ---
-
-            foreach ($managers as $key => $manager_id) {
-              // Set data
-                $task['text'] = $taskText;
-                $task["commentary"] = $commentaryText;
-                $task["datetime"] = date("Y-m-d H:i", (time()+1800) );
-                $task["phone"] = $phone;
-                $task["performerId"] = $manager_id;
-                $data['task'] = json_encode($task);
-              // ---
-              
-              $response=$this->connectPostAPI($url,$data);
-
-              if( isset($response->success) && $response->success!= false && isset($response->id) ){
-                // Save task
-                  $q = "
-                    INSERT INTO `rcrm_tasks` SET 
-                    `commonId`='".$commonId."', 
-                    `internalId`='".$response->id."', 
-                    `orderNumber`='', 
-                    `customer`='', 
-                    `text`='".$taskText."', 
-                    `status`='performing', 
-                    `processed`='0'
-                  ;";
-
-                  if ($db->query($q) === TRUE) {
-                      $log[] = 'OC task log has been created';
-                  } else {
-                    $log[] = 'OC task log has been not created: '.$db->error;
-                  }
-                // ---
-              }
-
-            }
-          // ---
-        // ---
-        */
             
         // Save callback
             $this->load->model('tool/addon');
-            $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit);
+            $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit, $response->call);
         // ---
 
 

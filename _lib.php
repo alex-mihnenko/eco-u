@@ -3,7 +3,7 @@
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
 
-	include("../config.php");
+	include("config.php");
 
 	$db = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
@@ -18,6 +18,97 @@
 
 	define('MS_AUTH', 'admin@mail195:b41fd841edc5');
 	define('RCRM_KEY', 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to');
+
+	// Telphin
+		define( 'TELPHIN_MY_APP_KEY', 'eeb41c58b7954678971824d23133fbc6' );
+		define( 'TELPHIN_MY_APP_SECRET', '9dac551ddb5945859c0d42aa12e47200' );
+		define( 'TELPHIN_EXTERNAL_FIRST', true );
+		define( 'TELPHIN_EXTENSION_ID', '154126' );
+		define( 'TELPHIN_LOCAL_NUMBER', '74951081876' );
+		define( 'TELPHIN_SERVER_NAME', "apiproxy.telphin.ru" );
+
+		define( 'TELPHIN_MAX_COUNT_IP', 10000 );	// максимальное кол-во попыток звонка с одного ip
+		define( 'TELPHIN_MAX_COUNT_TEL', 1000 );	// максимальное кол-во попыток звонка на один номер
+		define( 'TELPHIN_BLOCK_PERIOD', 86400 );	// в течение какого временного периода действует ограничение на кол-во звонков. По умолчанию, 24 часа
+
+		function get_token() {
+	        $res = gen_token();
+	        return $res['access_token'];
+	    }
+
+	    function gen_token() {
+	        $url = 'https://' . TELPHIN_SERVER_NAME . '/oauth/token';
+
+	        $post_data = array(
+			'client_id'       => TELPHIN_MY_APP_KEY,
+			'client_secret'   => TELPHIN_MY_APP_SECRET,
+	        'grant_type'      => 'client_credentials',
+	        );
+
+	        $req = curl_init();
+	        curl_setopt( $req, CURLOPT_URL, $url );
+	        curl_setopt( $req, CURLOPT_RETURNTRANSFER, true );
+	        curl_setopt( $req, CURLOPT_FOLLOWLOCATION, true );
+	        curl_setopt( $req, CURLOPT_POST, true );
+	        curl_setopt( $req, CURLOPT_POSTFIELDS, http_build_query( $post_data, '', '&' ) );
+	        curl_setopt( $req, CURLOPT_SSL_VERIFYPEER, false );
+	        curl_setopt( $req, CURLOPT_HTTPHEADER, array( 'Content-type: application/x-www-form-urlencoded' ) );
+	        curl_setopt( $req, CURLOPT_USERAGENT, 'TelphinWebCall-RingMeScript' );
+	        $res = json_decode( curl_exec( $req ), true );
+
+	        if ( ! $res )
+	            return array( 'error' => 'Error get token' );
+	        elseif ( isset( $res['error'] ) )
+	            return array( 'error' => $res['error'] );
+	        else
+	            return $res;
+	    }
+
+	    function telphinRequest($url, $qdata, $request) {
+
+	        $data = json_encode( $qdata );
+	        $token = get_token();
+
+	        $req = curl_init();
+	        curl_setopt( $req, CURLOPT_URL, $url );
+	        curl_setopt( $req, CURLOPT_RETURNTRANSFER, true );
+	        curl_setopt( $req, CURLOPT_FOLLOWLOCATION, true );
+	        curl_setopt( $req, CURLOPT_POST, true );
+	        curl_setopt( $req, CURLOPT_CUSTOMREQUEST, $request);  
+	        curl_setopt( $req, CURLOPT_POSTFIELDS, $data );
+	        curl_setopt( $req, CURLOPT_SSL_VERIFYPEER, false );
+	        curl_setopt( $req, CURLOPT_HTTPHEADER, array(
+	                'Content-type: application/json',
+	                "Authorization: Bearer " . $token
+	            )
+	        );
+	        curl_setopt( $req, CURLOPT_USERAGENT, 'TelphinWebCall-RingМeScript' );
+	        $res = json_decode( curl_exec( $req ), true );
+
+			if(!curl_errno($req)) {
+				if (curl_getinfo($req, CURLINFO_HTTP_CODE) == 401) {
+	                    curl_setopt( $req, CURLOPT_HTTPHEADER, array(
+	                            'Content-type: application/json',
+	                            "Authorization: Bearer " . $token
+	                        )
+	                    );
+	                    $res = json_decode( curl_exec( $req ), true );
+				}
+			}
+			
+	        
+			if(isset($res) && isset($res["message"]) && $res["message"] == "Unauthorized" ){
+				unset($res);
+			}
+			
+	        if ( ! $res )
+	            return array( 'error' => 'Error make call' );
+	        elseif ( isset( $res['error'] ) )
+	            return array( 'error' => $res['error'] );
+	        else
+	            return $res;
+	    }
+	// ---
 
 
 	function connectPostAPI($url, $qdata, $auth='', $cookie='') {
@@ -121,7 +212,6 @@
 			}
 		// ---
 	}
-
 
 	function isCyrilicLetter($char) {
         $alphabet = array(
