@@ -227,7 +227,7 @@
 
 			$result = connectPostAPI($url, $data);
 
-			$log[] = 'CRM customer address ['.$row_order['customer_id'].'] update: '.json_encode($result);
+			$log[] = 'CRM customer custom fields ['.$row_order['customer_id'].'] update: '.json_encode($result);
 		// ---
 	// ---
 // ---
