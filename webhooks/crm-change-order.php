@@ -36,7 +36,7 @@
 	}
 
 	$order = $result->order;
-	$customer = $result->customer;
+	$customer = $result->order->customer;
 	
 	if( $order->status != 'confim' ){
 		// ---
@@ -95,10 +95,10 @@
 		// ---
 			
 		// Save address
-			$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$address."';";
+			$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$order_address."';";
 			$rows_address = $db->query($q);
 
-			if ($rows_address->num_rows == 0 && !empty($address) ) {
+			if ($rows_address->num_rows == 0 && !empty($order_address) ) {
 				// To OC
 					$q = "
 						INSERT INTO `".DB_PREFIX."address` SET 
@@ -106,7 +106,7 @@
 						`firstname` = '".$row_order['firstname']."',
 						`lastname` = '".$row_order['lastname']."',
 						`company` = '',
-						`address_1` = '".$address."',
+						`address_1` = '".$order_address."',
 						`address_2` = '',
 						`city` = '',
 						`postcode` = '',
@@ -154,13 +154,13 @@
 							$customerCustomFields = array();
 
 							if( !isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
-								$customerCustomFields['addition_address_first'] = $address;
+								$customerCustomFields['addition_address_first'] = $order_address;
 							}
 							else if( isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
-								$customerCustomFields['addition_address_second'] = $address;
+								$customerCustomFields['addition_address_second'] = $order_address;
 							}
 							else {
-								$customerCustomFields['addition_address_third'] = $address;
+								$customerCustomFields['addition_address_third'] = $order_address;
 							}
 
 							$customerData = array(
@@ -192,6 +192,8 @@
 	// ---
 
 	// Save custom fields
+		$customerData = array();
+
 		// Get order custom fields
 			$order_intercom = '';
 
@@ -209,6 +211,10 @@
 				// ---
 			}
 
+
+			$customerData = array(
+				'customFields' => $customerCustomFields
+			);
 
 			$url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer->id.'/edit';
 
