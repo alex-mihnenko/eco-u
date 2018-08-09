@@ -45,7 +45,7 @@
 	$id = $orders['rows'][$config->current]['id'];
 	$log['Purchaseorder'] = $id;
 
-	if( isset($orders['rows'][$config->current]['deliveryPlannedMoment']) ) {
+	if( isset($orders['rows'][$config->current]['deliveryPlannedMoment']) && $orders['rows'][$config->current]['deliveryPlannedMoment'] != '' ) {
 		$deliveryPlannedMomentDateTime = $orders['rows'][$config->current]['deliveryPlannedMoment'];
 		$deliveryPlannedMomentArr = explode(' ', $deliveryPlannedMomentDateTime);
 		$deliveryPlannedMoment = $deliveryPlannedMomentArr[0];
