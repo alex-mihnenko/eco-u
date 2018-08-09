@@ -18,7 +18,7 @@ class ModelToolAddon extends Model {
 				LEFT JOIN `".DB_PREFIX."product` p ON p.product_id = op.product_id 
 				LEFT JOIN `".DB_PREFIX."product_description` pd ON pd.product_id = op.product_id 
 				LEFT JOIN ms_products msp ON msp.product_id = op.product_id 
-				WHERE op.order_id='".$order_id."' AND p.stock_status_id<>'7'
+				WHERE op.order_id='".$order_id."'
 			;";
 
 			$query = $this->db->query($sql);
