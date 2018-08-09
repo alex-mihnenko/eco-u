@@ -33,8 +33,6 @@
 	$orders = connectMSAPI($url,AUTH_DATA);
 	$log['orderes'] = count($orders['rows']);
 
-	print_r($orders); exit;
-
 	if( $config->current < 0 ) { $config->current = 0; }
 	else { $config->current = $config->current + 1; }
 	$config->count = count($orders['rows']);
