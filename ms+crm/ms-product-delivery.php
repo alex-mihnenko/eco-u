@@ -21,7 +21,7 @@
 
 
 	$log = [];
-	$currenttime = time();
+	$currenttime = mktime(0, 0, 0, date('n',time()), date('j',time()), date('Y',time()));
 // ---
 
 // Set query
@@ -33,6 +33,8 @@
 	$orders = connectMSAPI($url,AUTH_DATA);
 	$log['orderes'] = count($orders['rows']);
 
+	print_r($orders); exit;
+
 	if( $config->current < 0 ) { $config->current = 0; }
 	else { $config->current = $config->current + 1; }
 	$config->count = count($orders['rows']);
@@ -43,6 +45,7 @@
 
 // Processing
 	$id = $orders['rows'][$config->current]['id'];
+	$log['Purchaseorder'] = $id;
 
 	if( isset($orders['rows'][$config->current]['deliveryPlannedMoment']) ) {
 		$deliveryPlannedMomentDateTime = $orders['rows'][$config->current]['deliveryPlannedMoment'];
@@ -52,12 +55,12 @@
 		// Get UNIX time
 			$dateTmp = explode('-', $deliveryPlannedMoment);
 
-			$deliveryUnixtime = mktime(0, 0, 0, $dateTmp[1], $dateTmp[2], $dateTmp[0]);
+			$deliveryUnixtime = mktime(0, 0, 0, int($dateTmp[1]), int($dateTmp[2]), $dateTmp[0]);
 		// ---
 
 		$log['deliveryPlannedMoment'] = $deliveryPlannedMoment;
 
-		if( $deliveryUnixtime < $currenttime ) {
+		if( $deliveryUnixtime <= $currenttime ) {
 			// ---
 				$res['log'] = json_encode($log);
 				$res['mess']='Planned moment is passed';

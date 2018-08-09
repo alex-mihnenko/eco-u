@@ -560,6 +560,8 @@ if($argv[1]=='3'){
 		$CHECK_MS=true;
 		$page=0;		
 
+		$current_time = mktime(0, 0, 0, date('n',time()), date('j',time()), date('Y',time()));
+
 		while($CHECK_MS){
 		
 			$limit=100;
@@ -580,43 +582,72 @@ if($argv[1]=='3'){
 				$qty=$v['quantity'];
 				
 				if($v['meta']['type']=='variant') {
-
-					$res=mysql_query("select product_option_value_id from ms_variants where ms_id='$id'");
-					list($sub_post_id)=mysql_fetch_row($res);
-					echo("$sub_post_id - $qty<BR>");
-					
-					if($sub_post_id ){
-						$res2=mysql_query("select product_id from oc_product_option_value where  product_option_value_id='$sub_post_id'");
-						list($chpr_id)=mysql_fetch_row($res2);
-						
-						if($chpr_id){
-							$QTS[$chpr_id]=$chpr_id; 
-
-							mysql_query("
-								UPDATE `oc_product` SET 
-								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
-								WHERE `product_id`='$chpr_id';
-							");
-						}
-						mysql_query("update oc_product_option_value set quantity='$qty' where product_option_value_id='$sub_post_id'");
-
-					}
-				}elseif($v['meta']['type']=='product') {
 					// ---
-						if ( $qProduct = mysql_query("SELECT `product_id` FROM `ms_products` WHERE ms_id='$id';") ) $nProduct = mysql_num_rows($qProduct);
+						$res=mysql_query("select product_option_value_id from ms_variants where ms_id='$id'");
+						list($sub_post_id)=mysql_fetch_row($res);
+						echo("$sub_post_id - $qty<BR>");
+						
+						if($sub_post_id ){
+							$res2=mysql_query("select product_id from oc_product_option_value where product_option_value_id='$sub_post_id'");
+							list($chpr_id)=mysql_fetch_row($res2);
+							
+							if($chpr_id){
+								$QTS[$chpr_id]=$chpr_id; 
+
+								mysql_query("
+									UPDATE `oc_product` SET 
+									`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
+									WHERE `product_id`='$chpr_id';
+								");
+							}
+							mysql_query("update oc_product_option_value set quantity='$qty' where product_option_value_id='$sub_post_id'");
+
+						}
+					// ---
+				} else if($v['meta']['type']=='product') {
+					// ---
+						if ( $qProduct = mysql_query("SELECT `product_id` FROM `ms_products` WHERE ms_id='".$id."';") ) $nProduct = mysql_num_rows($qProduct);
 						else $nProduct = 0;
 
 						if( $nProduct>0 ){
-							$rowMSProduct = mysql_fetch_assoc($qProduct);
-							$product_id=$rowMSProduct['product_id'];
+							// ---
+								$rowMSProduct = mysql_fetch_assoc($qProduct);
+								$product_id=$rowMSProduct['product_id'];
 
-							if($qty>0) { $QTS[$product_id]=$product_id; $AVA=" and AVAILABLE='Y'"; } 
+								if ( $qProduct = mysql_query("SELECT `product_id`, `date_available` FROM `oc_products` WHERE `product_id`='".$product_id."';") ) $nProduct = mysql_num_rows($qProduct);
+								else $nProduct = 0;
 
-							mysql_query("
-								UPDATE `oc_product` SET 
-								`quantity`=$qty, `date_available`='0000-00-00', `status`=1 
-								WHERE `product_id`=".$product_id.";
-							");
+								if( $nProduct>0 ){
+									// ---
+										$rowOCProduct = mysql_fetch_assoc($qProduct);
+										$date_available=$rowOCProduct['date_available'];
+										
+										if($qty>0) {
+											// ---
+												$QTS[$product_id]=$product_id;
+												$AVA=" and AVAILABLE='Y'";
+												
+												$date_available_array = explode('-', $date_available);
+												$date_available_unixtime = mktime(0, 0, 0, int($date_available_array[1]), int($date_available_array[2]), $date_available_array[0]);
+
+												if( $date_available_unixtime <= $current_time ) {
+													mysql_query("
+														UPDATE `oc_product` SET 
+														`date_available`='0000-00-00'  
+														WHERE `product_id`=".$product_id.";
+													");
+												}
+											// ---
+										}
+
+										mysql_query("
+											UPDATE `oc_product` SET 
+											`quantity`=".$qty.", `status`='1'  
+											WHERE `product_id`=".$product_id.";
+										");
+									// ---
+								}
+							// ---
 						}
 					// ---
 				}
