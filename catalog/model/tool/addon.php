@@ -30,4 +30,39 @@ class ModelToolAddon extends Model {
 	        }
 		// ---
 	}
+
+	public function getCustomer($externalId) {
+		// ---
+			$sql = "
+				SELECT * FROM `".DB_PREFIX."customer` c 
+				WHERE c.email='".$externalId."' LIMIT 1
+			;";
+
+			$query = $this->db->query($sql);
+
+			if($query->row) {
+	            return $query->row;
+	        } else {
+	            return false;
+	        }
+		// ---
+	}
+
+
+	public function getCustomerAddresses($customer_id) {
+		// ---
+			$sql = "
+				SELECT * FROM `".DB_PREFIX."address` a 
+				WHERE a.customer_id='".$customer_id."'
+			;";
+
+			$query = $this->db->query($sql);
+
+			if($query->rows) {
+	            return $query->rows;
+	        } else {
+	            return array();
+	        }
+		// ---
+	}
 }

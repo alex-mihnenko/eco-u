@@ -1,6 +1,6 @@
 <?php
 // Init
-	include("_lib.php");
+	include("../_lib.php");
 // ---
 
 

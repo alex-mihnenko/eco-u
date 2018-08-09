@@ -1,10 +1,10 @@
 ﻿<?php
 // Init
-	include("_lib.php");
+	include("../_lib.php");
 
 	header('Content-Type: text/html; charset=utf-8');
 
-	$config = json_decode(file_get_contents('crm-to-oc-orders-config.json'));
+	$config = json_decode(file_get_contents('crm-to-oc-orders.json'));
 // ---
 
 // Request
@@ -70,18 +70,6 @@
 												$address = mb_substr($address,0,mb_strlen($address)-2);
 											// ---
 										}
-			
-										// $address = $order->customer->address->text;
-										// $length = strlen($address);
-										
-										// if( $length > 0 ){
-										// 	for ($i=0; $i<$length; $i++) {
-										// 	    if( !isCyrilicLetter( mb_substr($address,0,1) ) ){
-										// 	    	$address = mb_substr($address,1,strlen($address)-1);
-										// 	    }
-										// 	    else{ break; }
-										// 	}
-										// }
 									// ---
 
 									// Save address
@@ -126,11 +114,11 @@
 	// Update config
 		if( $count > 0 ){
 			$config->page = $config->page + 1;
-			file_put_contents('crm-to-oc-orders-config.json',json_encode($config));
+			file_put_contents('crm-to-oc-orders.json',json_encode($config));
 		}
 		else {
 			$config->page = 1;
-			file_put_contents('crm-to-oc-orders-config.json',json_encode($config));
+			file_put_contents('crm-to-oc-orders.json',json_encode($config));
 		}
 	// ---
 // ---

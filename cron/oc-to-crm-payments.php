@@ -1,6 +1,6 @@
 <?php
 // Init
-	include("_lib.php");
+	include("../_lib.php");
 
 	$log = [];
 
@@ -115,42 +115,6 @@ while ( $row = $result->fetch_assoc() ) {
 					}
 				// ---
 			// ---
-
-
-			/*
-			// Edit payment		
-				$url='https://eco-u.retailcrm.ru/api/v5/orders/payments/'.$paymentId.'/edit?apiKey='.RCRM_KEY;
-				
-				// Set data
-					$data['by'] = 'id';
-
-					$payment['externalId'] = $row['id_paymant'];
-					$payment['amount'] = $row['total'];
-					$payment['paidAt'] = $row['date_add'];
-					$payment['comment'] = $comment;
-					$payment['type'] = $type;
-					$payment['status'] = $status;
-
-					$data['payment'] = json_encode($payment);
-				// ---
-
-				$response=connectPostAPI($url,$data);
-
-				if (!$response->success)  { $log[] = '['.$row['id_paymant'].']: error edit '.json_encode($response); }
-				else { $log[] = '['.$row['id_paymant'].']: success edit'; }
-
-				// Set proccessed
-					$q = "UPDATE `".DB_PREFIX."order_payments` SET `processed` = 1 WHERE `id_paymant`=".$row['id_paymant'].";";
-
-					if ($db->query($q) === TRUE) {
-					    $log[] = '['.$row['id_paymant'].']: success update db';
-					} else {
-					    $log[] = '['.$row['id_paymant'].']: error update db '. $db->error;
-					}
-				// ---
-			// ---
-			*/
-
 
 			// Set task to managers
 				$url = 'https://eco-u.retailcrm.ru/api/v5/tasks/create?apiKey='.RCRM_KEY;

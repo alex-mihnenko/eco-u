@@ -1,8 +1,8 @@
 <?php
 // Init
-	include("_lib.php");
+	include("../_lib.php");
 
-	$config = json_decode(file_get_contents('ms-to-oc-supliers-config.json'));
+	$config = json_decode(file_get_contents('ms-to-oc-supliers.json'));
 // ---
 
 // Request
@@ -66,11 +66,11 @@
 	// Update config
 		if( $count > 0 ){
 			$config->page = $config->page + 1;
-			file_put_contents('ms-to-oc-supliers-config.json',json_encode($config));
+			file_put_contents('ms-to-oc-supliers.json',json_encode($config));
 		}
 		else {
 			$config->page = 0;
-			file_put_contents('ms-to-oc-supliers-config.json',json_encode($config));
+			file_put_contents('ms-to-oc-supliers.json',json_encode($config));
 		}
 	// ---
 // ---

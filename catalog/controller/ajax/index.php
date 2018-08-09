@@ -2160,115 +2160,76 @@ class ControllerAjaxIndex extends Controller {
             $customerId = intval($this->request->post['customerId']);
             $custom_field_code = $this->request->post['code'];
             $response = new stdClass();
+
+            $this->load->model('tool/addon');
           // ---
 
-          // Get customer
-              $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId;
-              $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+          // Get OC customer
+            $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId;
+            $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
 
-              $res = $this->connectGetAPI($url,$qdata);
-
-              if( isset($res->customer) ) {
-                // ---
-                  $customer = $res->customer;
-
-                  $customerData = array();
-                  $customerAddress = array();
-                  $customerCustomFields = array();
+            $res = $this->connectGetAPI($url,$qdata);
 
 
-                  if( isset($customer->address) ){
-                    // ---
-                      // Set main address
-                        $address = '';
+            if( isset($res->customer) ) {
+              // ---
+                $customer = $res->customer;
 
-                        if( !isset($customer->address->text) ){
-                          // Region and City
-                          if( isset($customer->address->cityType) ) { $address .= $customer->address->cityType.' '; }
-                          else if( isset($customer->address->region) ) { $address .= $customer->address->region.', '; }
-                          if( isset($customer->address->city) ) { $address .= $customer->address->city.', '; }
+                $customer_info = $this->model_catalog_product->getCustomer($customer->externalId);
 
-                          // Street
-                          if( isset($customer->address->streetType) ) { $address .= $customer->address->streetType.' '; }
-                          if( isset($customer->address->street) ) { $address .= $customer->address->street.', '; }
+                if( $customer_info ){
+                  // ---
+                    $customer_addresses = $this->model_catalog_product->getCustomerAddresses($customer_info['customer_id']);
 
-                          // Add
-                          if( isset($customer->address->building) ) { $address .= 'д. '.$customer->address->building.', '; }
-                          if( isset($customer->address->flat) ) { $address .= 'кв./офис '.$customer->address->flat.', '; }
-                          if( isset($customer->address->block) ) { $address .= 'под. '.$customer->address->block.', '; }
-                          if( isset($customer->address->floor) ) { $address .= 'эт. '.$customer->address->floor.', '; }
+                    $customer_address_primary_array = array();
+                    $customer_address_primary_text = array();
 
-                          // Fix
-                          $address = mb_substr($address,0,mb_strlen($address)-2);
-                        }
-                        else {
-                          $address = $customer->address->text;
-                        }
+                    foreach ($customer_addresses as $key => $address) {
                       // ---
-
-                      // Set additional addresses
-                        if( isset($customer->customFields->addition_address_first) ){
-                          $customerCustomFields['addition_address_first'] = $customer->customFields->addition_address_first;
-                        }
-                        if( isset($customer->customFields->addition_address_second) ){
-                          $customerCustomFields['addition_address_second'] = $customer->customFields->addition_address_second;
-                        }
-                        if( isset($customer->customFields->addition_address_third) ){
-                          $customerCustomFields['addition_address_third'] = $customer->customFields->addition_address_third;
-                        }
+                        
                       // ---
-                      
-                      // Change
-                        if( $custom_field_code == 'addition_address_first' ) {
-                            $customerAddress['text'] = $customerCustomFields['addition_address_first'];
-                            $customerCustomFields['addition_address_first'] = $address;
-                        }
-
-                        if( $custom_field_code == 'addition_address_second' ) {
-                            $customerAddress['text'] = $customerCustomFields['addition_address_second'];
-                            $customerCustomFields['addition_address_second'] = $address;
-                        }
-
-                        if( $custom_field_code == 'addition_address_third' ) {
-                            $customerAddress['text'] = $customerCustomFields['addition_address_third'];
-                            $customerCustomFields['addition_address_third'] = $address;
-                        }
-                      // ---
+                    }
 
 
+                    // Edit CRM customer
                       // Clear main address
-                        $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+                        // $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
 
-                        $qdata = array(
-                          'apiKey' => self::RETAILCRM_KEY,
-                          'by' => 'id',
-                          'customer' => json_encode(array('address' => array()))
-                        );
+                        // $qdata = array(
+                        //   'apiKey' => self::RETAILCRM_KEY,
+                        //   'by' => 'id',
+                        //   'customer' => json_encode(array('address' => array()))
+                        // );
 
-                        $res = $this->connectPostAPI($url, $qdata);
+                        // $res = $this->connectPostAPI($url, $qdata);
                       // ---
                       
-                      $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+                      // $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
 
-                      $customerData = array(
-                        'address' => $customerAddress,
-                        'customFields' => $customerCustomFields
-                      );
+                      // $customerData = array(
+                      //   'address' => $customerAddress,
+                      //   'customFields' => $customerCustomFields
+                      // );
 
-                      $qdata = array(
-                        'apiKey' => self::RETAILCRM_KEY,
-                        'by' => 'id',
-                        'customer' => json_encode($customerData)
-                      );
+                      // $qdata = array(
+                      //   'apiKey' => self::RETAILCRM_KEY,
+                      //   'by' => 'id',
+                      //   'customer' => json_encode($customerData)
+                      // );
 
-                      $res = $this->connectPostAPI($url, $qdata);
+                      // $res = $this->connectPostAPI($url, $qdata);
 
-                      $response->res = $res;
-                      $response->data = $customerData;
-                    // ---
-                  }
-                // ---
-              }
+                      // $response->res = $res;
+                      // $response->data = $customerData;
+                    // ----
+                      
+                  // ---
+                }
+              // ---
+            }
+
+          // ---
+     
           // ---
 
           $response->status = 'success';

@@ -69,27 +69,72 @@
 
 
 		// Get order address
-			$order_address = '';
+			$order_address_array = array();
+			$order_address_text = '';
 
 			if( isset($order->delivery->address) ){
 				// ---
-					// Region and City
-					if( isset($order->delivery->address->cityType) ) { $order_address .= $order->delivery->address->cityType.' '; }
-					else if( isset($order->delivery->address->region) ) { $order_address .= $order->delivery->address->region.', '; }
-					if( isset($order->delivery->address->city) ) { $order_address .= $order->delivery->address->city.', '; }
-
-					// Street
-					if( isset($order->delivery->address->streetType) ) { $order_address .= $order->delivery->address->streetType.' '; }
-					if( isset($order->delivery->address->street) ) { $order_address .= $order->delivery->address->street.', '; }
-
-					// Add
-					if( isset($order->delivery->address->building) ) { $order_address .= 'д. '.$order->delivery->address->building.', '; }
-					if( isset($order->delivery->address->flat) ) { $order_address .= 'кв./офис '.$order->delivery->address->flat.', '; }
-					if( isset($order->delivery->address->block) ) { $order_address .= 'под. '.$order->delivery->address->block.', '; }
-					if( isset($order->delivery->address->floor) ) { $order_address .= 'эт. '.$order->delivery->address->floor.', '; }
+					if( isset($order->delivery->address->region) ){
+						$order_address_array['region'] = $order->delivery->address->region;
+						$order_address_text .= $order->delivery->address->region . 'обл.'; // Область
+					}
+					if( isset($order->delivery->address->regionId) ){
+						$order_address_array['regionId'] = $order->delivery->address->regionId;
+						//$order_address_text .= $order->delivery->address->regionId; // Идентификатор области в geohelper
+					}
+					if( isset($order->delivery->address->city) && isset($order->delivery->address->cityType) ){
+						$order_address_array['city'] = $order->delivery->address->city;
+						$order_address_text .= $order->delivery->address->cityType . ' ' . $order->delivery->address->city ; // Город
+					}
+					if( isset($order->delivery->address->cityId) ){
+						$order_address_array['cityId'] = $order->delivery->address->cityId;
+						//$order_address_text .= $order->delivery->address->cityId . ''; // Идентификатор города в geohelper
+					}
+					if( isset($order->delivery->address->street) && isset($order->delivery->address->streetType) ){
+						$order_address_array['street'] = $order->delivery->address->street;
+						$order_address_text .= $order->delivery->address->streetType . ' ' . $order->delivery->address->street . ''; // Улица
+					}
+					if( isset($order->delivery->address->streetId) ){
+						$order_address_array['streetId'] = $order->delivery->address->streetId;
+						//$order_address_text .= '' . $order->delivery->address->streetId . ''; // Идентификатор улицы в geohelper
+					}
+					if( isset($order->delivery->address->building) ){
+						$order_address_array['building'] = $order->delivery->address->building;
+						$order_address_text .= 'д. ' . $order->delivery->address->building . ''; // Номер дома
+					}
+					if( isset($order->delivery->address->flat) ){
+						$order_address_array['flat'] = $order->delivery->address->flat;
+						$order_address_text .= 'кв./офис ' . $order->delivery->address->flat . ''; // Номер квартиры или офиса
+					}
+					if( isset($order->delivery->address->intercomCode) ){
+						$order_address_array['intercomCode'] = $order->delivery->address->intercomCode;
+						$order_address_text .= 'код домофона ' . $order->delivery->address->intercomCode . ', '; // Код домофона
+					}
+					if( isset($order->delivery->address->floor) ){
+						$order_address_array['floor'] = $order->delivery->address->floor;
+						$order_address_text .= 'эт. ' . $order->delivery->address->floor . ', '; // Этаж
+					}
+					if( isset($order->delivery->address->block) ){
+						$order_address_array['block'] = $order->delivery->address->block;
+						$order_address_text .= 'под. ' . $order->delivery->address->block . ', '; // Подъезд
+					}
+					if( isset($order->delivery->address->house) ){
+						$order_address_array['house'] = $order->delivery->address->house;
+						$order_address_text .= 'стр./корпус ' . $order->delivery->address->house . ', '; // Строение/корпус
+					}
+					if( isset($order->delivery->address->metro) ){
+						$order_address_array['metro'] = $order->delivery->address->metro;
+						$order_address_text .= 'метро ' . $order->delivery->address->metro . ', '; // Метро
+					}
 
 					// Fix
-					$order_address = mb_substr($order_address,0,mb_strlen($order_address)-2);
+					$order_address_text = mb_substr($order_address_text,0,mb_strlen($order_address_text)-2);
+
+
+					if( isset($order->customFields->order_delivery_address_type) && $order->customFields->customer_delivery_address_type != false ){
+						$order_address_array['address_type'] = $order->customFields->order_delivery_address_type;
+						$order_address_text .= '(Доставка в офис)';
+					}
 				// ---
 			}
 		// ---
@@ -99,54 +144,24 @@
 			$rows_address = $db->query($q);
 
 			if ($rows_address->num_rows == 0 && !empty($order_address) ) {
-				// To OC
-					$q = "
-						INSERT INTO `".DB_PREFIX."address` SET 
-						`customer_id` = '".$row_order['customer_id']."',
-						`firstname` = '".$row_order['firstname']."',
-						`lastname` = '".$row_order['lastname']."',
-						`company` = '',
-						`address_1` = '".$order_address."',
-						`address_2` = '',
-						`city` = '',
-						`postcode` = '',
-						`country_id` = '0',
-						`zone_id` = '0',
-						`custom_field` = ''
-					";
-					
-					if ($db->query($q) === TRUE) {
-					    $log[] = 'OC customer address ['.$row_order['customer_id'].'] has been inserted';
-					} else {
-						$log[] = 'OC customer address ['.$row_order['customer_id'].'] has been not inserted: '.$db->error;
-					}
-				// ---
+				$oc_address_type = 'primary';
 
 				// To CRM
 					$customerData = array();
 
 					if( !isset($customer->address) ){
 						// ---
-							$customerAddress = array();
-							
-							if( isset($order->delivery->address->countryIso) ) { $customerAddress['countryIso'] = $order->delivery->address->countryIso; }
-							if( isset($order->delivery->address->region) ) { $customerAddress['region'] = $order->delivery->address->region; }
-							if( isset($order->delivery->address->regionId) ) { $customerAddress['regionId'] = $order->delivery->address->regionId; }
-							if( isset($order->delivery->address->city) ) { $customerAddress['city'] = $order->delivery->address->city; }
-							if( isset($order->delivery->address->cityId) ) { $customerAddress['cityId'] = $order->delivery->address->cityId; }
-							if( isset($order->delivery->address->cityType) ) { $customerAddress['cityType'] = $order->delivery->address->cityType; }
-							if( isset($order->delivery->address->street) ) { $customerAddress['street'] = $order->delivery->address->street; }
-							if( isset($order->delivery->address->streetId) ) { $customerAddress['streetId'] = $order->delivery->address->streetId; }
-							if( isset($order->delivery->address->streetType) ) { $customerAddress['streetType'] = $order->delivery->address->streetType; }
-							if( isset($order->delivery->address->building) ) { $customerAddress['building'] = $order->delivery->address->building; }
-							if( isset($order->delivery->address->flat) ) { $customerAddress['flat'] = $order->delivery->address->flat; }
-							if( isset($order->delivery->address->intercomCode) ) { $customerAddress['intercomCode'] = $order->delivery->address->intercomCode; }
-							if( isset($order->delivery->address->floor) ) { $customerAddress['floor'] = $order->delivery->address->floor; }
-							if( isset($order->delivery->address->block) ) { $customerAddress['block'] = $order->delivery->address->block; }
-							if( isset($order->delivery->address->house) ) { $customerAddress['house'] = $order->delivery->address->house; }
-							if( isset($order->delivery->address->metro) ) { $customerAddress['metro'] = $order->delivery->address->metro; }
+							$customerData['address'] = $order_address_array;
 
-							$customerData['address'] = $customerAddress;
+							if( isset($order->customFields->order_delivery_address_type) ){
+								$customerCustomFields = array();
+
+								$customerCustomFields['customer_delivery_address_type'] = $order->customFields->order_delivery_address_type;
+								
+								$customerData['customFields'] = $customerCustomFields;
+							}
+
+							$oc_address_type = 'primary';
 						// ---
 					}
 					else{
@@ -154,18 +169,19 @@
 							$customerCustomFields = array();
 
 							if( !isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
-								$customerCustomFields['addition_address_first'] = $order_address;
+								$customerCustomFields['addition_address_first'] = $order_address_text;
+								$oc_address_type = 'addition_address_first';
 							}
 							else if( isset($customer->customFields->addition_address_first) && !isset($customer->customFields->addition_address_second) && !isset($customer->customFields->addition_address_third) ){
-								$customerCustomFields['addition_address_second'] = $order_address;
+								$customerCustomFields['addition_address_second'] = $order_address_text;
+								$oc_address_type = 'addition_address_second';
 							}
 							else {
-								$customerCustomFields['addition_address_third'] = $order_address;
+								$customerCustomFields['addition_address_third'] = $order_address_text;
+								$oc_address_type = 'addition_address_third';
 							}
 
-							$customerData = array(
-								'customFields' => $customerCustomFields
-							);
+							$customerData['customFields'] = $customerCustomFields;
 						// ---
 					}
 
@@ -184,55 +200,36 @@
 
 					$log[] = 'CRM customer address ['.$row_order['customer_id'].'] update: '.json_encode($result);
 				// ---
+
+				// To OC
+					$q = "
+						INSERT INTO `".DB_PREFIX."address` SET 
+						`customer_id` = '".$row_order['customer_id']."',
+						`firstname` = '".$row_order['firstname']."',
+						`lastname` = '".$row_order['lastname']."',
+						`company` = '',
+						`address_1` = '".$order_address_text."',
+						`address_2` = '".json_encode($order_address_array)."',
+						`city` = '',
+						`postcode` = '',
+						`country_id` = '0',
+						`zone_id` = '0',
+						`custom_field` = '".$oc_address_type."'
+					";
+					
+					if ($db->query($q) === TRUE) {
+					    $log[] = 'OC customer address ['.$row_order['customer_id'].'] has been inserted';
+					} else {
+						$log[] = 'OC customer address ['.$row_order['customer_id'].'] has been not inserted: '.$db->error;
+					}
+				// ---
 			}
 			else {
 				$log[] = 'OC customer address ['.$row_order['customer_id'].'] already exist';
 			}
 		// ---
 	// ---
-
-	// Save custom fields
-		$customerData = array();
-
-		// Get order custom fields
-			$order_intercom = '';
-
-			if( isset($order->customFields->intercom) ){
-				$order_intercom = $order->customFields->intercom;
-			}
-		// ---
-
-		// Save custom fields
-			$customerCustomFields = array();
-
-			if( $order_intercom != '' ){
-				// ---
-					$customerCustomFields['intercom'] = $order_intercom;
-				// ---
-			}
-
-
-			$customerData = array(
-				'customFields' => $customerCustomFields
-			);
-
-			$url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer->id.'/edit';
-
-								
-			$data = array(
-				'apiKey' => RCRM_KEY,
-				'by' => 'id',
-				'customer' => json_encode($customerData)
-			);
-
-			$result = connectPostAPI($url, $data);
-
-			$log[] = 'CRM customer custom fields ['.$row_order['customer_id'].'] update: '.json_encode($result);
-		// ---
-	// ---
 // ---
-
-/* DEBUG */ file_put_contents('crm-change-order-log.txt', $row_order['order_id']." : ".date('d.m.Y H:i:s')." : ".json_encode($log)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;

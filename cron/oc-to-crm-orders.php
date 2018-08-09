@@ -1,6 +1,6 @@
 <?php
 // Init
-	include("_lib.php");
+	include("../_lib.php");
 
 	$log = [];
 
@@ -87,75 +87,62 @@
 		// Check customer
 			$customer = [];
 
-			if( $row_order['email'] == '' && $row_order['telephone'] != '' ){
-				// ---
-					$row_order['email'] = $row_order['telephone'].'@eco-u.ru';
-
-					$q = "UPDATE `".DB_PREFIX."customer` SET `email` = '".$row_order['email']."' WHERE `customer_id`='".$row_order['customer_id']."';";
-
-					if ($db->query($q) === TRUE) {
-					    $log[] = 'OC customer ['.$row_order['customer_id'].'] has been updated';
-					} else {
-						$log[] = 'OC customer ['.$row_order['customer_id'].'] has been not updated: '.$db->error;
-					}
-				// ---
-			}
-
-			//$customer['externalId'] = $row_order['email'];
 			$customer['email'] = $row_order['email'];
 			$customer['firstName'] = $row_order['firstname'];
 			$customer['lastName'] = $row_order['lastname'];
 			$customer['phone'] = $row_order['telephone'];
 
 
-
-			$q = "SELECT * FROM `rcrm_customers` WHERE `email` LIKE'".$row_order['email']."' OR `email` LIKE '".$row_order['telephone']."' LIMIT 1;";
+			$q = "SELECT * FROM `".DB_PREFIX."customer` WHERE `customer_id` = '".$row_order['customer_id']."' AND `rcrm_id`='' LIMIT 1;";
 			$rows_customer = $db->query($q);
 
 
-			if ($rows_customer->num_rows == 0) {
+			if ($rows_customer->num_rows > 0) {
 				// Create CRM customer
 					$url='https://eco-u.retailcrm.ru/api/v5/customers/create?apiKey='.RCRM_KEY;
 					$data['customer'] = json_encode($customer);
 
 					$response=connectPostAPI($url,$data);
 
-					if( isset($response->success) && $response->success!= false && isset($response->id) ){
+					if( isset($response->success) && $response->success != false && isset($response->id) ){
 						// ---
 							$customer['id'] = $response->id;
 
 							$q = "
-								INSERT INTO `rcrm_customers` SET 
-								`id_internal`='".intval($customer['id'])."',
-								`id_external`='".$row_order['email']."',
-								`firstname`='".$row_order['firstname']."',
-								`email`='".$row_order['email']."',
-								`dublicates`=0,
-								`created`=NOW()
-							";
-							
+								UPDATE `".DB_PREFIX."customer` SET 
+								`rcrm_id` = '".$customer['id']."' 
+								WHERE `customer_id`='".$row_order['customer_id']."'
+							;";
+
 							if ($db->query($q) === TRUE) {
-								$id_customer = $db->insert_id;
-							    $log[] = 'OC/CRM Customer '.$id_customer.' has been created';
+							    $log[] = 'OC customer ['.$row_order['customer_id'].'] has been updated';
 							} else {
-								$log[] = 'OC/CRM Customer has been not inserted: '.$db->error;
+								$log[] = 'OC customer ['.$row_order['customer_id'].'] has been not updated: '.$db->error;
 							}
 						// ---
 					}
 					else{
-						$log[] = 'OC/CRM Customer has been not created: '.json_encode($response);
+						$log[] = 'CRM customer has been not created: '.json_encode($response);
 					}
 					
 				// ---
 			}
 			else{
-				$row_customer = $rows_customer->fetch_assoc();
-				$customer['id'] = $row_customer['id_internal'];
+				$q = "SELECT * FROM `".DB_PREFIX."customer` WHERE `customer_id` = '".$row_order['customer_id']."' LIMIT 1;";
+				$rows_customer = $db->query($q);
 
-				$log[] = 'Customer already exist';
+				if ($rows_customer->num_rows > 0) {
+					$row_customer = $rows_customer->fetch_assoc();
+					$customer['id'] = $row_customer['rcrm_id'];
+				}
+				else{
+					$log[] = 'OC customer has been not searched: '.json_encode($response);
+				}
+
+				$log[] = 'OC customer already exist';
 			}
 
-			$log[] = 'Customer ['.$row_order['customer_id'].']. Internal id ['.$customer['id'].']';
+			$log[] = 'OC customer ['.$row_order['customer_id'].']. Internal id ['.$customer['id'].']';
 		// ---
 
 		// Set general data
