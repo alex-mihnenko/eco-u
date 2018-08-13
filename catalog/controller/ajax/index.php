@@ -2147,14 +2147,16 @@ class ControllerAjaxIndex extends Controller {
 
                 if( isset($response->customer->customFields->customer_delivery_address_type) && $response->customer->customFields->customer_delivery_address_type != false ){
                   $customer_address_array['address_type'] = $response->customer->customFields->customer_delivery_address_type;
-                  $customer_address_text .= '(Доставка в офис)';
                 }
-
               // ---
 
 
               if( $customer_address_text != '' ){
                 $response->customer->address->text = $customer_address_text;
+              }
+
+              if( isset($response->customer->customFields->customer_delivery_address_type) && $response->customer->customFields->customer_delivery_address_type != false ){
+                $response->customer->address->text .= '(Доставка в офис)';
               }
             // ---
           // ---
