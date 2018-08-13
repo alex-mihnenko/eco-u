@@ -2297,16 +2297,20 @@ class ControllerAjaxIndex extends Controller {
 
                                 if( isset($additional_address_array['address_type']) && $additional_address_array['address_type'] == true ){
                                   $customerCustomFields['customer_delivery_address_type'] = true;
+                                  $customerData['customFields'] = $customerCustomFields;
                                 }
                                 else{
                                   $customerCustomFields['customer_delivery_address_type'] = false;
+                                  $customerData['customFields'] = $customerCustomFields;
                                 }
+
                               // ---
                             }
                             else{
                               // ---
                                 $customerData['address'] = array('text' => $additional_address_text);
                                 $customerCustomFields['customer_delivery_address_type'] = false;
+                                $customerData['customFields'] = $customerCustomFields;
                               // ---
                             }
                           // ---
