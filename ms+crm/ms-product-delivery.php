@@ -53,12 +53,12 @@
 		// Get UNIX time
 			$dateTmp = explode('-', $deliveryPlannedMoment);
 
-			$deliveryUnixtime = mktime(0, 0, 0, int($dateTmp[1]), int($dateTmp[2]), $dateTmp[0]);
+			$deliveryUnixtime = mktime(0, 0, 0, intval($dateTmp[1]), intval($dateTmp[2]), $dateTmp[0]);
 		// ---
 
 		$log['deliveryPlannedMoment'] = $deliveryPlannedMoment;
 
-		if( $deliveryUnixtime <= $currenttime ) {
+		if( $deliveryUnixtime < $currenttime ) {
 			// ---
 				$res['log'] = json_encode($log);
 				$res['mess']='Planned moment is passed';

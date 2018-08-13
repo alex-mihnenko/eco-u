@@ -28,7 +28,7 @@
 
 // Go-round tasks
 	while ( $row_demand = $rows_demand->fetch_assoc() ) {
-		if( $row_demand['date_added']+600 < time() ) {
+		if( $row_demand['date_added']+300 < time() ) {
 			// ---
 				$log[] = '#Start ['.$row_demand['demand_id'].'] from '.$row_demand['date_added'];
 
