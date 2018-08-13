@@ -2300,38 +2300,36 @@ class ControllerAjaxIndex extends Controller {
                             $this->model_tool_addon->editCustomerAddress($primary_address['address_id'], $code);
                             $this->model_tool_addon->editCustomerAddress($additional_address['address_id'], 'primary');
                           // ---
+
+                          // Clear main address
+                              $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+
+                              $qdata = array(
+                                'apiKey' => self::RETAILCRM_KEY,
+                                'by' => 'id',
+                                'customer' => json_encode(array('address' => array()))
+                              );
+
+                              $res = $this->connectPostAPI($url, $qdata);
+                          // ---
+                          
+                          // Set addresses
+                            $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+
+                            $qdata = array(
+                              'apiKey' => self::RETAILCRM_KEY,
+                              'by' => 'id',
+                              'customer' => json_encode($customerData)
+                            );
+
+                            $res = $this->connectPostAPI($url, $qdata);
+
+                            $response->res = $res;
+                            $response->data = $customerData;
+                          // ----
                         // ---
                       }
                     // ---
-
-
-                    // Clear main address
-                        $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
-
-                        $qdata = array(
-                          'apiKey' => self::RETAILCRM_KEY,
-                          'by' => 'id',
-                          'customer' => json_encode(array('address' => array()))
-                        );
-
-                        $res = $this->connectPostAPI($url, $qdata);
-                    // ---
-                    
-                    // Set addresses
-                      $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
-
-                      $qdata = array(
-                        'apiKey' => self::RETAILCRM_KEY,
-                        'by' => 'id',
-                        'customer' => json_encode($customerData)
-                      );
-
-                      $res = $this->connectPostAPI($url, $qdata);
-
-                      $response->res = $res;
-                      $response->data = $customerData;
-                    // ----
-                      
                   // ---
                 }
               // ---

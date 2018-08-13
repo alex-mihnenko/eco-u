@@ -251,7 +251,7 @@
 								`postcode` = '',
 								`country_id` = '0',
 								`zone_id` = '0',
-								`custom_field` = '' 
+								`custom_field` = 'primary' 
 								WHERE `customer_id` = '".$row_customer['customer_id']."' AND address_id='".$row_address['address_id']."'
 							";
 							
