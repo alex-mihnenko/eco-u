@@ -364,8 +364,6 @@
 	// ---
 // ---
 
-/* DEBUG */ file_put_contents('crm-to-oc-customers.log', date('d.m.Y H:i:s')." : ".json_encode($log)."\n\n\n", FILE_APPEND | LOCK_EX);
-
 // Response
 	$res['log'] = $log;
 	$res['mess']='Success';
