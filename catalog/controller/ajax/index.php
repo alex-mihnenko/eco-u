@@ -2095,10 +2095,10 @@ class ControllerAjaxIndex extends Controller {
                               $address_array = (array)json_decode($address['address_2']);
 
                               if( isset($address_array['address_type']) && $address_array['address_type'] == true ){
-                                $response->addresses[] = array( 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
+                                $response->addresses[] = array( 'text' => '<i class="fa fa-building"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
                               }
                               else{
-                                $response->addresses[] = array( 'text' => '<i class="fa fa-building"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
+                                $response->addresses[] = array( 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
                               }
                             // ---
                           }
