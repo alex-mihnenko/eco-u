@@ -76,7 +76,7 @@
 				// ---
 					if( isset($order->delivery->address->region) ){
 						$order_address_array['region'] = $order->delivery->address->region;
-						$order_address_text .= $order->delivery->address->region . 'обл.'; // Область
+						$order_address_text .= $order->delivery->address->region; // Область
 					}
 					if( isset($order->delivery->address->regionId) ){
 						$order_address_array['regionId'] = $order->delivery->address->regionId;
