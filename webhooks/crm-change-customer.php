@@ -200,7 +200,6 @@
 
 					if( isset($customer->customFields->customer_delivery_address_type) && $customer->customFields->customer_delivery_address_type != false ){
 						$customer_address_array['address_type'] = $customer->customFields->customer_delivery_address_type;
-						$customer_address_text .= '(Доставка в офис)';
 					}
 
 					if( isset($customer->address->text) ){
@@ -210,7 +209,7 @@
 
 
 				// Save
-					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$customer_address_text."' AND custom_field='primary';";
+					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND address_1='".$customer_address_text."' AND custom_field='primary';";
 					$rows_address = $db->query($q);
 
 					if ($rows_address->num_rows == 0 ) {
