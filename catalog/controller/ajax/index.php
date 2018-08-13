@@ -2077,7 +2077,6 @@ class ControllerAjaxIndex extends Controller {
             $response->customer = $res->order->customer;
 
             // Fix primary address
-
               $customer_address_array = array();
               $customer_address_text = '';
 
@@ -2285,14 +2284,34 @@ class ControllerAjaxIndex extends Controller {
                             $additional_address_text = '';
                             $additional_address_array = array();
 
-                            $additional_address_text = $additional_address['address_1'];
+                            if( !empty($additional_address['address_2']) && !empty(json_decode($additional_address['address_2'])) && count($additional_address['address_2']) > 1 ){
+                              // ---
+                                $additional_address_array = (array)json_decode($additional_address['address_2']);
+                                $customerData['address'] = $additional_address_array;
 
-                            if( !empty($additional_address['address_2']) && !empty(json_decode($additional_address['address_2'])) ){
-                              $additional_address_array = (array)json_decode($additional_address['address_2']);
-                              $customerData['address'] = $additional_address_array;
+                                if( isset($additional_address_array['address_type']) && $additional_address_array['address_type'] == true ){
+                                  $customerCustomFields['customer_delivery_address_type'] = true;
+                                }
+                                else{
+                                  $customerCustomFields['customer_delivery_address_type'] = false;
+                                }
+                              // ---
                             }
                             else{
-                              $customerData['address'] = array('text' => $additional_address_text);
+                              // ---
+                                $customerData['address'] = array('text' => $additional_address_text);
+                                
+                                if( !empty($additional_address['address_2']) && !empty(json_decode($additional_address['address_2'])) ){
+                                  $additional_address_array = (array)json_decode($additional_address['address_2']);
+                                  
+                                  if( isset($additional_address_array['address_type']) && $additional_address_array['address_type'] == true ){
+                                    $customerCustomFields['customer_delivery_address_type'] = true;
+                                  }
+                                  else{
+                                    $customerCustomFields['customer_delivery_address_type'] = false;
+                                  }
+                                }
+                              // ---
                             }
                           // ---
 
