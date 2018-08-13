@@ -57,12 +57,14 @@
 				// ---
 
 				// Get MS template
-					$urlDemandPut = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new?limit=100&offset=0";
+					$urlDemandPut = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new";
 
 					$dataDemandPut['customerOrder']["meta"] = array(
 						"href" => $row_demand['customer_order_data'],
 						"type" => 'customerorder',
-						"mediaType" => 'application/json'
+						"mediaType" => 'application/json',
+						"limit" => 100,
+						"offset" => 0,
 					);
 
 					$resoponseDemandPut = connectMSAPI($urlDemandPut, json_encode($dataDemandPut), 'PUT', MS_AUTH);
