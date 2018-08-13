@@ -133,8 +133,7 @@ if($_GET['type']){
 	
 	//Если статус заказа собран, то обновляем дату сборки в retailCRM и обновляем данные по заказу в МС
 	if($res['order']['status']=='assembling-complete'){
-			//if(!$ms_lead_id){
-					
+			//if(!$ms_lead_id){		
 				$order=null;
 				$shipmentDate=date("Y-m-d",time());
 				$order['shipmentDate']=$shipmentDate;
@@ -151,7 +150,9 @@ if($_GET['type']){
 				$ms_data['customerOrder']["meta"] = array(
 					"href" => $ms_lead_id_meta,
 					"type" => 'customerorder',
-					"mediaType" => 'application/json'
+					"mediaType" => 'application/json',
+					"limit" => 100,
+					"offset" => 0
 				);
 
 
@@ -168,6 +169,7 @@ if($_GET['type']){
 					;");
 				// ---
 
+				/*
 				if("IM".$krt['order']['externalId']==$krt['order']['number']) {
 					$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/?filter=name=IM'.$num;
 				}
@@ -187,7 +189,7 @@ if($_GET['type']){
 				
 				$link3='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id3;
 				$json3 = ms_query_send($link3, $ms_data3, 'PUT');
-
+				*/
 
 				//$link2='https://online.moysklad.ru/api/remap/1.1/entity/customerorder?search='.$num;
 				//$json2 = ms_query($link2);

@@ -64,7 +64,7 @@
 						"type" => 'customerorder',
 						"mediaType" => 'application/json',
 						"limit" => 100,
-						"offset" => 0,
+						"offset" => 0
 					);
 
 					$resoponseDemandPut = connectMSAPI($urlDemandPut, json_encode($dataDemandPut), 'PUT', MS_AUTH);
