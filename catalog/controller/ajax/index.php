@@ -2080,7 +2080,12 @@ class ControllerAjaxIndex extends Controller {
               $customer_address_array = array();
               $customer_address_text = '';
 
-              if( isset($response->customer->address) && !isset($response->customer->address->text) ){
+              if( isset($response->customer->address) && isset($response->customer->address->text) && !empty($response->customer->address->text) ){
+                // ---
+                  $response->customer->address->text = $response->customer->address->text;
+                // ---
+              }
+              else{
                 // ---
                   if( isset($response->customer->address->region) ){
                     $customer_address_array['region'] = $response->customer->address->region;
@@ -2145,15 +2150,14 @@ class ControllerAjaxIndex extends Controller {
                   $customer_address_text = mb_substr($customer_address_text,0,mb_strlen($customer_address_text)-2);
 
 
-                  if( isset($response->customer->customFields->order_delivery_address_type) && $response->customer->customFields->order_delivery_address_type != false ){
-                    $customer_address_array['address_type'] = $response->customer->customFields->order_delivery_address_type;
+                  if( isset($response->customer->customFields->customer_delivery_address_type) && $response->customer->customFields->customer_delivery_address_type != false ){
+                    $customer_address_array['address_type'] = $response->customer->customFields->customer_delivery_address_type;
                     $customer_address_text .= '(Доставка в офис)';
                   }
 
                   $response->customer->address->text = $customer_address_text;
                 // ---
               }
-
             // ---
           // ---
 
