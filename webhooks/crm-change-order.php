@@ -76,23 +76,29 @@
 				// ---
 					if( isset($order->delivery->address->region) ){
 						$order_address_array['region'] = $order->delivery->address->region;
-						$order_address_text .= $order->delivery->address->region; // Область
+						$order_address_text .= $order->delivery->address->region . ', '; // Область
 					}
 					if( isset($order->delivery->address->regionId) ){
 						$order_address_array['regionId'] = $order->delivery->address->regionId;
 						//$order_address_text .= $order->delivery->address->regionId; // Идентификатор области в geohelper
 					}
+					
 					if( isset($order->delivery->address->city) && isset($order->delivery->address->cityType) ){
 						$order_address_array['city'] = $order->delivery->address->city;
-						$order_address_text .= $order->delivery->address->cityType . ' ' . $order->delivery->address->city ; // Город
+						$order_address_text .= $order->delivery->address->cityType . ' ' . $order->delivery->address->city . ', ' ; // Город
 					}
+					else if( isset($order->delivery->address->city) && !isset($order->delivery->address->cityType) ){
+						$order_address_array['city'] = $order->delivery->address->city;
+						$order_address_text .= $order->delivery->address->city . ', '; // Город
+					}
+
 					if( isset($order->delivery->address->cityId) ){
 						$order_address_array['cityId'] = $order->delivery->address->cityId;
 						//$order_address_text .= $order->delivery->address->cityId . ''; // Идентификатор города в geohelper
 					}
 					if( isset($order->delivery->address->street) && isset($order->delivery->address->streetType) ){
 						$order_address_array['street'] = $order->delivery->address->street;
-						$order_address_text .= $order->delivery->address->streetType . ' ' . $order->delivery->address->street . ''; // Улица
+						$order_address_text .= $order->delivery->address->streetType . ' ' . $order->delivery->address->street . ', '; // Улица
 					}
 					if( isset($order->delivery->address->streetId) ){
 						$order_address_array['streetId'] = $order->delivery->address->streetId;
@@ -100,11 +106,11 @@
 					}
 					if( isset($order->delivery->address->building) ){
 						$order_address_array['building'] = $order->delivery->address->building;
-						$order_address_text .= 'д. ' . $order->delivery->address->building . ''; // Номер дома
+						$order_address_text .= 'д. ' . $order->delivery->address->building . ', '; // Номер дома
 					}
 					if( isset($order->delivery->address->flat) ){
 						$order_address_array['flat'] = $order->delivery->address->flat;
-						$order_address_text .= 'кв./офис ' . $order->delivery->address->flat . ''; // Номер квартиры или офиса
+						$order_address_text .= 'кв./офис ' . $order->delivery->address->flat . ', '; // Номер квартиры или офиса
 					}
 					if( isset($order->delivery->address->intercomCode) ){
 						$order_address_array['intercomCode'] = $order->delivery->address->intercomCode;
