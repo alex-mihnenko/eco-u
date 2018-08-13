@@ -2158,7 +2158,7 @@ class ControllerAjaxIndex extends Controller {
 
           // Init
             $customerId = intval($this->request->post['customerId']);
-            $custom_field_code = $this->request->post['code'];
+            $code = $this->request->post['code'];
             $response = new stdClass();
 
             $this->load->model('tool/addon');
@@ -2175,52 +2175,77 @@ class ControllerAjaxIndex extends Controller {
               // ---
                 $customer = $res->customer;
 
-                $customer_info = $this->model_catalog_product->getCustomer($customer->externalId);
+                $customer_info = $this->model_tool_addon->getCustomer($customer->externalId);
 
                 if( $customer_info ){
                   // ---
-                    $customer_addresses = $this->model_catalog_product->getCustomerAddresses($customer_info['customer_id']);
+                    // Get addresses
+                      $primary_address = $this->model_tool_addon->getCustomerAddress($customer_info['customer_id'], 'primary');
+                      $additional_address = $this->model_tool_addon->getCustomerAddress($customer_info['customer_id'], $code);
 
-                    $customer_address_primary_array = array();
-                    $customer_address_primary_text = array();
+                      if( $primary_address != false && $additional_address != false ){
+                        // ---
+                          $customerData = array();
 
-                    foreach ($customer_addresses as $key => $address) {
-                      // ---
-                        
-                      // ---
-                    }
+                          // Set primary address
+                            $primary_address_text = '';
+                            $primary_address_array = array();
+
+                            $primary_address_text = $primary_address['address_1'];
+                            
+                            $customerCustomFields[$code] = $primary_address_text;
+                            $customerData['customFields'] = $customerCustomFields;
+                          // ---
+
+                          // Set additional address
+                            $additional_address_text = '';
+                            $additional_address_array = array();
+
+                            $additional_address_text = $additional_address['address_1'];
+
+                            if( !empty($additional_address['address_2']) && !empty(json_decode($additional_address['address_2'])) ){
+                              $additional_address_array = (array)json_decode($additional_address['address_2']);
+                              $customerData['address'] = $additional_address_array;
+                            }
+                            else{
+                              $customerData['address'] = array('text' => $additional_address_text);
+                            }
+                          // ---
+
+                          // Edit OC addresses
+                            $this->model_tool_addon->editCustomerAddress($primary_address['address_id'], $code);
+                            $this->model_tool_addon->editCustomerAddress($additional_address['address_id'], 'primary');
+                          // ---
+                        // ---
+                      }
+                    // ---
 
 
-                    // Edit CRM customer
-                      // Clear main address
-                        // $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+                    // Clear main address
+                        $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
 
-                        // $qdata = array(
-                        //   'apiKey' => self::RETAILCRM_KEY,
-                        //   'by' => 'id',
-                        //   'customer' => json_encode(array('address' => array()))
-                        // );
+                        $qdata = array(
+                          'apiKey' => self::RETAILCRM_KEY,
+                          'by' => 'id',
+                          'customer' => json_encode(array('address' => array()))
+                        );
 
-                        // $res = $this->connectPostAPI($url, $qdata);
-                      // ---
-                      
-                      // $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+                        $res = $this->connectPostAPI($url, $qdata);
+                    // ---
+                    
+                    // Set addresses
+                      $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
 
-                      // $customerData = array(
-                      //   'address' => $customerAddress,
-                      //   'customFields' => $customerCustomFields
-                      // );
+                      $qdata = array(
+                        'apiKey' => self::RETAILCRM_KEY,
+                        'by' => 'id',
+                        'customer' => json_encode($customerData)
+                      );
 
-                      // $qdata = array(
-                      //   'apiKey' => self::RETAILCRM_KEY,
-                      //   'by' => 'id',
-                      //   'customer' => json_encode($customerData)
-                      // );
+                      $res = $this->connectPostAPI($url, $qdata);
 
-                      // $res = $this->connectPostAPI($url, $qdata);
-
-                      // $response->res = $res;
-                      // $response->data = $customerData;
+                      $response->res = $res;
+                      $response->data = $customerData;
                     // ----
                       
                   // ---

@@ -35,7 +35,7 @@ class ModelToolAddon extends Model {
 		// ---
 			$sql = "
 				SELECT * FROM `".DB_PREFIX."customer` c 
-				WHERE c.email='".$externalId."' LIMIT 1
+				WHERE c.customer_id='".$externalId."' LIMIT 1
 			;";
 
 			$query = $this->db->query($sql);
@@ -63,6 +63,37 @@ class ModelToolAddon extends Model {
 	        } else {
 	            return array();
 	        }
+		// ---
+	}
+
+	public function getCustomerAddress($customer_id, $code) {
+		// ---
+			$sql = "
+				SELECT * FROM `".DB_PREFIX."address` a 
+				WHERE a.customer_id='".$customer_id."' AND a.custom_field='".$code."'
+			;";
+
+			$query = $this->db->query($sql);
+
+			if($query->row) {
+	            return $query->row;
+	        } else {
+	            return false;
+	        }
+		// ---
+	}
+
+	public function editCustomerAddress($address_id, $code) {
+		// ---
+			$sql = "
+				UPDATE `".DB_PREFIX."address` a 
+				SET `custom_field`='".$code."' 
+				WHERE a.address_id='".$address_id."'
+			;";
+
+			$query = $this->db->query($sql);
+			
+	        return true;
 		// ---
 	}
 }
