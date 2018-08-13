@@ -215,7 +215,7 @@
 						`lastname` = '".$row_order['lastname']."',
 						`company` = '',
 						`address_1` = '".$order_address_text."',
-						`address_2` = '".json_encode($order_address_array)."',
+						`address_2` = '".json_encode($order_address_array,JSON_UNESCAPED_UNICODE)."',
 						`city` = '',
 						`postcode` = '',
 						`country_id` = '0',

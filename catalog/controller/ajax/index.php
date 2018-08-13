@@ -2164,7 +2164,7 @@ class ControllerAjaxIndex extends Controller {
             $this->load->model('tool/addon');
           // ---
 
-          // Get OC customer
+          // Get CRM customer
             $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId;
             $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
 
