@@ -2150,12 +2150,11 @@ class ControllerAjaxIndex extends Controller {
                   $customer_address_text .= '(Доставка в офис)';
                 }
 
-                $response->customer->address->text = $customer_address_text;
               // ---
 
 
-              if( $customer_address_text == '' ){
-                $response->customer->address->text = $response->customer->address->text;
+              if( $customer_address_text != '' ){
+                $response->customer->address->text = $customer_address_text;
               }
             // ---
           // ---
