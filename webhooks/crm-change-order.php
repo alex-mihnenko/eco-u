@@ -140,10 +140,10 @@
 		// ---
 			
 		// Save address
-			$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$order_address."';";
+			$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND address_1='".$order_address_text."';";
 			$rows_address = $db->query($q);
 
-			if ($rows_address->num_rows == 0 && !empty($order_address) ) {
+			if ($rows_address->num_rows == 0 && !empty($order_address_text) ) {
 				$oc_address_type = 'primary';
 
 				// To CRM
