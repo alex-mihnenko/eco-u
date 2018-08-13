@@ -131,7 +131,7 @@
 					$order_address_text = mb_substr($order_address_text,0,mb_strlen($order_address_text)-2);
 
 
-					if( isset($order->customFields->order_delivery_address_type) && $order->customFields->customer_delivery_address_type != false ){
+					if( isset($order->customFields->order_delivery_address_type) && $order->customFields->order_delivery_address_type != false ){
 						$order_address_array['address_type'] = $order->customFields->order_delivery_address_type;
 						$order_address_text .= '(Доставка в офис)';
 					}
