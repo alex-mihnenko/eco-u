@@ -2064,6 +2064,8 @@ class ControllerAjaxIndex extends Controller {
           // Init
             $orderid = $this->request->post['id'];
             $response = new stdClass();
+
+            $this->load->model('tool/addon');
           // ---
 
           // Get CRM order
@@ -2075,87 +2077,39 @@ class ControllerAjaxIndex extends Controller {
 
             $response->order = $res->order;
             $response->customer = $res->order->customer;
+            $response->addresses = array();
 
-            // Fix primary address
-              $customer_address_array = array();
-              $customer_address_text = '';
+            // Get addresses
+              if( isset($response->customer->externalId) ) {
+                // ---
+                  $customer_info = $this->model_tool_addon->getCustomer($response->customer->externalId);
 
-              // ---
-                if( isset($response->customer->address->region) ){
-                  $customer_address_array['region'] = $response->customer->address->region;
-                  $customer_address_text .= $response->customer->address->region . ', '; // Область
-                }
-                if( isset($response->customer->address->regionId) ){
-                  $customer_address_array['regionId'] = $response->customer->address->regionId;
-                  //$customer_address_text .= $response->customer->address->regionId; // Идентификатор области в geohelper
-                }
-                
-                if( isset($response->customer->address->city) && isset($response->customer->address->cityType) ){
-                  $customer_address_array['city'] = $response->customer->address->city;
-                  $customer_address_text .= $response->customer->address->cityType . ' ' . $response->customer->address->city . ', ' ; // Город
-                }
-                else if( isset($response->customer->address->city) && !isset($response->customer->address->cityType) ){
-                  $customer_address_array['city'] = $response->customer->address->city;
-                  $customer_address_text .= $response->customer->address->city . ', '; // Город
-                }
+                  if( $customer_info ){
+                    // ---
+                      $customer_addresses = $this->model_tool_addon->getCustomerAddresses($customer_info['customer_id']);
 
-                if( isset($response->customer->address->cityId) ){
-                  $customer_address_array['cityId'] = $response->customer->address->cityId;
-                  //$customer_address_text .= $response->customer->address->cityId . ''; // Идентификатор города в geohelper
-                }
-                if( isset($response->customer->address->street) && isset($response->customer->address->streetType) ){
-                  $customer_address_array['street'] = $response->customer->address->street;
-                  $customer_address_text .= $response->customer->address->streetType . ' ' . $response->customer->address->street . ', '; // Улица
-                }
-                if( isset($response->customer->address->streetId) ){
-                  $customer_address_array['streetId'] = $response->customer->address->streetId;
-                  //$customer_address_text .= '' . $response->customer->address->streetId . ''; // Идентификатор улицы в geohelper
-                }
-                if( isset($response->customer->address->building) ){
-                  $customer_address_array['building'] = $response->customer->address->building;
-                  $customer_address_text .= 'д. ' . $response->customer->address->building . ', '; // Номер дома
-                }
-                if( isset($response->customer->address->flat) ){
-                  $customer_address_array['flat'] = $response->customer->address->flat;
-                  $customer_address_text .= 'кв./офис ' . $response->customer->address->flat . ', '; // Номер квартиры или офиса
-                }
-                if( isset($response->customer->address->intercomCode) ){
-                  $customer_address_array['intercomCode'] = $response->customer->address->intercomCode;
-                  $customer_address_text .= 'код домофона ' . $response->customer->address->intercomCode . ', '; // Код домофона
-                }
-                if( isset($response->customer->address->floor) ){
-                  $customer_address_array['floor'] = $response->customer->address->floor;
-                  $customer_address_text .= 'эт. ' . $response->customer->address->floor . ', '; // Этаж
-                }
-                if( isset($response->customer->address->block) ){
-                  $customer_address_array['block'] = $response->customer->address->block;
-                  $customer_address_text .= 'под. ' . $response->customer->address->block . ', '; // Подъезд
-                }
-                if( isset($response->customer->address->house) ){
-                  $customer_address_array['house'] = $response->customer->address->house;
-                  $customer_address_text .= 'стр./корпус ' . $response->customer->address->house . ', '; // Строение/корпус
-                }
-                if( isset($response->customer->address->metro) ){
-                  $customer_address_array['metro'] = $response->customer->address->metro;
-                  $customer_address_text .= 'метро ' . $response->customer->address->metro . ', '; // Метро
-                }
+                      foreach ($customer_addresses as $key => $address) {
+                        // ---
+                          if( !empty(json_decode($address['address_2'])) ){
+                            // ---
+                              $address_array = (array)json_decode($address['address_2']);
 
-                // Fix
-                $customer_address_text = mb_substr($customer_address_text,0,mb_strlen($customer_address_text)-2);
-
-
-                if( isset($response->customer->customFields->customer_delivery_address_type) && $response->customer->customFields->customer_delivery_address_type != false ){
-                  $customer_address_array['address_type'] = $response->customer->customFields->customer_delivery_address_type;
-                }
-              // ---
-
-
-              if( $customer_address_text != '' ){
-                $response->customer->address->text = $customer_address_text;
-              }
-
-              if( isset($response->customer->customFields->customer_delivery_address_type) && $response->customer->customFields->customer_delivery_address_type != false ){
-                $response->customer->address->text .= '(Доставка в офис)';
+                              if( isset($address_array['address_type']) && $address_array['address_type'] == true ){
+                                $response->addresses[] = '<i class="fa fa-home"></i>'.$address['address_1'];
+                              }
+                              else{
+                                $response->addresses[] = '<i class="fa fa-building"></i>'.$address['address_1'];
+                              }
+                            // ---
+                          }
+                          else{
+                              $response->addresses[] = $address['address_1'];
+                          }
+                        // ---
+                      }
+                    // ---
+                  }
+                // ---
               }
             // ---
           // ---
@@ -2303,7 +2257,6 @@ class ControllerAjaxIndex extends Controller {
                                   $customerCustomFields['customer_delivery_address_type'] = false;
                                   $customerData['customFields'] = $customerCustomFields;
                                 }
-
                               // ---
                             }
                             else{
