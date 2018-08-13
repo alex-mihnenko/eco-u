@@ -2080,7 +2080,7 @@ class ControllerAjaxIndex extends Controller {
               $customer_address_array = array();
               $customer_address_text = '';
 
-              if( isset($response->customer->address) ){
+              if( isset($response->customer->address) && !isset($response->customer->address->text) ){
                 // ---
                   if( isset($response->customer->address->region) ){
                     $customer_address_array['region'] = $response->customer->address->region;
@@ -2149,10 +2149,11 @@ class ControllerAjaxIndex extends Controller {
                     $customer_address_array['address_type'] = $response->customer->customFields->order_delivery_address_type;
                     $customer_address_text .= '(Доставка в офис)';
                   }
+
+                  $response->customer->address->text = $customer_address_text;
                 // ---
               }
 
-              $response->customer->address->text = $customer_address_text;
             // ---
           // ---
 
