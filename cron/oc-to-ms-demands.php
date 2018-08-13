@@ -28,7 +28,7 @@
 
 // Go-round tasks
 	while ( $row_demand = $rows_demand->fetch_assoc() ) {
-		if( $row_demand['demand_id']+300 < time() ) {
+		if( $row_demand['date_added']+600 < time() ) {
 			// ---
 				$log[] = '#Start ['.$row_demand['demand_id'].'] from '.$row_demand['date_added'];
 
@@ -59,9 +59,8 @@
 				// ---
 
 				// Get MS template
-					$urlDemandPut = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new";
+					$urlDemandPut = "https://online.moysklad.ru/api/remap/1.1/entity/demand/new?limit=100&offset=0";
 
-					$dataDemandPut = array('limit' => 100, 'offset' => 0);
 					$dataDemandPut['customerOrder']["meta"] = array(
 						"href" => $row_demand['customer_order_data'],
 						"type" => 'customerorder',
