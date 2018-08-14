@@ -74,6 +74,12 @@
                           <?php } ?>
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-rcrm_id"><?php echo $entry_rcrm_id; ?></label>
+                        <div class="col-sm-10">
+                          <input type="number" name="rcrm_id" value="<?php echo $rcrm_id; ?>" placeholder="<?php echo $entry_rcrm_id; ?>" id="input-rcrm_id" class="form-control" />
+                        </div>
+                      </div>
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                         <div class="col-sm-10">

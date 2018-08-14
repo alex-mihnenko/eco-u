@@ -27,6 +27,7 @@ $_['column_action']         = 'Действие';
 // Entry
 $_['entry_customer_group']  = 'Группа покупателей';
 $_['entry_discount']       = 'Персональная скидка';
+$_['entry_rcrm_id']       = 'retailCRM ID';
 $_['entry_firstname']       = 'Имя, Отчество';
 $_['entry_lastname']        = 'Фамилия';
 $_['entry_email']           = 'E-Mail';

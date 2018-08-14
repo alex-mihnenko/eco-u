@@ -684,6 +684,7 @@ class ControllerCustomerCustomer extends Controller {
 
 		$data['entry_customer_group'] = $this->language->get('entry_customer_group');
 		$data['entry_discount'] = $this->language->get('entry_discount');
+		$data['entry_rcrm_id'] = $this->language->get('entry_rcrm_id');
 		$data['entry_firstname'] = $this->language->get('entry_firstname');
 		$data['entry_lastname'] = $this->language->get('entry_lastname');
 		$data['entry_email'] = $this->language->get('entry_email');
@@ -879,6 +880,14 @@ class ControllerCustomerCustomer extends Controller {
 			$data['discount'] = $customer_info['discount'];
 		} else {
 			$data['discount'] = '';
+		}
+
+		if (isset($this->request->post['rcrm_id'])) {
+			$data['rcrm_id'] = $this->request->post['rcrm_id'];
+		} elseif (!empty($customer_info)) {
+			$data['rcrm_id'] = $customer_info['rcrm_id'];
+		} else {
+			$data['rcrm_id'] = '';
 		}
 
 		if (isset($this->request->post['firstname'])) {
