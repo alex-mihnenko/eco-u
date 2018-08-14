@@ -628,7 +628,7 @@ if($argv[1]=='3'){
 												$AVA=" and AVAILABLE='Y'";
 												
 												$date_available_array = explode('-', $date_available);
-												$date_available_unixtime = mktime(0, 0, 0, int($date_available_array[1]), int($date_available_array[2]), $date_available_array[0]);
+												$date_available_unixtime = mktime(0, 0, 0, intval($date_available_array[1]), intval($date_available_array[2]), $date_available_array[0]);
 
 												if( $date_available_unixtime <= $current_time ) {
 													mysql_query("
