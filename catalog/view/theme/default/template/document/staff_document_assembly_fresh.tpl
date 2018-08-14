@@ -152,8 +152,6 @@
 
 				                  				<td style="width: 200px; text-align: right;">
 				                  					<?php echo $product['order_id']; ?>
-				                  					<?php echo $count_products; ?>
-				                  					<?php echo round(count($category)/2); ?>
 				                  				</td>
 
 			                  				</tr>
