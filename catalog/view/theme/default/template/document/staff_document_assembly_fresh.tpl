@@ -165,7 +165,7 @@
 			                </table>
 			            </div>
 
-		    			<br><hr><br>
+		    			<br>
 
 					</div>
 
