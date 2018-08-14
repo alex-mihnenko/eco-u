@@ -614,7 +614,7 @@ if($argv[1]=='3'){
 								$rowMSProduct = mysql_fetch_assoc($qProduct);
 								$product_id=$rowMSProduct['product_id'];
 
-								if ( $qProduct = mysql_query("SELECT `product_id`, `date_available` FROM `oc_products` WHERE `product_id`='".$product_id."';") ) $nProduct = mysql_num_rows($qProduct);
+								if ( $qProduct = mysql_query("SELECT `product_id`, `date_available` FROM `oc_product` WHERE `product_id`='".$product_id."';") ) $nProduct = mysql_num_rows($qProduct);
 								else $nProduct = 0;
 
 								if( $nProduct>0 ){
@@ -642,7 +642,7 @@ if($argv[1]=='3'){
 
 										mysql_query("
 											UPDATE `oc_product` SET 
-											`quantity`=".$qty.", `status`='1'  
+											`quantity`=".$qty.", `status`='1' 
 											WHERE `product_id`=".$product_id.";
 										");
 									// ---
