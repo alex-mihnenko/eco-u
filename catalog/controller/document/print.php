@@ -242,6 +242,71 @@ class ControllerDocumentPrint extends Controller {
 						// ---
 					// ---
 				break;
+
+				case 'staff_document_assembly_fresh':
+					// ---
+						// Opencart
+							$orders = array();
+
+							$this->load->model('document/print');
+
+							// Get orders
+								$resultOrders = $this->model_document_print->getOrders(array(13));
+					        // ---
+
+
+							// Create products array
+								$products = array();
+								
+								foreach ($resultOrders as $key => $order) {
+									// ---
+										$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
+
+										foreach ($resultProducts as $key => $product) {
+											// ---
+												$products[$product['product_id']][] = array( 'order_id' => $order['order_id'], 'name' => $product['name'], 'details' => $product );
+											// ---
+										}
+									// ---
+								}
+								
+								$data['products'] = $products;
+							// ---
+
+
+							// Crate categories array
+								$categories = array();
+								
+								foreach ($products as $key => $product) {
+									// ---
+										// Get categories
+											$resultCategories = $this->model_document_print->getProductCategory($key);
+											
+											$groups = array();
+
+								            foreach ($resultCategories as $keyCategories => $category) {
+								            	$groups[] = $category['category_id'];
+								            }
+								        // ---
+
+										// 35/36 - Зелень | 42/44 - Овощи | 68/69 - Фркуты/Ягоды
+										if( in_array(35, $groups) || in_array(36, $groups) ) {
+											$categories['Зелень'][$key] = $product;
+										}
+										else if( in_array(42, $groups) || in_array(44, $groups) ) {
+											$categories['Овощи'][$key] = $product;
+										}
+										else if( in_array(68, $groups) || in_array(69, $groups) ) {
+											$categories['Фркуты/Ягоды'][$key] = $product;
+										}
+									// ---
+								}
+								
+								$data['categories'] = $categories;
+							// ---
+						// ---
+					// ---
+				break;
 			}
 		// ---
 

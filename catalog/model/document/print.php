@@ -69,6 +69,7 @@ class ModelDocumentPrint extends Model {
 				LEFT JOIN `" . DB_PREFIX . "weight_class_description` wcd ON wcd.weight_class_id = p.weight_class_id 
 				WHERE order_id='".$order_id."' 
 				GROUP BY op.order_product_id 
+				ORDER BY op.name
 			";
 
 			$products = $this->db->query($sql);

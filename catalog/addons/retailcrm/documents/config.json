@@ -20,6 +20,12 @@
     "staff_document_assembly": {
         "name": "Технологическая карта на сборку",
         "path": "staff_document_assembly",
+        "code": "",
+        "relation": "all"
+    },
+    "staff_document_assembly_fresh": {
+        "name": "Карта сборки свежих продуктов",
+        "path": "staff_document_assembly_fresh",
     	"code": "",
     	"relation": "all"
 	}
