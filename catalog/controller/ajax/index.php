@@ -1147,7 +1147,7 @@ class ControllerAjaxIndex extends Controller {
 
               if ( isset($response->methods['free']) ){
                 // ---
-                  if( $this->session->data['subtotal'] >= $response->methods['free']['cost'] ){
+                  if( $this->session->data['subtotal']-$this->session->data['discount'] >= $response->methods['free']['cost'] ){
                     $response->deliveryprice = 0;
                   }
                 // ---
@@ -1159,7 +1159,7 @@ class ControllerAjaxIndex extends Controller {
             // ---
               if ( isset($response->methods['free']) ){
                 // ---
-                  if( $this->session->data['subtotal'] >= $response->methods['free']['cost'] ){
+                  if( $this->session->data['subtotal']-$this->session->data['discount'] >= $response->methods['free']['cost'] ){
                     // ---
                       if( $response->tobeltway != null ){
                         $response->deliveryprice = (int)$response->methods['mkadout']['milecost'] * (int)$response->tobeltway;
