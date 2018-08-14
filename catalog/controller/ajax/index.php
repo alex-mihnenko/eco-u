@@ -2154,7 +2154,7 @@ class ControllerAjaxIndex extends Controller {
 
             foreach ($order_products as $key => $product) {
               // ---
-                if( $product['stock'] <= $product['quantity'] ){
+                if( $product['stock_status_id'] !=7 && $product['stock'] <= $product['quantity'] ){
                   $products[] = $product;
                 }
               // ---
