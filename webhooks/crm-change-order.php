@@ -139,7 +139,6 @@
 
 					if( isset($order->customFields->order_delivery_address_type) && $order->customFields->order_delivery_address_type != false ){
 						$order_address_array['address_type'] = $order->customFields->order_delivery_address_type;
-						$order_address_text .= '(Доставка в офис)';
 					}
 				// ---
 			}
