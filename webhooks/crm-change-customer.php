@@ -143,7 +143,7 @@
 				// Check address
 					if( isset($customer->address->region) ){
 						$customer_address_array['region'] = $customer->address->region;
-						$customer_address_text .= $customer->address->region . 'обл.'; // Область
+						$customer_address_text .= $customer->address->region . ', '; // Область
 					}
 					if( isset($customer->address->regionId) ){
 						$customer_address_array['regionId'] = $customer->address->regionId;
@@ -151,7 +151,11 @@
 					}
 					if( isset($customer->address->city) && isset($customer->address->cityType) ){
 						$customer_address_array['city'] = $customer->address->city;
-						$customer_address_text .= $customer->address->cityType . ' ' . $customer->address->city ; // Город
+						$customer_address_text .= $customer->address->cityType . ' ' . $customer->address->city . ', ' ; // Город
+					}
+					else if( isset($customer->address->city) && !isset($customer->address->cityType) ){
+						$order_address_array['city'] = $customer->address->city;
+						$order_address_text .= $customer->address->city . ', '; // Город
 					}
 					if( isset($customer->address->cityId) ){
 						$customer_address_array['cityId'] = $customer->address->cityId;
@@ -159,7 +163,7 @@
 					}
 					if( isset($customer->address->street) && isset($customer->address->streetType) ){
 						$customer_address_array['street'] = $customer->address->street;
-						$customer_address_text .= $customer->address->streetType . ' ' . $customer->address->street . ''; // Улица
+						$customer_address_text .= $customer->address->streetType . ' ' . $customer->address->street . ', '; // Улица
 					}
 					if( isset($customer->address->streetId) ){
 						$customer_address_array['streetId'] = $customer->address->streetId;
@@ -167,11 +171,11 @@
 					}
 					if( isset($customer->address->building) ){
 						$customer_address_array['building'] = $customer->address->building;
-						$customer_address_text .= 'д. ' . $customer->address->building . ''; // Номер дома
+						$customer_address_text .= 'д. ' . $customer->address->building . ', '; // Номер дома
 					}
 					if( isset($customer->address->flat) ){
 						$customer_address_array['flat'] = $customer->address->flat;
-						$customer_address_text .= 'кв./офис ' . $customer->address->flat . ''; // Номер квартиры или офиса
+						$customer_address_text .= 'кв./офис ' . $customer->address->flat . ', '; // Номер квартиры или офиса
 					}
 					if( isset($customer->address->intercomCode) ){
 						$customer_address_array['intercomCode'] = $customer->address->intercomCode;
@@ -221,7 +225,7 @@
 								`lastname` = '".$row_customer['lastname']."',
 								`company` = '',
 								`address_1` = '".$customer_address_text."',
-								`address_2` = '".json_encode($customer_address_array)."',
+								`address_2` = '".json_encode($customer_address_array,JSON_UNESCAPED_UNICODE)."',
 								`city` = '',
 								`postcode` = '',
 								`country_id` = '0',
@@ -246,7 +250,7 @@
 								`lastname` = '".$row_customer['lastname']."',
 								`company` = '',
 								`address_1` = '".$customer_address_text."',
-								`address_2` = '".json_encode($customer_address_array)."',
+								`address_2` = '".json_encode($customer_address_array,JSON_UNESCAPED_UNICODE)."',
 								`city` = '',
 								`postcode` = '',
 								`country_id` = '0',
@@ -314,6 +318,8 @@
 		}
 	// ---
 // ---
+
+/* DEBUG  */  file_put_contents('./crm-change-customer.log', date("d.m.Y H:i", time()) . "" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;
