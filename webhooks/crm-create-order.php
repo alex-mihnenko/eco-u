@@ -558,6 +558,9 @@
 
 					if( isset($delivery_date) && isset($delivery_time_from) && isset($delivery_time_to) ){
 						// ---
+							$delivery_date_arr = explode('-', $delivery_date);
+							$delivery_date = $delivery_date_arr[2].'.'.$delivery_date_arr[1].'.'.$delivery_date_arr[0];
+
 							$q = "
 								UPDATE `".DB_PREFIX."order` SET 
 								`delivery_time` = '".$delivery_date.' '.$delivery_time_from.'-'.$delivery_time_to."' 
