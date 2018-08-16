@@ -329,9 +329,6 @@
 				$delivery_code = $order->delivery->code;
 				$delivery_cost = $order->delivery->cost;
 				$delivery_netCost = $order->delivery->netCost;
-				$delivery_date = $order->delivery->date;
-				$delivery_time_from = $order->delivery->time->from;
-				$delivery_time_to = $order->delivery->time->to;
 
 				if ( $delivery_code == 'flat-pay' ) {
 					$order_shipping_method = 'Доставка в пределах МКАД';
@@ -555,6 +552,10 @@
 						// ---
 					}
 
+
+					if( isset($order->delivery->date) ) { $delivery_date = $order->delivery->date; }
+					if( isset($order->delivery->time->from) ) { $delivery_time_from = $order->delivery->time->from; }
+					if( isset($order->delivery->time->to) ) { $delivery_time_to = $order->delivery->time->to; }
 
 					if( isset($delivery_date) && isset($delivery_time_from) && isset($delivery_time_to) ){
 						// ---
