@@ -1,6 +1,5 @@
 ﻿<?php
 // Init
-	$_GET['id'] = 19418;
 	header("Access-Control-Allow-Origin: *");
 	
 	include("../_lib.php");
@@ -239,20 +238,20 @@
 			    $log[] = 'OC order ['.$order_id.'] has been inserted';
 
 			    // Edit CRM order
-					// $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$crm_order_id.'/edit';
+					$url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$crm_order_id.'/edit';
 
-					// $order_data = array();
-					// $order_data['externalId'] = $order_id;
+					$order_data = array();
+					$order_data['externalId'] = $order_id;
 
-					// $data = array(
-					// 	'apiKey' => RCRM_KEY,
-					// 	'by' => 'id',
-					// 	'order' => json_encode($order_data)
-					// );
+					$data = array(
+						'apiKey' => RCRM_KEY,
+						'by' => 'id',
+						'order' => json_encode($order_data)
+					);
 
-					// $result = connectPostAPI($url, $data);
+					$result = connectPostAPI($url, $data);
 
-					// $log[] = 'CRM order ['.$crm_order_id.'] updated: '.json_encode($result);
+					$log[] = 'CRM order ['.$crm_order_id.'] updated: '.json_encode($result);
 				// ---
 			} else {
 				$log[] = 'OC order has been not inserted: '.$db->error;
@@ -741,6 +740,9 @@
 		}
 	// ---
 // ---
+
+
+/* DEBUG  */  file_put_contents('./crm-create-order.log', date("d.m.Y H:i", time()) . "" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;
