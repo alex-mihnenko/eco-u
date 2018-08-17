@@ -833,10 +833,35 @@ class ControllerAjaxIndex extends Controller {
 
         // Get sipping area
           unset($this->session->data['shipping_custom_field']);
+          unset($this->session->data['shipping_address_2']);
 
-          $structure = array("ADDRESS");
-          $record = array($address);
-          $result = $this->model_dadata_index->cleanRecord($structure, $record);
+          // Get data details
+            $structure = array("ADDRESS");
+            $record = array($address);
+            $result = $this->model_dadata_index->cleanRecord($structure, $record);
+
+            $response->dadata = $result['data'];
+
+            $shipping_address_2 = array();
+
+            if( isset($result['data'][0][0]['country']) ) { $shipping_address_2['country'] = $result['data'][0][0]['country']; }
+
+            if( isset($result['data'][0][0]['city']) && $result['data'][0][0]['city'] != null ) {
+              $shipping_address_2['city'] = $result['data'][0][0]['city'];
+            }
+            else if( isset($result['data'][0][0]['region']) && isset($result['data'][0][0]['region_type_full']) && $result['data'][0][0]['region_type_full'] == 'город' ) {
+              $shipping_address_2['city'] = $result['data'][0][0]['region'];
+            }
+            else {
+              $shipping_address_2['region'] = $result['data'][0][0]['region'];
+            }
+            
+            if( isset($result['data'][0][0]['street']) ) { $shipping_address_2['street'] = $result['data'][0][0]['street']; }
+            if( isset($result['data'][0][0]['house']) ) { $shipping_address_2['building'] = $result['data'][0][0]['house']; }
+
+            $this->session->data['shipping_address_2'] = $shipping_address_2;
+            $response->address_details = $this->session->data['shipping_address_2'];
+          // ---
 
           $response->address = null;
           $response->mkad = null;
@@ -850,9 +875,6 @@ class ControllerAjaxIndex extends Controller {
           else{
             $response->tobeltway = $deliverydistance;
           }
-
-          $response->region = mb_strtolower($result['data'][0][0]['region']);
-          $response->dadata = $result['data'];
 
           if( isset($result['data'][0][0]['source']) ) {
             $response->address = $result['data'][0][0]['source'];
@@ -2095,15 +2117,15 @@ class ControllerAjaxIndex extends Controller {
                               $address_array = (array)json_decode($address['address_2']);
 
                               if( isset($address_array['address_type']) && $address_array['address_type'] == true ){
-                                $response->addresses[] = array( 'text' => '<i class="fa fa-building"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
+                                $response->addresses[] = array( 'address_id' => $address['address_id'], 'customer_id' => $address['customer_id'], 'address_1' => $address['address_1'], 'address_2' => $address['address_2'], 'text' => '<i class="fa fa-building"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
                               }
                               else{
-                                $response->addresses[] = array( 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
+                                $response->addresses[] = array( 'address_id' => $address['address_id'], 'customer_id' => $address['customer_id'], 'address_1' => $address['address_1'], 'address_2' => $address['address_2'], 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
                               }
                             // ---
                           }
                           else{
-                            $response->addresses[] = array( 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
+                            $response->addresses[] = array( 'address_id' => $address['address_id'], 'customer_id' => $address['customer_id'], 'address_1' => $address['address_1'], 'address_2' => $address['address_2'], 'text' => '<i class="fa fa-home"></i> '.$address['address_1'], 'code' => $address['custom_field'] );
                           }
                         // ---
                       }
@@ -2316,6 +2338,30 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
+        }
+
+        public function chormeDeleteAddress() {
+          // ---
+            header("Access-Control-Allow-Origin: *");
+
+            // Init
+              $customerId = intval($this->request->post['customerId']);
+              $address_id = $this->request->post['address_id'];
+              $response = new stdClass();
+
+              $this->load->model('tool/addon');
+            // ---
+
+            // Proccessing
+              $response->delete = $this->model_tool_addon->deleteCustomerAddress($customerId, $address_id);
+            // ---
+
+            $response->status = 'success';
+            $response->message = 'Успешно';
+
+            echo json_encode($response);
+            exit;
+          // ---
         }
 
         public function chormeGetCouriers() {
