@@ -54,6 +54,7 @@
 		date_added,
 		payment_code,
 		shipping_address_1,
+		shipping_address_2,
 		shipping_method,
 		shipping_code,
 		shipping_custom_field,
@@ -488,11 +489,61 @@
 				} 
 			// ---
 
+			// Address
+				$delivery_address = array('text' => $row_order['shipping_address_1']);
+				$order['customFields']['order_confirmed_address'] = false;
+
+				//Get customer addresses
+					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id` = '".$row_order['customer_id']."';";
+					$rows_address = $db->query($q);
+
+					if ($rows_address->num_rows > 0) {
+						// ---
+							while ( $row_address = $rows_address->fetch_assoc() ) {
+								// ---
+									if( (!empty($row_order['shipping_address_2']) && !empty(json_decode($row_order['shipping_address_2']))) && (!empty($row_address['address_2']) && !empty(json_decode($row_address['address_2']))) ) {
+										// ---
+											if( $row_order['shipping_address_1'] == $row_address['address_1'] ) {
+												// ---
+													$delivery_address = (array)json_decode($row_address['address_2']);
+													$order['customFields']['order_confirmed_address'] = true;
+
+													break;
+												// ---
+											}
+											else {
+												$order_address_2 = (array)json_decode($row_order['shipping_address_2']);
+												$customer_address_2 = (array)json_decode($row_address['address_2']);
+
+												if( isset($order_address_2['street']) && isset($order_address_2['building']) ) {
+													if( isset($customer_address_2['street']) && isset($customer_address_2['building']) ) {
+														if( $order_address_2['street'] == $customer_address_2['street'] && $order_address_2['building'] == $customer_address_2['building'] ) {
+															// ---
+																$delivery_address = (array)json_decode($row_address['address_2']);
+																$order['customFields']['order_confirmed_address'] = true;
+
+																break;
+															// ---
+														}
+													}
+												}
+
+											}
+										// ---
+									}
+
+								// ---
+							}
+						// ---
+					}
+				// ---
+			// ---
+
 			$delivery = array(
 				'code' => $delivery_code,
 				'cost' => $delivery_cost,
 				'netCost' => $delivery_netcost,
-				'address' => array('text' => $row_order['shipping_address_1']),
+				'address' => $delivery_address,
 				'shipmentStore' => 'eco-u'
 			);
 

@@ -213,33 +213,115 @@
 		// ---
 	}
 
-	function isCyrilicLetter($char) {
-        $alphabet = array(
-            'а','б','в',
-            'г','д','е',
-            'ё','ж','з',
-            'и','й','к',
-            'л','м','н',
-            'о','п','р',
-            'с','т','у',
-            'ф','х','ц',
-            'ч','ш','щ',
-            'ь','ы','ъ',
-            'э','ю','я',
-            'А','Б','В',
-            'Г','Д','Е',
-            'Ё','Ж','З',
-            'И','Й','К',
-            'Л','М','Н',
-            'О','П','Р',
-            'С','Т','У',
-            'Ф','Х','Ц',
-            'Ч','Ш','Щ',
-            'Ь','Ы','Ъ',
-            'Э','Ю','Я'
-       	);
+	// Processors
+		function addressCrmToOc($address, $office = false){
+			// ---
+				$obj = array();
+				$text = '';
 
-        if( in_array($char,$alphabet, true) ){ return true; }
-        else { return false; }
-    }
+				// ---
+					if( isset($address->region) ){
+						$obj['region'] = $address->region;
+						$text .= $address->region . ', '; // Область
+					}
+					if( isset($address->regionId) ){
+						$obj['regionId'] = $address->regionId;
+						//$text .= $address->regionId; // Идентификатор области в geohelper
+					}
+					
+					if( isset($address->city) && isset($address->cityType) ){
+						$obj['city'] = $address->city;
+						$obj['cityType'] = $address->cityType;
+						$text .= $address->cityType . ' ' . $address->city . ', ' ; // Город
+					}
+					else if( isset($address->city) && !isset($address->cityType) ){
+						$obj['city'] = $address->city;
+						$text .= $address->city . ', '; // Город
+					}
+
+					if( isset($address->cityId) ){
+						$obj['cityId'] = $address->cityId;
+						//$text .= $address->cityId . ''; // Идентификатор города в geohelper
+					}
+					if( isset($address->street) && isset($address->streetType) ){
+						$obj['street'] = $address->street;
+						$obj['streetType'] = $address->streetType;
+						$text .= $address->streetType . ' ' . $address->street . ', '; // Улица
+					}
+					if( isset($address->streetId) ){
+						$obj['streetId'] = $address->streetId;
+						//$text .= '' . $address->streetId . ''; // Идентификатор улицы в geohelper
+					}
+					if( isset($address->building) ){
+						$obj['building'] = $address->building;
+						$text .= 'д. ' . $address->building . ', '; // Номер дома
+					}
+					if( isset($address->flat) ){
+						$obj['flat'] = $address->flat;
+						$text .= 'кв./офис ' . $address->flat . ', '; // Номер квартиры или офиса
+					}
+					if( isset($address->intercomCode) ){
+						$obj['intercomCode'] = $address->intercomCode;
+						$text .= 'код домофона ' . $address->intercomCode . ', '; // Код домофона
+					}
+					if( isset($address->floor) ){
+						$obj['floor'] = $address->floor;
+						$text .= 'эт. ' . $address->floor . ', '; // Этаж
+					}
+					if( isset($address->block) ){
+						$obj['block'] = $address->block;
+						$text .= 'под. ' . $address->block . ', '; // Подъезд
+					}
+					if( isset($address->house) ){
+						$obj['house'] = $address->house;
+						$text .= 'стр./корпус ' . $address->house . ', '; // Строение/корпус
+					}
+					if( isset($address->metro) ){
+						$obj['metro'] = $address->metro;
+						$text .= 'метро ' . $address->metro . ', '; // Метро
+					}
+
+					// Fix
+					$text = mb_substr($text,0,mb_strlen($text)-2);
+
+
+					if( isset($office) && $office !== false ){
+						$obj['office'] = true;
+					}
+				// ---
+
+				return array('obj' => $obj, 'text' => $text);
+			// ---
+		}
+
+		function isCyrilicLetter($char) {
+	        $alphabet = array(
+	            'а','б','в',
+	            'г','д','е',
+	            'ё','ж','з',
+	            'и','й','к',
+	            'л','м','н',
+	            'о','п','р',
+	            'с','т','у',
+	            'ф','х','ц',
+	            'ч','ш','щ',
+	            'ь','ы','ъ',
+	            'э','ю','я',
+	            'А','Б','В',
+	            'Г','Д','Е',
+	            'Ё','Ж','З',
+	            'И','Й','К',
+	            'Л','М','Н',
+	            'О','П','Р',
+	            'С','Т','У',
+	            'Ф','Х','Ц',
+	            'Ч','Ш','Щ',
+	            'Ь','Ы','Ъ',
+	            'Э','Ю','Я'
+	       	);
+
+	        if( in_array($char,$alphabet, true) ){ return true; }
+	        else { return false; }
+	    }
+    // ---
 // ---
