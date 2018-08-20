@@ -134,6 +134,7 @@ class ControllerCommonCart extends Controller {
                     // Get value
                         $address_value = $address['address_1'];
 
+                        /*
                         if( isset($address['address_2']) && !empty($address['address_2']) && !empty(json_decode($address['address_2'])) ){
                             // ---
                                 $address_2 = (array)json_decode($address['address_2']);
@@ -178,7 +179,7 @@ class ControllerCommonCart extends Controller {
 
                                 $address_value = $address_text;
                             // ---
-                        }
+                        }*/
                     // ---
 
                     $arAddress[] = Array(
