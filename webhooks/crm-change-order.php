@@ -171,6 +171,20 @@
 					// ---
 				}
 				else {
+					$row_address = $rows_address->fetch_assoc();
+
+					$q = "
+						UPDATE `".DB_PREFIX."address` SET 
+						`custom_field` = '".$oc_address_type."' 
+						WHERE `customer_id`='".$row_order['customer_id']."' AND `address_id`='".$row_address['address_id']."'
+					;";
+
+					if ($db->query($q) === TRUE) {
+					    $log[] = 'OC customer addresses ['.$customer_id.'] has been updated';
+					} else {
+						$log[] = 'OC customer addresses ['.$order_id.'] has been not updated: '.$db->error;
+					}
+
 					$log[] = 'OC customer address ['.$row_order['customer_id'].'] already exist or empty';
 				}
 			// ---
