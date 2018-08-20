@@ -143,7 +143,7 @@
 
 				$oc_address_type = 'primary';
 
-				$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND `address_1` = '".$order_address['text'."';";
+				$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_order['customer_id']."' AND `address_1` = '".$order_address['text']."';";
 				$rows_address = $db->query($q);
 
 				if ($rows_address->num_rows == 0 && !empty($order_address['text']) ) {
