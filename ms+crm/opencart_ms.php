@@ -113,7 +113,7 @@ if($argv[1]=='2'){
 			$offset=$limit*$page;
 			$link="https://online.moysklad.ru/api/remap/1.1/entity/uom/?limit=$limit&offset=$offset";
 			$json=ms_query($link);
-			
+
 			foreach($json['rows'] as $k=>$v){		
 				if($v['name']=="л") {
 					$v['description']="Литр";
@@ -215,6 +215,30 @@ if($argv[1]=='2'){
 							}
 						// ---
 
+						// Product attributes
+							$product_always_in_stock = 0;
+							$product_composite_price = 0;
+							$product_discount = 0;
+
+							if( isset($v['attributes']) ){
+								foreach ($v['attributes'] as $key_attribute => $attribute) {
+									// ---
+										if( $attribute['name'] == 'Всегда в наличии' && $attribute['value'] == 1 ) {
+											$product_always_in_stock = 1;
+										}
+
+										if( $attribute['name'] == 'Сложная цена' && $attribute['value'] == 1 ) {
+											$product_composite_price = 1;
+										}
+
+										if( $attribute['name'] == 'Скидка'  ) {
+											$product_discount = intval($attribute['value']);
+										}
+									// ---
+								}
+							}
+						// ---
+
 						if($product_id){
 							echo '<br><b>UPDATE PRODUCT</b><br>';
 
@@ -283,7 +307,8 @@ if($argv[1]=='2'){
 									`minimum`='$minimum',
 									`weight_class_id`='$uomid',
 									`price`='".$price."',
-									`model`='".$v['name']."' 
+									`model`='".$v['name']."',
+									`composite_price`='".$product_composite_price."' 
 									WHERE product_id='$product_id'
 								");
 
@@ -296,23 +321,53 @@ if($argv[1]=='2'){
 								}
 
 
-								if ( $qDiscount = mysql_query("SELECT `discount` FROM `oc_product` WHERE `product_id`=".$product_id.";") ) $nDiscount = mysql_num_rows($qDiscount);
-								else $nDiscount = 0;
+								// Discount
+									if( $product_discount > 0 ){
+										// ---
+											$special_price = $price - ($price * (intval($product_discount)/100));
 
-								if( $nDiscount>0 ){
-									$rowDiscount = mysql_fetch_assoc($qDiscount);
-
-									$discount = $rowDiscount['discount'];
-
-									if( isset($discount) && intval($discount)>0 ){
-										$special_price = $price - ($price * (intval($discount)/100));
-
-										$qInsert = mysql_query("UPDATE `oc_product` SET `special_price`='".$special_price."' WHERE `product_id`=".$product_id.";");
+											mysql_query("
+												UPDATE `oc_product` SET 
+												`special_price`='".$special_price."',
+												`discount`='".$product_discount."' 
+												WHERE product_id='".$product_id."'
+											");
+										// ---
 									}
-									else{
-										$special_price = 0;
+									else {
+										if ( $qDiscount = mysql_query("SELECT `discount` FROM `oc_product` WHERE `product_id`=".$product_id.";") ) $nDiscount = mysql_num_rows($qDiscount);
+										else $nDiscount = 0;
+
+										if( $nDiscount>0 ){
+											$rowDiscount = mysql_fetch_assoc($qDiscount);
+
+											$discount = $rowDiscount['discount'];
+
+											if( isset($discount) && intval($discount)>0 ){
+												$special_price = $price - ($price * (intval($discount)/100));
+
+												$qInsert = mysql_query("UPDATE `oc_product` SET `special_price`='".$special_price."' WHERE `product_id`=".$product_id.";");
+											}
+											else{
+												$special_price = 0;
+											}
+										}
 									}
-								}
+								// ---
+
+
+								// Stock
+									if( $product_always_in_stock == 1 ){
+										// ---
+											mysql_query("
+												UPDATE `oc_product` SET 
+												`stock_status_id`='7',
+												`status`='1' 
+												WHERE product_id='".$product_id."'
+											");
+										// ---
+									}
+								// ---
 							// ---
 						}
 						else{
@@ -368,6 +423,17 @@ if($argv[1]=='2'){
 									if(file_exists($file_path)) resizeImage($tmp,$_SERVER['DOCUMENT_ROOT'].'/image/cache/catalog/',$v['image']['title']."-74x74-product_thumb.jpg",74,74,100);
 								}
 
+								// Discount
+									if( $product_discount  > 0 ){
+										// ---
+											$special_price = $price - ($price * (intval($product_discount)/100));
+										// ---
+									}
+									else {
+										$special_price = 0;
+									}
+								// ---
+
 								$qInsert = mysql_query("
 									INSERT INTO oc_product SET 
 									model = '" . addslashes($v['name']) . "',
@@ -408,10 +474,10 @@ if($argv[1]=='2'){
 									weight_package = '',
 									shelf_life = '',
 									available_in_time = '',
-									special_price = '0',
-									discount = '0',
+									special_price = '".$special_price."',
+									discount='".$product_discount."',
 									profitable_offer = '0',
-									composite_price = '0',
+									composite_price = '".$product_composite_price."',
 									ultra_fresh = '0',
 									yml = '0',
 									is_weighted = '0',
@@ -449,6 +515,19 @@ if($argv[1]=='2'){
 
 								mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='".$product_id."', ms_id='".$v['id']."',del='0',purchaseprice='0'");
 
+
+								// Stock
+									if( $product_always_in_stock == 1 && isset($product_id) ){
+										// ---
+											mysql_query("
+												UPDATE `oc_product` SET 
+												`stock_status_id`='7',
+												`status`='1' 
+												WHERE product_id='".$product_id."'
+											");
+										// ---
+									}
+								// ---
 
 								// UltraFresh
 									if( $site_id == 35 || $site_id == 36 ) {
