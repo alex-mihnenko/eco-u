@@ -2347,6 +2347,7 @@ class ControllerAjaxIndex extends Controller {
             // Init
               $customerId = intval($this->request->post['customerId']);
               $address_id = $this->request->post['address_id'];
+              $address_type = $this->request->post['address_type'];
               $response = new stdClass();
 
               $this->load->model('tool/addon');
@@ -2354,6 +2355,22 @@ class ControllerAjaxIndex extends Controller {
 
             // Proccessing
               $response->delete = $this->model_tool_addon->deleteCustomerAddress($customerId, $address_id);
+
+              if( $address_type == 'primary' ){
+                // ---
+                  $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customerId.'/edit';
+
+                  $data = array(
+                      'apiKey' => self::RETAILCRM_KEY,
+                      'by' => 'externalId',
+                      'customer' => json_encode(array( 'address' => array(), 'customFields'=> array('customer_delivery_address_type'=> false) ))
+                  );
+
+                  $res = $this->connectPostAPI($url,$data);
+
+                  $response->res = $res;
+                // ---
+              }
             // ---
 
             $response->status = 'success';
