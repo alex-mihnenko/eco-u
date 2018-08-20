@@ -146,56 +146,60 @@
 
 
 				// Save
-					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND address_1='".$customer_address['text']."' AND custom_field='primary';";
-					$rows_address = $db->query($q);
-
-					if ($rows_address->num_rows == 0 ) {
-						// Insert
-							$q = "
-								INSERT INTO `".DB_PREFIX."address` SET 
-								`customer_id` = '".$row_customer['customer_id']."',
-								`firstname` = '".$row_customer['firstname']."',
-								`lastname` = '".$row_customer['lastname']."',
-								`company` = '',
-								`address_1` = '".$customer_address['text']."',
-								`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
-								`city` = '',
-								`postcode` = '',
-								`country_id` = '0',
-								`zone_id` = '0',
-								`custom_field` = 'primary'
-							";
-							
-							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been inserted';
-							} else {
-								$log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been not inserted: '.$db->error;
-							}
+					if( !empty($customer_address['text']) || !empty($customer_address['obj']) ){
 						// ---
-					}
-					else {
-						$row_address = $rows_address->fetch_assoc();
+							$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND address_1='".$customer_address['text']."' AND custom_field='primary';";
+							$rows_address = $db->query($q);
 
-						// Update
-							$q = "
-								UPDATE `".DB_PREFIX."address` SET 
-								`firstname` = '".$row_customer['firstname']."',
-								`lastname` = '".$row_customer['lastname']."',
-								`company` = '',
-								`address_1` = '".$customer_address['text']."',
-								`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
-								`city` = '',
-								`postcode` = '',
-								`country_id` = '0',
-								`zone_id` = '0',
-								`custom_field` = 'primary' 
-								WHERE `customer_id` = '".$row_customer['customer_id']."' AND address_id='".$row_address['address_id']."'
-							";
-							
-							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been updated';
-							} else {
-								$log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been not updated: '.$db->error;
+							if ($rows_address->num_rows == 0 ) {
+								// Insert
+									$q = "
+										INSERT INTO `".DB_PREFIX."address` SET 
+										`customer_id` = '".$row_customer['customer_id']."',
+										`firstname` = '".$row_customer['firstname']."',
+										`lastname` = '".$row_customer['lastname']."',
+										`company` = '',
+										`address_1` = '".$customer_address['text']."',
+										`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
+										`city` = '',
+										`postcode` = '',
+										`country_id` = '0',
+										`zone_id` = '0',
+										`custom_field` = 'primary'
+									";
+									
+									if ($db->query($q) === TRUE) {
+									    $log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been inserted';
+									} else {
+										$log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been not inserted: '.$db->error;
+									}
+								// ---
+							}
+							else {
+								$row_address = $rows_address->fetch_assoc();
+
+								// Update
+									$q = "
+										UPDATE `".DB_PREFIX."address` SET 
+										`firstname` = '".$row_customer['firstname']."',
+										`lastname` = '".$row_customer['lastname']."',
+										`company` = '',
+										`address_1` = '".$customer_address['text']."',
+										`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
+										`city` = '',
+										`postcode` = '',
+										`country_id` = '0',
+										`zone_id` = '0',
+										`custom_field` = 'primary' 
+										WHERE `customer_id` = '".$row_customer['customer_id']."' AND address_id='".$row_address['address_id']."'
+									";
+									
+									if ($db->query($q) === TRUE) {
+									    $log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been updated';
+									} else {
+										$log[] = 'OC customer primary address ['.$row_customer['customer_id'].'] has been not updated: '.$db->error;
+									}
+								// ---
 							}
 						// ---
 					}
