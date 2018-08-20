@@ -284,6 +284,9 @@
 					// Fix
 					$text = mb_substr($text,0,mb_strlen($text)-2);
 
+					if( isset($address->text) ){
+						$text .= $address->text;
+					}
 
 					if( isset($office) && $office !== false ){
 						$obj['office'] = true;

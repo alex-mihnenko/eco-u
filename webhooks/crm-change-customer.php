@@ -137,83 +137,16 @@
 	// Edit adddresses
 		if( isset($customer->address) ){
 			// ---
-				$customer_address_array = array();
-				$customer_address_text = '';
-
-				// Check address
-					if( isset($customer->address->region) ){
-						$customer_address_array['region'] = $customer->address->region;
-						$customer_address_text .= $customer->address->region . ', '; // Область
-					}
-					if( isset($customer->address->regionId) ){
-						$customer_address_array['regionId'] = $customer->address->regionId;
-						//$customer_address_text .= $customer->address->regionId; // Идентификатор области в geohelper
-					}
-					if( isset($customer->address->city) && isset($customer->address->cityType) ){
-						$customer_address_array['city'] = $customer->address->city;
-						$customer_address_text .= $customer->address->cityType . ' ' . $customer->address->city . ', ' ; // Город
-					}
-					else if( isset($customer->address->city) && !isset($customer->address->cityType) ){
-						$order_address_array['city'] = $customer->address->city;
-						$order_address_text .= $customer->address->city . ', '; // Город
-					}
-					if( isset($customer->address->cityId) ){
-						$customer_address_array['cityId'] = $customer->address->cityId;
-						//$customer_address_text .= $customer->address->cityId . ''; // Идентификатор города в geohelper
-					}
-					if( isset($customer->address->street) && isset($customer->address->streetType) ){
-						$customer_address_array['street'] = $customer->address->street;
-						$customer_address_text .= $customer->address->streetType . ' ' . $customer->address->street . ', '; // Улица
-					}
-					if( isset($customer->address->streetId) ){
-						$customer_address_array['streetId'] = $customer->address->streetId;
-						//$customer_address_text .= '' . $customer->address->streetId . ''; // Идентификатор улицы в geohelper
-					}
-					if( isset($customer->address->building) ){
-						$customer_address_array['building'] = $customer->address->building;
-						$customer_address_text .= 'д. ' . $customer->address->building . ', '; // Номер дома
-					}
-					if( isset($customer->address->flat) ){
-						$customer_address_array['flat'] = $customer->address->flat;
-						$customer_address_text .= 'кв./офис ' . $customer->address->flat . ', '; // Номер квартиры или офиса
-					}
-					if( isset($customer->address->intercomCode) ){
-						$customer_address_array['intercomCode'] = $customer->address->intercomCode;
-						$customer_address_text .= 'код домофона ' . $customer->address->intercomCode . ', '; // Код домофона
-					}
-					if( isset($customer->address->floor) ){
-						$customer_address_array['floor'] = $customer->address->floor;
-						$customer_address_text .= 'эт. ' . $customer->address->floor . ', '; // Этаж
-					}
-					if( isset($customer->address->block) ){
-						$customer_address_array['block'] = $customer->address->block;
-						$customer_address_text .= 'под. ' . $customer->address->block . ', '; // Подъезд
-					}
-					if( isset($customer->address->house) ){
-						$customer_address_array['house'] = $customer->address->house;
-						$customer_address_text .= 'стр./корпус ' . $customer->address->house . ', '; // Строение/корпус
-					}
-					if( isset($customer->address->metro) ){
-						$customer_address_array['metro'] = $customer->address->metro;
-						$customer_address_text .= 'метро ' . $customer->address->metro . ', '; // Метро
-					}
-
-					// Fix
-					$customer_address_text = mb_substr($customer_address_text,0,mb_strlen($customer_address_text)-2);
-
-
-					if( isset($customer->customFields->customer_delivery_address_type) && $customer->customFields->customer_delivery_address_type != false ){
-						$customer_address_array['address_type'] = $customer->customFields->customer_delivery_address_type;
-					}
-
-					if( isset($customer->address->text) ){
-						$customer_address_text .= $customer->address->text;
-					}
-				// ---
+				if( isset($customer->customFields->customer_delivery_address_type) && $customer->customFields->customer_delivery_address_type != false ){
+					$customer_address = addressCrmToOc($customer->address, true);
+				}
+				else {
+					$customer_address = addressCrmToOc($customer->address, false);
+				}
 
 
 				// Save
-					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND address_1='".$customer_address_text."' AND custom_field='primary';";
+					$q = "SELECT * FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND address_1='".$customer_address['text']."' AND custom_field='primary';";
 					$rows_address = $db->query($q);
 
 					if ($rows_address->num_rows == 0 ) {
@@ -224,8 +157,8 @@
 								`firstname` = '".$row_customer['firstname']."',
 								`lastname` = '".$row_customer['lastname']."',
 								`company` = '',
-								`address_1` = '".$customer_address_text."',
-								`address_2` = '".json_encode($customer_address_array,JSON_UNESCAPED_UNICODE)."',
+								`address_1` = '".$customer_address['text']."',
+								`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
 								`city` = '',
 								`postcode` = '',
 								`country_id` = '0',
@@ -249,8 +182,8 @@
 								`firstname` = '".$row_customer['firstname']."',
 								`lastname` = '".$row_customer['lastname']."',
 								`company` = '',
-								`address_1` = '".$customer_address_text."',
-								`address_2` = '".json_encode($customer_address_array,JSON_UNESCAPED_UNICODE)."',
+								`address_1` = '".$customer_address['text']."',
+								`address_2` = '".json_encode($customer_address['obj'],JSON_UNESCAPED_UNICODE)."',
 								`city` = '',
 								`postcode` = '',
 								`country_id` = '0',
@@ -277,42 +210,6 @@
 				    $log[] = 'OC primary address ['.$row_customer['customer_id'].'] has been deleted';
 				} else {
 					$log[] = 'OC primary address ['.$row_customer['customer_id'].'] has been not deleted: '.$db->error;
-				}
-			// ---
-		}
-
-		if( !isset($customer->customFields->addition_address_first) ){
-			// ---
-				$q = "DELETE FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND custom_field='addition_address_first';";
-
-				if ($db->query($q) === TRUE) {
-				    $log[] = 'OC first address ['.$row_customer['customer_id'].'] has been deleted';
-				} else {
-					$log[] = 'OC first address ['.$row_customer['customer_id'].'] has been not deleted: '.$db->error;
-				}
-			// ---
-		}
-
-		if( !isset($customer->customFields->addition_address_second) ){
-			// ---
-				$q = "DELETE FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND custom_field='addition_address_second';";
-
-				if ($db->query($q) === TRUE) {
-				    $log[] = 'OC second address ['.$row_customer['customer_id'].'] has been deleted';
-				} else {
-					$log[] = 'OC second address ['.$row_customer['customer_id'].'] has been not deleted: '.$db->error;
-				}
-			// ---
-		}
-		
-		if( !isset($customer->customFields->addition_address_third) ){
-			// ---
-				$q = "DELETE FROM `".DB_PREFIX."address` WHERE `customer_id`='".$row_customer['customer_id']."' AND custom_field='addition_address_third';";
-
-				if ($db->query($q) === TRUE) {
-				    $log[] = 'OC third address ['.$row_customer['customer_id'].'] has been deleted';
-				} else {
-					$log[] = 'OC third address ['.$row_customer['customer_id'].'] has been not deleted: '.$db->error;
 				}
 			// ---
 		}
