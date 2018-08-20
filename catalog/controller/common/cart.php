@@ -131,9 +131,59 @@ class ControllerCommonCart extends Controller {
             $arAddress = Array();
             if(!empty($addresses)) {
                 foreach($addresses as $address) {
+                    // Get value
+                        $address_value = $address['address_1'];
+
+                        if( isset($address['address_2']) && !empty($address['address_2']) && !empty(json_decode($address['address_2'])) ){
+                            // ---
+                                $address_2 = (array)json_decode($address['address_2']);
+                                $address_text = '';
+                                
+                                if( strpos('москва', mb_strtolower($address_2['city'])) === false ){
+                                    if( isset($address_2['city']) && isset($address_2['cityType']) ){
+                                        $address_text .= $address_2['cityType'] . ' ' . $address_2['city'] . ', ' ; // Город
+                                    }
+                                    else if( isset($address_2['city']) && !isset($address_2['cityType']) ){
+                                        $address_text .= $address_2['city'] . ', '; // Город
+                                    }
+                                }
+                                
+                                if( isset($address_2['street']) && isset($address_2['streetType']) ){
+                                    $address_text .= $address_2['streetType'] . ' ' . $address_2['street'] . ', '; // Улица
+                                }
+                                if( isset($address_2['building']) ){
+                                    $address_text .= 'д. ' . $address_2['building'] . ', '; // Номер дома
+                                }
+                                if( isset($address_2['flat']) ){
+                                    $address_text .= 'кв./офис ' . $address_2['flat'] . ', '; // Номер квартиры или офиса
+                                }
+                                if( isset($address_2['intercomCode']) ){
+                                    $address_text .= 'код домофона ' . $address_2['intercomCode'] . ', '; // Код домофона
+                                }
+                                if( isset($address_2['floor']) ){
+                                    $address_text .= 'эт. ' . $address_2['floor'] . ', '; // Этаж
+                                }
+                                if( isset($address_2['block']) ){
+                                    $address_text .= 'под. ' . $address_2['block'] . ', '; // Подъезд
+                                }
+                                if( isset($address_2['house']) ){
+                                    $address_text .= 'стр./корпус ' . $address_2['house'] . ', '; // Строение/корпус
+                                }
+                                if( isset($address_2['metro']) ){
+                                    $address_text .= 'метро ' . $address_2['metro'] . ', '; // Метро
+                                }
+
+                                // Fix
+                                $address_text = mb_substr($address_text,0,mb_strlen($address_text)-2);
+
+                                $address_value = $address_text;
+                            // ---
+                        }
+                    // ---
+
                     $arAddress[] = Array(
                         'address_id' => $address['address_id'],
-                        'value' => $address['address_1']
+                        'value' => $address_value
                     );
                 }
             } else {
