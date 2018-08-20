@@ -86,8 +86,8 @@ class ModelToolAddon extends Model {
 	public function deleteCustomerAddress($address_id) {
 		// ---
 			$sql = "
-				DELETE FROM `".DB_PREFIX."address` a 
-				WHERE a.address_id='".$address_id."'
+				DELETE FROM `".DB_PREFIX."address`  
+				WHERE address_id='".$address_id."'
 			;";
 
 			$query = $this->db->query($sql);
