@@ -2354,7 +2354,7 @@ class ControllerAjaxIndex extends Controller {
             // ---
 
             // Proccessing
-              $response->delete = $this->model_tool_addon->deleteCustomerAddress($customerId, $address_id);
+              $response->delete = $this->model_tool_addon->deleteCustomerAddress($address_id);
 
               if( $address_type == 'primary' ){
                 // ---
