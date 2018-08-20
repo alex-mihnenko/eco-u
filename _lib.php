@@ -248,6 +248,10 @@
 						$obj['streetType'] = $address->streetType;
 						$text .= $address->streetType . ' ' . $address->street . ', '; // Улица
 					}
+					else if( isset($address->street) && !isset($address->streetType) ){
+						$obj['street'] = $address->street;
+						$text .= $address->street . ', '; // Улица
+					}
 					if( isset($address->streetId) ){
 						$obj['streetId'] = $address->streetId;
 						//$text .= '' . $address->streetId . ''; // Идентификатор улицы в geohelper
