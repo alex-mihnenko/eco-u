@@ -517,7 +517,7 @@
 
 												if( isset($order_address_2['street']) && isset($order_address_2['building']) ) {
 													if( isset($customer_address_2['street']) && isset($customer_address_2['building']) ) {
-														if( $order_address_2['street'] == $customer_address_2['street'] && $order_address_2['building'] == $customer_address_2['building'] ) {
+														if( strpos($customer_address_2['street'], $order_address_2['street']) !== false  && $order_address_2['building'] == $customer_address_2['building'] ) {
 															// ---
 																$delivery_address = (array)json_decode($row_address['address_2']);
 																$order['customFields']['order_confirmed_address'] = true;
