@@ -178,6 +178,8 @@
 	// ---
 // ---
 
+/* DEBUG  */  file_put_contents('./crm-change-order.log', date("d.m.Y H:i", time()) . "" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
+
 // Response
 	$res['log'] = $log;
 	$res['mess']='Success';
