@@ -338,27 +338,9 @@ if($argv[1]=='2'){
 
 								// Manufacturer
 									if( isset($v['country']['meta']['href']) ){
-										$qInsert = mysql_query("
-											INSERT INTO oc_product_description SET 
-											product_id='".$product_id."',
-											language_id='1',
-											name='".addslashes($v['name'])."',
-											description_short='',
-											description_yml='',
-											description='".$v['description']."',
-											customer_props3='',
-											tag='',
-											meta_title='".addslashes($v['name'])."',
-											meta_description='".addslashes($v['name'])."',
-											meta_keyword='".addslashes($v['name'])."'
-										");
-
 										mysql_query("
-											UPDATE `oc_product_description` SET 
-											name='".addslashes($v['name'])."',
-											description_short='',
-											description_yml='',
-											description='".addslashes($v['description'])."' 
+											UPDATE `oc_product` SET 
+											manufacturer_id = '" . (int)$CNTRS[$v['country']['meta']['href']] . "' 
 											WHERE product_id='".$product_id."'
 										");
 									}
