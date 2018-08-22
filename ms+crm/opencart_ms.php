@@ -350,10 +350,12 @@ if($argv[1]=='2'){
 									if( $product_discount == 0 ){
 										mysql_query("
 											UPDATE `oc_product` SET 
-											`special_price`='',
+											`special_price`='0.0000',
 											`discount`='0' 
 											WHERE product_id='".$product_id."'
 										");
+
+										echo mysql_error();
 									}
 									else if( $product_discount > 0 ){
 										// ---
