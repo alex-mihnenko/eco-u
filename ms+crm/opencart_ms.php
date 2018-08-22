@@ -132,13 +132,15 @@ if($argv[1]=='2'){
 		$page=0;
 		$limit=100;
 		
+		$CNTRS = array();
+
 		while($CHECK_MS){
 			$offset=$limit*$page;
 			$link="https://online.moysklad.ru/api/remap/1.1/entity/country/?limit=$limit&offset=$offset";
 			$json=ms_query($link);
 				
 			foreach($json['rows'] as $k=>$v){
-				if ( $qCountries = mysql_query("SELECT `manufacturer_id` FROM `oc_manufacturer` WHERE `name`='".$v['name']."';") ) $nCountries = mysql_num_rows($qCountries);
+				if ( $qCountries = mysql_query("SELECT `manufacturer_id` FROM `oc_manufacturer` WHERE `name` LIKE '%".$v['name']."%';") ) $nCountries = mysql_num_rows($qCountries);
 				else $nCountries = 0;
 
 				$manid = -1;
@@ -166,6 +168,7 @@ if($argv[1]=='2'){
 			if(!count($json['rows'])) { 
 				$CHECK_MS=false; 
 			} 
+
 			$page++;
 		}
 	// ---
@@ -315,10 +318,10 @@ if($argv[1]=='2'){
 								");
 
 								// Manufacturer
-									if( isset($v['country']) ){
+									if( isset($v['country']['meta']['href']) ){
 										mysql_query("
 											UPDATE `oc_product` SET 
-											`manufacturer_id`='".$CNTRS[$v['country']['meta']['href']]."',
+											`manufacturer_id`='".(int)$CNTRS[$v['country']['meta']['href']]."' 
 											WHERE product_id='".$product_id."'
 										");
 									}
