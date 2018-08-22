@@ -44,7 +44,7 @@
 	if( $order->status == 'confim' || $order->status == 'send-to-assembling' ){ // Подтвержден или на сборку
 		$action = '#1';
 	}
-	else if( $order->status == 'warehouse-partial-refund' ){ // Частичный возврат на склад
+	else if( $order->status == 'delivering' ){ // Доставляется
 		$action = '#2';
 	}
 
