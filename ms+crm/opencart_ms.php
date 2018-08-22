@@ -380,7 +380,7 @@ if($argv[1]=='2'){
 											");
 										// ---
 									}
-									else {
+									else if( $product_discount == 0 ){
 										mysql_query("
 											UPDATE `oc_product` SET 
 											`special_price`='',
