@@ -347,7 +347,15 @@ if($argv[1]=='2'){
 								// ---
 
 								// Discount
-									if( $product_discount > 0 ){
+									if( $product_discount == 0 ){
+										mysql_query("
+											UPDATE `oc_product` SET 
+											`special_price`='',
+											`discount`='0' 
+											WHERE product_id='".$product_id."'
+										");
+									}
+									else if( $product_discount > 0 ){
 										// ---
 											$special_price = $price - ($price * (intval($product_discount)/100));
 
@@ -358,14 +366,6 @@ if($argv[1]=='2'){
 												WHERE product_id='".$product_id."'
 											");
 										// ---
-									}
-									else if( $product_discount == 0 ){
-										mysql_query("
-											UPDATE `oc_product` SET 
-											`special_price`='',
-											`discount`='0' 
-											WHERE product_id='".$product_id."'
-										");
 									}
 								// ---
 
