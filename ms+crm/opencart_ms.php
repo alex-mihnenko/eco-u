@@ -185,6 +185,9 @@ if($argv[1]=='2'){
 
 			foreach($json['rows'] as $k=>$v){
 				// ---
+					print_r($v);
+					exit;
+
 					$NDEL_METKA[$v['id']]=$v['id'];
 					
 					if(isset($v['externalCode'])){			
@@ -224,6 +227,8 @@ if($argv[1]=='2'){
 							$product_always_in_stock = 0;
 							$product_composite_price = 0;
 							$product_discount = 0;
+							$product_shelf_life = '';
+							$product_date_manufacture = '0000-00-00 00:00:00';
 
 							if( isset($v['attributes']) ){
 								foreach ($v['attributes'] as $key_attribute => $attribute) {
@@ -238,6 +243,14 @@ if($argv[1]=='2'){
 
 										if( $attribute['name'] == 'Скидка'  ) {
 											$product_discount = intval($attribute['value']);
+										}
+
+										if( $attribute['name'] == 'Срок хранения'  ) {
+											$product_shelf_life = $attribute['value'];
+										}
+
+										if( $attribute['name'] == 'Дата производства'  ) {
+											$product_date_manufacture = $attribute['value'];
 										}
 									// ---
 								}
@@ -300,33 +313,59 @@ if($argv[1]=='2'){
 									mysql_query("insert into ms_products set xmlId='".$v['externalCode']."', product_id='$product_id',ms_id='".$v['id']."',del='0'");
 								}
 
-								mysql_query("
-									UPDATE `oc_product_description` SET 
-									`name`='".$v['name']."' 
-									WHERE `product_id`='".$product_id."' AND `language_id`='1'");
 
 								mysql_query("
 									UPDATE `oc_product` SET 
+									`date_manufacture`='".$product_date_manufacture."',
 									`date_modified`=NOW(),
 									`weight`='".$v['weight']."',
 									`minimum`='$minimum',
 									`weight_class_id`='$uomid',
 									`price`='".$price."',
 									`model`='".$v['name']."',
+									`shelf_life` = '".$product_shelf_life."',
 									`composite_price`='".$product_composite_price."' 
 									WHERE product_id='$product_id'
 								");
 
-								// Manufacturer
-									if( isset($v['country']['meta']['href']) ){
+								// Description
+									if( isset($v['description']) && !empty($v['description']) && $v['description'] != '' ) {
 										mysql_query("
-											UPDATE `oc_product` SET 
-											`manufacturer_id`='".(int)$CNTRS[$v['country']['meta']['href']]."' 
-											WHERE product_id='".$product_id."'
+											UPDATE `oc_product_description` SET 
+											`name`='".addslashes($v['name'])."', 
+											`description_short`='".addslashes($v['description'])."' 
+											WHERE product_id='".$product_id."' AND `language_id`='1'
 										");
 									}
 								// ---
 
+								// Manufacturer
+									if( isset($v['country']['meta']['href']) ){
+										$qInsert = mysql_query("
+											INSERT INTO oc_product_description SET 
+											product_id='".$product_id."',
+											language_id='1',
+											name='".addslashes($v['name'])."',
+											description_short='',
+											description_yml='',
+											description='".$v['description']."',
+											customer_props3='',
+											tag='',
+											meta_title='".addslashes($v['name'])."',
+											meta_description='".addslashes($v['name'])."',
+											meta_keyword='".addslashes($v['name'])."'
+										");
+
+										mysql_query("
+											UPDATE `oc_product_description` SET 
+											name='".addslashes($v['name'])."',
+											description_short='',
+											description_yml='',
+											description='".addslashes($v['description'])."' 
+											WHERE product_id='".$product_id."'
+										");
+									}
+								// ---
 
 								// Discount
 									if( $product_discount >= 0 ){
@@ -341,27 +380,7 @@ if($argv[1]=='2'){
 											");
 										// ---
 									}
-									// else {
-									// 	if ( $qDiscount = mysql_query("SELECT `discount` FROM `oc_product` WHERE `product_id`=".$product_id.";") ) $nDiscount = mysql_num_rows($qDiscount);
-									// 	else $nDiscount = 0;
-
-									// 	if( $nDiscount>0 ){
-									// 		$rowDiscount = mysql_fetch_assoc($qDiscount);
-
-									// 		$discount = $rowDiscount['discount'];
-
-									// 		if( isset($discount) && intval($discount)>0 ){
-									// 			$special_price = $price - ($price * (intval($discount)/100));
-
-									// 			$qInsert = mysql_query("UPDATE `oc_product` SET `special_price`='".$special_price."' WHERE `product_id`=".$product_id.";");
-									// 		}
-									// 		else{
-									// 			$special_price = 0;
-									// 		}
-									// 	}
-									// }
 								// ---
-
 
 								// Stock
 									if( $product_always_in_stock == 1 ){
@@ -369,6 +388,16 @@ if($argv[1]=='2'){
 											mysql_query("
 												UPDATE `oc_product` SET 
 												`stock_status_id`='7',
+												`status`='1' 
+												WHERE product_id='".$product_id."'
+											");
+										// ---
+									}
+									else {
+										// ---
+											mysql_query("
+												UPDATE `oc_product` SET 
+												`stock_status_id`='5',
 												`status`='1' 
 												WHERE product_id='".$product_id."'
 											");
@@ -463,6 +492,7 @@ if($argv[1]=='2'){
 									points = '0',
 									tax_class_id = '0',
 									date_available = '0000-00-00',
+									date_manufacture = '".$product_date_manufacture."',
 									weight = '" . (float)$v['weight'] . "',
 									weight_class_id = '" . (int)$uomid . "',
 									length = '0',
@@ -479,7 +509,7 @@ if($argv[1]=='2'){
 									date_new = NOW(),
 									weight_variants = '',
 									weight_package = '',
-									shelf_life = '',
+									shelf_life = '".$product_shelf_life."',
 									available_in_time = '',
 									special_price = '".$special_price."',
 									discount='".$product_discount."',
@@ -500,9 +530,9 @@ if($argv[1]=='2'){
 									product_id='".$product_id."',
 									language_id='1',
 									name='".addslashes($v['name'])."',
-									description_short='',
+									description_short='".addslashes($v['description'])."',
 									description_yml='',
-									description='".$v['description']."',
+									description='',
 									customer_props3='',
 									tag='',
 									meta_title='".addslashes($v['name'])."',
@@ -529,6 +559,16 @@ if($argv[1]=='2'){
 											mysql_query("
 												UPDATE `oc_product` SET 
 												`stock_status_id`='7',
+												`status`='1' 
+												WHERE product_id='".$product_id."'
+											");
+										// ---
+									}
+									else {
+										// ---
+											mysql_query("
+												UPDATE `oc_product` SET 
+												`stock_status_id`='5',
 												`status`='1' 
 												WHERE product_id='".$product_id."'
 											");
