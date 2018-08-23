@@ -194,8 +194,10 @@
                             
                             <?php if($product['stock_status_id'] == 7) { ?>
                                 <input type="submit" value="" class="p-o_submit">
+                            <?php else if($product['stock_status_id'] == 6) { ?>
+                                <div class="p-o_submit n-a_time" rel="tooltip" title="Поставка через <?php echo $product['available_in_time']; ?> дн."></div>
                             <?php } else { ?>
-                                <div class="p-o_submit n-a_time" rel="tooltip" title="Поставка через <?php echo $product['available_in_time']; ?>  дн."></div>
+                                <div class="p-o_submit n-a_time" rel="tooltip"></div>
                             <?php } ?>
                         </div>
                     </div>
