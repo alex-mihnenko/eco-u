@@ -3,7 +3,7 @@
 <?php } ?>
 
 <ul class="list-letter search_product_list">
-    <?php foreach($products as $key => $product) { ?>
+    <?php foreach($products as $key => $product) { if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue; ?>
     
     <?php if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) { ?>
         <?php continue; ?>

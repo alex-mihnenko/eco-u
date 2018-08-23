@@ -2914,7 +2914,7 @@ class ControllerAjaxIndex extends Controller {
       $this->load->model('account/user');
 
       $data['products'] = $this->model_catalog_product->searchProducts($search);
-      
+
       $this->response->setOutput($this->load->view('product/search', $data));
     }
 
