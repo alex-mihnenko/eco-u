@@ -192,13 +192,11 @@
                             
                             <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                             
-                            <?php if($product['stock_status_id'] == 7) { ?>
+                            <?php if($product['quantity'] > 0 || $product['stock_status_id'] == 7) { ?>
                                 <input type="submit" value="" class="p-o_submit">
                             <?php } else { ?>
-                                <?php if($product['stock_status_id'] == 6) { ?>
+                                <?php if( $product['quantity'] <= 0 && !empty($product['available_in_time']) ) { ?>
                                     <div class="p-o_submit n-a_time" rel="tooltip" title="Поставка через <?php echo $product['available_in_time']; ?> дн."></div>
-                                <?php } else { ?>
-                                    <div class="p-o_submit n-a_time" rel="tooltip"></div>
                                 <?php } ?>
                             <?php } ?>
                         </div>
