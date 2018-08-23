@@ -18,6 +18,9 @@
 		else {
 			$log[] = 'No rows';
 
+			$config->page = 0;
+			file_put_contents('ms-to-oc-products.json',json_encode($config));
+
 			$res['log'] = $log;
 			$res['mess']='Success';
 			echo json_encode($res); exit;
