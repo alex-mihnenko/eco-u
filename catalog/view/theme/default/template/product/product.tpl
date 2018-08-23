@@ -240,8 +240,6 @@
 
                     <hr class="indent xs">
 
-
-
                     <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
                         <button class="c-p_submit">Добавить в корзину</button>
                     <?php } elseif($quantity <= 0 && $stock_status_id == 6) { ?>

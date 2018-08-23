@@ -3,7 +3,12 @@
 <?php } ?>
 
 <ul class="list-letter search_product_list">
-    <?php foreach($products as $key => $product) { if($product['quantity'] <= 0 && $product['stock_status_id'] == 5) continue; ?>
+    <?php foreach($products as $key => $product) { ?>
+    
+    <?php if(($product['quantity'] <= 0 && $product['stock_status_id'] == 5) || $product['status'] != 1) { ?>
+        <?php continue; ?>
+    <?php } ?>
+
     <li data-product="<?php echo $product['product_id']; ?>" data-type="dynamic">
         <div id="catsorted_prod_<?php echo $product['product_id']; ?>" itemscope itemtype="http://schema.org/Product" itemprop="itemListElement">
             <meta itemprop="position" content="<?php echo $key; ?>" />
