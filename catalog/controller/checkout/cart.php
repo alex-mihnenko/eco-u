@@ -500,7 +500,7 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
-                
+
 		if ($product_info) {
 			// Check quantity
 				if (isset($this->request->post['quantity']) && ((float)$this->request->post['quantity'] >= $product_info['minimum'])) {
@@ -566,7 +566,7 @@ class ControllerCheckoutCart extends Controller {
 					}
 				// ---
 
-                // Add to cart                
+                // Add to cart
 				$this->cart->add($newProductId, $quantity, $packaging, $option, $recurring_id, $weight_variant);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));

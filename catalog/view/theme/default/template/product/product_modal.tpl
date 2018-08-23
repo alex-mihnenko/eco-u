@@ -61,11 +61,11 @@
                                         $price = floatval($price); 
 
                                         if(empty($weight_variants)) {
-                                            $quantity=1;
+                                            $price_quantity=1;
                                         }
                                         else{
                                             $arVariants = explode(',', $weight_variants);
-                                            $quantity=$arVariants[0];
+                                            $price_quantity=$arVariants[0];
                                         }
 
                                         $composit = 1;
@@ -74,10 +74,10 @@
 
                                         if(isset($composite_price)) {
                                             $format = (array)json_decode($composite_price);
-                                            if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                            if( $format[$price_quantity] ) { $composit = $format[$price_quantity]; }
                                         }
                                         
-                                        $total = round($composit * $quantity * $price);
+                                        $total = round($composit * $price_quantity * $price);
 
                                         if($total > 999) $currency = ' р';
                                     ?>
@@ -176,11 +176,11 @@
                                         else { $price = floatval($price); }
 
                                         if(empty($weight_variants)) {
-                                            $quantity=1;
+                                            $price_quantity=1;
                                         }
                                         else{
                                             $arVariants = explode(',', $weight_variants);
-                                            $quantity=$arVariants[0];
+                                            $price_quantity=$arVariants[0];
                                         }
 
                                         $composit = 1;
@@ -189,11 +189,11 @@
 
                                         if(isset($composite_price)) {
                                             $format = (array)json_decode($composite_price);
-                                            if( $format[$quantity] ) { $composit = $format[$quantity]; }
+                                            if( $format[$price_quantity] ) { $composit = $format[$price_quantity]; }
                                         }
                                         
 
-                                        $total = round($composit * $quantity * $price);
+                                        $total = round($composit * $price_quantity * $price);
                                     ?>
                                     <?php echo $total; ?> <?php echo $currency; ?>
                                 </div>
@@ -205,12 +205,40 @@
                         <?php if($quantity > 0 || ($quantity <= 0 && $stock_status_id == 7)) { ?>
                             <button class="c-p_submit">Добавить в корзину</button>
                         <?php } elseif($quantity <= 0 && $stock_status_id == 6) { ?>
-                            <button class="c-p_submit navl">Ожидаем поставку<?php if(!empty($available_in_time)) { ?> через <?php echo $available_in_time; } ?></button>
+                            <button class="c-p_submit navl">Добавить в корзину</button>
                         <?php } elseif($quantity <= 0 && $stock_status_id == 5) { ?>
                             <button class="c-p_submit sold">Нет в наличии</button>
                         <?php } ?>
 
                         <hr class="indent md">
+
+                        <?php if( $quantity <= 0 && $stock_status_id == 6 ) { ?>
+                            <?php if(!empty($available_in_time)) { ?>
+                                
+                                <?php
+                                    $available_day = intval($available_in_time);
+
+                                    if( $available_day == 1 ){
+                                        $available_postfix = 'день';
+                                    }
+                                    else if( $available_day > 1 && $available_day < 5 ){
+                                        $available_postfix = 'дня';
+                                    }
+                                    else if( $available_day >= 5 && $available_day <= 20 ){
+                                        $available_postfix = 'дней';
+                                    }
+                                    else {
+                                        $available_day_last = intval(substr($available_in_time, -1));
+
+                                        if( $available_day_last == 1 ) { $available_postfix = 'день'; } 
+                                        else if( $available_day_last > 1 && $available_day_last < 5 )  { $available_postfix = 'дня'; }
+                                        else { $available_postfix = 'дней'; }
+                                    }
+                                ?>
+
+                                <div class="c-p_txt">Ожидаем поставку: <span style="font-weight:400;">через <?php echo $available_day; ?> <?php echo $available_postfix; ?></span></div>
+                            <?php } ?>
+                        <?php } ?>
 
                         <?php if( $location != '' ) { ?>
                             <div class="c-p_txt">Регион поставки: <span style="font-weight:400;"><?php echo $location; ?></span></div>
