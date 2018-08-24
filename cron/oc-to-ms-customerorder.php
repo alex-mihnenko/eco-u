@@ -1,7 +1,7 @@
 <?php
 // Init
 	set_time_limit(0);
-	
+
 	include("../_lib.php");
 
 	$log = [];
@@ -20,7 +20,7 @@
 		o.order_status_id 
 		FROM ms_demand msd 
 		LEFT JOIN ".DB_PREFIX."order o ON msd.order_id = o.order_id
-		WHERE msd.order_id>'0' AND msd.ms_customer_order_status='0' AND o.order_status_id=5 GROUP BY msd.order_id ORDER BY msd.demand_id DESC LIMIT 100;
+		WHERE msd.order_id>'0' AND msd.ms_customer_order_status='0' AND o.order_status_id=5 GROUP BY msd.order_id ORDER BY msd.demand_id DESC LIMIT 50;
     ";
 
 	$rows_demand = $db->query($q);
