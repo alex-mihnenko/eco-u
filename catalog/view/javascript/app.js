@@ -1628,6 +1628,7 @@ $(document).ready(function() {
 					                ymaps.route([this_coordinates[0],endPoint]).then(function (res) {
 					                	// ---
 						                	var deliverydistance = Math.ceil(res.properties._data.RouterRouteMetaData.length / 1000);
+						                	console.log('Delivery distance is ' + deliverydistance);
 						                	$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 
 						                	callback();
@@ -1646,6 +1647,8 @@ $(document).ready(function() {
 				                }
 				                else {
 				                	// ---
+									  	console.log("Yandex can not create route");
+
 				                		var deliverydistance = -1;
 										$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 

@@ -815,7 +815,7 @@ class ControllerAjaxIndex extends Controller {
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
 
           $address = $this->request->post['address'];
-          $deliverydistance = $this->request->post['deliverydistance'];
+          $deliverydistance = floatval($this->request->post['deliverydistance']);
 
           $response = new stdClass();
 
@@ -869,6 +869,10 @@ class ControllerAjaxIndex extends Controller {
           if( $deliverydistance == -1 ){
             if( isset($result['data'][0][0]['beltway_distance']) ) {
               $response->tobeltway = intval($result['data'][0][0]['beltway_distance']);
+              $this->session->data['shipping_custom_field'] = 'Внимание! Расчет стоимости доставки произведен не точно. Необходима проверка.';
+            }
+            else {
+              $response->tobeltway = 0;
               $this->session->data['shipping_custom_field'] = 'Внимание! Расчет стоимости доставки произведен не точно. Необходима проверка.';
             }
           }
