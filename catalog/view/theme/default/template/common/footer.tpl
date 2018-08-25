@@ -31,6 +31,41 @@
         </div>
     </footer>
 
+    <!-- Modals -->
+        <div class="modal" data-marker="modal-coupon">
+            <div class="body md">
+                <button class="close"></button>
+
+                <div class="flex flex-row flex-center">
+                    <div class="flex-col image"></div>
+
+                    <div class="flex-col content">
+                        <hr class="indent md">
+
+                        <h1>СКИДКА 200 р<br>на первый заказ</h1>
+                        <hr class="indent md">
+
+                        <form class="coupon-form" method="post" action="index.php">
+                            <label>введите телефон</label>
+                            <hr class="indent xxs">
+
+                            <input class="form-control" name="phone" value="" placeholder="" required="" />
+                            <hr class="indent sm">
+
+                            <button class="btn btn-orange btn-sm" type="submit">Получить SMS c кодом на скидку</button>
+                        </form>
+
+                        <div class="message"><label>...</label></div>
+
+                        <hr class="indent sm">
+                    </div>
+                </div>
+            </div>
+
+            <div class="overlay"></div>
+        </div>
+    <!-- End Modals -->
+
     <?php foreach ($scripts as $script) { ?>
     <script src="<?php echo $script; ?>" type="text/javascript"></script>
     <?php } ?>

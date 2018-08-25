@@ -435,6 +435,7 @@ class ControllerCommonCart extends Controller {
             }
 
             $this->load->model('checkout/order');
+
             // Check discount
                 $data['discount'] = 0;
                 $data['discount_percentage'] = 0;
@@ -495,22 +496,51 @@ class ControllerCommonCart extends Controller {
                 } else {
                     // ---
                         $coupon = $this->customer->getCouponDiscount();
-                        $couponDiscount = $coupon['discount']/100*$this->cart->getTotal();
-                        $couponPercentage = intval($coupon['discount']);
 
-                        if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
-                            $data['discount'] = $couponDiscount;
-                            $data['discount_percentage'] = $couponPercentage;
-                        }
-                        else{
-                            if( $personal_discount_percentage > $cumulative_discount_percentage ) {
-                                $data['discount'] = $personal_discount;
-                                $data['discount_percentage'] = $personal_discount_percentage;
-                            }
-                            else{
-                                $data['discount'] = $cumulative_discount;
-                                $data['discount_percentage'] = $cumulative_discount_percentage;
-                            }
+                        if($coupon['type'] == 'P') {
+                            // ---
+                                $couponDiscount = $coupon['discount'] / 100 * $this->cart->getTotal();
+                                $couponPercentage = intval($coupon['discount']);
+
+                                if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $couponDiscount;
+                                    $data['discount_percentage'] = $couponPercentage;
+
+                                    $data['coupon'] = true;
+                                }
+                                else{
+                                    if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                        $data['discount'] = $personal_discount;
+                                        $data['discount_percentage'] = $personal_discount_percentage;
+                                    }
+                                    else{
+                                        $data['discount'] = $cumulative_discount;
+                                        $data['discount_percentage'] = $cumulative_discount_percentage;
+                                    }
+                                }
+                            // ---
+                        } else if($coupon['type'] == 'F') {
+                            // ---
+                                $couponDiscount = intval($coupon['discount']);
+                                $couponPercentage = $couponDiscount * 100 / $this->cart->getTotal();
+
+                                if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $couponDiscount;
+                                    $data['discount_percentage'] = $couponPercentage;
+
+                                    $data['coupon'] = true;
+                                }
+                                else{
+                                    if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                        $data['discount'] = $personal_discount;
+                                        $data['discount_percentage'] = $personal_discount_percentage;
+                                    }
+                                    else{
+                                        $data['discount'] = $cumulative_discount;
+                                        $data['discount_percentage'] = $cumulative_discount_percentage;
+                                    }
+                                }
+                            // ---
                         }
                     // ---
                 }

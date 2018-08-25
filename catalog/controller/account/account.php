@@ -230,24 +230,30 @@ class ControllerAccountAccount extends Controller {
                     // ---
                 } else {
                     // ---
-                      $coupon = $this->customer->getCouponDiscount();
+                        $coupon = $this->customer->getCouponDiscount();
 
-                      $couponDiscount = floor($coupon['discount']/100*$this->cart->getTotal());
-                      $couponPercentage = $coupon['discount'];
+                        if($coupon['type'] == 'P') {
+                            // ---
+                                $couponDiscount = $coupon['discount'] / 100 * $this->cart->getTotal();
+                                $couponPercentage = intval($coupon['discount']);
 
-                      if( $couponPercentage > $this->session->data['personal_discount_percentage']  && $couponPercentage > $this->session->data['cumulative_discount_percentage'] ) {
-                            $data['discount'] = $couponDiscount;
-                            $data['discount_percentage'] = $couponPercentage;
-                        }
-                        else{
-                            if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
-                                $data['discount'] = $this->session->data['personal_discount'];
-                                $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
-                            }
-                            else{
-                                $data['discount'] = $this->session->data['cumulative_discount'];
-                                $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
-                            }
+                                if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $couponDiscount;
+                                    $data['discount_percentage'] = $couponPercentage;
+
+                                    $data['coupon'] = true;
+                                }
+                                else{
+                                    if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                        $data['discount'] = $personal_discount;
+                                        $data['discount_percentage'] = $personal_discount_percentage;
+                                    }
+                                    else{
+                                        $data['discount'] = $cumulative_discount;
+                                        $data['discount_percentage'] = $cumulative_discount_percentage;
+                                    }
+                                }
+                            // ---
                         }
                     // ---
                 }

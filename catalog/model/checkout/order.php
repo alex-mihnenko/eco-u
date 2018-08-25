@@ -909,6 +909,22 @@ class ModelCheckoutOrder extends Model {
         if( $this->session->data['coupon'] == true  ){
         	if(isset($this->session->data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'coupon', 'Скидка по купону', '".$this->session->data['discount']."', '2')");
         	if(isset($this->session->data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount_percentage', 'Процент скидки', '".$this->session->data['discount_percentage']."', '2')");
+        	
+        	// Check coupon
+        		if( isset($this->session->data['coupon_id']) ){
+        			// ---
+        				$sql = "
+							UPDATE `" . DB_PREFIX . "coupon` 
+							SET `status` = 0 
+				        	WHERE coupon_id = '" . (int)$this->session->data['coupon_id'] . "' AND uses_total = 1 AND uses_customer = 1
+						;";
+        				
+        				$this->db->query($sql);
+
+        				unset($this->session->data['coupon_id']);
+        			// ---
+        		}
+        	// ---
         }
         else {
         	if(isset($this->session->data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount', 'Скидка', '".$this->session->data['discount']."', '2')");

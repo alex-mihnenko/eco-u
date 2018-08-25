@@ -109,4 +109,59 @@ class ModelToolAddon extends Model {
 	        return true;
 		// ---
 	}
+
+
+
+	// Customer one off coupon
+		public function checkCustomerOneOffCoupon($phone) {
+			// ---
+				$sql = "
+					SELECT * FROM `".DB_PREFIX."customer` c 
+					LEFT JOIN `".DB_PREFIX."order` o ON c.customer_id = o.customer_id 
+					WHERE c.telephone='".$phone."'
+				;";
+
+				$query = $this->db->query($sql);
+
+				if($query->row) {
+		            return $query->row;
+		        } else {
+		            return false;
+		        }
+			// ---
+		}
+
+		public function createCustomerOneOffCoupon($phone, $coupon) {
+			// ---
+				$sql = "
+					DELETE FROM `".DB_PREFIX."coupon` 
+					WHERE name='".$phone."' AND `type` = 'F'
+				;";
+
+				$query = $this->db->query($sql);
+				
+
+				$sql = "
+					INSERT INTO `".DB_PREFIX."coupon` SET 
+					`name` = '".$phone."',
+					`code` = '".$coupon."',
+					`type` = 'F',
+					`discount` = '200.0000',
+					`logged` = '0',
+					`shipping` = '0',
+					`total` = '0.0000',
+					`date_start` = 'NOW()',
+					`date_end` = '".date("Y-m-d", (time()+7776000))."',
+					`uses_total` = '1',
+					`uses_customer` = '1',
+					`status` = '1',
+					`date_added` = 'NOW()'
+				;";
+
+				$query = $this->db->query($sql);
+				
+		        return true;
+			// ---
+		}
+	// ---
 }

@@ -6,436 +6,447 @@ class ControllerAjaxIndex extends Controller {
 
   // Customers
     // Registration
-    public function ajaxRegisterCustomer() {
-          $arRequest = $this->request->post;
-          $arUser['firstname'] = '';
-          $arUser['lastname'] = '';
-          $arUser['fax'] = '';
-          $arUser['company'] = '';
-          $arUser['address_1'] = '';
-          $arUser['address_2'] = '';
-          $arUser['city'] = '';
-          $arUser['postcode'] = '';
-          $arUser['country_id'] = 0;
-          $arUser['zone_id'] = 0;
-          $arUser['telephone'] = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
-          $arUser['password'] = $arRequest['pass'];
-          $arUser['email'] = $arUser['telephone'].'@eco-u.ru';
-          
-          $this->load->model('account/customer');
-          $customer_id = $this->model_account_customer->addCustomer($arUser);
-          return $customer_id;
-    }
+      public function ajaxRegisterCustomer() {
+            $arRequest = $this->request->post;
+            $arUser['firstname'] = '';
+            $arUser['lastname'] = '';
+            $arUser['fax'] = '';
+            $arUser['company'] = '';
+            $arUser['address_1'] = '';
+            $arUser['address_2'] = '';
+            $arUser['city'] = '';
+            $arUser['postcode'] = '';
+            $arUser['country_id'] = 0;
+            $arUser['zone_id'] = 0;
+            $arUser['telephone'] = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
+            $arUser['password'] = $arRequest['pass'];
+            $arUser['email'] = $arUser['telephone'].'@eco-u.ru';
+            
+            $this->load->model('account/customer');
+            $customer_id = $this->model_account_customer->addCustomer($arUser);
+            return $customer_id;
+      }
+    // ---
     
     // SMS Confirm
-    public function ajaxSendConfirmationSms() {
-          $this->load->model('sms/confirmation');
-          $arRequest = $this->request->post;
-          $phone = $arRequest['telephone'];
-          $phoneFormat = str_replace(Array('(', ')', '+', '-', ' '), '', $phone);
-          if(!empty($phoneFormat))
-          {
-              $code = substr(str_replace('.', '', hexdec(md5(time()+$phone))), 0, 6);
-              $message = str_replace('[REPLACE]', $code, $this->config->get('config_sms_confirmation_text'));
-              $this->model_sms_confirmation->addCode($code, time()+300);
-              $this->model_sms_confirmation->clearOldCodes();
-              $result = json_decode($this->model_sms_confirmation->sendSMS($phoneFormat, $message));
-              if($result->status == 'success')
-              {
-                  echo json_encode(Array('status' => 'success'));
-              }
-              else
-              {
-                  echo json_encode(Array('status' => 'error'));
-              }
-          }
-    }
+      public function ajaxSendConfirmationSms() {
+            $this->load->model('sms/confirmation');
+            $arRequest = $this->request->post;
+            $phone = $arRequest['telephone'];
+            $phoneFormat = str_replace(Array('(', ')', '+', '-', ' '), '', $phone);
+            if(!empty($phoneFormat))
+            {
+                $code = substr(str_replace('.', '', hexdec(md5(time()+$phone))), 0, 6);
+                $message = str_replace('[REPLACE]', $code, $this->config->get('config_sms_confirmation_text'));
+                $this->model_sms_confirmation->addCode($code, time()+300);
+                $this->model_sms_confirmation->clearOldCodes();
+                $result = json_decode($this->model_sms_confirmation->sendSMS($phoneFormat, $message));
+                if($result->status == 'success')
+                {
+                    echo json_encode(Array('status' => 'success'));
+                }
+                else
+                {
+                    echo json_encode(Array('status' => 'error'));
+                }
+            }
+      }
+    // ---
     
     // Check registration
-    public function ajaxValidateRegistration() {
-        
-          $this->load->model('sms/confirmation');
-          $arRequest = $this->request->post;
-          $phone = $arRequest['telephone'];
-          $password = $arRequest['pass'];
-          $code = $arRequest['smscode'];
+      public function ajaxValidateRegistration() {
           
-          //$this->model_sms_confirmation->clearOldCodes();
-          $valid = $this->model_sms_confirmation->validateCode($code);
-          if($valid === 0)
-          {
-              echo json_encode(Array('status' => 'error'));
-          }
-          else
-          {
-              $customer_id = $this->ajaxRegisterCustomer();
-              if($customer_id) {
-                  $this->customer->loginByPhone($phone, $password);
-                  echo json_encode(Array('status' => 'success', 'customer_id' => $customer_id));
-              } else {
-                  echo json_encode(Array('status' => 'error'));
-              }
-          }
-    }
-    
+            $this->load->model('sms/confirmation');
+            $arRequest = $this->request->post;
+            $phone = $arRequest['telephone'];
+            $password = $arRequest['pass'];
+            $code = $arRequest['smscode'];
+            
+            //$this->model_sms_confirmation->clearOldCodes();
+            $valid = $this->model_sms_confirmation->validateCode($code);
+            if($valid === 0)
+            {
+                echo json_encode(Array('status' => 'error'));
+            }
+            else
+            {
+                $customer_id = $this->ajaxRegisterCustomer();
+                if($customer_id) {
+                    $this->customer->loginByPhone($phone, $password);
+                    echo json_encode(Array('status' => 'success', 'customer_id' => $customer_id));
+                } else {
+                    echo json_encode(Array('status' => 'error'));
+                }
+            }
+      }
+    // ---
+      
     // Check new password
-    public function ajaxValidateNewPassword() {
-        
-          $this->load->model('sms/confirmation');
-          $arRequest = $this->request->get;
-          $phoneFormat = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
-          $password = $arRequest['password'];
+      public function ajaxValidateNewPassword() {
           
-          $valid = $this->model_sms_confirmation->validateCode($password);
-          if($valid === 0)
-          {
-              echo json_encode(Array('status' => 'error'));
-          }
-          else
-          {
-              $result = $this->customer->getByPhone($phoneFormat);
-              if(isset($result['customer_id'])) {
-                  $this->customer->setPassword($password, $result['customer_id']);
-                  $this->customer->loginByPhone($phoneFormat, $password);
-                  echo json_encode(Array('status' => 'success'));
-              } else {
-                  echo json_encode(Array('status' => 'error'));
-              }
-          }
-    }
-  
+            $this->load->model('sms/confirmation');
+            $arRequest = $this->request->get;
+            $phoneFormat = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
+            $password = $arRequest['password'];
+            
+            $valid = $this->model_sms_confirmation->validateCode($password);
+            if($valid === 0)
+            {
+                echo json_encode(Array('status' => 'error'));
+            }
+            else
+            {
+                $result = $this->customer->getByPhone($phoneFormat);
+                if(isset($result['customer_id'])) {
+                    $this->customer->setPassword($password, $result['customer_id']);
+                    $this->customer->loginByPhone($phoneFormat, $password);
+                    echo json_encode(Array('status' => 'success'));
+                } else {
+                    echo json_encode(Array('status' => 'error'));
+                }
+            }
+      }
+    // ---
+    
     // Set new password    
-    public function ajaxSetPassword() {
-        $arRequest = $this->request->get;
-        $password = $arRequest['password'];
-        $cid = 17;
-        $this->customer->setPassword($password, $cid);
-    }
+      public function ajaxSetPassword() {
+          $arRequest = $this->request->get;
+          $password = $arRequest['password'];
+          $cid = 17;
+          $this->customer->setPassword($password, $cid);
+      }
+    // ---
 
     // Registration
-    public function registrationCustomer() {
-      // ---
-        // Check
-          if( !isset($this->request->post['firstname']) && !isset($this->request->post['telephone']) ){
-            // ---
-              $response->status = 'error';
-              $response->message = 'Нет данных';
-              
-
-              echo json_encode($response);
-              exit;
-            // ---
-          }
+      public function registrationCustomer() {
         // ---
+          // Check
+            if( !isset($this->request->post['firstname']) && !isset($this->request->post['telephone']) ){
+              // ---
+                $response->status = 'error';
+                $response->message = 'Нет данных';
+                
 
-        // Init
-          $firstname = $this->request->post['firstname'];
+                echo json_encode($response);
+                exit;
+              // ---
+            }
+          // ---
+
+          // Init
+            $firstname = $this->request->post['firstname'];
+            $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+
+            $response = new stdClass();
+          // ---
+
+          // Create customer
+            $this->load->model('account/customer');
+            $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+            if( empty($customer) ) {
+              // Create new customer
+                $password = $this->model_account_customer->generatePassword();
+
+                $customer_data = array(
+                  'firstname' => $firstname,
+                  'lastname' => '',
+                  'email' => '',
+                  'telephone' => $telephone,
+                  'fax' => '',
+                  'password' => $password,
+                  'address_1' => ''
+                );
+
+                $customer_id = $this->model_account_customer->addCustomer($customer_data);
+              // ---
+
+              // SMS alert
+                $this->load->model('sms/confirmation');
+                $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
+                $this->model_sms_confirmation->sendSMS($telephone, $message);
+              // ---
+            }
+            else{
+              // ---
+                $response->status = 'error';
+                $response->message = 'Вы уже зарегистрированы';
+
+                echo json_encode($response);
+                exit;
+              // ---
+            }
+          // ---
+
+          // Response
+          $response->status = 'success';
+          $response->message = 'Успешно!<br>Мы отправили Вам SMS с паролем.';
+          
+
+          echo json_encode($response);
+          exit;
+
+        // ---
+      }
+    // ---
+
+    // Login
+      public function ajaxLoginByPhone() {
+          //$arUser = $this->request->post;
+          //$phone = str_replace(Array('(', ')', '+', '-', ' '), '', $arUser['telephone']);
+          //$password = $arUser['password'];
+
           $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+          $password =$this->request->post['password'];
 
-          $response = new stdClass();
-        // ---
+          if(!empty($password)) {
+              $response = Array('status' => 'success', 'message' => '');
+              $locked = '';
 
-        // Create customer
+              if($this->customer->loginByPhone($telephone, $password, false, $locked)) {
+                echo json_encode($response);
+              }
+              else {
+                  if($locked) {
+                      if($locked == 1) {
+                          $m = 'минуту';
+                      } elseif($locked < 5) {
+                          $m = 'минуты';
+                      } else {
+                          $m = 'минут';
+                      }
+                      $message = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
+                  } else {
+                      $message = 'Не верный номер или пароль';
+                  }
+
+                  echo json_encode(Array('status' => 'error', 'message' => $message));
+              }
+          }
+      }
+    // ---
+    
+    // Logout
+      public function ajaxLogout() {
+          $this->customer->logout();
+          $this->response->setOutput(json_encode(Array('status' => 'success')));
+      }
+    // ---
+
+    // Recovery password
+      public function recoveryPasswordByTelephone() {
+        // Init
+            $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+
+            $response = new stdClass();
+          // ---
+
+        // Check customer
           $this->load->model('account/customer');
           $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
 
           if( empty($customer) ) {
-            // Create new customer
+            $response->status = 'error';
+            $response->message = 'Не верный телефон';
+            echo json_encode($response);
+            exit;
+          }
+          else {
+            // Create new password
               $password = $this->model_account_customer->generatePassword();
-
-              $customer_data = array(
-                'firstname' => $firstname,
-                'lastname' => '',
-                'email' => '',
-                'telephone' => $telephone,
-                'fax' => '',
-                'password' => $password,
-                'address_1' => ''
-              );
-
-              $customer_id = $this->model_account_customer->addCustomer($customer_data);
+              $this->model_account_customer->editPassword($telephone,$password);
             // ---
-
+            
             // SMS alert
               $this->load->model('sms/confirmation');
               $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
               $this->model_sms_confirmation->sendSMS($telephone, $message);
             // ---
           }
-          else{
-            // ---
-              $response->status = 'error';
-              $response->message = 'Вы уже зарегистрированы';
 
-              echo json_encode($response);
-              exit;
-            // ---
-          }
-        // ---
+          // Response
+          $response->status = 'success';
+          $response->message = 'Мы отправили Вам SMS с паролем';
+          
 
-        // Response
-        $response->status = 'success';
-        $response->message = 'Успешно!<br>Мы отправили Вам SMS с паролем.';
-        
-
-        echo json_encode($response);
-        exit;
-
-      // ---
-    }
-    
-    // Login
-    public function ajaxLoginByPhone() {
-        //$arUser = $this->request->post;
-        //$phone = str_replace(Array('(', ')', '+', '-', ' '), '', $arUser['telephone']);
-        //$password = $arUser['password'];
-
-        $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
-        $password =$this->request->post['password'];
-
-        if(!empty($password)) {
-            $response = Array('status' => 'success', 'message' => '');
-            $locked = '';
-
-            if($this->customer->loginByPhone($telephone, $password, false, $locked)) {
-              echo json_encode($response);
-            }
-            else {
-                if($locked) {
-                    if($locked == 1) {
-                        $m = 'минуту';
-                    } elseif($locked < 5) {
-                        $m = 'минуты';
-                    } else {
-                        $m = 'минут';
-                    }
-                    $message = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
-                } else {
-                    $message = 'Не верный номер или пароль';
-                }
-
-                echo json_encode(Array('status' => 'error', 'message' => $message));
-            }
-        }
-    }
-    
-    // Logout
-    public function ajaxLogout() {
-        $this->customer->logout();
-        $this->response->setOutput(json_encode(Array('status' => 'success')));
-    }
-
-    // Recovery password
-    public function recoveryPasswordByTelephone() {
-      // Init
-          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
-
-          $response = new stdClass();
-        // ---
-
-      // Check customer
-        $this->load->model('account/customer');
-        $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
-
-        if( empty($customer) ) {
-          $response->status = 'error';
-          $response->message = 'Не верный телефон';
           echo json_encode($response);
           exit;
-        }
-        else {
-          // Create new password
-            $password = $this->model_account_customer->generatePassword();
-            $this->model_account_customer->editPassword($telephone,$password);
-          // ---
-          
-          // SMS alert
-            $this->load->model('sms/confirmation');
-            $message = str_replace('[REPLACE]', $password, $this->config->get('config_sms_password_new_text'));
-            $this->model_sms_confirmation->sendSMS($telephone, $message);
-          // ---
-        }
-
-        // Response
-        $response->status = 'success';
-        $response->message = 'Мы отправили Вам SMS с паролем';
-        
-
-        echo json_encode($response);
-        exit;
-      // ---
-    }
+        // ---
+      }
+    // ---
 
     // Get customer
-    public function getCustomerByTelephone() {
-      // ---
-        // Init
-          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
-          
-          $response = new stdClass();
+      public function getCustomerByTelephone() {
         // ---
+          // Init
+            $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+            
+            $response = new stdClass();
+          // ---
 
-        // Get
-          $this->load->model('account/customer');
+          // Get
+            $this->load->model('account/customer');
+            
+            $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
+
+            if( empty($customer) ){
+              $response->result = false;
+              $response->message = 'Пользователь не найден';
+            }
+            else{
+              $response->result = true;
+              $response->message = 'Пользователь найден';
+
+              $response->customer = $customer;
+              $response->addresses = $this->model_account_customer->getAddresses($customer['customer_id']);
+            }
+          // ---
+
+          // Response
+          $response->status = 'success';
           
-          $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
-
-          if( empty($customer) ){
-            $response->result = false;
-            $response->message = 'Пользователь не найден';
-          }
-          else{
-            $response->result = true;
-            $response->message = 'Пользователь найден';
-
-            $response->customer = $customer;
-            $response->addresses = $this->model_account_customer->getAddresses($customer['customer_id']);
-          }
+          echo json_encode($response);
+          exit;
         // ---
-
-        // Response
-        $response->status = 'success';
-        
-        echo json_encode($response);
-        exit;
-      // ---
-    } 
+      }
+    // ---
 
     // Apply coupon
-    public function ajaxApplyCoupon() {
-      // ---
-        // Init
-          $code = $this->request->post['code'];
-          $response = new stdClass();
+      public function ajaxApplyCoupon() {
         // ---
+          // Init
+            $code = $this->request->post['code'];
+            $response = new stdClass();
+          // ---
 
 
-        // Processing
-        if(isset($code)) {
-          $this->load->model('extension/total/coupon');
-          $coupon = $this->model_extension_total_coupon->getCoupon($code);
-          
-          if(!$coupon) {
+          // Processing
+          if(isset($code)) {
+            $this->load->model('extension/total/coupon');
+            $coupon = $this->model_extension_total_coupon->getCoupon($code);
+            
+            if(!$coupon) {
+              $response->status = 'error';
+              $response->message = 'Указан несуществующий купон';
+              echo json_encode($response);
+              exit;
+            }
+
+            if($coupon) {
+                $this->session->data['coupon'] = $coupon['code'];
+                $this->session->data['coupon_id'] = $coupon['coupon_id'];
+            } else {
+                unset($this->session->data['coupon']);
+                unset($this->session->data['coupon_id']);
+            }
+            
+            // Totals
+            $this->load->model('extension/extension');
+
+            $totals = array();
+            $taxes = $this->cart->getTaxes();
+            $total = 0;
+
+            // Because __call can not keep var references so we put them into an array. 
+            $total_data = array(
+              'totals' => &$totals,
+              'taxes'  => &$taxes,
+              'total'  => &$total
+            );
+
+            $sort_order = array();
+
+            $results = $this->model_extension_extension->getExtensions('total');
+
+            foreach ($results as $key => $value) {
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+            }
+
+            array_multisort($sort_order, SORT_ASC, $results);
+
+            foreach ($results as $result) {
+              if ($this->config->get($result['code'] . '_status')) {
+                      $this->load->model('extension/total/' . $result['code']);
+                      $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
+              }
+            }
+
+            $sort_order = array();
+
+            foreach ($totals as $key => $value) {
+              $sort_order[$key] = $value['sort_order'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $totals);  
+            
+            foreach($totals as $total) {
+                if($total['code'] == 'total') {
+                    $total_price = ceil($total["value"]);
+                    
+                    if(isset($this->session->data['coupon_id'])) {
+                        $customer_coupon = $this->customer->getCouponDiscount();
+                    }
+                    $html = '<div>'; // root
+                    if($customer_id = $this->customer->isLogged()) {
+                        $this->load->model('checkout/order');
+                        $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
+                        $customer_discount = $this->customer->getPersonalDiscount($customer_id, $orders);
+                        $html .= '<div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px; margin-top: -32px;display: none;">';
+                        $html .= 'Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;">' . -1 * (int)$customer_discount . '%</span>';
+                        $html .= '<input type="hidden" id="customer_discount" data-type="P" value="' . (int)$customer_discount . '">';
+                        $html .= '</div>';
+                    }
+
+                    $html .= '<div class="personal-coupon" style="height:50px;  margin-top: -32px; display: none;">';
+                    if(isset($customer_coupon)) {
+                        if($customer_coupon['type'] == 'P') {
+                            $cDcnt = (int)$totals[0]['value']*((int)$customer_coupon['discount']/100);
+                            $html .= 'Текущая скидка <span class="p-o_discount sticker_discount b-d_coupon_circle">' . -1*(int)$customer_coupon['discount'] . '%</span>';
+                        } elseif($customer_coupon['type'] == 'F') {
+                            $cDcnt = (int)$customer_coupon['discount'];
+                            $html .= 'Ваша скидка <span class="c-d_amount">' . (int)$customer_coupon['discount'] . '</span> руб';
+                        }
+                        $html .= '<input type="hidden" id="customer_coupon" data-type="' . $customer_coupon['type'] . '" value="' . (int)$customer_coupon['discount'] . '">';
+                    }
+                    $html .= '</div>';
+                    if(!isset($customer_coupon) && !isset($customer_discount)) {
+                            $html .= '<div class="b-d_coupon" style="display: none;">';
+                            $html .= 'Есть купон на скидку?';
+                            $html .= '</div>';
+                    } else {
+                            $html .= '<div class="b-d_coupon_discount" style="display: none;">';
+                            $html .= 'Увеличить скидку';
+                            $html .= '</div>';
+                    }
+                    $html .= '</div>'; // root
+
+
+                    $response->status = 'success';
+                    $response->message = 'Купон успешно применен';
+                    $response->coupon_id = $this->session->data['coupon_id'];
+
+                    //$response->total = (int)$this->cart->getOrderPrice();
+                    //$response->html = $html;
+                    //$discountValue = (int)$this->cart->getTotal() - $response['total'];
+                    //$response->discountValue = $discountValue;
+
+                    echo json_encode($response);
+                    exit;
+                }
+            }
+          } else {
             $response->status = 'error';
-            $response->message = 'Указан несуществующий купон';
+            $response->message = 'Введите купон купон';
             echo json_encode($response);
             exit;
           }
-
-          if($coupon) {
-              $this->session->data['coupon'] = $coupon['code'];
-              $this->session->data['coupon_id'] = $coupon['coupon_id'];
-          } else {
-              unset($this->session->data['coupon']);
-              unset($this->session->data['coupon_id']);
-          }
-          
-          // Totals
-          $this->load->model('extension/extension');
-
-          $totals = array();
-          $taxes = $this->cart->getTaxes();
-          $total = 0;
-
-          // Because __call can not keep var references so we put them into an array. 
-          $total_data = array(
-            'totals' => &$totals,
-            'taxes'  => &$taxes,
-            'total'  => &$total
-          );
-
-          $sort_order = array();
-
-          $results = $this->model_extension_extension->getExtensions('total');
-
-          foreach ($results as $key => $value) {
-                  $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-          }
-
-          array_multisort($sort_order, SORT_ASC, $results);
-
-          foreach ($results as $result) {
-            if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('extension/total/' . $result['code']);
-                    $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-            }
-          }
-
-          $sort_order = array();
-
-          foreach ($totals as $key => $value) {
-            $sort_order[$key] = $value['sort_order'];
-          }
-
-          array_multisort($sort_order, SORT_ASC, $totals);  
-          
-          foreach($totals as $total) {
-              if($total['code'] == 'total') {
-                  $total_price = ceil($total["value"]);
-                  
-                  if(isset($this->session->data['coupon_id'])) {
-                      $customer_coupon = $this->customer->getCouponDiscount();
-                  }
-                  $html = '<div>'; // root
-                  if($customer_id = $this->customer->isLogged()) {
-                      $this->load->model('checkout/order');
-                      $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
-                      $customer_discount = $this->customer->getPersonalDiscount($customer_id, $orders);
-                      $html .= '<div class="personal-discount" style="position:relative;color:#666;font-size:18px;font-weight:700;height:50px;line-height:50px; margin-top: -32px;display: none;">';
-                      $html .= 'Текущая скидка <span class="p-o_discount sticker_discount" style="position:relative;top:0;left:10px;display:inline-block;width:40px;height:40px;line-height:40px;font-size:16px;">' . -1 * (int)$customer_discount . '%</span>';
-                      $html .= '<input type="hidden" id="customer_discount" data-type="P" value="' . (int)$customer_discount . '">';
-                      $html .= '</div>';
-                  }
-
-                  $html .= '<div class="personal-coupon" style="height:50px;  margin-top: -32px; display: none;">';
-                  if(isset($customer_coupon)) {
-                      if($customer_coupon['type'] == 'P') {
-                          $cDcnt = (int)$totals[0]['value']*((int)$customer_coupon['discount']/100);
-                          $html .= 'Текущая скидка <span class="p-o_discount sticker_discount b-d_coupon_circle">' . -1*(int)$customer_coupon['discount'] . '%</span>';
-                      } elseif($customer_coupon['type'] == 'F') {
-                          $cDcnt = (int)$customer_coupon['discount'];
-                          $html .= 'Ваша скидка <span class="c-d_amount">' . (int)$customer_coupon['discount'] . '</span> руб';
-                      }
-                      $html .= '<input type="hidden" id="customer_coupon" data-type="' . $customer_coupon['type'] . '" value="' . (int)$customer_coupon['discount'] . '">';
-                  }
-                  $html .= '</div>';
-                  if(!isset($customer_coupon) && !isset($customer_discount)) {
-                          $html .= '<div class="b-d_coupon" style="display: none;">';
-                          $html .= 'Есть купон на скидку?';
-                          $html .= '</div>';
-                  } else {
-                          $html .= '<div class="b-d_coupon_discount" style="display: none;">';
-                          $html .= 'Увеличить скидку';
-                          $html .= '</div>';
-                  }
-                  $html .= '</div>'; // root
-
-
-                  $response->status = 'success';
-                  $response->message = 'Купон успешно применен';
-                  $response->coupon_id = $this->session->data['coupon_id'];
-
-                  //$response->total = (int)$this->cart->getOrderPrice();
-                  //$response->html = $html;
-                  //$discountValue = (int)$this->cart->getTotal() - $response['total'];
-                  //$response->discountValue = $discountValue;
-
-                  echo json_encode($response);
-                  exit;
-              }
-          }
-        } else {
-          $response->status = 'error';
-          $response->message = 'Введите купон купон';
-          echo json_encode($response);
-          exit;
-        }
+          // ---
         // ---
-      // ---
-    }
+      }
+    // ---
 
     // About order
-       public function getAboutOrderModal() {
+      public function getAboutOrderModal() {
         // ---
           // Init
             $order_id = $this->request->post['order_id'];
@@ -560,25 +571,79 @@ class ControllerAjaxIndex extends Controller {
       }
     // ---
 
-    public function isCustomerLogged(){
-      // Init
-        $customer_id = $this->customer->isLogged();
+    // Check customer
+      public function isCustomerLogged(){
+        // Init
+          $customer_id = $this->customer->isLogged();
+          
+          $response = new stdClass();
+        // ---
         
-        $response = new stdClass();
-      // ---
-      
-      // Chech
-        if( !$customer_id ) { $status = false; }
-        else { $status = true; }
-      // ---
+        // Chech
+          if( !$customer_id ) { $status = false; }
+          else { $status = true; }
+        // ---
 
-      // Response
-      $response->status = $status;
-      
-      echo json_encode($response);
-      exit;
+        // Response
+        $response->status = $status;
+        
+        echo json_encode($response);
+        exit;
 
-    }
+      }
+    // ---
+
+    //  Coupons
+      public function createCustomerOneOffCoupon() {
+        // ---
+          // Init
+            $phone = preg_replace("/[^0-9,.]/", "", $this->request->post['phone']);
+            
+            $response = new stdClass();
+
+            $this->load->model('tool/addon');
+            $this->load->model('sms/confirmation');
+          // ---
+
+          // Get
+            $customer_info = $this->model_tool_addon->checkCustomerOneOffCoupon($phone);
+
+            if( $customer_info == false ) {
+              // Random number
+                $length = 4;
+                $rundomCoupon = '1ECO-';
+
+                for($i = 0; $i < $length; $i++) {
+                    $rundomCoupon .= mt_rand(0, 9);
+                }
+
+                $response->coupon = $rundomCoupon;
+              
+                $this->model_tool_addon->createCustomerOneOffCoupon($phone, $rundomCoupon);
+              // ---
+
+              // Semd SMS
+                $message = "Скидка 200 р. на первый заказ по купону ".$response->coupon." на сайте eco-u.ru";
+              
+                $this->model_sms_confirmation->sendSMS($phone, $message);
+              // ---
+
+              $response->message = 'Ваш купон отправлен в SMS';
+            }
+            else {
+              $response->message = 'К сожалению, Вы уже делали заказ';
+            }
+
+          // ---
+
+          // Response
+          $response->status = 'success';
+          
+          echo json_encode($response);
+          exit;
+        // ---
+      }
+    // ---
   // ---
 
   // Orders
@@ -1006,25 +1071,55 @@ class ControllerAjaxIndex extends Controller {
             } else {
                 // ---
                     $coupon = $this->customer->getCouponDiscount();
-                    $couponDiscount = $coupon['discount']/100*$this->cart->getTotal();
-                    $couponPercentage = round($coupon['discount']);
 
-                    if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
-                        $data['discount'] = $couponDiscount;
-                        $data['discount_percentage'] = $couponPercentage;
+                    if($coupon['type'] == 'P') {
+                        // ---
+                            $couponDiscount = $coupon['discount'] / 100 * $this->cart->getTotal();
+                            $couponPercentage = intval($coupon['discount']);
 
-                        $data['coupon'] = true;
+                            if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                $data['discount'] = $couponDiscount;
+                                $data['discount_percentage'] = $couponPercentage;
+
+                                $data['coupon'] = true;
+                            }
+                            else{
+                                if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $personal_discount;
+                                    $data['discount_percentage'] = $personal_discount_percentage;
+                                }
+                                else{
+                                    $data['discount'] = $cumulative_discount;
+                                    $data['discount_percentage'] = $cumulative_discount_percentage;
+                                }
+                            }
+                        // ---
+                    } else if($coupon['type'] == 'F') {
+                        // ---
+                            $couponDiscount = intval($coupon['discount']);
+                            $couponPercentage = $couponDiscount * 100 / $this->cart->getTotal();
+
+                            if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                $data['discount'] = $couponDiscount;
+                                $data['discount_percentage'] = $couponPercentage;
+
+                                $data['coupon'] = true;
+                            }
+                            else{
+                                if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $personal_discount;
+                                    $data['discount_percentage'] = $personal_discount_percentage;
+                                }
+                                else{
+                                    $data['discount'] = $cumulative_discount;
+                                    $data['discount_percentage'] = $cumulative_discount_percentage;
+                                }
+                            }
+                        // ---
                     }
-                    else{
-                        if( $personal_discount_percentage > $cumulative_discount_percentage ) {
-                            $data['discount'] = $personal_discount;
-                            $data['discount_percentage'] = $personal_discount_percentage;
-                        }
-                        else{
-                            $data['discount'] = $cumulative_discount;
-                            $data['discount_percentage'] = $cumulative_discount_percentage;
-                        }
-                    }
+                
+                  $this->session->data['coupon_id'] = $coupon['coupon_id'];
+                  $response->coupon_id = $this->session->data['coupon_id'];
                 // ---
             }
 
@@ -2572,7 +2667,6 @@ class ControllerAjaxIndex extends Controller {
       }
     // ---
   // ---
-
 
   // Not proccessed
     public function ajaxGetProducts() {

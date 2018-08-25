@@ -52,6 +52,20 @@ $(document).ready(function() {
 				// ---
 			}
 		// ---
+
+		// Modal coupon
+			var modalCouponFlag = Cookies.get('flags-modal-coupon');
+			
+			if( typeof modalCouponFlag == 'undefined' ){
+				// ---
+					Cookies.set('flags-modal-coupon', true, { expires: 30 });
+
+					setTimeout(function(){
+						$('.modal[data-marker="modal-coupon"]').modal('show');
+					}, 30000);
+				// ---
+			}
+		// ---
 		
 		// Nav
 			if( $(window).scrollTop() >= 50 ){ $('nav').attr('data-style', 'solid'); }
@@ -1391,6 +1405,38 @@ $(document).ready(function() {
 			});
 		// ---
 	// ---
+
+	// Modals
+		// Coupon
+			$('.modal form.coupon-form').submit(function(){
+				console.log('Modal coupon - Check customer phone');
+
+				var form = $(this);
+				var modal = $(this).parents('.modal');
+
+				var phone = form.find('input[name="phone"]').val();
+
+				$.post('/?route=ajax/index/createCustomerOneOffCoupon', {phone:phone}, function(data){
+					// ---
+						form.attr('data-visible', 'false');
+
+						modal.find('.message label').text(data.message);
+						modal.find('.message').attr('data-visible', 'true');
+
+						setTimeout(function(){
+							form.attr('data-visible', 'true');
+							modal.find('.message label').text('...');
+							modal.find('.message').attr('data-visible', 'false');
+						},5000);
+
+						return false;
+					// ---
+				}, 'json');
+				
+				return false;
+			});
+		// ---
+	// ---
 });
 
 // General
@@ -1950,6 +1996,31 @@ $(document).ready(function() {
 // ---
 
 // Components
+	// Modal
+		// $('.modal[data-marker="modal-coupon"]').modal('show');
+
+		jQuery.fn.modal = function (method) {
+			switch (method) {
+				case 'show':
+					// ---
+						$(this).css('display','flex');
+
+						$(this).find('.close, .overlay').on('click', function(){
+							console.log('Modal close');
+							$(this).parents('.modal').modal('hide');
+						});
+					// ---
+				break;
+				
+				case 'hide':
+					// ---
+						$(this).css('display','none');
+					// ---
+				break;
+			}
+		}
+	// ---
+
 	// Tooltips
 		function initTooltips() {
 			// ---

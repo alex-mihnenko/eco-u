@@ -21,6 +21,37 @@ xxl
  */
 
 /* General */
+	/* Flex */
+		.flex {
+			display: flex;
+			width: 100%;
+			height: auto;
+		}
+
+		.flex-row { flex-direction: row; }
+		
+		.flex-center {
+			justify-content: center;
+			align-items: center;
+			align-content: center;
+		}
+
+		.flex-col {
+			display: flex;
+			/*-ms-flex-preferred-size: 0;
+			flex-basis: 0;
+			-ms-flex-positive: 1;
+			flex-grow: 1;
+			max-width: 100%;
+			min-height: 5px; */
+		}
+
+
+		@media (max-width: 575px) {
+			.flex-row { flex-direction: column; }
+		}
+	/* Flex */
+
 	.h2 {
 		font-size: 36px;
 	    font-weight: 500;
@@ -1840,6 +1871,314 @@ xxl
 		.grid-col.col-3 { width: 33.333333%; }
 	/* Grid */
 
+	/* Modal */
+		.modal {
+			display: none;
+			justify-content: center;
+		    align-items: center;
+		    align-content: center;
+
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			z-index: 1000000;
+		}
+
+		/* Body */
+			.modal .body {
+				display: flex;
+				position: relative;
+				z-index: 200;
+				overflow: hidden;
+
+				background-color: #739d3d;
+				border-radius: 8px;
+				box-shadow: 0px 0px 60px rgba(0,0,0,.25);
+				-webkit-box-shadow: 0px 0px 14px rgba(0,0,0,.25);
+			}
+
+			.modal .body.md {
+				width: 768px;
+				height: auto;
+			}
+
+			@media (max-width: 767px) {
+				.modal .body.md {
+					width: 95%;
+				}
+			}
+		/* Body */
+
+		/* Overlay */
+			.modal .overlay {
+				display: block;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100%;
+				z-index: 100;
+				background-color: rgba(0,0,0,.5);
+			}
+		/* Overlay */
+
+		/* Close */
+			.modal .close {
+			    display: block;
+			    position: absolute;
+			    left: auto;
+			    width: 24px;
+			    height: 24px;
+			    top: 10px;
+			    right: 10px;
+			    left: inherit;
+			    z-index: 100;
+			    box-sizing: border-box;
+
+			    background-color: transparent;
+			    border: none;
+			    cursor: pointer;
+			}
+
+			.modal .close:before,
+			.modal .close:after {
+				content: ' ';
+				position: absolute;
+				top: 0px;
+				left: 12px;
+				width: 1px;
+				height: 24px;
+				background-color: #FFFFFF;
+
+				-webkit-transition: background-color .25s;
+				-moz-transition: background-color .25s;
+				-ms-transition: background-color .25s;
+				-o-transition: background-color .25s;
+				transition: background-color .25s;
+
+				-webkit-transform-origin: 50% 50%;
+				-moz-transform-origin: 50% 50%;
+				-ms-transform-origin: 50% 50%;
+				-o-transform-origin: 50% 50%;
+				transform-origin: 50% 50%;
+			}
+
+			.modal .close:before {
+				-webkit-transform: rotate(45deg);
+				-moz-transform: rotate(45deg);
+				-ms-transform: rotate(45deg);
+				-o-transform: rotate(45deg);
+				transform: rotate(45deg);
+			}
+
+			.modal .close:after {
+				-webkit-transform: rotate(-45deg);
+				-moz-transform: rotate(-45deg);
+				-ms-transform: rotate(-45deg);
+				-o-transform: rotate(-45deg);
+				transform: rotate(-45deg);
+			}
+
+			.modal .close:hover:before,
+			.modal .close:hover:after {
+				background-color: #ECECEC;
+			}
+		/* Close */
+
+		/* Custom */
+			/* Coupon */
+				@media (max-width: 767px) {
+					.modal .body {
+						max-width: 400px;
+					}
+
+					.modal .flex-row {
+						flex-direction: column;
+					}
+				}
+
+				.modal[data-marker="modal-coupon"] .image {
+					height: 100%;
+					width: 40%;
+					background: url(/catalog/view/theme/default/img/modal/coupon-image.jpg) no-repeat center left scroll; 
+					-webkit-background-size: cover;
+					-moz-background-size: cover;
+					-o-background-size: cover;
+					background-size: cover;
+				}
+
+				@media (max-width: 767px) {
+					.modal[data-marker="modal-coupon"] .image {
+						width: 100%;
+						height: 200px;
+					}
+				}
+
+				.modal[data-marker="modal-coupon"] .content {
+					height: 100%;
+					width: 60%;
+
+					text-align: center;
+				}
+
+				@media (max-width: 767px) {
+					.modal[data-marker="modal-coupon"] .content {
+						height: auto;
+						width: 100%;
+					}
+				}
+
+
+				.modal[data-marker="modal-coupon"] .content h1 {
+				    font-weight: 500;
+				    color: #FFFFFF;
+				    font-size: 36px;
+				    line-height: 42px;
+				    text-align: center;
+				}
+
+				@media (max-width: 575px) {
+					.modal[data-marker="modal-coupon"] .content h1 {
+					    font-size: 28px;
+					    line-height: 34px;
+					}
+				}
+
+				.modal[data-marker="modal-coupon"] .content label {
+					color: #FFFFFF;
+					min-height: 20px;
+				}
+				
+				.modal[data-marker="modal-coupon"] .content .form-control {
+					color: #FFFFFF;
+				    text-align: center;
+				    padding: 0px;
+				    line-height: 31px;
+				}
+
+				.modal[data-marker="modal-coupon"] .content .btn {
+					max-width: 304px;
+				}
+
+				@media (max-width: 767px) {
+					.modal[data-marker="modal-coupon"] .content .btn {
+						width: 90%;
+					}
+				}
+
+				@media (max-width: 575px) {
+					.modal[data-marker="modal-coupon"] .content .btn {
+						font-size: 12px;
+					}
+				}
+
+				/* Animation */
+					.modal[data-marker="modal-coupon"] .coupon-form[data-visible="false"] {
+						-webkit-animation: modal-coupon-form-hide 1s forwards;
+						-moz-animation:    modal-coupon-form-hide 1s forwards;
+						-o-animation:      modal-coupon-form-hide 1s forwards;
+						animation:         modal-coupon-form-hide 1s forwards;
+					}
+
+					@-webkit-keyframes modal-coupon-form-hide {
+						0%   { opacity: 1; transform: translateY(0px); }
+						100% { opacity: 0; transform: translateY(-25px); }
+					}
+					@-moz-keyframes modal-coupon-form-hide {
+						0%   { opacity: 1; transform: translateY(0px); }
+						100% { opacity: 0; transform: translateY(-25px); }
+					}
+					@-o-keyframes modal-coupon-form-hide {
+						0%   { opacity: 1; transform: translateY(0px); }
+						100% { opacity: 0; transform: translateY(-25px); }
+					}
+					@keyframes modal-coupon-form-hide {
+						0%   { opacity: 1; transform: translateY(0px); }
+						100% { opacity: 0; transform: translateY(-25px); }
+					}
+
+					.modal[data-marker="modal-coupon"] .coupon-form[data-visible="true"] {
+						-webkit-animation: modal-coupon-form-show 1s forwards;
+						-moz-animation:    modal-coupon-form-show 1s forwards;
+						-o-animation:      modal-coupon-form-show 1s forwards;
+						animation:         modal-coupon-form-show 1s forwards;
+					}
+
+					@-webkit-keyframes modal-coupon-form-show {
+						0%   { opacity: 0; transform: translateY(-25px); }
+						100% { opacity: 1; transform: translateY(0px); }
+					}
+					@-moz-keyframes modal-coupon-form-show {
+						0%   { opacity: 0; transform: translateY(-25px); }
+						100% { opacity: 1; transform: translateY(0px); }
+					}
+					@-o-keyframes modal-coupon-form-show {
+						0%   { opacity: 0; transform: translateY(-25px); }
+						100% { opacity: 1; transform: translateY(0px); }
+					}
+					@keyframes modal-coupon-form-show {
+						0%   { opacity: 0; transform: translateY(-25px); }
+						100% { opacity: 1; transform: translateY(0px); }
+					}
+
+					.modal[data-marker="modal-coupon"] .message {
+						opacity: 0;
+					}
+					
+					.modal[data-marker="modal-coupon"] .message[data-visible="true"] {
+						-webkit-animation: modal-coupon-message-show 1s .25s forwards;
+						-moz-animation:    modal-coupon-message-show 1s .25s forwards;
+						-o-animation:      modal-coupon-message-show 1s .25s forwards;
+						animation:         modal-coupon-message-show 1s .25s forwards;
+					}
+
+					@-webkit-keyframes modal-coupon-message-show {
+						0%   { opacity: 0; transform: translateY(25px); }
+						100% { opacity: 1; transform: translateY(-25px); }
+					}
+					@-moz-keyframes modal-coupon-message-show {
+						0%   { opacity: 0; transform: translateY(25px); }
+						100% { opacity: 1; transform: translateY(-25px); }
+					}
+					@-o-keyframes modal-coupon-message-show {
+						0%   { opacity: 0; transform: translateY(25px); }
+						100% { opacity: 1; transform: translateY(-25px); }
+					}
+					@keyframes modal-coupon-message-show {
+						0%   { opacity: 0; transform: translateY(25px); }
+						100% { opacity: 1; transform: translateY(-25px); }
+					}
+
+					.modal[data-marker="modal-coupon"] .message[data-visible="false"] {
+						-webkit-animation: modal-coupon-message-hide 1s forwards;
+						-moz-animation:    modal-coupon-message-hide 1s forwards;
+						-o-animation:      modal-coupon-message-hide 1s forwards;
+						animation:         modal-coupon-message-hide 1s forwards;
+					}
+
+					@-webkit-keyframes modal-coupon-message-hide {
+						0%   { opacity: 1; transform: translateY(-25px); }
+						100% { opacity: 0; transform: translateY(25px); }
+					}
+					@-moz-keyframes modal-coupon-message-hide {
+						0%   { opacity: 1; transform: translateY(-25px); }
+						100% { opacity: 0; transform: translateY(25px); }
+					}
+					@-o-keyframes modal-coupon-message-hide {
+						0%   { opacity: 1; transform: translateY(-25px); }
+						100% { opacity: 0; transform: translateY(25px); }
+					}
+					@keyframes modal-coupon-message-hide {
+						0%   { opacity: 1; transform: translateY(-25px); }
+						100% { opacity: 0; transform: translateY(25px); }
+					}
+				/* Animation */
+			/* Coupon */
+		/* Custom */
+	/* Modal */
+
 	/* Buttons */
 		.btn {
 		    display: inline-block;
@@ -1872,6 +2211,13 @@ xxl
 
 		.btn:hover {
 			background: #83AA4F;
+		}
+
+		.btn.btn-orange {
+			background: #f17e46;
+		    border: none;
+		    border-radius: 100px;
+		    color: #FFFFFF;
 		}
 
 		.btn.btn-bordered {
