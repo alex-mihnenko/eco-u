@@ -44,7 +44,7 @@
 	if( $order->status == 'confim' || $order->status == 'send-to-assembling' ){ // Подтвержден или на сборку
 		$action = '#1';
 	}
-	else if( $order->status == 'delivering' ){ // Доставляется
+	else if( $order->status == 'delivering' || $order->status == 'send-to-delivery' || $order->status == 'complete' ){ // Доставляется или Доставлен или Завершен
 		$action = '#2';
 	}
 
