@@ -1429,7 +1429,15 @@ $(document).ready(function() {
 						modal.find('.message label').text(data.message);
 						modal.find('.message').attr('data-visible', 'true');
 
+						if( data.sended == true ) {
+							$('.adversting[data-target="modal-oneoff-coupon"]').remove();
+						}
+
 						setTimeout(function(){
+							if( data.sended == true ) {
+								$('.modal[data-marker="modal-oneoff-coupon"]').modal('hide');
+							}
+
 							form.attr('data-visible', 'true');
 							modal.find('.message label').text('...');
 							modal.find('.message').attr('data-visible', 'false');

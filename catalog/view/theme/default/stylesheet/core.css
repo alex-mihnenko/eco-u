@@ -2315,6 +2315,7 @@ xxl
 		@media (max-width: 575px) {
 			.btn {
 				width: 100%;
+				min-width: 80px;
 			}
 
 			.btn.btn-inline {

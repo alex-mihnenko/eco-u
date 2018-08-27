@@ -628,9 +628,11 @@ class ControllerAjaxIndex extends Controller {
                 $this->model_sms_confirmation->sendSMS($phone, $message);
               // ---
 
+              $response->sended = true;
               $response->message = 'Ваш купон отправлен в SMS';
             }
             else {
+              $response->sended = false;
               $response->message = 'К сожалению, Вы уже делали заказ';
             }
 
