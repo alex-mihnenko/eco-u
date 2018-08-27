@@ -918,9 +918,11 @@ class ControllerAjaxIndex extends Controller {
             }
             else if( isset($result['data'][0][0]['region']) && isset($result['data'][0][0]['region_type_full']) && $result['data'][0][0]['region_type_full'] == 'город' ) {
               $shipping_address_2['city'] = $result['data'][0][0]['region'];
+              $response->region = mb_strtolower($result['data'][0][0]['region']);
             }
             else {
               $shipping_address_2['region'] = $result['data'][0][0]['region'];
+              $response->region = mb_strtolower($result['data'][0][0]['region']);
             }
             
             if( isset($result['data'][0][0]['street']) ) { $shipping_address_2['street'] = $result['data'][0][0]['street']; }
