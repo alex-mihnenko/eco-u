@@ -121,9 +121,9 @@
 							;";
 
 							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer addresses ['.$customer_id.'] has been updated';
+							    $log[] = 'OC customer addresses ['.$row_order['customer_id'].'] has been updated';
 							} else {
-								$log[] = 'OC customer addresses ['.$order_id.'] has been not updated: '.$db->error;
+								$log[] = 'OC customer addresses ['.$row_order['order_id'].'] has been not updated: '.$db->error;
 							}
 						// ---
 
@@ -168,9 +168,9 @@
 							;";
 
 							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer addresses ['.$customer_id.'] has been updated';
+							    $log[] = 'OC customer addresses ['.$row_order['customer_id'].'] has been updated';
 							} else {
-								$log[] = 'OC customer addresses ['.$order_id.'] has been not updated: '.$db->error;
+								$log[] = 'OC customer addresses ['.$row_order['order_id'].'] has been not updated: '.$db->error;
 							}
 
 							$log[] = 'OC customer address ['.$row_order['customer_id'].'] already exist or empty';
