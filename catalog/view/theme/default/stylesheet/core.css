@@ -1988,7 +1988,7 @@ xxl
 		/* Close */
 
 		/* Custom */
-			/* Coupon */
+			/* Oneoff Coupon */
 				@media (max-width: 767px) {
 					.modal .body {
 						max-width: 400px;
@@ -1999,7 +1999,7 @@ xxl
 					}
 				}
 
-				.modal[data-marker="modal-coupon"] .image {
+				.modal[data-marker="modal-oneoff-coupon"] .image {
 					height: 100%;
 					width: 40%;
 					background: url(/catalog/view/theme/default/img/modal/coupon-image.jpg) no-repeat center left scroll; 
@@ -2010,13 +2010,13 @@ xxl
 				}
 
 				@media (max-width: 767px) {
-					.modal[data-marker="modal-coupon"] .image {
+					.modal[data-marker="modal-oneoff-coupon"] .image {
 						width: 100%;
 						height: 200px;
 					}
 				}
 
-				.modal[data-marker="modal-coupon"] .content {
+				.modal[data-marker="modal-oneoff-coupon"] .content {
 					height: 100%;
 					width: 60%;
 
@@ -2024,14 +2024,14 @@ xxl
 				}
 
 				@media (max-width: 767px) {
-					.modal[data-marker="modal-coupon"] .content {
+					.modal[data-marker="modal-oneoff-coupon"] .content {
 						height: auto;
 						width: 100%;
 					}
 				}
 
 
-				.modal[data-marker="modal-coupon"] .content h1 {
+				.modal[data-marker="modal-oneoff-coupon"] .content h1 {
 				    font-weight: 500;
 				    color: #FFFFFF;
 				    font-size: 36px;
@@ -2040,42 +2040,42 @@ xxl
 				}
 
 				@media (max-width: 575px) {
-					.modal[data-marker="modal-coupon"] .content h1 {
+					.modal[data-marker="modal-oneoff-coupon"] .content h1 {
 					    font-size: 28px;
 					    line-height: 34px;
 					}
 				}
 
-				.modal[data-marker="modal-coupon"] .content label {
+				.modal[data-marker="modal-oneoff-coupon"] .content label {
 					color: #FFFFFF;
 					min-height: 20px;
 				}
 				
-				.modal[data-marker="modal-coupon"] .content .form-control {
+				.modal[data-marker="modal-oneoff-coupon"] .content .form-control {
 					color: #FFFFFF;
 				    text-align: center;
 				    padding: 0px;
 				    line-height: 31px;
 				}
 
-				.modal[data-marker="modal-coupon"] .content .btn {
+				.modal[data-marker="modal-oneoff-coupon"] .content .btn {
 					max-width: 304px;
 				}
 
 				@media (max-width: 767px) {
-					.modal[data-marker="modal-coupon"] .content .btn {
+					.modal[data-marker="modal-oneoff-coupon"] .content .btn {
 						width: 90%;
 					}
 				}
 
 				@media (max-width: 575px) {
-					.modal[data-marker="modal-coupon"] .content .btn {
+					.modal[data-marker="modal-oneoff-coupon"] .content .btn {
 						font-size: 12px;
 					}
 				}
 
 				/* Animation */
-					.modal[data-marker="modal-coupon"] .coupon-form[data-visible="false"] {
+					.modal[data-marker="modal-oneoff-coupon"] .coupon-form[data-visible="false"] {
 						-webkit-animation: modal-coupon-form-hide 1s forwards;
 						-moz-animation:    modal-coupon-form-hide 1s forwards;
 						-o-animation:      modal-coupon-form-hide 1s forwards;
@@ -2099,7 +2099,7 @@ xxl
 						100% { opacity: 0; transform: translateY(-25px); }
 					}
 
-					.modal[data-marker="modal-coupon"] .coupon-form[data-visible="true"] {
+					.modal[data-marker="modal-oneoff-coupon"] .coupon-form[data-visible="true"] {
 						-webkit-animation: modal-coupon-form-show 1s forwards;
 						-moz-animation:    modal-coupon-form-show 1s forwards;
 						-o-animation:      modal-coupon-form-show 1s forwards;
@@ -2123,11 +2123,11 @@ xxl
 						100% { opacity: 1; transform: translateY(0px); }
 					}
 
-					.modal[data-marker="modal-coupon"] .message {
+					.modal[data-marker="modal-oneoff-coupon"] .message {
 						opacity: 0;
 					}
 					
-					.modal[data-marker="modal-coupon"] .message[data-visible="true"] {
+					.modal[data-marker="modal-oneoff-coupon"] .message[data-visible="true"] {
 						-webkit-animation: modal-coupon-message-show 1s .25s forwards;
 						-moz-animation:    modal-coupon-message-show 1s .25s forwards;
 						-o-animation:      modal-coupon-message-show 1s .25s forwards;
@@ -2151,7 +2151,7 @@ xxl
 						100% { opacity: 1; transform: translateY(-25px); }
 					}
 
-					.modal[data-marker="modal-coupon"] .message[data-visible="false"] {
+					.modal[data-marker="modal-oneoff-coupon"] .message[data-visible="false"] {
 						-webkit-animation: modal-coupon-message-hide 1s forwards;
 						-moz-animation:    modal-coupon-message-hide 1s forwards;
 						-o-animation:      modal-coupon-message-hide 1s forwards;
@@ -2178,6 +2178,65 @@ xxl
 			/* Coupon */
 		/* Custom */
 	/* Modal */
+
+	/* Adversting */
+		.adversting {
+			display: none;
+			position: fixed;
+			top: auto;
+			bottom: 0px;
+			left: 0px;
+			width: 100%;
+			height: auto;
+			overflow: hidden;
+			z-index: 10000;
+			opacity: 0;
+
+			text-decoration: none;
+
+			-webkit-transition: opacity .5s;
+			-moz-transition: opacity .5s;
+			-ms-transition: opacity .5s;
+			-o-transition: opacity .5s;
+			transition: opacity .5s;
+		}
+
+		.adversting[data-visible="true"] {
+			opacity: 1;
+		}
+
+		.adversting .body {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: auto;
+			box-sizing: border-box;
+			padding: 8px 0px;
+			background-color: #739d3d;
+
+			color: #FFFFFF;
+			text-align: center;
+			text-decoration: none;
+		}
+
+		.adversting .body .container {
+			display: block;
+			position: relative;
+			width: 100%;
+			max-width: 1420px;
+			height: auto;
+    		margin: 0 auto;
+		}
+
+
+		.adversting h2 {
+		    font-weight: 500;
+		    color: #FFFFFF;
+		    font-size: 16px;
+		    line-height: 24px;
+		    text-align: center;
+		}
+	/* Adversting */
 
 	/* Buttons */
 		.btn {

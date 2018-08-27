@@ -54,14 +54,14 @@ $(document).ready(function() {
 		// ---
 
 		// Modal coupon
-			var modalCouponFlag = Cookies.get('flags-modal-coupon');
+			var modalCouponFlag = Cookies.get('flags-modal-oneoff-coupon');
 			
 			if( typeof modalCouponFlag == 'undefined' ){
 				// ---
-					Cookies.set('flags-modal-coupon', true, { expires: 30 });
+					Cookies.set('flags-modal-oneoff-coupon', true, { expires: 30 });
 
 					setTimeout(function(){
-						$('.modal[data-marker="modal-coupon"]').modal('show');
+						$('.modal[data-marker="modal-oneoff-coupon"]').modal('show');
 					}, 30000);
 				// ---
 			}
@@ -1407,6 +1407,12 @@ $(document).ready(function() {
 	// ---
 
 	// Modals
+		$(document).on('click', '[data-action="modal"]', function(){
+			// ---
+				$('.modal[data-marker="'+$(this).attr('data-target')+'"]').modal('show');
+			// ---
+		});
+
 		// Coupon
 			$('.modal form.coupon-form').submit(function(){
 				console.log('Modal coupon - Check customer phone');
@@ -2007,7 +2013,15 @@ $(document).ready(function() {
 
 						$(this).find('.close, .overlay').on('click', function(){
 							console.log('Modal close');
+
 							$(this).parents('.modal').modal('hide');
+
+							if( $(this).parents('.modal').attr('data-marker') == 'modal-oneoff-coupon' ){
+								$('.adversting[data-target="modal-oneoff-coupon"]').css('display','block');
+								setTimeout(function(){
+									$('.adversting[data-target="modal-oneoff-coupon"]').attr('data-visible','true');
+								}, 500);
+							}
 						});
 					// ---
 				break;

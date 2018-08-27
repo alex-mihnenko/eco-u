@@ -31,8 +31,19 @@
         </div>
     </footer>
 
+    <!-- Adversting -->
+        <a href="#modal-oneoff-coupon" data-action="modal" data-target="modal-oneoff-coupon" class="adversting">
+            <div class="body">
+                <div class="container">
+                    <h2>Получите скидку в 200 р. на первый заказ</h2>
+                </div>
+            </div>
+        </a>
+    <!-- End Adversting -->
+
+
     <!-- Modals -->
-        <div class="modal" data-marker="modal-coupon">
+        <div class="modal" data-marker="modal-oneoff-coupon">
             <div class="body md">
                 <button class="close"></button>
 
