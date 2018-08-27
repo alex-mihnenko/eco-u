@@ -1699,9 +1699,9 @@ $(document).ready(function() {
 				                }
 				                else {
 				                	// ---
-									  	console.log("Yandex can not create route");
+									  	console.log("Point into MKAD");
 
-				                		var deliverydistance = -1;
+				                		var deliverydistance = 0;
 										$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 
 										callback();

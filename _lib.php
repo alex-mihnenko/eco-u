@@ -284,6 +284,9 @@
 						$obj['metro'] = $address->metro;
 						$text .= 'метро ' . $address->metro . ', '; // Метро
 					}
+					if( isset($address->notes) ){
+						$obj['notes'] = $address->notes;
+					}
 
 					// Fix
 					$text = mb_substr($text,0,mb_strlen($text)-2);
