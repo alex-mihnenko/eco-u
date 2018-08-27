@@ -9,7 +9,6 @@ class ControllerCommonHeader extends Controller {
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/slick.css');
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/jquery-ui.css');
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/jquery.jscrollpane.css');
-			$this->document->addStyle('catalog/view/theme/default/stylesheet/suggestions.min.css');
 			$this->document->addStyle('catalog/view/libs/enjoyhint-master/enjoyhint.css');
 			
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/style.css');
