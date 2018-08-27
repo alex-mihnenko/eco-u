@@ -3341,11 +3341,11 @@ xxl
 
 	/* Suggestions */
 		.delivery-address-container .input-group {
-			position: relative;
+			position: relative !important;
 		}
 
 		.delivery-address-container .input-group .suggestions-wrapper {
-			width: 100%;
+			width: 100% !important;
 		}
 
 		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions {
@@ -3357,20 +3357,20 @@ xxl
 		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion {
 			box-sizing: border-box !important;
 		    padding: 5px 0px !important;
-		    border-bottom: 1px solid #eee;
-		    font-size: 12px;
-		    font-weight: 500;
-		    line-height: 22px;
-		    color: #8C969E;
-		    font-family: 'Roboto', sans-serif;  
+		    border-bottom: 1px solid #eee !important;
+		    font-size: 12px !important;
+		    font-weight: 500 !important;
+		    line-height: 22px !important;
+		    color: #8C969E !important;
+		    font-family: 'Roboto', sans-serif !important;  
 		}
 
 		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion:first-child {
-		    border-top: 1px solid #eee;
+		    border-top: 1px solid #eee !important;
 		}
 
 		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion:last-child {
-			border: none;
+			border: none !important;
 		}
 	/* Suggestions */
 /* Fixes */
