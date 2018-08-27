@@ -48,8 +48,7 @@
                 <button class="close"></button>
 
                 <div class="flex flex-row flex-center">
-                    <div class="flex-col image"></div>
-
+                    <div class="flex-col offset"></div>
                     <div class="flex-col content">
                         <hr class="indent md">
 
