@@ -1,6 +1,7 @@
 * { outline: 0 !important; -webkit-tap-highlight-color: rgba(0,0,0,0); }
 
 /*
+
 xs
 @media (max-width: 575px) {}
 
@@ -18,7 +19,8 @@ xl
 
 xxl
 @media (min-width: 1920px) {}
- */
+
+*/
 
 /* General */
 	/* Flex */
