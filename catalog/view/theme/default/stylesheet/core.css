@@ -3338,4 +3338,39 @@ xxl
 			}
 		}
 	/* Product page*/
+
+	/* Suggestions */
+		.delivery-address-container .input-group {
+			position: relative;
+		}
+
+		.delivery-address-container .input-group .suggestions-wrapper {
+			width: 100%;
+		}
+
+		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions {
+			top: 5px !important;
+			left: 0px !important;
+			width: 100% !important;
+		}
+
+		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion {
+			box-sizing: border-box !important;
+		    padding: 5px 0px !important;
+		    border-bottom: 1px solid #eee;
+		    font-size: 12px;
+		    font-weight: 500;
+		    line-height: 22px;
+		    color: #8C969E;
+		    font-family: 'Roboto', sans-serif;  
+		}
+
+		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion:first-child {
+		    border-top: 1px solid #eee;
+		}
+
+		.delivery-address-container .input-group .suggestions-wrapper .suggestions-suggestions .suggestions-suggestion:last-child {
+			border: none;
+		}
+	/* Suggestions */
 /* Fixes */
