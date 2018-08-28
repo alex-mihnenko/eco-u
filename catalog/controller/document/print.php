@@ -245,13 +245,39 @@ class ControllerDocumentPrint extends Controller {
 
 				case 'staff_document_assembly_fresh':
 					// ---
-						// Opencart
+						// Combine
 							$orders = array();
 
 							$this->load->model('document/print');
 
 							// Get orders
-								$resultOrders = $this->model_document_print->getOrders(array(13));
+								// CRM
+									$resultOrders = array();
+
+									$url = 'https://eco-u.retailcrm.ru/api/v5/orders';
+
+									for ($i=1; $i < 5; $i++) { 
+										// ---
+								            $qdata = array(
+								            	'apiKey' => self::RETAILCRM_KEY, 'limit' => 100, 'page' => $i,
+								            	'filter' => array('extendedStatus' => 'assembling')
+								            );
+						            		
+						            		$result = $this->connectGetAPI($url,$qdata);
+						            		$crmOrders = $result->orders;
+
+						            		foreach ($crmOrders as $key => $order) {
+						            			$resultOrders[] = $order;
+						            		}
+										// ---
+									}
+
+
+								// ---
+
+								// Opencart
+									// $resultOrders = $this->model_document_print->getOrders(array(13));
+								// ---
 					        // ---
 
 
@@ -260,11 +286,11 @@ class ControllerDocumentPrint extends Controller {
 								
 								foreach ($resultOrders as $key => $order) {
 									// ---
-										$resultProducts = $this->model_document_print->getOrderProducts($order['order_id']);
+										$resultProducts = $this->model_document_print->getOrderProducts($order->externalId);
 
 										foreach ($resultProducts as $key => $product) {
 											// ---
-												$products[$product['product_id']][] = array( 'order_id' => $order['order_id'], 'name' => $product['name'], 'details' => $product );
+												$products[$product['product_id']][] = array( 'order_id' => $order->externalId, 'name' => $product['name'], 'details' => $product );
 											// ---
 										}
 									// ---
