@@ -2251,7 +2251,23 @@ class ControllerAjaxIndex extends Controller {
 
             $res_notes = $this->connectGetAPI($url,$qdata);
 
-            $response->notes = $res_notes->notes;
+            $notes = array();
+            $month = ['','янв.','фев.','мар.','апр.','май','июн.','июл.','авг.','сен.','окт.','ноя.','дек.'];
+
+            foreach ($res_notes->notes as $key_notes => $note) {
+              // ---
+                $note_createdAt_arr = explode(' ', $note->createdAt);
+
+                $note_createdAt_date_arr =  explode('-', $note_createdAt_arr[0]);
+                $note_createdAt_date = $note_createdAt_date_arr[2] . ' ' . $month[intval($note_createdAt_date_arr[1])] . ' ' . $note_createdAt_date_arr[0];
+
+                $note_createdAt_time = $note_createdAt_arr[1];
+
+                $notes[$note_createdAt_date][] = array('note' => $note, 'time' => $note_createdAt_time);
+              // ---
+            }
+
+            $response->notes = $notes;
           // ---
 
           $response->status = 'success';
@@ -2259,6 +2275,36 @@ class ControllerAjaxIndex extends Controller {
 
           echo json_encode($response);
           exit;
+        }
+
+        public function chormeDeleteNote() {
+          // ---
+            header("Access-Control-Allow-Origin: *");
+
+            // Init
+              $customerId = intval($this->request->post['customerId']);
+              $note_id = $this->request->post['note_id'];
+              $response = new stdClass();
+            // ---
+
+            // Proccessing
+                $url = 'https://eco-u.retailcrm.ru/api/v5/customers/notes/'.$note_id.'/delete';
+
+                $data = array(
+                    'apiKey' => self::RETAILCRM_KEY
+                );
+
+                $res = $this->connectPostAPI($url,$data);
+
+                $response->res = $res;
+            // ---
+
+            $response->status = 'success';
+            $response->message = 'Успешно';
+
+            echo json_encode($response);
+            exit;
+          // ---
         }
 
         public function chormeGetStocks() {
