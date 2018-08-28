@@ -64,7 +64,7 @@
 
 	while ( $row_callbacks = $rows_callbacks->fetch_assoc() ) {
 		// ----
-			if( $row_callbacks['date_added'] + 900 < $currenttime ) {
+			if( $row_callbacks['date_added'] + 1800 < $currenttime ) {
 				$teleo = json_decode($row_callbacks['response']); // $teleo->call_id && $teleo->call_api_id
 
 				
