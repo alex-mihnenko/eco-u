@@ -593,7 +593,7 @@ class ControllerAjaxIndex extends Controller {
       }
     // ---
 
-    //  Coupons
+    // Coupons
       public function createCustomerOneOffCoupon() {
         // ---
           // Init
@@ -2576,32 +2576,33 @@ class ControllerAjaxIndex extends Controller {
 
   // Other
     // Call request
-    public function sendCallRequest() {
-        // Init
-          $phone = preg_replace("/[^0-9,.]/", "", $this->request->post['phone']);
-          $roistat_visit = $this->request->post['roistat_visit'];
-          $response = new stdClass();
-        // ---
+      public function sendCallRequest() {
+          // Init
+            $phone = preg_replace("/[^0-9,.]/", "", $this->request->post['phone']);
+            $roistat_visit = $this->request->post['roistat_visit'];
+            $response = new stdClass();
+          // ---
 
 
-        // Send to Telphin
-          include_once(DIR_APPLICATION . '/model/tool/teleo.php');
+          // Send to Telphin
+            include_once(DIR_APPLICATION . '/model/tool/teleo.php');
 
-          $response->call = call_proccessing('+'.$phone);
-        // --
-            
-        // Save callback
-            $this->load->model('tool/addon');
-            $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit, $response->call);
-        // ---
+            $response->call = call_proccessing('+'.$phone);
+          // --
+              
+          // Save callback
+              $this->load->model('tool/addon');
+              $coupon = $this->model_tool_addon->callbackAdd($phone, $roistat_visit, $response->call);
+          // ---
 
 
-        $response->status = 'success';
-        $response->message = 'Запрос успешно отправлен.<br>Спасибо!';
+          $response->status = 'success';
+          $response->message = 'Запрос успешно отправлен.<br>Спасибо!';
 
-        echo json_encode($response);
-        exit;
-    }
+          echo json_encode($response);
+          exit;
+      }
+    // ---
 
     // Curl
       public function connectPostAPI($url, $qdata, $auth='', $cookie='') {

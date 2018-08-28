@@ -5,7 +5,7 @@ class ModelToolAddon extends Model {
 			INSERT INTO `tb_callback` SET 
 			`telephone` = '" . $this->db->escape($telephone) . "', 
 			`roistat_visit` = '" . $this->db->escape($roistat_visit) . "', 
-			`date_added` = NOW(),
+			`date_added` = '".time()."',
 			`response` = '" . json_encode($teleo) . "',
 			`status` = '0'
 		;");
