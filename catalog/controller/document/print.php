@@ -280,7 +280,6 @@ class ControllerDocumentPrint extends Controller {
 								// ---
 					        // ---
 
-
 							// Create products array
 								$products = array();
 								
@@ -290,6 +289,12 @@ class ControllerDocumentPrint extends Controller {
 
 										foreach ($resultProducts as $key => $product) {
 											// ---
+												// Packaging
+													if( isset($order->customFields->strogo_po_fasovke) && $order->customFields->strogo_po_fasovke == 1 ){
+														$product['packaging'] = true;
+													}
+												// ---
+
 												$products[$product['product_id']][] = array( 'order_id' => $order->externalId, 'name' => $product['name'], 'details' => $product );
 											// ---
 										}

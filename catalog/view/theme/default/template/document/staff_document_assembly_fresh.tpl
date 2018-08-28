@@ -147,7 +147,11 @@
 												<?php } ?>
 
 				                  				<td>
-				                  					<?php echo $product['details']['variant']; ?> <?php echo $product['details']['unit']; ?> x <?php echo $product['details']['amount']; ?>
+				                  					<?php if( isset($product['packaging']) && $product['packaging'] == true ) { ?>
+				                  						<?php echo $product['details']['variant']; ?> <?php echo $product['details']['unit']; ?> x <?php echo $product['details']['amount']; ?>
+				                  					<?php } else { ?>
+				                  						<?php echo ( floatval($product['details']['variant']) * floatval($product['details']['amount']) ); ?> <?php echo $product['details']['unit']; ?>
+				                  					<?php } ?>
 				                  				</td>
 
 				                  				<td style="width: 200px; text-align: right;">
