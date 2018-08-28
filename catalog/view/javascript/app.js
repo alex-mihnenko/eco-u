@@ -2014,13 +2014,16 @@ $(document).ready(function() {
 		// $('.modal[data-marker="modal-coupon"]').modal('show');
 
 		jQuery.fn.modal = function (method) {
+			var $this = $(this);
+
 			switch (method) {
 				case 'show':
 					// ---
-						$(this).css('display','flex');
 
-						$(this).find('.close, .overlay').on('click', function(){
-							console.log('Modal close');
+						$this.attr('data-display','flex');
+						$this.css('display','flex');
+
+						$this.find('.close, .overlay').on('click', function(){
 
 							$(this).parents('.modal').modal('hide');
 
@@ -2036,7 +2039,11 @@ $(document).ready(function() {
 				
 				case 'hide':
 					// ---
-						$(this).css('display','none');
+						$this.attr('data-display','none');
+
+						setTimeout(function(){
+							$this.css('display','none');
+						}, 1000);
 					// ---
 				break;
 			}

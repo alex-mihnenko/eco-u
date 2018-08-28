@@ -82,16 +82,16 @@
         <p class="xs" style="display: block">Сумма заказа меньше 1000 рублей.</p>
     <?php } else { ?>
         <div class="coupon"> 
-            <?php if( intval($discount) == 0 ) { ?>
-                <button class="link" data-action="show-apply-coupon" type="button">Есть купон на скидку?</button>
-                
-                <div class="apply">
-                    <input type="text" name="coupon" class="form-control" placeholder="Купон на скидку">
-                    <button class="btn btn-bordered btn-sm btn-inline margin xs" type="button" data-action="send-apply-coupon">OK</button>
-                </div>
+            <button class="link" data-action="show-apply-coupon" type="button">Есть купон на скидку?</button>
+            
+            <div class="apply">
+                <input type="text" name="coupon" class="form-control" placeholder="Купон на скидку">
+                <button class="btn btn-bordered btn-sm btn-inline margin xs" type="button" data-action="send-apply-coupon">OK</button>
+            </div>
 
-                <p class="xs message-error"></p>
-            <?php } else { ?>
+            <p class="xs message-error"></p>
+
+            <?php if( intval($discount) > 0 ) { ?>
                 <p class="text-color-green">Ваша скидка <?php echo round($discount,2) ?> руб.</p>
             <?php } ?>
         </div>

@@ -1886,6 +1886,7 @@ xxl
 			width: 100%;
 			height: 100%;
 			z-index: 1000000;
+			opacity: 0;
 		}
 
 		/* Body */
@@ -1988,6 +1989,56 @@ xxl
 				background-color: #ECECEC;
 			}
 		/* Close */
+
+		/* Animation */
+			.modal[data-display="flex"] {
+				-webkit-animation: modal-show 1s forwards;
+				-moz-animation:    modal-show 1s forwards;
+				-o-animation:      modal-show 1s forwards;
+				animation:         modal-show 1s forwards;
+			}
+
+			@-webkit-keyframes modal-show {
+				0%   { opacity: 0; transform: scale(1.1,1.1); }
+				100% { opacity: 1; transform: scale(1,1); }
+			}
+			@-moz-keyframes modal-show {
+				0%   { opacity: 0; transform: scale(1.1,1.1); }
+				100% { opacity: 1; transform: scale(1,1); }
+			}
+			@-o-keyframes modal-show {
+				0%   { opacity: 0; transform: scale(1.1,1.1); }
+				100% { opacity: 1; transform: scale(1,1); }
+			}
+			@keyframes modal-show {
+				0%   { opacity: 0; transform: scale(1.1,1.1); }
+				100% { opacity: 1; transform: scale(1,1); }
+			}
+
+			.modal[data-display="none"] {
+				-webkit-animation: modal-hide 1s forwards;
+				-moz-animation:    modal-hide 1s forwards;
+				-o-animation:      modal-hide 1s forwards;
+				animation:         modal-hide 1s forwards;
+			}
+
+			@-webkit-keyframes modal-hide {
+				0%   { opacity: 1; transform: scale(1,1); }
+				100% { opacity: 0; transform: scale(1.1,1.1); }
+			}
+			@-moz-keyframes modal-hide {
+				0%   { opacity: 1; transform: scale(1,1); }
+				100% { opacity: 0; transform: scale(1.1,1.1); }
+			}
+			@-o-keyframes modal-hide {
+				0%   { opacity: 1; transform: scale(1,1); }
+				100% { opacity: 0; transform: scale(1.1,1.1); }
+			}
+			@keyframes modal-hide {
+				0%   { opacity: 1; transform: scale(1,1); }
+				100% { opacity: 0; transform: scale(1.1,1.1); }
+			}
+		/* Animation */
 
 		/* Custom */
 			/* Oneoff Coupon */
@@ -2190,7 +2241,7 @@ xxl
 						100% { opacity: 0; transform: translateY(25px); }
 					}
 				/* Animation */
-			/* Coupon */
+			/* Oneoff Coupon */
 		/* Custom */
 	/* Modal */
 
