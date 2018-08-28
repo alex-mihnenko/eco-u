@@ -355,12 +355,24 @@
 						    }
 						// ---
 
+						// Quantity
+						    if( $product['weight_class_id'] == 2 || $product['weight_class_id'] == 9 ){ // Gramm OR Kilogramm
+								$quantity = $product['quantity'];
+							}
+							else if( $product['weight_class_id'] == 7 ){ // Liter
+								$quantity = $product['quantity'];
+							}
+							else if( $product['weight_class_id'] == 1 ){ // Piece
+								$quantity = $product['amount'];
+							}
+						// ---
+
 						$items[] = array(
-							'initialPrice'=> $product['price'],
-							'discountManualAmount'=> 0,
-							'discountManualPercent'=> $order_discount_manual_percent,
-							'quantity'=>$product['quantity'],
-							'properties'=>$properties,
+							'initialPrice' => $product['price'],
+							'discountManualAmount' => 0,
+							'discountManualPercent' => $order_discount_manual_percent,
+							'quantity'=> $quantity,
+							'properties'=> $properties,
 							'offer' => array(
 								'externalId'=>$product['product_id']
 							),
