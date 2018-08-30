@@ -68,7 +68,7 @@ if($_GET['type']){
 									`model`='".$rowProduct['model']."',
 									`quantity`='{$vg['quantity']}',
 									`amount`='1',
-									`variant`='1',
+									`variant`='".($vg['quantity'])."',
 									`price`='{$vg['initialPrice']}',
 									`total` ='$totalg',
 									`tax`='0',

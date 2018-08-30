@@ -295,7 +295,7 @@ class ControllerDocumentPrint extends Controller {
 													}
 												// ---
 
-												$products[$product['product_id']][] = array( 'order_id' => $order->externalId, 'name' => $product['name'], 'details' => $product );
+												$products[$product['name']][] = array( 'order_id' => $order->externalId, 'name' => $product['name'], 'details' => $product );
 											// ---
 										}
 									// ---
@@ -311,7 +311,7 @@ class ControllerDocumentPrint extends Controller {
 								foreach ($products as $key => $product) {
 									// ---
 										// Get categories
-											$resultCategories = $this->model_document_print->getProductCategory($key);
+											$resultCategories = $this->model_document_print->getProductCategory($product[0]['details']['product_id']);
 											
 											$groups = array();
 
@@ -332,7 +332,13 @@ class ControllerDocumentPrint extends Controller {
 										}
 									// ---
 								}
-								
+
+								foreach ($categories as $key_category => $category) {
+									// ---
+										ksort($categories[$key_category]);
+									// ---
+								}
+									
 								$data['categories'] = $categories;
 							// ---
 						// ---
