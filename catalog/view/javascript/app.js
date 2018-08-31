@@ -114,7 +114,7 @@ $(document).ready(function() {
 		/* Dropdown */
 			$(document).find('.dropdown .list').css('visibility', 'visible');
 			
-			$(document).on('click', '.dropdown > [data-action="toggle"]', function(){
+			$(document).on('click', '.dropdown > [data-action="toggle"]', function(e){
 				// ---
 					let $this = $(this).parents('.dropdown');
 
@@ -128,15 +128,8 @@ $(document).ready(function() {
 							$this.attr('data-style','open');
 						// ---
 					}
-				// ---
-			});
 
-			$(document).on('focusout', '.dropdown', function(){
-				// ---
-					if( app.size != 'xs' && app.size != 'sm' ){
-						let $this = $(this);
-						$this.attr('data-style','default');
-					}
+					e.stopPropagation();
 				// ---
 			});
 
@@ -157,10 +150,26 @@ $(document).ready(function() {
 				// ---
 			});
 			
-			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(){
+			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
 				// ---
 					let $this = $(this).parents('.dropdown');
 					$this.attr('data-style','default');
+					e.stopPropagation();
+				// ---
+			});
+
+			$(document).on('click', function(e){
+				// ---
+					// Check menu
+						if( $('nav .menu[data-marker="menu"]').attr('data-style') == 'open' ){
+							// ---
+								console.log('Hide menu');
+
+								var $this = $('nav .menu[data-marker="menu"]');
+								$this.attr('data-style','default');
+							// ---
+						}
+					// ---
 				// ---
 			});
 		/* Dropdown */
@@ -1226,6 +1235,51 @@ $(document).ready(function() {
 	                }
 	            }, "json");
 	        });
+		// ---
+	// ---
+
+	// Blog 
+		// Blog modal
+			app.modals.blog = $('[data-remodal-id="modal-blog"]').remodal();
+
+			$(document).on('click', '.blog .featured a.post-featured', function(e){
+				var $this = $(this);
+				var href = $(this).attr('href');
+				var post_id = $(this).attr('data-id');
+
+				// Show blog modal
+					$.post('/?route=extension/module/iblog/postAjax', {post_id:post_id}, function(data){
+						// ---
+							console.log(data);
+							$('[data-remodal-id="modal-blog"]').find('.body').html(data.html);
+
+
+							app.modals.blog.open();
+							e.preventDefault();
+						// ---
+					},'json');
+					
+					e.preventDefault();
+				// ---
+			});
+		// ---
+
+		// Search
+			$('.blog-search button[id=\'iblog-search-button\']').on('click', function(e) {
+				url = $('base').attr('href') + '/blog/search';
+				var value = $('.blog-search input[name=\'search\']').val();
+				if (value) {
+					url += '&search=' + encodeURIComponent(value);
+				}
+
+				location = url;
+			});
+
+			$('.blog-search input[name=\'search\']').on('keydown', function(e) {
+				if (e.keyCode == 13) {
+					$('.blog-search button[id=\'iblog-search-button\']').trigger('click');
+				}
+			});
 		// ---
 	// ---
 

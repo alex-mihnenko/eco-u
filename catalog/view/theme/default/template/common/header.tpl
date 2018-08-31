@@ -30,7 +30,15 @@
 	<?php echo $analytic; ?>
 	<?php } ?>
 </head>
+
+<?php if (stripslashes($route['_route_']) == 'eda/') { ?>
 <body>
+<?php } else { ?>
+<body class="page_2">
+<?php } ?>
+	
+	<div style="display: none;"><?php echo stripslashes($route['_route_']); ?></div>
+
 	<div class="wreaper">
 		<nav>
 			<a href="/" class="logo"><img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю"></a>
@@ -68,7 +76,7 @@
 							<span class="counter">0</span>
 						</div>
 
-						<div class="svg-container pointer dropdown inverse menu">
+						<div class="svg-container pointer dropdown inverse menu" data-marker="mobile-menu">
 							<i data-action="toggle" tabindex="-1"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
@@ -97,6 +105,7 @@
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
 								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
 								<a href="/about" class="item" target="_blank">О нас</a>
+								<a href="/blog" class="item">Блог</a>
 							</div>
 						</div>
 					</div>
@@ -104,7 +113,7 @@
 
 				<div class="grid-row hidden-xs hidden-sm">
 					<div class="grid-col col-6 align-start">
-						<div class="svg-container pointer dropdown menu" tabindex="-1">
+						<div class="svg-container pointer dropdown menu" tabindex="-1" data-marker="menu">
 							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
 							<div class="list">
@@ -116,6 +125,7 @@
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
 								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
 								<a href="/about" class="item" target="_blank">О нас</a>
+								<a href="/blog" class="item">Блог</a>
 							</div>
 						</div>
 
@@ -401,6 +411,15 @@
         	<div class="body">
 	   		</div>
 	    </div>
+
+
+	    <div class="remodal modal-blog modal-lg" data-remodal-id="modal-blog">
+        	<button data-remodal-action="close" class="remodal-close"></button>
+
+        	<div class="body">
+	   		</div>
+	    </div>
+
 
 	    <div class="remodal modal-payment modal-sm" data-remodal-id="modal-payment">
 			<button data-remodal-action="close" class="remodal-close"></button>

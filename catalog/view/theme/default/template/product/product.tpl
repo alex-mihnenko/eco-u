@@ -1,10 +1,5 @@
 <?php echo $header; ?>
 
-
-<script>
-    window.bodyClass = 'page_2';
-</script>
-
 <div class="product">
     <!-- Container -->
     <section class="fond-white">

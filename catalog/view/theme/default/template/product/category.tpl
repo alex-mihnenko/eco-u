@@ -84,9 +84,9 @@
                                 <a href="#l-p_<?php echo $category['id']; ?>">
                                 <?php } ?>
                                     <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
-                                        <?php if(!empty($category['image'])) { ?><i class="svg"><?php loadSvg('path', $category['image']); ?></i><?php } ?>
+                                        <?php if(!empty($category['image'])) { ?><i class="svg" data-source="<?php echo $category['image']; ?>"><?php loadSvg('path', $category['image']); ?></i><?php } ?>
                                     <?php } else { ?>
-                                        <?php if(!empty($category['image'])) { ?><i class="svg"><?php loadSvg('path', '/image/'.$category['image']); ?></i><?php } ?>
+                                        <?php if(!empty($category['image'])) { ?><i class="svg" data-source="<?php echo '/image/'.$category['image']; ?>"><?php loadSvg('path', '/image/'.$category['image']); ?></i><?php } ?>
                                     <?php } ?>
 
 
@@ -350,16 +350,31 @@
                                                 <?php } ?>
                                             </ul>
 
-                                            <?php if( $lCount-2 > 0 ) { ?>
+                                            <?php if( $lCount-5 > 0 ) { ?>
                                                 <div class="show-more sm-lg" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>" data-default="еще <?php echo ($lCount-5); ?> продуктов"  style="<?php if($lCount <= 5) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-5); ?> продуктов</div>
+                                            <?php } ?>
+
+                                            <?php if( $lCount-4 > 0 ) { ?>
                                                 <div class="show-more sm-md" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>" data-default="еще <?php echo ($lCount-4); ?> продуктов"  style="<?php if($lCount <= 4) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-4); ?> продуктов</div>
+                                            <?php } ?>
+
+                                            <?php if( $lCount-3 > 0 ) { ?>
                                                 <div class="show-more sm-sm" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>" data-default="еще <?php echo ($lCount-3); ?> продуктов"  style="<?php if($lCount <= 3) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-3); ?> продуктов</div>
+                                            <?php } ?>
+
+                                            <?php if( $lCount-2 > 0 ) { ?>
                                                 <div class="show-more sm-xs" data-mode="catsort" data-target="<?php echo $subcategory['id']; ?>" data-parent="<?php echo $subcategory['parent']; ?>" data-default="еще <?php echo ($lCount-2); ?> продуктов"  style="<?php if($lCount <= 2) { ?>visibility:hidden;<?php } ?>">еще <?php echo ($lCount-2); ?> продуктов</div>
                                             <?php } ?>
                                         </div>
 
                                     <?php } ?>
                                 </div>
+
+                                <?php if( $category['id'] == 'new' ) { ?>
+                                    <div class="content-bottom">
+                                        <?php echo $content_bottom; ?>
+                                    </div>
+                                <?php } ?>
                             <?php } ?>
 
     					</div> <!-- container -->
@@ -368,37 +383,6 @@
     			</div>
     		</div>
             <!-- END Categories products -->
-
-            <!-- Alphabetic products -->
-            <div class="tabs__block" id="container-products-alphabetic">
-                <div class="button-alphabetic button-alphabetic-shadow" data-remodal-target="modal8">А-Я</div>
-                <div class="clearfix rel"> 
-                    
-                    <div id="contentcontainer">
-                        <div class="container">
-                        </div> <!-- container -->
-                    </div> <!-- contentcontainer -->
-
-                </div>
-            </div>
-            <!-- END Alphabetic products -->
-            
-            <!-- List of products -->
-            <div class="tabs__block" id="container-products-list">
-                <div class="width-1418">
-                    <div class="auto-columnizer clearfix">
-                    </div>
-
-                    <!-- Modal -->
-                    <div class="remodal list-modal" data-remodal-id="modal5">
-                        <button data-remodal-action="close" class="remodal-close"></button>
-                        <div class="l-m_title"></div>
-                        <div class="modal-content"></div>
-                    </div>
-                    <!-- END modal -->
-                </div>
-    		</div>
-            <!-- END List of products -->
 
 
             <!-- Searched products -->
@@ -415,6 +399,11 @@
     	</div>
     <!-- END Products -->
 <!-- END catalog -->
+
+<!-- Content top -->
+    <?php echo $content_bottom; ?>
+<!-- END Content top -->
+
 
 <!-- Footer -->
 <?php echo $footer; ?>

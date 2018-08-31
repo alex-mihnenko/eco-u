@@ -19,10 +19,6 @@
 
 
 <!-- Container -->
-<script>
-    window.bodyClass = 'page_2';
-</script>
-
 <hr class="indent md">
 
 <section class="fond-white">

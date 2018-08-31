@@ -1709,10 +1709,7 @@ footer {
     margin: 115px 0 0 0;
     padding: 0 0 0 267px;
 }
-.container {
-	max-width: 1418px;
-	position: relative;
-}
+
 .list-letter {
 	width: 100%;
 	/*display: table;*/
@@ -5545,7 +5542,7 @@ select.ca-i_input.input-error_3 {
 	    margin: 60px 0 20px 0;
 	}
 	.container > div {
-		margin-bottom: 130px;
+		margin-bottom: 0px;
 	}
 	.a-p_thumb {
 	    height: auto;

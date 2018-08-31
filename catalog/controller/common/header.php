@@ -1,6 +1,10 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+		// Route
+        	$data['route'] = $this->request->get;
+        // ---
+
 		// Styles
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/googlfonts.css');
 			$this->document->addStyle('catalog/view/theme/default/stylesheet/remodal.css');
