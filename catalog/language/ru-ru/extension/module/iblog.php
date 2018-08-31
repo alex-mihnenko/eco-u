@@ -1,9 +1,10 @@
 <?php
-$_['heading_title']				= 'Записи блога';
+$_['heading_title']				= 'Блог';
 $_['no_featured']				= 'Нет рекомендованных записей.';
 $_['no_posts']					= 'Нет записей.';
 
 // Text
+$_['text_all']					= 'Все';
 $_['text_author']				= 'Автор: ';
 $_['text_date_created']			= 'Дата создания: ';
 $_['text_error']				= 'Запись не найдена!';

@@ -92,7 +92,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <hr class="indent sm">
+                                        <hr class="indent xxs">
 
                                         <?php if ($post['image']) { ?>
                                             <div class="image"><a href="<?php echo $post['href']; ?>"><img src="<?php echo $post['image']; ?>" title="<?php echo $post['title']; ?>" alt="<?php echo $post['title']; ?>" /></a></div>

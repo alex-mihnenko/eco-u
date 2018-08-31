@@ -215,9 +215,38 @@ class ModelExtensionModuleiBlog extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "iblog_post SET small_image = '" . $this->db->escape(html_entity_decode($data['small_image'], ENT_QUOTES, 'UTF-8')) . "' WHERE id = '" . (int)$post_id . "'");
 		}
 		
+		$flag_generate_slug = false;
+		if( empty($data['slug']) ) { $flag_generate_slug = true; }
+
 		foreach ($data['post_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "iblog_post_description SET iblog_post_id = '" . (int)$post_id . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($value['title']) . "', excerpt = '" . $this->db->escape($value['excerpt']) . "', body = '" . $this->db->escape($value['body']) . "', meta_keywords = '" . $this->db->escape(preg_replace('/,$/', '', $value['meta_keyword']).',') . "', meta_description = '" . $this->db->escape($value['meta_description']) . "'");
+			
+			// Set slug
+				if( $flag_generate_slug ){
+					// ---
+						$slug = $this->str2url($value['title']);
+						$checkSlug = $this->db->query("SELECT * FROM " . DB_PREFIX . "iblog_post WHERE slug = '" . $this->db->escape($slug) . "'");
+
+						if( $checkSlug->num_rows > 0 ) {
+							$count = 1;
+
+							while ( $checkSlug->num_rows > 0 ) {
+								$slug_tmp = $slug . '-' . $count;
+								$checkSlug =  $this->db->query("SELECT * FROM " . DB_PREFIX . "iblog_post WHERE slug = '" . $this->db->escape($slug_tmp) . "'");
+								$count ++;
+							}
+
+							$slug = $slug_tmp;
+						}
+						
+
+						$this->db->query("UPDATE " . DB_PREFIX . "iblog_post SET slug = '" . $this->db->escape($slug) . "' WHERE id = '" . (int)$post_id . "'");		
+						$flag_generate_slug = false;
+					// ---
+				}
+			// ---
 		}
+
 		
 	}
 	
@@ -259,8 +288,36 @@ class ModelExtensionModuleiBlog extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "iblog_categories_id SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE category_id = '" . (int)$category_id . "'");
 		}
 		
+		$flag_generate_slug = false;
+		if( empty($data['slug']) ) { $flag_generate_slug = true; }
+
 		foreach ($data['category_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "iblog_categories SET category_id  = '" . $category_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']). "', meta_description = '" . $this->db->escape($value['meta_description']). "', meta_keywords = '" . $this->db->escape($value['meta_keyword']) . "',  language_id = '" . (int)$language_id . "'");
+			
+			// Set slug
+				if( $flag_generate_slug ){
+					// ---
+						$slug = $this->str2url($value['title']);
+						$checkSlug = $this->db->query("SELECT * FROM " . DB_PREFIX . "iblog_categories_id WHERE slug = '" . $this->db->escape($slug) . "'");
+
+						if( $checkSlug->num_rows > 0 ) {
+							$count = 1;
+
+							while ( $checkSlug->num_rows > 0 ) {
+								$slug_tmp = $slug . '-' . $count;
+								$checkSlug =  $this->db->query("SELECT * FROM " . DB_PREFIX . "iblog_categories_id WHERE slug = '" . $this->db->escape($slug_tmp) . "'");
+								$count ++;
+							}
+
+							$slug = $slug_tmp;
+						}
+						
+
+						$this->db->query("UPDATE " . DB_PREFIX . "iblog_categories_id SET slug = '" . $this->db->escape($slug) . "' WHERE id = '" . (int)$post_id . "'");		
+						$flag_generate_slug = false;
+					// ---
+				}
+			// ---
 		}
 				
 		// MySQL Hierarchical Data Closure Table Pattern
@@ -431,6 +488,45 @@ class ModelExtensionModuleiBlog extends Model {
 
 		return $query->rows;
 	}
+
+	public function rus2translit($string) {
+        $converter = array(
+            'а' => 'a',   'б' => 'b',   'в' => 'v',
+            'г' => 'g',   'д' => 'd',   'е' => 'e',
+            'ё' => 'e',   'ж' => 'j',   'з' => 'z',
+            'и' => 'i',   'й' => 'y',   'к' => 'k',
+            'л' => 'l',   'м' => 'm',   'н' => 'n',
+            'о' => 'o',   'п' => 'p',   'р' => 'r',
+            'с' => 's',   'т' => 't',   'у' => 'u',
+            'ф' => 'f',   'х' => 'h',   'ц' => 'ts',
+            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'shch',
+            'ь' => '',  'ы' => 'y',   'ъ' => '',
+            'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+            
+            'А' => 'A',   'Б' => 'B',   'В' => 'V',
+            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+            'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
+            'И' => 'I',   'Й' => 'Y',   'К' => 'K',
+            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+            'О' => 'O',   'П' => 'P',   'Р' => 'R',
+            'С' => 'S',   'Т' => 'T',   'У' => 'U',
+            'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
+            'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
+            'Ь' => '',  'Ы' => 'Y',   'Ъ' => '',
+            'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+            '.' => '',   ' ' => '-',  '*' => '',
+            '"' => '',   '"' => '', '-' => '',
+        );
+        return strtr($string, $converter);
+    }
+
+    public function str2url($str) {
+        $str = $this->rus2translit($str);
+        $str = strtolower($str);
+        $url = trim($str, "-");
+
+        return $url;
+    }
 	
   }
 ?>

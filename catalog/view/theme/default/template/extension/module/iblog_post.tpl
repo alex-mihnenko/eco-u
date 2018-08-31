@@ -146,3 +146,5 @@
 <hr class="indent xl">
 
 <?php echo $footer; ?>
+
+<div class="progress-view"><div class="marker"></div></div>

@@ -4,9 +4,15 @@
   </style>
 <?php endif; ?>
 
-<div class="title"><h3 class="h4 text-upper"> <i class="fa fa-bars"></i> <?php echo $heading_title; ?></h3></div>
+<div class="title"><h3 class="h5 text-upper"> <i class="fa fa-bars"></i> <?php echo $heading_title; ?></h3></div>
 
 <div class="list-group">
+  <?php if ($category_id == 0) { ?>
+    <a href="/blog" class="list-group-item active"><?php echo $text_all; ?></a>
+  <?php } else { ?>
+    <a href="/blog" class="list-group-item"><?php echo $text_all; ?></a>
+  <?php } ?>
+
   <?php foreach ($categories as $category) { ?>
 
     <?php if ($category['category_id'] == $category_id) { ?>

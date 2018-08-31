@@ -4,14 +4,16 @@
   </style>
 <?php endif; ?>
 
-<div class="title"><h3 class="h4 text-upper"> <i class="fa fa-retweet"></i> <?php echo $heading_title; ?></h3></div>
-<hr class="indent xs">
+<div class="title"><h3 class="h5 text-upper"> <i class="fa fa-retweet"></i> <?php echo $heading_title; ?></h3></div>
 
 <div class="widget">
     <?php if (!empty($posts)) { ?>
 		<?php foreach ($posts as $post) { ?>
 			<div class="post-widget">
-				<a href="<?php echo $post['href']; ?>"<?php echo ($post['post_id'] == $post_id) ? ' class="active"' : ''; ?>><?php echo $post['title']; ?></a>
+				<a href="<?php echo $post['href']; ?>"<?php echo ($post['post_id'] == $post_id) ? ' class="active"' : ''; ?>>
+					<?php echo $post['title']; ?>
+					<span><?php echo $post['excerpt']; ?></span>
+				</a>
 				<hr class="indent xs">
 			</div>
 		<?php } ?>

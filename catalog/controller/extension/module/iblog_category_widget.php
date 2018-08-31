@@ -52,6 +52,7 @@ class ControllerExtensionModuleiBlogCategoryWidget extends Controller {
 	public function index($setting) {
 	
     	$data['heading_title'] = !empty($setting['name']) ? $setting['name'] : $this->language->get('heading_title');
+    	$data['text_all'] = $this->language->get('text_all');
 
 		if (isset($this->request->get['path'])) {
 			$parts = explode('_', (string)$this->request->get['path']);
