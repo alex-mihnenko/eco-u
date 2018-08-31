@@ -2991,6 +2991,14 @@ xxl
 		    line-height: 48px;
 		}
 
+		.btn.btn-xs {
+		    padding: 0px 10px;
+
+			font-size: 14px;
+		    font-weight: 600;
+		    line-height: 32px;
+		}
+
 		@media (max-width: 575px) {
 			.btn {
 				width: 100%;
@@ -4237,4 +4245,11 @@ xxl
 			border: none !important;
 		}
 	/* Suggestions */
+
+	/* Btn */
+		.l-p_title .btn {
+			position: relative;
+			top: -8px;
+		}
+	/* Btn */
 /* Fixes */

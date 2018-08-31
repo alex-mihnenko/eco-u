@@ -4,7 +4,11 @@
   </style>
 <?php endif; ?>
 
-<div class="l-p_title"><?php echo $heading_title; ?></div>
+<div class="l-p_title">
+	<span><?php echo $heading_title; ?></span>
+	&nbsp;&nbsp;&nbsp;
+	<a href="/blog" class="btn btn-xs" target="_blank"><?php echo $text_all; ?></a>
+</div>
 
 <div class="blog">
 	<?php if ($featured_posts!== false && $featured=='yes') { ?>

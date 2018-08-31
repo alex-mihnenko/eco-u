@@ -54,6 +54,7 @@ class ControllerExtensionModuleiBlogHome extends Controller {
 		$this->data['no_featured']				= $this->language->get('no_featured');
 		$this->data['no_posts']					= $this->language->get('no_posts');
 		$this->data['iblog_button']				= $this->language->get('iblog_button');
+		$this->data['text_all']				= $this->language->get('text_all');
 
 		if(isset($setting['limit']))	{
 			$limit = $setting['limit'];
