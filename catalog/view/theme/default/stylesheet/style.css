@@ -907,21 +907,16 @@ header {
 .b-p_title {
 	font-weight: 500;
 	color: #FFFFFF;
-	/*font-size: 52px;
+	font-size: 52px;
 	text-align: center;
-	line-height: 70px;*/
-	font-size: 30px;
-    text-align: center;
-    line-height: 38px;
+	line-height: 70px;
 	position: relative;
 	top: 43.5%;
 }
 @media (min-width: 768px) and (max-width: 991px) {
 	.b-p_title {
-		/*font-size: 38px;
-		line-height: 48px;*/
-		font-size: 24px;
-    	line-height: 32px;
+		font-size: 38px;
+		line-height: 48px;
 	}
 }
 
@@ -5719,10 +5714,8 @@ select.ca-i_input.input-error_3 {
 	}
 	.b-p_title {
 	    top: 40%;
-	    /*font-size: 22px;
-	    line-height: 29px;*/
-	    font-size: 16px;
-    	line-height: 23px;
+	    font-size: 22px;
+	    line-height: 29px;
 	}
 	.b-p_title_newsite {
 		top: 40%;
