@@ -2259,9 +2259,13 @@ class ControllerAjaxIndex extends Controller {
                 $note_createdAt_arr = explode(' ', $note->createdAt);
 
                 $note_createdAt_date_arr =  explode('-', $note_createdAt_arr[0]);
-                $note_createdAt_date = $note_createdAt_date_arr[2] . ' ' . $month[intval($note_createdAt_date_arr[1])] . ' ' . $note_createdAt_date_arr[0];
+                $note_createdAt_date = $note_createdAt_date_arr[2] . ' ' . $month[intval($note_createdAt_date_arr[1])];
+                if( intval($note_createdAt_date_arr[0]) > intval(date('Y', time())) ) {
+                  $note_createdAt_date .= ' ' . $note_createdAt_date_arr[0];
+                }
 
-                $note_createdAt_time = $note_createdAt_arr[1];
+                $note_createdAt_time_arr = explode(':', $note_createdAt_arr[1]);
+                $note_createdAt_time = $note_createdAt_time_arr[0] . ':' . $note_createdAt_time_arr[1];
 
                 $notes[$note_createdAt_date][] = array('note' => $note, 'time' => $note_createdAt_time);
               // ---
