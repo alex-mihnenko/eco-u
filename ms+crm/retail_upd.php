@@ -90,8 +90,10 @@ if($_GET['type']){
 
 						$qUpdate = mysql_query("
 							UPDATE `oc_order_product` SET 
-							quantity='{$vg['quantity']}',
-							price='{$vg['initialPrice']}',
+							quantity='".$vg['quantity']."',
+							amount='".$rowProduct['amount']."',
+							variant='".($vg['quantity']/$rowProduct['amount'])."',
+							price='".$vg['initialPrice']."',
 							total ='$totalg' 
 							WHERE `order_product_id`='$opid';
 						");
