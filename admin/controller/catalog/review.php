@@ -283,14 +283,14 @@ class ControllerCatalogReview extends Controller {
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 
-		$data['column_product'] = $this->language->get('column_product');
+		$data['column_theme'] = $this->language->get('column_theme');
 		$data['column_author'] = $this->language->get('column_author');
 		$data['column_rating'] = $this->language->get('column_rating');
 		$data['column_status'] = $this->language->get('column_status');
 		$data['column_date_added'] = $this->language->get('column_date_added');
 		$data['column_action'] = $this->language->get('column_action');
 
-		$data['entry_product'] = $this->language->get('entry_product');
+		$data['entry_theme'] = $this->language->get('entry_theme');
 		$data['entry_author'] = $this->language->get('entry_author');
 		$data['entry_rating'] = $this->language->get('entry_rating');
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -415,7 +415,7 @@ class ControllerCatalogReview extends Controller {
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 
-		$data['entry_product'] = $this->language->get('entry_product');
+		$data['entry_theme'] = $this->language->get('entry_theme');
 		$data['entry_author'] = $this->language->get('entry_author');
 		$data['entry_rating'] = $this->language->get('entry_rating');
 		$data['entry_date_added'] = $this->language->get('entry_date_added');

@@ -16,120 +16,64 @@
 </div>
 
 
+<!-- Content top -->
+<?php echo $content_top; ?>
+<!-- END Content top -->
 
 
 <!-- Container -->
+<hr class="indent lg">
 <hr class="indent md">
 
-<section class="fond-white">
-    <div class="width-1194 pd-29"> 
-        <ul class="liTabs t_wrap t_wrap_1">
-            <li class="t_item t-item_1">
-                <!-- /// -->
-                <a class="t_link t_link_1 cur" href="#"> <span>ИСТОРИЯ ЗАКАЗОВ</span></a>
-
-                <div class="t_content">
-                    <div class="table-responsive">
-                        <table class="table-history">
-                            <tr>
-                                <th>Номер заказа</th>
-                                <th>Дата</th>
-                                <th>Статус</th>
-                                <th>Сумма</th>
-                                <th></th>
-                            </tr>
+<div id="account">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table-history">
+                <tr>
+                    <th>Номер заказа</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Сумма</th>
+                    <th></th>
+                </tr>
 
 
-                            <?php foreach($orders as $order) { ?>
-                                <tr data-order-id="<?php echo $order['order_id']; ?>">
-                                    <td class="t-h_number" data-action="order-about">№ <?php echo $order['order_id']; ?></td>
-                                    <td class="t-h_width" data-action="order-about"><?php echo $order['date']; ?></td>
-                                    <td class="t-h_width" data-action="order-about">
-                                        <?php if( $order['status_id'] != 7 ) { ?>
-                                            <p class="text-color-green"><?php echo $order['status']; ?></p>
-                                        <?php } else { ?>
-                                            <p class="text-color-red"><?php echo $order['status']; ?></p>
-                                        <?php } ?>
-                                    </td>
-                                    <td data-action="order-about">
-                                        <p><?php echo round($order['total'],2); ?> руб.</p>
-                                    </td>
-                                    <td>
-                                        <?php if( $order['status_id'] == 5 || $order['status_id'] == 7 ) { ?>
-                                            <a href="#repeat-<?php echo $order['order_id']; ?>" class="btn btn-bordered btn-sm" data-action="order-repeat" data-order-id="<?php echo $order['order_id']; ?>">Повторить</a>
-                                        <?php } else { ?>
-                                            <?php if( $order['paid'] == false ) { ?>
-                                                <?php if( $order['surcharge'] == true ) { ?>
-                                                    <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-surcharge" data-order-id="<?php echo $order['order_id']; ?>">Доплатить</a>
-                                                <?php } else { ?>
-                                                    <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        <?php } ?>
-
-                                    </td>
-                                </tr>
+                <?php foreach($orders as $order) { ?>
+                    <tr data-order-id="<?php echo $order['order_id']; ?>">
+                        <td class="t-h_number" data-action="order-about">№ <?php echo $order['order_id']; ?></td>
+                        <td class="t-h_width" data-action="order-about"><?php echo $order['date']; ?></td>
+                        <td class="t-h_width" data-action="order-about">
+                            <?php if( $order['status_id'] != 7 ) { ?>
+                                <p class="text-color-green"><?php echo $order['status']; ?></p>
+                            <?php } else { ?>
+                                <p class="text-color-red"><?php echo $order['status']; ?></p>
                             <?php } ?>
-                        </table>
-                    </div>
-                </div>
-                <!-- /// -->
-            </li>
+                        </td>
+                        <td data-action="order-about">
+                            <p><?php echo round($order['total'],2); ?> руб.</p>
+                        </td>
+                        <td>
+                            <?php if( $order['status_id'] == 5 || $order['status_id'] == 7 ) { ?>
+                                <a href="#repeat-<?php echo $order['order_id']; ?>" class="btn btn-bordered btn-sm" data-action="order-repeat" data-order-id="<?php echo $order['order_id']; ?>">Повторить</a>
+                            <?php } else { ?>
+                                <?php if( $order['paid'] == false ) { ?>
+                                    <?php if( $order['surcharge'] == true ) { ?>
+                                        <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-surcharge" data-order-id="<?php echo $order['order_id']; ?>">Доплатить</a>
+                                    <?php } else { ?>
+                                        <a href="#pay-rbs-<?php echo $order['payment_custom_field']; ?>" class="btn btn-sm" data-action="rbs-payment" data-order-id="<?php echo $order['order_id']; ?>">Оплатить</a>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php } ?>
 
-            <li class="t_item t-item_1">
-                <a class="t_link t_link_1" href="#"><span>ЛИЧНЫЕ ДАННЫЕ</span></a>
-                <div class="t_content"> 
-                        <div>
-                                        <div class="current-discount">
-                                            <div class="c-d_text">Текущая скидка</div>
-                                            <div class="c-d_size"><?php echo intval($discount_percentage); ?>%</div>
-                                        </div>
-                                        <form class="form-personal">
-                                                <div class="f-p_box">
-                                                    <input type="text" data-name="customer_firstname" placeholder="Имя" value="<?php echo $customer['firstname']; ?>" class="f-p_input">
-                                                </div>
-                                                <div class="f-p_box">
-                                                        <input type="text" data-name="customer_telephone" placeholder="Телефон" value="<?php echo $customer['telephone']; ?>" class="f-p_input" id="phone">
-                                                </div>
-                                                <div class="f-p_box">
-                                                        <?php
-                                                        $re = '/[0-9]+@eco-u.ru/';
-                                                        if(1 === preg_match_all($re, $customer['email'], $matches, PREG_SET_ORDER, 0)) {
-                                                        ?>
-                                                            <input type="hidden" data-name="customer_email_virtual" value="<?php echo $customer['email']; ?>" class="f-p_input">
-                                                            <input type="text" data-name="customer_email" placeholder="EMAIL" value="" class="f-p_input">
-                                                        <? } else { ?>
-                                                            <input type="text" data-name="customer_email" placeholder="EMAIL" value="<?php echo $customer['email']; ?>" class="f-p_input">
-                                                        <? } ?>
-                                                </div>
-                                                <div class="f-p_box2" style="display: none;">
-                                                        <?php $lastAddress = count($customer['addresses'])-1;
-                                                        foreach($customer['addresses'] as $i => $address) { ?>
-                                                        <div class="f-p_address_container" data-index="<?php echo $address['address_id']; ?>">
-                                                            <div class="f-p_address_remove <?php if($i == $lastAddress) { ?>last<?php } ?>" data-target="<?php echo $address['address_id']; ?>">&times;</div>
-                                                            <input type="text" name="dynamic[]" data-name="customer_address" data-target-id="<?php echo $address['address_id']; ?>" placeholder="Адрес Доставки" value="<?php echo $address['value']; ?>" class="f-p_input">
-                                                        </div>
-                                                        <?php } ?>
-                                                        <div class="f-p_plus"></div>
-                                                </div>
-                                                <div class="f-p_chek">
-                                                    <input type="checkbox" id="myId1" name="myName1" <?php if($newsletter) { ?>checked=""<?php } ?>>
-                                                    <label for="myId1">
-                                                        <span class="pseudo-checkbox"></span>
-                                                        <span class="label-text">Я согласен получать информацию о специальных предложениях</span>
-                                                    </label>
-                                                </div>
-                                                <div class="clearfix f-p_mobile">
-                                                        <span class="f-p_submit">Сохранить изменения</span>
-                                                </div>
-                                        </form>
-                                </div>
-                </div>
-            </li>
-        </ul>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
     </div>
-</section>
-<!-- END Container  -->
+</div>
+
+<hr class="indent lg">
 
 <!-- Favorite Products -->
 <section class="fond-f-p">
@@ -342,4 +286,7 @@
         </div>
 </section>
 <!-- Favorite Products -->
+
+<?php echo $content_bottom; ?>
+
 <?php echo $footer; ?> 

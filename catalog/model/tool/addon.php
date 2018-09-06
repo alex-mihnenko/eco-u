@@ -111,7 +111,6 @@ class ModelToolAddon extends Model {
 	}
 
 
-
 	// Customer one off coupon
 		public function checkCustomerOneOffCoupon($phone) {
 			// ---
@@ -161,6 +160,82 @@ class ModelToolAddon extends Model {
 				$query = $this->db->query($sql);
 				
 		        return true;
+			// ---
+		}
+	// ---
+
+	// Testimonials
+		public function addTestimonail($user_id, $author, $text, $parent_id=0, $good=0) {
+			// ---
+				$query = $this->db->query("
+					INSERT INTO `" . DB_PREFIX . "testimonials` SET 
+					`customer_id` = '0', 
+					`user_id` = '" . $user_id . "', 
+					`author` = '" . $this->db->escape($author) . "', 
+					`text` = '" . $this->db->escape($text) . "', 
+					`parent_id` = '".$parent_id."', 
+					`good` = '" . $good . "', 
+					`date_added` = '" . time() . "'
+				;");
+
+				return $query;
+			// ---
+		}
+
+		public function getTestimonails($customer_id) {
+			// ---
+				$query = $this->db->query("
+					SELECT 
+						t.testimonials_id, t.customer_id, t.author, t.text, t.parent_id, t.good, t.date_added 
+					FROM `" . DB_PREFIX . "testimonials` t  
+					LEFT JOIN `" . DB_PREFIX . "customer` c ON c.customer_id = t.customer_id 
+					WHERE c.rcrm_id = '" . $customer_id . "' AND t.parent_id = 0 ORDER BY t.date_added ASC
+				;");
+
+				if( $query->num_rows > 0) {
+					return $query->rows;
+				}
+				else {
+					return false;
+				}
+			// ---
+		}
+
+		public function getChildsTestimonails($testimonials_id) {
+			// ---
+				$query = $this->db->query("
+					SELECT 
+						t.testimonials_id, t.customer_id, t.user_id, t.author, t.text, t.parent_id, t.good, t.date_added, 
+						u.image 
+					FROM `" . DB_PREFIX . "testimonials` t 
+					LEFT JOIN `" . DB_PREFIX . "user` u ON u.user_id = t.user_id
+					WHERE `parent_id` = '" . $testimonials_id . "' ORDER BY t.date_added ASC
+				;");
+
+				if( $query->num_rows > 0) {
+					return $query->rows;
+				}
+				else {
+					return false;
+				}
+			// ---
+		}
+
+		public function getUserByEmail($email) {
+			// ---
+				$query = $this->db->query("
+					SELECT 
+						u.user_id, u.firstname  
+					FROM `" . DB_PREFIX . "user` u 
+					WHERE u.email = '" . $email . "' LIMIT 1
+				;");
+
+				if( $query->num_rows > 0) {
+					return $query->row;
+				}
+				else {
+					return false;
+				}
 			// ---
 		}
 	// ---

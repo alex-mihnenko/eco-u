@@ -2187,21 +2187,39 @@ class ControllerAjaxIndex extends Controller {
           header("Access-Control-Allow-Origin: *");
 
           // Init
-            $orderid = $this->request->post['id'];
+            $order_id = $this->request->post['order_id'];
+            $customer_id = $this->request->post['customer_id'];
             $response = new stdClass();
 
             $this->load->model('tool/addon');
           // ---
 
           // Get CRM order
-            $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$orderid;
-            $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+            if( $customer_id == 0 ){
+              // ---
+                $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$order_id;
+                $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
 
-            $res = $this->connectGetAPI($url,$qdata);
-            $order = $res->order;
+                $res = $this->connectGetAPI($url,$qdata);
+                $order = $res->order;
 
-            $response->order = $res->order;
-            $response->customer = $res->order->customer;
+                $response->order = $res->order;
+                $response->customer = $res->order->customer;
+              // ---
+            }
+            else if ( $order_id == 0 ) {
+              // ---
+                $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer_id;
+                $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+
+                $res = $this->connectGetAPI($url,$qdata);
+                $order = $res->order;
+
+                $response->order = array();
+                $response->customer = $res->customer;
+              // ---
+            }
+
             $response->addresses = array();
 
             // Get addresses
@@ -2339,6 +2357,141 @@ class ControllerAjaxIndex extends Controller {
 
           $response->status = 'success';
           $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }
+
+        public function chormeGetTestimonails() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $customer_id = $this->request->post['customer_id'];
+
+            $response = new stdClass();
+
+            $this->load->model('tool/addon');
+          // ---
+
+          // Get items
+            $results = $this->model_tool_addon->getTestimonails($customer_id);
+            $testimonails = array();
+            
+
+            if( $results == false ){
+              $response->result = false;
+              $response->message = 'Отзывы не найдены';
+            }
+            else{
+                $response->result = true;
+                $response->message = 'Отзывы успешно загружены';
+
+                $months = ['','Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+
+                foreach ($results as $key => $item) {
+                  // ---
+                    // Get childs
+                      $childs_html = '';
+                      $childs = $this->model_tool_addon->getChildsTestimonails($item['testimonials_id']);
+
+                      if( $childs != false ){
+                        foreach ($childs as $key_child => $child) {
+                          // ---
+                            if( $child['user_id'] == 0 ) { $class_child = ''; }
+                            else { $class_child = 'answer'; }
+
+                            $childs_html .= '
+                              <div class="child '.$class_child.'">
+                                <div class="body">
+                                  <div class="about">
+                                    <span> <span class="firstname">'.$child['author'].'</span>, '.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+                                  </div>
+                                  <div class="text">
+                                    <p>'.$child['text'].'</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ';
+                          // ---
+                        }
+                      }
+                    // ---
+
+                    if( $item['good'] == true ) { $good = '<i class="fa fa-thumbs-o-up green"></i>'; }
+                    else { $good = '<i class="fa fa-thumbs-o-down red"></i>'; }
+
+                    $testimonails[] = '
+                      <div class="panel testimonial" data-id="'.$item['testimonials_id'].'">
+                          <div class="body">
+                            <div class="about">
+                              '.$good.'
+                              <span>'.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+                            </div>
+                            <div class="text">
+                              <p>'.$item['text'].'</p>
+                            </div>
+                            <div class="childs">
+                              '.$childs_html.'
+                            </div>
+                          </div>
+                      </div>
+                    ';
+                  // ---
+                }
+
+                $response->testimonails = $testimonails;
+            }
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }
+
+        public function chormeSetTestimonial() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $user_email = $this->request->post['user_email'];
+            $testimonial_text = $this->request->post['testimonial_text'];
+            $testimonial_id = $this->request->post['testimonial_id'];
+
+            $response = new stdClass();
+
+            $this->load->model('tool/addon');
+          // ---
+
+          // Get customer
+              $this->load->model('account/customer');
+              
+              $user = $this->model_tool_addon->getUserByEmail($user_email);
+              $response->user = $user;
+          // ---
+
+          // Set
+              if( $user == false ){
+                $response->result = false;
+                $response->message = 'Ответ не был сохранен - Нет пользователя в OC';
+              }
+              else {
+                // ---
+                  $result = $this->model_tool_addon->addTestimonail($user['user_id'], $user['firstname'], $testimonial_text, $testimonial_id, 0);
+
+                  if( $result == false ){
+                    $response->result = false;
+                    $response->message = 'Ответ не был сохранен';
+                  }
+                  else{
+                    $response->result = true;
+                    $response->message = 'Ответ добавлен';
+                  }
+                // ---
+              }
+          // ---
+
+          $response->status = 'success';
 
           echo json_encode($response);
           exit;

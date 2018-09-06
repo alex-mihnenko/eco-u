@@ -48,6 +48,10 @@ xxl
 			min-height: 5px; */
 		}
 
+		.flex-col-50 {
+			width: 50%;
+		}
+
 
 		@media (max-width: 575px) {
 			.flex-row { flex-direction: column; }
@@ -55,6 +59,12 @@ xxl
 	/* Flex */
 
 	/* Grid */
+		.container-wrapper {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+
 		.container {
 			display: block;
 			width: 100%;
@@ -62,16 +72,14 @@ xxl
 			margin: 0px auto;
 		}
 
-		@media (min-width: 1200px) and (min-width: 1599px) {
-			.container {
-				max-width: 1194px;
-			}
+		@media (min-width: 1200px) and (max-width: 1599px) {
+			.container { max-width: 1194px; }
+			.container-wrapper .container { max-width: 600px; }
 		}
 
 		@media (min-width: 1600px) {
-			.container {
-				max-width: 1418px;
-			}
+			.container { max-width: 1418px; }
+			.container-wrapper .container { max-width: 600px; }
 		}
 	/* Grid */
 
@@ -628,6 +636,266 @@ xxl
 	/* Cart */
 
 	/* Account */
+		/* Nav */
+			nav.account {
+				position: fixed;
+				top: 62px;
+				left: 0px;
+				width: 100%;
+				height: auto;
+				min-height: auto;
+				box-sizing: border-box;
+				margin: 0 auto;
+				padding: 0px 30px;
+				z-index: 1000;
+				overflow: hidden;
+
+				background-color: #FFFFFF !important;
+				border-bottom: 1px solid #E6E6E6;
+
+				text-align: center;
+			}
+
+			nav.account > a {
+				display: inline-block;
+				position: relative;
+				width: auto;
+				height: 100%;
+				box-sizing: border-box;
+				margin: 0 20px;
+				padding: 20px 0px;
+
+				font-size: 12px;
+			    font-weight: 700;
+			    line-height: 12px;
+			    box-sizing: border-box;
+			    color: #585858;
+			    text-decoration: none;
+			    text-transform: uppercase;
+			}
+
+			nav.account > a:after {
+				content: ' ';
+				position: absolute;
+				top: auto;
+				bottom: 0px;
+				left: 0px;
+				width: 100%;
+				height: 4px;
+				background-color: #749D3E;
+				z-index: 100;
+
+				-webkit-transition: transform .25s;
+				-moz-transition: transform .25s;
+				-ms-transition: transform .25s;
+				-o-transition: transform .25s;
+				transition: transform .25s;
+
+				-webkit-transform: translateY(6px);
+				-moz-transform: translateY(6px);
+				-ms-transform: translateY(6px);
+				-o-transform: translateY(6px);
+				transform: translateY(6px);
+			}
+
+			nav.account > a:hover:after,
+			nav.account > a.active:after {
+				-webkit-transform: translateY(0px);
+				-moz-transform: translateY(0px);
+				-ms-transform: translateY(0px);
+				-o-transform: translateY(0px);
+				transform: translateY(0px);
+			}
+		/* Nav */
+
+		/* Testimonials */
+			#account-testimonials .testimonials-list {
+			}
+
+			#account-testimonials .testimonials-list .item {
+				margin-bottom: 30px;
+			}
+
+			#account-testimonials .testimonials-list .item .body {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+
+			#account-testimonials .testimonials-list .item .about {
+				margin-bottom: 10px;
+
+				font-size: 14px;
+				line-height: 22px;
+			    font-weight: 500;
+			    color: #374047;
+			    box-sizing: border-box;
+			}
+
+			#account-testimonials .testimonials-list .item .about .good {
+				top: 4px;
+				display: inline-block;
+				width: 22px;
+				height: 22px;
+				margin-right: 15px;
+			}
+
+			#account-testimonials .testimonials-list .item .about .firstname {
+				color: #749D3E;
+			}
+
+			#account-testimonials .testimonials-list .item .about .good.green svg * {
+				fill: #749D3E;
+			}
+
+			#account-testimonials .testimonials-list .item .about .good.red svg * {
+				fill: #e2617f;
+			}
+
+
+			#account-testimonials .testimonials-list .item .text {
+				font-size: 14px;
+				line-height: 22px;
+			    font-weight: 200;
+			    color: #868281;
+			    box-sizing: border-box;
+			}
+
+			/* Childs */
+				#account-testimonials .testimonials-list .item .childs {
+					display: block;
+					width: 100%;
+					height: auto;
+					margin: 15px 0px;
+				}
+
+				#account-testimonials .testimonials-list .item .childs .child {
+					display: block;
+					width: 100%;
+					height: auto;
+					overflow: hidden;
+					margin: 0px 0px 15px;
+				}
+
+				#account-testimonials .testimonials-list .item .childs .child .author {
+					display: block;
+					float: left;
+					width: 80px;
+					height: 100%;
+				}
+
+				#account-testimonials .testimonials-list .item .childs .child .author .image {
+					display: block;
+					width: 60px;
+					height: 60px;
+					border-radius: 100px;
+				}
+
+				#account-testimonials .testimonials-list .item .childs .child .body {
+					display: block;
+					float: left;
+					width: calc(100% - 80px);
+					height: 100%;
+				}
+
+				#account-testimonials .testimonials-list .item .childs .answer {
+					display: block;
+					border: none;
+					background-color: transparent;
+					cursor: pointer;
+					margin-left: 80px;
+
+					font-size: 12px;
+					line-height: 22px;
+				    font-weight: 700;
+					color: #749D3E;
+				}
+			/* Childs */
+
+			/* Answer */
+				#account-testimonials form.answer {
+					display: block;
+					position: relative;
+					box-sizing: border-box;
+					padding: 0px;
+					width: 100%;
+					height: 0px;
+					overflow: hidden;
+
+					-webkit-transition: height .5s;
+					-moz-transition: height .5s;
+					-ms-transition: height .5s;
+					-o-transition: height .5s;
+					transition: height .5s;
+				}
+
+				#account-testimonials form.answer[data-view="visible"] {
+					height: 242px;
+				}
+
+				#account-testimonials form.answer textarea {
+					margin-top: 25px;
+				}
+
+				#account-testimonials form.answer .close {
+					display: block;
+					position: absolute;
+					top: 0px;
+					right: 0px;
+					background-color: transparent;
+					border: none;
+					cursor: pointer;
+					box-sizing: border-box;
+					width: 20px;
+					height: 20px;
+				}
+
+				#account-testimonials form.answer .close:before,
+				#account-testimonials form.answer .close:after {
+					content: ' ';
+					position: absolute;
+					top: 0px;
+					left: 10px;
+					width: 2px;
+					height: 20px;
+					background-color: #D4D7DF;
+
+					-webkit-transition: background-color .25s;
+					-moz-transition: background-color .25s;
+					-ms-transition: background-color .25s;
+					-o-transition: background-color .25s;
+					transition: background-color .25s;
+
+					-webkit-transform-origin: 50% 50%;
+					-moz-transform-origin: 50% 50%;
+					-ms-transform-origin: 50% 50%;
+					-o-transform-origin: 50% 50%;
+					transform-origin: 50% 50%;
+				}
+
+				#account-testimonials form.answer .close:before {
+					-webkit-transform: rotate(45deg);
+					-moz-transform: rotate(45deg);
+					-ms-transform: rotate(45deg);
+					-o-transform: rotate(45deg);
+					transform: rotate(45deg);
+				}
+
+				#account-testimonials form.answer .close:after {
+					-webkit-transform: rotate(-45deg);
+					-moz-transform: rotate(-45deg);
+					-ms-transform: rotate(-45deg);
+					-o-transform: rotate(-45deg);
+					transform: rotate(-45deg);
+				}
+
+				#account-testimonials form.answer .close:hover:before,
+				#account-testimonials form.answer .close:hover:after {
+					background-color: #749D3E;
+				}
+			/* Answer */
+		/* Testimonials */
+
 		/* Order about */
 			.table-history tr > td {
 				cursor: pointer;
@@ -3019,6 +3287,46 @@ xxl
 			    font-size: 12px;
 			}
 		}
+
+
+		/* Toggles */
+			.btn-toggle {
+				display: block;
+				width: auto;
+				height: auto;
+			}
+
+			.btn-toggle.light button {
+				cursor: pointer;
+			}
+
+			.btn-toggle button:nth-child(2) {
+				margin-left: 15px;
+			}
+
+			.btn-toggle.light button {
+				border: none;
+				background-color: transparent;
+			}
+
+			.btn-toggle.light button i svg * {
+				-webkit-transition: fill .5s;
+				-moz-transition: fill .5s;
+				-ms-transition: fill .5s;
+				-o-transition: fill .5s;
+				transition: fill .5s;
+			}
+
+			.btn-toggle.light button.btn-green:hover i svg *,
+			.btn-toggle.light button.btn-green.active i svg * {
+				fill: #749D3E;
+			}
+
+			.btn-toggle.light button.btn-red:hover i svg *,
+			.btn-toggle.light button.btn-red.active i svg * {
+				fill: #e2617f;
+			}
+		/* Toggles */
 	/* Buttons */
 
 	/* Inputs */
@@ -3037,6 +3345,33 @@ xxl
 		    font-weight: 500;
 		    margin: 0;
 		    padding: 0;
+		}
+
+		.form-control.bordered {
+			border: 2px solid #EEEEEE;
+			border-radius: 4px;
+			background-color: #EEEEEE;
+			box-sizing: border-box;
+			padding: 15px;
+			
+		    font-size: 14px;
+		    line-height: 22px;
+		    color: #374047;
+
+		    -webkit-transition: border-color .5s;
+		    -moz-transition: border-color .5s;
+		    -ms-transition: border-color .5s;
+		    -o-transition: border-color .5s;
+		    transition: border-color .5s;
+		}
+
+		.form-control.bordered:focus {
+			border-color: #749D3E;
+		}
+
+		textarea.form-control {
+			resize: none;
+			min-height: 150px;
 		}
 
 		.form-input {

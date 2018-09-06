@@ -26,21 +26,12 @@
       <div class="panel-body">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-review" class="form-horizontal">
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-author"><?php echo $entry_author; ?></label>
+            <label class="col-sm-2 control-label" for="input-author"><span data-toggle="tooltip" title="<?php echo $help_author; ?>"><?php echo $entry_author; ?></span></label>
             <div class="col-sm-10">
               <input type="text" name="author" value="<?php echo $author; ?>" placeholder="<?php echo $entry_author; ?>" id="input-author" class="form-control" />
+              <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
               <?php if ($error_author) { ?>
               <div class="text-danger"><?php echo $error_author; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-product"><span data-toggle="tooltip" title="<?php echo $help_product; ?>"><?php echo $entry_product; ?></span></label>
-            <div class="col-sm-10">
-              <input type="text" name="product" value="<?php echo $product; ?>" placeholder="<?php echo $entry_product; ?>" id="input-product" class="form-control" />
-              <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
-              <?php if ($error_product) { ?>
-              <div class="text-danger"><?php echo $error_product; ?></div>
               <?php } ?>
             </div>
           </div>
@@ -50,59 +41,6 @@
               <textarea name="text" cols="60" rows="8" placeholder="<?php echo $entry_text; ?>" id="input-text" class="form-control"><?php echo $text; ?></textarea>
               <?php if ($error_text) { ?>
               <div class="text-danger"><?php echo $error_text; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-name"><?php echo $entry_rating; ?></label>
-            <div class="col-sm-10">
-              <label class="radio-inline">
-                <?php if ($rating == 1) { ?>
-                <input type="radio" name="rating" value="1" checked="checked" />
-                1
-                <?php } else { ?>
-                <input type="radio" name="rating" value="1" />
-                1
-                <?php } ?>
-              </label>
-              <label class="radio-inline">
-                <?php if ($rating == 2) { ?>
-                <input type="radio" name="rating" value="2" checked="checked" />
-                2
-                <?php } else { ?>
-                <input type="radio" name="rating" value="2" />
-                2
-                <?php } ?>
-              </label>
-              <label class="radio-inline">
-                <?php if ($rating == 3) { ?>
-                <input type="radio" name="rating" value="3" checked="checked" />
-                3
-                <?php } else { ?>
-                <input type="radio" name="rating" value="3" />
-                3
-                <?php } ?>
-              </label>
-              <label class="radio-inline">
-                <?php if ($rating == 4) { ?>
-                <input type="radio" name="rating" value="4" checked="checked" />
-                4
-                <?php } else { ?>
-                <input type="radio" name="rating" value="4" />
-                4
-                <?php } ?>
-              </label>
-              <label class="radio-inline">
-                <?php if ($rating == 5) { ?>
-                <input type="radio" name="rating" value="5" checked="checked" />
-                5
-                <?php } else { ?>
-                <input type="radio" name="rating" value="5" />
-                5
-                <?php } ?>
-              </label>
-              <?php if ($error_rating) { ?>
-              <div class="text-danger"><?php echo $error_rating; ?></div>
               <?php } ?>
             </div>
           </div>
@@ -142,24 +80,24 @@ $('.datetime').datetimepicker({
 });
 //--></script>
   <script type="text/javascript"><!--
-$('input[name=\'product\']').autocomplete({
+$('input[name=\'author\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-			url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			url: 'index.php?route=catalog/review/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
 			dataType: 'json',			
 			success: function(json) {
 				response($.map(json, function(item) {
 					return {
 						label: item['name'],
-						value: item['product_id']
+						value: item['customer_id']
 					}
 				}));
 			}
 		});
 	},
 	'select': function(item) {
-		$('input[name=\'product\']').val(item['label']);
-		$('input[name=\'product_id\']').val(item['value']);		
+		$('input[name=\'author\']').val(item['label']);
+		$('input[name=\'customer_id\']').val(item['value']);		
 	}	
 });
 //--></script></div>

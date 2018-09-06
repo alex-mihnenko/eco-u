@@ -9,7 +9,7 @@ $_['text_add']          = 'Добавить';
 $_['text_edit']         = 'Редактирование';
 
 // Column
-$_['column_product']    = 'Товар';
+$_['column_theme']    = 'Тема';
 $_['column_author']     = 'Автор';
 $_['column_rating']     = 'Рейтинг';
 $_['column_status']     = 'Статус';
@@ -17,7 +17,7 @@ $_['column_date_added'] = 'Дата';
 $_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_product']     = 'Товар';
+$_['entry_theme']     = 'Тема';
 $_['entry_author']      = 'Автор';
 $_['entry_rating']      = 'Рейтинг';
 $_['entry_status']      = 'Статус';

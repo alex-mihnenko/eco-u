@@ -4,182 +4,221 @@ class ControllerAccountEdit extends Controller {
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/edit', '', true);
+			$this->session->data['redirect'] = $this->url->link('account/account', '', true);
 
 			$this->response->redirect($this->url->link('account/login', '', true));
 		}
 
-		$this->load->language('account/edit');
+		$this->load->language('account/account');
 
 		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment.js');
-		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
-
-		$this->load->model('account/customer');
-
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_account_customer->editCustomer($this->request->post);
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			// Add to activity log
-			if ($this->config->get('config_customer_activity')) {
-				$this->load->model('account/activity');
-
-				$activity_data = array(
-					'customer_id' => $this->customer->getId(),
-					'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-				);
-
-				$this->model_account_activity->addActivity('edit', $activity_data);
-			}
-
-			$this->response->redirect($this->url->link('account/account', '', true));
-		}
 
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home')
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home')
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', true)
+			'text' => $this->language->get('text_account'),
+			'href' => $this->url->link('account/account', '', true)
 		);
 
-		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_edit'),
-			'href'      => $this->url->link('account/edit', '', true)
-		);
+		if (isset($this->session->data['success'])) {
+			$data['success'] = $this->session->data['success'];
+
+			unset($this->session->data['success']);
+		} else {
+			$data['success'] = '';
+		} 
 
 		$data['heading_title'] = $this->language->get('heading_title');
 
-		$data['text_your_details'] = $this->language->get('text_your_details');
-		$data['text_additional'] = $this->language->get('text_additional');
-		$data['text_select'] = $this->language->get('text_select');
-		$data['text_loading'] = $this->language->get('text_loading');
+		$data['text_my_account'] = $this->language->get('text_my_account');
+		$data['text_my_orders'] = $this->language->get('text_my_orders');
+		$data['text_my_newsletter'] = $this->language->get('text_my_newsletter');
+		$data['text_edit'] = $this->language->get('text_edit');
+		$data['text_password'] = $this->language->get('text_password');
+		$data['text_address'] = $this->language->get('text_address');
+		$data['text_credit_card'] = $this->language->get('text_credit_card');
+		$data['text_wishlist'] = $this->language->get('text_wishlist');
+		$data['text_order'] = $this->language->get('text_order');
+		$data['text_download'] = $this->language->get('text_download');
+		$data['text_reward'] = $this->language->get('text_reward');
+		$data['text_return'] = $this->language->get('text_return');
+		$data['text_transaction'] = $this->language->get('text_transaction');
+		$data['text_newsletter'] = $this->language->get('text_newsletter');
+		$data['text_recurring'] = $this->language->get('text_recurring');
 
-		$data['entry_firstname'] = $this->language->get('entry_firstname');
-		$data['entry_lastname'] = $this->language->get('entry_lastname');
-		$data['entry_email'] = $this->language->get('entry_email');
-		$data['entry_telephone'] = $this->language->get('entry_telephone');
-		$data['entry_fax'] = $this->language->get('entry_fax');
+		$data['edit'] = $this->url->link('account/edit', '', true);
+		$data['password'] = $this->url->link('account/password', '', true);
+		$data['address'] = $this->url->link('account/address', '', true);
+		
+		$data['credit_cards'] = array();
+		
+		$files = glob(DIR_APPLICATION . 'controller/extension/credit_card/*.php');
+		
+		if(!empty($files)) foreach ($files as $file) {
+			$code = basename($file, '.php');
+			
+			if ($this->config->get($code . '_status') && $this->config->get($code . '_card')) {
+				$this->load->language('extension/credit_card/' . $code);
 
-		$data['button_continue'] = $this->language->get('button_continue');
-		$data['button_back'] = $this->language->get('button_back');
-		$data['button_upload'] = $this->language->get('button_upload');
-
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
+				$data['credit_cards'][] = array(
+					'name' => $this->language->get('heading_title'),
+					'href' => $this->url->link('extension/credit_card/' . $code, '', true)
+				);
+			}
+		}
+		
+		$data['wishlist'] = $this->url->link('account/wishlist');
+		$data['order'] = $this->url->link('account/order', '', true);
+		$data['download'] = $this->url->link('account/download', '', true);
+		
+		if ($this->config->get('reward_status')) {
+			$data['reward'] = $this->url->link('account/reward', '', true);
 		} else {
-			$data['error_warning'] = '';
-		}
-
-		if (isset($this->error['firstname'])) {
-			$data['error_firstname'] = $this->error['firstname'];
-		} else {
-			$data['error_firstname'] = '';
-		}
-
-		if (isset($this->error['lastname'])) {
-			$data['error_lastname'] = $this->error['lastname'];
-		} else {
-			$data['error_lastname'] = '';
-		}
-
-		if (isset($this->error['email'])) {
-			$data['error_email'] = $this->error['email'];
-		} else {
-			$data['error_email'] = '';
-		}
-
-		if (isset($this->error['telephone'])) {
-			$data['error_telephone'] = $this->error['telephone'];
-		} else {
-			$data['error_telephone'] = '';
-		}
-
-		if (isset($this->error['custom_field'])) {
-			$data['error_custom_field'] = $this->error['custom_field'];
-		} else {
-			$data['error_custom_field'] = array();
-		}
-
-		$data['action'] = $this->url->link('account/edit', '', true);
-
-		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
-			$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-		}
-
-		if (isset($this->request->post['firstname'])) {
-			$data['firstname'] = $this->request->post['firstname'];
-		} elseif (!empty($customer_info)) {
-			$data['firstname'] = $customer_info['firstname'];
-		} else {
-			$data['firstname'] = '';
-		}
-
-		if (isset($this->request->post['lastname'])) {
-			$data['lastname'] = $this->request->post['lastname'];
-		} elseif (!empty($customer_info)) {
-			$data['lastname'] = $customer_info['lastname'];
-		} else {
-			$data['lastname'] = '';
-		}
-
-		if (isset($this->request->post['email'])) {
-			$data['email'] = $this->request->post['email'];
-		} elseif (!empty($customer_info)) {
-			$data['email'] = $customer_info['email'];
-		} else {
-			$data['email'] = '';
-		}
-
-		if (isset($this->request->post['telephone'])) {
-			$data['telephone'] = $this->request->post['telephone'];
-		} elseif (!empty($customer_info)) {
-			$data['telephone'] = $customer_info['telephone'];
-		} else {
-			$data['telephone'] = '';
-		}
-
-		if (isset($this->request->post['fax'])) {
-			$data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($customer_info)) {
-			$data['fax'] = $customer_info['fax'];
-		} else {
-			$data['fax'] = '';
-		}
-
-		// Custom Fields
-		$this->load->model('account/custom_field');
-
-		$data['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
-
-		if (isset($this->request->post['custom_field'])) {
-			$data['account_custom_field'] = $this->request->post['custom_field'];
-		} elseif (isset($customer_info)) {
-			$data['account_custom_field'] = json_decode($customer_info['custom_field'], true);
-		} else {
-			$data['account_custom_field'] = array();
-		}
-
-		$data['back'] = $this->url->link('account/account', '', true);
-
+			$data['reward'] = '';
+		}		
+		
+		$data['return'] = $this->url->link('account/return', '', true);
+		$data['transaction'] = $this->url->link('account/transaction', '', true);
+		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['recurring'] = $this->url->link('account/recurring', '', true);
+		
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
+		
+        $this->load->model('checkout/order');
+        $customer_id = $this->session->data['customer_id'];
+        $data['orders'] = Array();
+        $data['customer'] = Array();
 
-		$this->response->setOutput($this->load->view('account/edit', $data));
+        if($this->customer->getNewsletter() == 1) {
+            $data['newsletter'] = true;
+        } else {
+            $data['newsletter'] = false;
+        }
+        if(!empty($customer_id)) {
+            // Check discount
+                $this->session->data['personal_discount'] = 0;
+                $this->session->data['personal_discount_percentage'] = 0;
+                
+                $this->session->data['cumulative_discount'] = 0;
+                $this->session->data['cumulative_discount_percentage'] = 0;
+                
+                // Personal discount
+                    $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
+                    
+                    $basePrice = $this->cart->getTotal();
+                    $order_discount = $customer_discount/100;
+
+                    $this->session->data['personal_discount'] = floor($order_discount * $basePrice);
+                    $this->session->data['personal_discount_percentage'] = $customer_discount;
+                // ---
+
+                // Cumulative discount
+                    $totalCustomerOutcome = 0;
+
+                    if($orders !== false) {
+                        foreach($orders as $order) {
+                            if($order['order_status_id'] == 5) {
+                                $totalCustomerOutcome += $order['total'];
+                            }
+                        }
+                    }
+
+                    $cumulative_discount = intval(floor($totalCustomerOutcome/10000));
+                    if( $cumulative_discount > intval($this->config->get('config_max_discount')) ) $cumulative_discount = intval($this->config->get('config_max_discount'));
+                    
+                    $basePrice = $this->cart->getTotal();
+                    $order_discount = $cumulative_discount/100;
+
+
+                    $this->session->data['cumulative_discount'] = floor($order_discount * $basePrice);
+                    $this->session->data['cumulative_discount_percentage'] = $cumulative_discount;
+                // ---
+
+
+                $data['discount'] = 0;
+                $data['discount_percentage'] = 0;
+
+                if(!$this->customer->getCouponDiscount()) {
+                    // ---
+                        if( $this->session->data['personal_discount_percentage'] > $this->session->data['cumulative_discount_percentage'] ) {
+                            $data['discount'] = $this->session->data['personal_discount'];
+                            $data['discount_percentage'] = $this->session->data['personal_discount_percentage'];
+                        }
+                        else{
+                            $data['discount'] = $this->session->data['cumulative_discount'];
+                            $data['discount_percentage'] = $this->session->data['cumulative_discount_percentage'];
+                        }
+                    // ---
+                } else {
+                    // ---
+                        $coupon = $this->customer->getCouponDiscount();
+
+                        if($coupon['type'] == 'P') {
+                            // ---
+                                $couponDiscount = $coupon['discount'] / 100 * $this->cart->getTotal();
+                                $couponPercentage = intval($coupon['discount']);
+
+                                if( $couponPercentage > $personal_discount_percentage  && $couponPercentage > $cumulative_discount_percentage ) {
+                                    $data['discount'] = $couponDiscount;
+                                    $data['discount_percentage'] = $couponPercentage;
+
+                                    $data['coupon'] = true;
+                                }
+                                else{
+                                    if( $personal_discount_percentage > $cumulative_discount_percentage ) {
+                                        $data['discount'] = $personal_discount;
+                                        $data['discount_percentage'] = $personal_discount_percentage;
+                                    }
+                                    else{
+                                        $data['discount'] = $cumulative_discount;
+                                        $data['discount_percentage'] = $cumulative_discount_percentage;
+                                    }
+                                }
+                            // ---
+                        }
+                    // ---
+                }
+            // ---
+            
+            $addresses = $this->customer->getAddresses();
+            $arAddress = Array();
+            if(!empty($addresses)) {
+                foreach($addresses as $address) {
+                    $arAddress[] = Array(
+                        'address_id' => $address['address_id'],
+                        'value' => $address['address_1']
+                    );
+                }
+            } else {
+                $arAddress[] = Array(
+                    'address_id' => 0,
+                    'value' => ''
+                );
+            }
+            $data['customer'] = Array(
+                'firstname' => $this->customer->getFirstName(),
+                'telephone' => $this->customer->getTelephone(),
+                'email' => $this->customer->getEmail(),
+                'addresses' => $arAddress
+            );
+        }
+        
+        // Предпочитаемые товары
+        $results = $this->model_catalog_product->getProductsPreferable();
+        $data['pref_products'] = $results;
+        
+        $this->response->setOutput($this->load->view('account/edit', $data));
 	}
-
 	protected function validate() {
 		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');

@@ -33,10 +33,6 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label class="control-label" for="input-product"><?php echo $entry_product; ?></label>
-                <input type="text" name="filter_product" value="<?php echo $filter_product; ?>" placeholder="<?php echo $entry_product; ?>" id="input-product" class="form-control" />
-              </div>
-              <div class="form-group">
                 <label class="control-label" for="input-author"><?php echo $entry_author; ?></label>
                 <input type="text" name="filter_author" value="<?php echo $filter_author; ?>" placeholder="<?php echo $entry_author; ?>" id="input-author" class="form-control" />
               </div>
@@ -76,20 +72,10 @@
               <thead>
                 <tr>
                   <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                  <td class="text-left"><?php if ($sort == 'pd.name') { ?>
-                    <a href="<?php echo $sort_product; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_product; ?>"><?php echo $column_product; ?></a>
-                    <?php } ?></td>
                   <td class="text-left"><?php if ($sort == 'r.author') { ?>
                     <a href="<?php echo $sort_author; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_author; ?>"><?php echo $column_author; ?></a>
-                    <?php } ?></td>
-                  <td class="text-right"><?php if ($sort == 'r.rating') { ?>
-                    <a href="<?php echo $sort_rating; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_rating; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_rating; ?>"><?php echo $column_rating; ?></a>
                     <?php } ?></td>
                   <td class="text-left"><?php if ($sort == 'r.status') { ?>
                     <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
@@ -115,7 +101,6 @@
                     <?php } ?></td>
                   <td class="text-left"><?php echo $review['name']; ?></td>
                   <td class="text-left"><?php echo $review['author']; ?></td>
-                  <td class="text-right"><?php echo $review['rating']; ?></td>
                   <td class="text-left"><?php echo $review['status']; ?></td>
                   <td class="text-left"><?php echo $review['date_added']; ?></td>
                   <td class="text-right"><a href="<?php echo $review['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>

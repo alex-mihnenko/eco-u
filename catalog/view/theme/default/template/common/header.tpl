@@ -36,8 +36,6 @@
 <?php } else { ?>
 <body class="page_2">
 <?php } ?>
-	
-	<div style="display: none;"><?php echo stripslashes($route['_route_']); ?></div>
 
 	<div class="wreaper">
 		<nav>

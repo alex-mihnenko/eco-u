@@ -116,6 +116,10 @@ function loadSvg($type, $src) {
 		case 'path':
     		echo file_get_contents( DIR_APPLICATION.'../'.$src );
 		break;
+
+		case 'src':
+    		return file_get_contents( DIR_APPLICATION.'../catalog/view/theme/default/img/svg/'.$src );
+		break;
 	}
 }
 
