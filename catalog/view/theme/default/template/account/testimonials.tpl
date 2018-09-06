@@ -18,11 +18,14 @@
         <div class="flex flex-row">
           <div class="flex-col flex-col-50">
             <hr class="indent xxs">
-            <div class="btn-toggle light">
-                <button type="button" data-value="1" class="btn-green active"><i class="svg" data-src="icon-thumb-up.svg"><?php loadSvg('name', 'icon-thumb-up.svg'); ?></i></button>
-                <button type="button" data-value="0" class="btn-red"><i class="svg" data-src="icon-thumb-down.svg"><?php loadSvg('name', 'icon-thumb-down.svg'); ?></i></button>
+            <div class="btn-toggle rating">
+                <button type="button" data-value="1" class="btn-red"><i class="fa fa-star-o"></i></button>
+                <button type="button" data-value="2" class="btn-red"><i class="fa fa-star-o"></i></button>
+                <button type="button" data-value="3" class="btn-red"><i class="fa fa-star-o"></i></button>
+                <button type="button" data-value="4" class="btn-red"><i class="fa fa-star-o"></i></button>
+                <button type="button" data-value="5" class="btn-red"><i class="fa fa-star-o"></i></button>
 
-                <input type="hidden" name="good" value="1">
+                <input type="text" name="rating" value="" required="">
             </div>
           </div>
 
@@ -44,7 +47,7 @@
         <button type="button" class="close" data-action="close"> </button>
         
         <textarea class="form-control bordered justify" name="text" placeholder="<?php echo $entry_testimonials; ?>" required=""></textarea>
-        <input type="hidden" name="good" value="1">
+        <input type="hidden" name="rating" value="0">
         <input type="hidden" name="parent_id" value="0">
 
         <hr class="indent xs">

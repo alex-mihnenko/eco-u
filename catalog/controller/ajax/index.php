@@ -2386,7 +2386,7 @@ class ControllerAjaxIndex extends Controller {
                 $response->result = true;
                 $response->message = 'Отзывы успешно загружены';
 
-                $months = ['','Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+                $months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
                 foreach ($results as $key => $item) {
                   // ---
@@ -2404,7 +2404,10 @@ class ControllerAjaxIndex extends Controller {
                               <div class="child '.$class_child.'">
                                 <div class="body">
                                   <div class="about">
-                                    <span> <span class="firstname">'.$child['author'].'</span>, '.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+                                    <span>
+                                    <span><b>'.$child['author'].'</b>, </span> 
+                                    <span><b>'.date('j', $child['date_added']).' '.$months[intval(date('m', $child['date_added']))].' '.date('Y', $child['date_added']).'</b></span>
+                                  </span>
                                   </div>
                                   <div class="text">
                                     <p>'.$child['text'].'</p>
@@ -2417,15 +2420,30 @@ class ControllerAjaxIndex extends Controller {
                       }
                     // ---
 
-                    if( $item['good'] == true ) { $good = '<i class="fa fa-thumbs-o-up green"></i>'; }
-                    else { $good = '<i class="fa fa-thumbs-o-down red"></i>'; }
+                    // Rating
+                      $rating = '<div class="rating">';
+
+                      for ($i=1; $i <=5 ; $i++) { 
+                        // ---
+                          if( $i <= $item['rating'] ){
+                            $rating .= '<i class="fa fa-star red"></i>';
+                          }
+                          else {
+                            $rating .= '<i class="fa fa-star-o"></i>';
+                          }
+                        // ---
+                      }
+
+                      $rating .= '</div>';
+                    // ---
 
                     $testimonails[] = '
                       <div class="panel testimonial" data-id="'.$item['testimonials_id'].'">
                           <div class="body">
                             <div class="about">
-                              '.$good.'
-                              <span>'.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+                              '.$rating.'
+                              <span><b>'.$item['author'].'</b>, </span>
+                              <span><b>'.date('j', $item['date_added']).' '.$months[intval(date('m', $item['date_added']))].' '.date('Y', $item['date_added']).'</b></span>
                             </div>
                             <div class="text">
                               <p>'.$item['text'].'</p>

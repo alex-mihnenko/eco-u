@@ -1256,9 +1256,9 @@ $(document).ready(function() {
 			$('#account-testimonials').on('submit', 'form.post', function(){
 				var form = $(this);
 				var text = $(this).find('[name="text"]').val();
-				var good = $(this).find('[name="good"]').val();
+				var rating = $(this).find('[name="rating"]').val();
 
-				$.post('/?route=account/testimonials/addItem', {text:text, good:good}, function(data){
+				$.post('/?route=account/testimonials/addItem', {text:text, rating:rating}, function(data){
 					// ---
 						form.find('.form-control').val('');
 
@@ -1273,9 +1273,9 @@ $(document).ready(function() {
 				var form = $(this);
 				var text = $(this).find('[name="text"]').val();
 				var parent_id = $(this).find('[name="parent_id"]').val();
-				var good = $(this).find('[name="good"]').val();
+				var rating = $(this).find('[name="rating"]').val();
 
-				$.post('/?route=account/testimonials/addItem', {text:text, parent_id:parent_id, good:good}, function(data){
+				$.post('/?route=account/testimonials/addItem', {text:text, parent_id:parent_id, rating:rating}, function(data){
 					// ---
 						form.find('.form-control').val('');
 
@@ -1528,14 +1528,58 @@ $(document).ready(function() {
 		// ---
 
 		// Buttons
+			// $(document).on('mouseenter', '.btn-toggle button', function(){
+			// 	var $this = $(this);
+			// 	var value = parseInt($this.attr('data-value'));
+			// 	var count = 1;
+
+			// 	$this.parents('.btn-toggle').find('button').each(function(key, val){
+
+			// 		if( count <= value ){
+			// 			$(this).addClass('active');
+			// 			$(this).find('i').removeClass('fa-star-o').addClass('fa-star');
+			// 		}
+			// 		else {
+			// 			$(this).removeClass('active');
+			// 			$(this).find('i').addClass('fa-star-o').removeClass('fa-star');
+			// 		}
+
+			// 		count++;
+			// 	});
+			// });
+
+			// $(document).on('mouseleave', '.btn-toggle', function(){
+			// 	if( $(this).attr('data-set') !== 'true' ){
+			// 		$(this).find('button').each(function(key, val){
+			// 			$(this).removeClass('active');
+			// 			$(this).find('i').addClass('fa-star-o').removeClass('fa-star');
+			// 		});
+			// 	}
+			// });
+			
 			$(document).on('click', '.btn-toggle button', function(){
 				var $this = $(this);
-
 				var value = $this.attr('data-value');
 
-				$this.parent().find('button').removeClass('active');
-				$this.addClass('active');
-				$this.parent().find('input').val(value);
+				var count = 1;
+
+				$this.parents('.btn-toggle').attr('data-set', 'true');
+
+				$this.parents('.btn-toggle').find('button').each(function(key, val){
+
+					if( count <= value ){
+						$(this).addClass('active');
+						$(this).find('i').removeClass('fa-star-o').addClass('fa-star');
+					}
+					else {
+						$(this).removeClass('active');
+						$(this).find('i').addClass('fa-star-o').removeClass('fa-star');
+					}
+
+					count++;
+				});
+
+				$this.parents('.btn-toggle').find('input').val(value);
 			});
 		// ---
 	// ---

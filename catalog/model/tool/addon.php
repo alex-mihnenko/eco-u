@@ -165,7 +165,7 @@ class ModelToolAddon extends Model {
 	// ---
 
 	// Testimonials
-		public function addTestimonail($user_id, $author, $text, $parent_id=0, $good=0) {
+		public function addTestimonail($user_id, $author, $text, $parent_id=0, $rating=0) {
 			// ---
 				$query = $this->db->query("
 					INSERT INTO `" . DB_PREFIX . "testimonials` SET 
@@ -174,7 +174,7 @@ class ModelToolAddon extends Model {
 					`author` = '" . $this->db->escape($author) . "', 
 					`text` = '" . $this->db->escape($text) . "', 
 					`parent_id` = '".$parent_id."', 
-					`good` = '" . $good . "', 
+					`rating` = '" . $rating . "', 
 					`date_added` = '" . time() . "'
 				;");
 
@@ -186,7 +186,7 @@ class ModelToolAddon extends Model {
 			// ---
 				$query = $this->db->query("
 					SELECT 
-						t.testimonials_id, t.customer_id, t.author, t.text, t.parent_id, t.good, t.date_added 
+						t.testimonials_id, t.customer_id, t.author, t.text, t.parent_id, t.rating, t.date_added 
 					FROM `" . DB_PREFIX . "testimonials` t  
 					LEFT JOIN `" . DB_PREFIX . "customer` c ON c.customer_id = t.customer_id 
 					WHERE c.rcrm_id = '" . $customer_id . "' AND t.parent_id = 0 ORDER BY t.date_added ASC
@@ -205,7 +205,7 @@ class ModelToolAddon extends Model {
 			// ---
 				$query = $this->db->query("
 					SELECT 
-						t.testimonials_id, t.customer_id, t.user_id, t.author, t.text, t.parent_id, t.good, t.date_added, 
+						t.testimonials_id, t.customer_id, t.user_id, t.author, t.text, t.parent_id, t.rating, t.date_added, 
 						u.image 
 					FROM `" . DB_PREFIX . "testimonials` t 
 					LEFT JOIN `" . DB_PREFIX . "user` u ON u.user_id = t.user_id

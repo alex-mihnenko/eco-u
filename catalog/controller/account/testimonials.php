@@ -67,8 +67,8 @@ class ControllerAccountTestimonials extends Controller {
         	// Init
 	            $text = $this->request->post['text'];
 
-	            if( isset($this->request->post['good']) ) { $good = $this->request->post['good']; }
-	            else { $good = 0; }
+	            if( isset($this->request->post['rating']) ) { $rating = intval($this->request->post['rating']); }
+	            else { $rating = 0; }
 
 	            if( isset($this->request->post['parent_id']) ) { $parent_id = $this->request->post['parent_id']; }
 	            else { $parent_id = 0; }
@@ -101,7 +101,7 @@ class ControllerAccountTestimonials extends Controller {
         	// Set
 	            $this->load->model('account/testimonials');
 	            
-	            $result = $this->model_account_testimonials->addItem($customer_id, $customer['firstname'], $text, $parent_id, $good);
+	            $result = $this->model_account_testimonials->addItem($customer_id, $customer['firstname'], $text, $parent_id, $rating);
 
 	            if( $result == false ){
 	              $response->result = false;
@@ -178,7 +178,7 @@ class ControllerAccountTestimonials extends Controller {
 
 	              $items = array();
 
-	              $months = ['','Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+	              $months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
 	              foreach ($results as $key => $item) {
 	              	// ---
@@ -196,7 +196,7 @@ class ControllerAccountTestimonials extends Controller {
 					              				</div>
 					              				<div class="body">
 						              				<div class="about">
-						              					<span> <span class="firstname">'.$child['author'].'</span>, '.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+						              					<span> <span class="firstname">'.$child['author'].'</span>, '.date('j', $child['date_added']).' '.$months[intval(date('m', $child['date_added']))].' '.date('Y', $child['date_added']).'</span>
 						              				</div>
 						              				<div class="text">
 						              					<p>'.$child['text'].'</p>
@@ -211,15 +211,29 @@ class ControllerAccountTestimonials extends Controller {
 	              			}
 	              		// ---
 
-	              		if( $item['good'] == true ) { $good = '<i class="svg good green">'.loadSvg('src', 'icon-thumb-up.svg').'</i>'; }
-	              		else { $good = '<i class="svg good red">'.loadSvg('src', 'icon-thumb-down.svg').'</i>'; }
+	              		// Rating
+	              			$rating = '<div class="rating">';
+
+		              		for ($i=1; $i <=5 ; $i++) { 
+		              			// ---
+		              				if( $i <= $item['rating'] ){
+	              						$rating .= '<i class="fa fa-star red"></i>';
+		              				}
+		              				else {
+	              						$rating .= '<i class="fa fa-star-o"></i>';
+		              				}
+		              			// ---
+		              		}
+
+	              			$rating .= '</div>';
+	              		// ---
 
 	              		$items[] = '
 	              			<div class="item" data-id="'.$item['testimonials_id'].'" data-user-id="'.$item['user_id'].'">
 					            <div class="body">
 		              				<div class="about">
-		              					'.$good.'
-		              					<span>'.$months[intval(date('m', $item['date_added']))].', '.date('j', $item['date_added']).', '.date('Y', $item['date_added']).'</span>
+		              					'.$rating.'
+		              					<span>'.date('j', $item['date_added']).' '.$months[intval(date('m', $item['date_added']))].' '.date('Y', $item['date_added']).'</span>
 		              				</div>
 		              				<div class="text">
 		              					<p>'.$item['text'].'</p>

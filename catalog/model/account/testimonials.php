@@ -1,6 +1,6 @@
 <?php
 class ModelAccountTestimonials extends Model {
-	public function addItem($customer_id, $author, $text, $parent_id=0, $good=0) {
+	public function addItem($customer_id, $author, $text, $parent_id=0, $rating=1) {
 		// ---
 			$query = $this->db->query("
 				INSERT INTO `" . DB_PREFIX . "testimonials` SET 
@@ -9,8 +9,9 @@ class ModelAccountTestimonials extends Model {
 				`author` = '" . $this->db->escape($author) . "', 
 				`text` = '" . $this->db->escape($text) . "', 
 				`parent_id` = '" . $parent_id . "', 
-				`good` = '" . $good . "', 
-				`date_added` = '" . time() . "'
+				`rating` = '" . intval($rating) . "', 
+				`date_added` = '" . time() . "',
+				`status` = '0'
 			;");
 
 			return $query;
@@ -19,7 +20,12 @@ class ModelAccountTestimonials extends Model {
 
 	public function getItems($customer_id) {
 		// ---
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "testimonials` WHERE `customer_id` = '" . $customer_id . "' AND `parent_id` = 0 ORDER BY date_added ASC;");
+			if( $customer_id > 0 ) { 
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "testimonials` WHERE `customer_id` = '" . $customer_id . "' AND `parent_id` = 0 ORDER BY date_added ASC;");
+			}
+			else {
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "testimonials` WHERE `parent_id` = 0 AND `status` = 1 ORDER BY date_added ASC;");
+			}
 
 			if( $query->num_rows > 0) {
 				return $query->rows;
@@ -34,7 +40,7 @@ class ModelAccountTestimonials extends Model {
 		// ---
 			$query = $this->db->query("
 				SELECT 
-					t.testimonials_id, t.customer_id, t.user_id, t.author, t.text, t.parent_id, t.good, t.date_added, 
+					t.testimonials_id, t.customer_id, t.user_id, t.author, t.text, t.parent_id, t.rating, t.date_added, 
 					u.image 
 				FROM `" . DB_PREFIX . "testimonials` t 
 				LEFT JOIN `" . DB_PREFIX . "user` u ON u.user_id = t.user_id

@@ -102,8 +102,9 @@
 								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
 								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
-								<a href="/about" class="item" target="_blank">О нас</a>
 								<a href="/blog" class="item">Блог</a>
+								<a href="/testimonials" class="item">Отзывы</a>
+								<a href="/about" class="item" target="_blank">О нас</a>
 							</div>
 						</div>
 					</div>
@@ -122,8 +123,9 @@
 								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
 								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
 								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
-								<a href="/about" class="item" target="_blank">О нас</a>
 								<a href="/blog" class="item">Блог</a>
+								<a href="/testimonials" class="item">Отзывы</a>
+								<a href="/about" class="item" target="_blank">О нас</a>
 							</div>
 						</div>
 
