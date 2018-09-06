@@ -295,7 +295,7 @@
 										`name` = '".$item->offer->name."',
 										`model` = '".$item->offer->name."',
 										`quantity` = '".$item->quantity."',
-										`amount` = '".ceil($item->quantity)."',
+										`amount` = '1',
 										`variant` = '".$item->quantity."',
 										`price` = '".floatval($item->initialPrice)."',
 										`total` = '".$product_total."',
