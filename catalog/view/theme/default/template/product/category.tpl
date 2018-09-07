@@ -74,7 +74,7 @@
                             <?php if(empty($products_catsorted[$category['id']]['sub'])) continue; ?>
                             
                             <li>
-                                <?php if( $category['id'] == 'new' || $category['id'] == 'sale' ) { ?>
+                                <?php if( $category['id'] == 'new' ) { ?>
                                 <a href="#l-p_<?php echo $category['id']; ?>" data-style="active">
                                 <?php } else { ?>
                                 <a href="#l-p_<?php echo $category['id']; ?>">

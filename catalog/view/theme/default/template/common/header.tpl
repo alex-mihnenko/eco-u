@@ -43,7 +43,7 @@
 
 			<div class="grid-container">
 				<div class="grid-row hidden-md hidden-lg hidden-xl hidden-xxl">
-					<div class="grid-col col-6 align-start">
+					<div class="grid-col col-50 align-start">
 		
                 		<a class="svg-container pointer" href="#empty" data-marker="auth-button">
 							<i class="svg" data-src="icon-user.svg"><?php loadSvg('name', 'icon-user.svg'); ?></i>
@@ -68,7 +68,7 @@
 						</div>
 					</div>
 
-					<div class="grid-col col-6 align-end">
+					<div class="grid-col col-50 align-end">
 						<div class="svg-container pointer cart" data-remodal-target="modal-basket">
 							<i class="svg" data-src="icon-bucket.svg"><?php loadSvg('name', 'icon-bucket.svg'); ?></i>
 							<span class="counter">0</span>
@@ -111,7 +111,7 @@
 				</div>
 
 				<div class="grid-row hidden-xs hidden-sm">
-					<div class="grid-col col-6 align-start">
+					<div class="grid-col col-50 align-start">
 						<div class="svg-container pointer dropdown menu" tabindex="-1" data-marker="menu">
 							<i data-action="toggle"><span data-marker="first-line"></span><span data-marker="second-line"></span><span data-marker="third-line"></span></i>
 
@@ -143,7 +143,7 @@
 						</div>
 					</div>
 
-					<div class="grid-col col-6 align-end">
+					<div class="grid-col col-50 align-end">
 						<div class="svg-container pointer">
 							<div class="flex flex-row">
 								<div class="search" data-style="default">
@@ -296,7 +296,7 @@
 						<hr class="indent sm">
 
 						<form id="form-phone" action="/index.php" method="POST">
-							<div class="t-c_input">
+							<div class="t-c_input input-group required">
 								<input type="text" placeholder="Введите номер телефона" class="input" id="phone" name="phone" style="text-align: center;" required="">
 								<span class="underline"></span>
 							</div>

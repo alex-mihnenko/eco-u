@@ -126,7 +126,7 @@ $(document).ready(function() {
 			
 			$(document).on('click', '.dropdown > [data-action="toggle"]', function(e){
 				// ---
-					let $this = $(this).parents('.dropdown');
+					var $this = $(this).parents('.dropdown');
 
 					if( $this.attr('data-style') == 'open' ){
 						// ---
@@ -145,7 +145,7 @@ $(document).ready(function() {
 
 			$(document).on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
 				// ---
-					let $this = $(this).parents('.sub-dropdown');
+					var $this = $(this).parents('.sub-dropdown');
 
 					if( $this.attr('data-style') == 'open' ){
 						// ---
@@ -162,7 +162,7 @@ $(document).ready(function() {
 			
 			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
 				// ---
-					let $this = $(this).parents('.dropdown');
+					var $this = $(this).parents('.dropdown');
 					$this.attr('data-style','default');
 					e.stopPropagation();
 				// ---
@@ -470,9 +470,9 @@ $(document).ready(function() {
             		var validation = true;
 
 					$(this).find('.input-group.required').each(function(key,val){
-						let $this = $(this).find('.form-input');
-						let $name = $this.attr('name');
-						let $value = $this.val();
+						var $this = $(this).find('.form-input');
+						var $name = $this.attr('name');
+						var $value = $this.val();
 
 						if( $name == 'phone' || $name == 'telephone' ) {
 							$value = $value.replace(/\D/g,'');
@@ -1046,6 +1046,30 @@ $(document).ready(function() {
 				var $form = $(this);
 				var $modal = $(this).parents('.remodal');
 				var phone = $form.find('input[name="phone"]').val();
+
+				// Validation
+            		var validation = true;
+
+					$form.find('.input-group.required').each(function(key,val){
+						var $this = $(this).find('input');
+						var $name = $this.attr('name');
+						var $value = $this.val();
+
+						console.log($name + ' ' + $value);
+
+						if( $name == 'phone' || $name == 'telephone' ) {
+							$value = $value.replace(/\D/g,'');
+							if( $value.length < 11 ) { $this.attr('data-style','error'); validation = false; return false; }
+							else{ $this.attr('data-style','default'); }
+						}
+						else {
+							if( $value.length < 3 ) { $this.attr('data-style','error'); validation = false; return false; }
+							else{ $this.attr('data-style','default'); }
+						}
+					});
+
+					if( !validation ){ return false; }
+				// ---
 
 	            if(phone != '' ) {
 	                $.post('/?route=ajax/index/sendCallRequest',{ phone: phone, roistat_visit: app.customer.roistat_visit }, function(data){
@@ -1988,8 +2012,8 @@ $(document).ready(function() {
 			}
 		// ---
 	}
-// ---
 
+// ---
 // Account
 	function accountTestimonialsLoadItems(){
 		// ---

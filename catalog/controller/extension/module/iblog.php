@@ -453,7 +453,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -701,7 +701,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -1419,7 +1419,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 		
 		
@@ -1494,6 +1494,8 @@ class ControllerExtensionModuleiBlog extends Controller {
 		$posts_total = $this->moduleModel->getPosts($postData); 
 
 		$total_posts = $this->moduleModel->getTotalPosts($this->config->get('config_store_id'), $postData);
+
+		$month = ['','янв.','фев.','мар.','апр.','май','июн.','июл.','авг.','сен.','окт.','ноя.','дек.'];
 
 		foreach ($posts_total as $post) {
 			$date_created = date('d', strtotime($post['created'])) . ' ' . $month[intval(date('n', strtotime($post['created'])))] . ' ' . date('Y', strtotime($post['created']));

@@ -79,7 +79,7 @@
 
 
     <?php if($error_total) { ?>
-        <p class="xs" style="display: block">Сумма заказа меньше 1000 рублей.</p>
+        <p class="xs text-color-green" style="display: block">Чтобы перейти к оформлению заказа,<br>его стоимость должна быть больше 1000 рублей.</p>
     <?php } else { ?>
         <div class="coupon"> 
             <button class="link" data-action="show-apply-coupon" type="button">Есть купон на скидку?</button>

@@ -16,11 +16,11 @@
 
             <div class="container">
                 <div class="grid-row">
-                    <div class="grid-col col-8">
+                    <div class="grid-col col-75">
                         <h1 class="h2 padding no"><?php echo $heading_title; ?></h1>
                     </div>
                     
-                    <div class="grid-col col-4">
+                    <div class="grid-col col-25">
                         <div class="blog-search">
                             <input type="text" name="search" value="" class="search-field form-control" placeholder="<?php echo $search_placeholder; ?>">
                             <button class="btn btn-default" id="iblog-search-button" type="button"> <i class="svg" data-src="icon-search.svg" data-action="search-open"><?php loadSvg('name', 'icon-search.svg'); ?></i> </button>
@@ -38,7 +38,7 @@
     <div class="blog">
         <div class="container">
             <div class="grid-row ">
-                <div class="grid-col col-8">
+                <div class="grid-col col-75">
                     <?php echo $content_top; ?>
 
                     <?php if ($thumb && isset($moduleData['MainImageEnabled']) && ($moduleData['MainImageEnabled']=='yes')) { ?>
@@ -69,14 +69,14 @@
                             <h2 class="h2" itemprop="headline"><?php echo $title; ?></h2>
 
                             <div class="grid-row">
-                                <div class="grid-col col-4">
+                                <div class="grid-col col-25">
                                     <span class="date">
                                         <i class="fa fa-calendar"></i> <?php echo $date_created; ?>
                                     </span>
                                     <meta itemprop="datePublished" content="<?php echo $date_created; ?>"/>
                                 </div>
 
-                                <div class="grid-col col-4">
+                                <div class="grid-col col-25">
                                     <span class="tags">
                                         <i class="fa fa-tags"></i>
                                         
@@ -133,7 +133,7 @@
                     <?php echo $content_bottom; ?> 
                 </div>
 
-                <div class="grid-col col-4">
+                <div class="grid-col col-25">
                     <?php echo $column_right; ?>
                 </div>
             </div>

@@ -15,8 +15,8 @@
         <textarea class="form-control bordered justify" name="text" placeholder="<?php echo $entry_testimonials; ?>" required=""></textarea>
         <hr class="indent sm">
 
-        <div class="flex flex-row">
-          <div class="flex-col flex-col-50">
+        <div class="grid-row adaptive">
+          <div class="grid-col col-50 flex-col">
             <hr class="indent xxs">
             <div class="btn-toggle rating">
                 <button type="button" data-value="1" class="btn-red"><i class="fa fa-star-o"></i></button>
@@ -27,9 +27,10 @@
 
                 <input type="text" name="rating" value="" required="">
             </div>
+            <hr class="indent xs">
           </div>
 
-          <div class="flex-col flex-col-50">
+          <div class="grid-col col-50 flex-col">
             <button type="submit" class="btn btn-primary btn-sm"><?php echo $button_submit; ?></button>
           </div>
         </div>
@@ -51,11 +52,11 @@
         <input type="hidden" name="parent_id" value="0">
 
         <hr class="indent xs">
-        <div class="flex flex-row">
-          <div class="flex-col flex-col-50">
+        <div class="grid-row adaptive">
+          <div class="grid-col col-50 flex-col">
           </div>
 
-          <div class="flex-col flex-col-50">
+          <div class="grid-col col-50 flex-col">
             <button type="submit" class="btn btn-primary btn-sm"><?php echo $button_submit; ?></button>
           </div>
         </div>
