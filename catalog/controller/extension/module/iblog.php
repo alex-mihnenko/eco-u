@@ -453,7 +453,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'DESC';
+			$order = 'ASC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -701,7 +701,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'DESC';
+			$order = 'ASC';
 		}
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -1419,7 +1419,7 @@ class ControllerExtensionModuleiBlog extends Controller {
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'DESC';
+			$order = 'ASC';
 		}
 		
 		
