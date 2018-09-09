@@ -4668,6 +4668,17 @@ xxl
 		}
 	/* Product page*/
 
+	/* About page */
+		.b-accordion a {
+			color: #749d3e;
+			text-decoration: underline;
+		}
+
+		.b-accordion a:hover {
+			text-decoration: none;
+		}
+	/* About page */
+
 	/* Suggestions */
 		.suggestions-nowrap {
 		    white-space: nowrap;
