@@ -2195,19 +2195,7 @@ class ControllerAjaxIndex extends Controller {
           // ---
 
           // Get CRM order
-            if( $customer_id == 0 ){
-              // ---
-                $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$order_id;
-                $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
-
-                $res = $this->connectGetAPI($url,$qdata);
-                $order = $res->order;
-
-                $response->order = $res->order;
-                $response->customer = $res->order->customer;
-              // ---
-            }
-            else if ( $order_id == 0 ) {
+            if ( $order_id == 0 ) {
               // ---
                 $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer_id;
                 $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
@@ -2219,6 +2207,19 @@ class ControllerAjaxIndex extends Controller {
                 $response->customer = $res->customer;
               // ---
             }
+            else {
+              // ---
+                $url = 'https://eco-u.retailcrm.ru/api/v5/orders/'.$order_id;
+                $qdata = array('apiKey' => self::RETAILCRM_KEY, 'by' => 'id');
+
+                $res = $this->connectGetAPI($url,$qdata);
+                $order = $res->order;
+
+                $response->order = $res->order;
+                $response->customer = $res->order->customer;
+              // ---
+            }
+            
 
             $response->addresses = array();
 
