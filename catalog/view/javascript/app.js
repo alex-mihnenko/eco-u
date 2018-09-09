@@ -39,6 +39,8 @@ $(document).ready(function() {
 		initAuth();
 		initParams();
 
+		checkHash();
+		
 		// EnjoyHint
 			if( $('.qwe').find('.list-products').length > 0 ){
 				// ---
@@ -1714,11 +1716,6 @@ $(document).ready(function() {
 	    // Roistat
 	    	checkRoistat();
 	    // ---
-
-	    // Hashes
-	    	checkHash();
-	    // ---
-
 	}
 
 	function initAuth(){
@@ -2014,6 +2011,7 @@ $(document).ready(function() {
 	}
 
 // ---
+
 // Account
 	function accountTestimonialsLoadItems(){
 		// ---
@@ -2241,8 +2239,6 @@ $(document).ready(function() {
 
 // Components
 	// Modal
-		// $('.modal[data-marker="modal-coupon"]').modal('show');
-
 		jQuery.fn.modal = function (method) {
 			var $this = $(this);
 
