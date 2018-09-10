@@ -17,8 +17,7 @@ include("opencart_inc.php");
 
 
 echo("<yml_catalog date=\"2016-12-10 22:27:15\">
-<meta http-equiv=\"Content-Type\" content=\"text/xml;charset=UTF-8\">
-<meta charset=\"utf-8\">
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <shop>
 <name>Eco-u</name>
 <company>Eco-u</company>

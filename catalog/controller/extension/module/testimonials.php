@@ -184,4 +184,94 @@ class ControllerExtensionModuleTestimonials extends Controller {
 
 		$this->response->setOutput($this->load->view('extension/module/testimonials', $data));
 	}
+
+	public function add() {
+		$this->load->language('extension/module/testimonials');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		// Breadcrumbs
+			$data['breadcrumbs'] = array();
+
+			$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('text_home'),
+				'href' => $this->url->link('common/home')
+			);
+
+			$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('text_account'),
+				'href' => $this->url->link('account/account', '', true)
+			);
+
+			$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('text_testimonials'),
+				'href' => $this->url->link('account/testimonials', '', true)
+			);
+		// ---
+
+		// Pagination
+			if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+			} else { 
+				$page = 1;
+			}	
+			
+			if (isset($this->request->get['limit'])) {
+				$limit = $this->request->get['limit'];
+			} else {
+				$limit = 20;
+			}
+
+			$url = '';
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+		// ---
+
+		// Text and Lyouts
+			$data['heading_title'] = $this->language->get('heading_title');
+			$data['sub_heading_title_add'] = $this->language->get('sub_heading_title_add');
+
+			$data['text_empty'] = $this->language->get('text_empty');
+			$data['button_submit'] = $this->language->get('button_submit');
+			$data['button_back'] = $this->language->get('button_back');
+
+			$data['column_left'] = $this->load->controller('common/column_left');
+			$data['column_right'] = $this->load->controller('common/column_right');
+			$data['content_top'] = $this->load->controller('common/content_top');
+			$data['content_bottom'] = $this->load->controller('common/content_bottom');
+			$data['footer'] = $this->load->controller('common/footer');
+			$data['header'] = $this->load->controller('common/header');
+		// ---
+
+		// Get data
+			$this->load->model('extension/module/testimonials');
+
+			$data['order_id'] = 0;
+			$data['customer_id'] = 0;
+
+			if( isset($this->request->get['o']) ) { $data['order_id'] = $this->request->get['o']; }
+			if( isset($this->request->get['c']) ) { $data['customer_id'] = $this->request->get['c']; }
+
+			if( $data['order_id'] == 0 && $data['customer_id'] == 0 ) {
+				header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+    			$this->response->redirect($this->url->link('common/home'));
+			}
+
+
+			$order_info = $this->model_extension_module_testimonials->getOrderById($data['order_id'], $data['customer_id']);
+
+			if( $order_info == false ) {
+				header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+    			$this->response->redirect($this->url->link('common/home'));
+			}
+		// ---
+
+		$this->response->setOutput($this->load->view('extension/module/testimonials_add', $data));
+	}
 }

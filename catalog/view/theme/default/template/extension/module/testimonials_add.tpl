@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 
 <hr class="indent xl">
-<hr class="indent xl">
+<hr class="indent md">
 
 <?php echo $column_left; ?>
 <?php echo $content_top; ?>
@@ -10,6 +10,10 @@
 
     <div class="container">
 
+      <h1 class="h2"><?php echo $heading_title; ?></h1>
+      <p><?php echo $sub_heading_title_add; ?></p>
+      <hr class="indent sm">
+      
       <form action="index.php" method="post" enctype="multipart/form-data" class="form-horizontal post">
         
         <textarea class="form-control bordered justify" name="text" placeholder="<?php echo $entry_testimonials; ?>" required=""></textarea>
@@ -31,14 +35,15 @@
           </div>
 
           <div class="grid-col col-50 flex-col">
-            <input type="hidden" name="order_id" value="">
-            <input type="hidden" name="customer_id" value="">
+            <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+            <input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>">
 
             <button type="submit" class="btn btn-primary btn-sm"><?php echo $button_submit; ?></button>
           </div>
         </div>
 
       </form>
+
       <hr class="indent lg">
 
       <h1 class="h3"><?php echo $heading_title; ?></h1>
@@ -46,24 +51,6 @@
         
       <div class="testimonials-list"></div>
       <hr class="indent xs">
-
-      <form action="index.php" method="post" enctype="multipart/form-data" class="form-horizontal answer" id="form-testimonials-answer">
-        <button type="button" class="close" data-action="close"> </button>
-        
-        <textarea class="form-control bordered justify" name="text" placeholder="<?php echo $entry_testimonials; ?>" required=""></textarea>
-        <input type="hidden" name="rating" value="0">
-        <input type="hidden" name="parent_id" value="0">
-
-        <hr class="indent xs">
-        <div class="grid-row adaptive">
-          <div class="grid-col col-50 flex-col">
-          </div>
-
-          <div class="grid-col col-50 flex-col">
-            <button type="submit" class="btn btn-primary btn-sm"><?php echo $button_submit; ?></button>
-          </div>
-        </div>
-      </form>
     </div>
 
 

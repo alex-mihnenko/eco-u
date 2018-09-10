@@ -74,6 +74,12 @@ class ControllerAccountTestimonials extends Controller {
 	            if( isset($this->request->post['parent_id']) ) { $parent_id = $this->request->post['parent_id']; }
 	            else { $parent_id = 0; }
 
+	            if( isset($this->request->post['customer_id']) && $this->request->post['customer_id'] != 0 ) { $customer_id = $this->request->post['customer_id']; }
+	            else { $customer_id = 0; }
+
+	            if( isset($this->request->post['order_id']) && $this->request->post['order_id'] != 0 ) { $order_id = $this->request->post['order_id']; }
+	            else { $order_id = 0; }
+
 	            $response = new stdClass();
 
 	            $log = [];
@@ -90,27 +96,32 @@ class ControllerAccountTestimonials extends Controller {
 						$managers[] = $user->id;
 					}
 				// ---
+
+				$this->load->language('account/testimonials');
         	// ---
 
         	// Get customer
-	            $this->load->model('account/customer');
-	            
-	            $customer_id = $this->customer->isLogged();
-	            $customer = $this->model_account_customer->getCustomer($customer_id);
+		        $this->load->model('account/customer');
+				
+				if( $customer_id == 0 ){
+		            $customer_id = $this->customer->isLogged();
+				}
+		        
+		        $customer = $this->model_account_customer->getCustomer($customer_id);
         	// ---
 
         	// Set
 	            $this->load->model('account/testimonials');
 	            
-	            $result = $this->model_account_testimonials->addItem($customer_id, $customer['firstname'], $text, $parent_id, $rating);
+	            $result = $this->model_account_testimonials->addItem($customer_id, $customer['firstname'], $text, $parent_id, $rating, $order_id);
 
 	            if( $result == false ){
 	              $response->result = false;
-	              $response->message = 'Отзыв не был сохранен';
+	              $response->message = $this->language->get('add_success');
 	            }
 	            else{
 	              $response->result = true;
-	              $response->message = 'Отзыв добавлен';
+	              $response->message = $this->language->get('add_error');
 	            }
         	// ---
 

@@ -1290,7 +1290,13 @@ $(document).ready(function() {
 				var text = $(this).find('[name="text"]').val();
 				var rating = $(this).find('[name="rating"]').val();
 
-				$.post('/?route=account/testimonials/addItem', {text:text, rating:rating}, function(data){
+				if( $(this).find('[name="order_id"]').val() == '' ) { var order_id = 0; }
+				else { var order_id = $(this).find('[name="order_id"]').val(); }
+				
+				if( $(this).find('[name="customer_id"]').val() == '' ) { var customer_id = 0; }
+				else { var customer_id = $(this).find('[name="customer_id"]').val(); }
+				
+				$.post('/?route=account/testimonials/addItem', {customer_id:customer_id, text:text, rating:rating, order_id:order_id}, function(data){
 					// ---
 						form.find('.form-control').val('');
 
@@ -1306,6 +1312,8 @@ $(document).ready(function() {
 				var text = $(this).find('[name="text"]').val();
 				var parent_id = $(this).find('[name="parent_id"]').val();
 				var rating = $(this).find('[name="rating"]').val();
+
+				
 
 				$.post('/?route=account/testimonials/addItem', {text:text, parent_id:parent_id, rating:rating}, function(data){
 					// ---
@@ -2015,7 +2023,6 @@ $(document).ready(function() {
 			}
 		// ---
 	}
-
 // ---
 
 // Account

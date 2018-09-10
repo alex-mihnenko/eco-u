@@ -2,6 +2,7 @@
 // Heading
 $_['heading_title']    = 'Отзывы покупателей';
 $_['sub_heading_title']    = 'Оставить отзыв вы можете из Личного кабинета';
+$_['sub_heading_title_add']    = 'Оставить свой отзыв';
 
 // Text
 $_['text_account']     = 'Личный Кабинет';
