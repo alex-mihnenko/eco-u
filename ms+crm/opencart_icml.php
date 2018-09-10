@@ -4,7 +4,13 @@
 	ini_set('memory_limit', '512M');
 	ini_set('max_execution_time', '300');
 
-Header("Content-Type: application/xml; charset=UTF-8");
+header("Content-Type: text/xml");
+header("Expires: Thu, 19 Feb 1998 13:24:18 GMT");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+header("Cache-Control: no-cache, must-revalidate");
+header("Cache-Control: post-check=0,pre-check=0");
+header("Cache-Control: max-age=0");
+header("Pragma: no-cache");
 
 include("opencart_inc.php");
 
