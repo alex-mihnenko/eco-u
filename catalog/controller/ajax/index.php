@@ -192,37 +192,55 @@ class ControllerAjaxIndex extends Controller {
 
     // Login
       public function ajaxLoginByPhone() {
-          //$arUser = $this->request->post;
-          //$phone = str_replace(Array('(', ')', '+', '-', ' '), '', $arUser['telephone']);
-          //$password = $arUser['password'];
+          // Init
+            $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
+            $password =$this->request->post['password'];
 
-          $telephone = preg_replace("/[^0-9,.]/", "", $this->request->post['telephone']);
-          $password =$this->request->post['password'];
+            $response = new stdClass();
+          // ...
 
-          if(!empty($password)) {
-              $response = Array('status' => 'success', 'message' => '');
-              $locked = '';
+          // Processing
+            if(!empty($password)) {
+                $locked = '';
 
-              if($this->customer->loginByPhone($telephone, $password, false, $locked)) {
-                echo json_encode($response);
-              }
-              else {
-                  if($locked) {
-                      if($locked == 1) {
-                          $m = 'минуту';
-                      } elseif($locked < 5) {
-                          $m = 'минуты';
-                      } else {
-                          $m = 'минут';
-                      }
-                      $message = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
-                  } else {
-                      $message = 'Не верный номер или пароль';
+                if($this->customer->loginByPhone($telephone, $password, false, $locked)) {
+                  $response->result = true;
+                  $response->message = 'Успешная авторизация';
+
+                  if( isset($this->session->data['redirect']) ) {
+                    $response->redirect = $this->session->data['redirect'];
+                    unset($this->session->data['redirect']);
                   }
+                }
+                else {
+                    if($locked) {
+                        if($locked == 1) {
+                            $m = 'минуту';
+                        } elseif($locked < 5) {
+                            $m = 'минуты';
+                        } else {
+                            $m = 'минут';
+                        }
+                        $message = 'Ваш аккаунт заблокирован на ' . $locked . ' ' . $m;// . date('H:i:s d.m.Y', strtotime($locked));
+                    } else {
+                        $message = 'Не верный номер или пароль';
+                    }
 
-                  echo json_encode(Array('status' => 'error', 'message' => $message));
-              }
-          }
+                    $response->result = false;
+                    $response->message = $message;
+                }
+            }
+            else {
+              $response->result = false;
+              $response->message = 'Не указан пароль';
+            }
+          // ...
+
+          // Response
+          $response->status = 'success';
+          
+          echo json_encode($response);
+          exit;
       }
     // ---
     

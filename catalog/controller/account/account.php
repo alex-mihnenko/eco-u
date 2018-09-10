@@ -2,9 +2,10 @@
 class ControllerAccountAccount extends Controller {
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/account', '', true);
+            unset($this->session->data['redirect']);
+            $this->session->data['redirect'] = $this->url->link('account/account', '', true);
 
-			$this->response->redirect($this->url->link('account/login', '', true));
+			$this->response->redirect('/#modal');
 		}
 
 		$this->load->language('account/account');

@@ -918,10 +918,16 @@ $(document).ready(function() {
 
 	            if(telephone != '' && password != '') {
 	                $.post('/?route=ajax/index/ajaxLoginByPhone',{ telephone: telephone, password: password}, function(data){
-	                    if(data.status == 'success') {
+	                    if( data.result == true ) {
 	                    	console.log('Auth success');
+	                    	console.log(data.redirect);
 
-	                        window.location.href = '/account';
+	                    	if( typeof data.redirect == 'undefined' ) {
+	                        	window.location.href = '/account';
+	                    	}
+	                    	else {
+	                        	window.location.href = data.redirect;
+	                    	}
 	                    } else {
 	                    	console.log('Auth error');
 
