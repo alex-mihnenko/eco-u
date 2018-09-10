@@ -4,7 +4,7 @@
 	ini_set('memory_limit', '512M');
 	ini_set('max_execution_time', '300');
 
-Header("Content-Type: text/xml;charset=UTF-8");
+Header("Content-Type: application/xml; charset=UTF-8");
 
 include("opencart_inc.php");
 
