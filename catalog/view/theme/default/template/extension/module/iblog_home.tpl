@@ -7,6 +7,7 @@
 <div class="l-p_title">
 	<span><?php echo $heading_title; ?></span>
 	&nbsp;&nbsp;&nbsp;
+	<hr class="indent sm hidden-xxl hidden-xl hidden-lg hidden-md">
 	<a href="/blog" class="btn btn-xs" target="_blank"><?php echo $text_all; ?></a>
 </div>
 

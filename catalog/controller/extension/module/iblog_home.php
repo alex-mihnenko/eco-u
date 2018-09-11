@@ -96,7 +96,7 @@ class ControllerExtensionModuleiBlogHome extends Controller {
 				}
 
 				if (file_exists(DIR_IMAGE . $post['small_image'])) {
-					$small_image = $this->model_tool_image->resize($post['small_image'], 300, 300);
+					$small_image = $this->model_tool_image->resize($post['small_image'], 300, 350);
 				} else {
 					$small_image = '';
 				}

@@ -289,7 +289,7 @@
 			<button data-remodal-action="close" class="remodal-close"></button>
 
 
-			<?php if( date('G', time()) >= 9 && date('G', time()) < 18 ) { ?>
+			<?php if( date('G', time()) >= 10 && date('G', time()) < 18 ) { ?>
 				<div class="body t-c_box">
 					<div class="form">
 						<div class="t-c_title" style="text-align: center; margin-bottom: 10px;">Обратный звонок</div>
@@ -325,7 +325,7 @@
 
 					<div class="t-c_title" style="text-align: center; margin-bottom: 10px;">Наши телефоны</div>
 					<hr class="indent xs">
-					<p class="t-c_subtitle">Мы работаем без выходных<br>Принимаем звонки с 9-00 до 18-00</p>
+					<p class="t-c_subtitle">Мы работаем без выходных<br>Принимаем звонки с 10-00 до 18-00</p>
 
 					<hr class="indent lg">
 					<hr class="indent lg">

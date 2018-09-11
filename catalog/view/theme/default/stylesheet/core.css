@@ -77,7 +77,7 @@ xxl
 			.container-wrapper .container { max-width: 90%; }
 		}
 		@media (min-width: 768px) and (max-width: 991px) {
-			.container { max-width: 760px; }
+			.container { max-width: 700px; }
 			.container-wrapper .container { max-width: 600px; }
 		}
 
@@ -120,7 +120,7 @@ xxl
 			height: auto;
 		}
 
-		@media (max-width: 575px) {
+		@media (max-width: 767px) {
 			.grid-row.adaptive {
 				flex-direction: column;
 			}
@@ -169,7 +169,7 @@ xxl
 		.grid-col.col-10 { width: 10%; }
 		.grid-col.col-5 { width: 5%; }
 
-		@media (max-width: 575px) {
+		@media (max-width: 767px) {
 			.grid-col.col-100,
 			.grid-col.col-90,
 			.grid-col.col-85,
@@ -1165,6 +1165,12 @@ xxl
 				box-sizing: border-box;
 				padding-right: 30px;
 			}
+
+			@media (max-width: 767px) {
+				.blog .list {
+					padding-right: 0px;
+				}
+			}
 		/* General */
 
 		/* Header */
@@ -1306,6 +1312,18 @@ xxl
 				max-width: 800px;
 			}
 
+			@media (min-width: 768px) and (max-width: 991px) {
+				.blog .post {
+					max-width: 95%;
+				}
+			}
+
+			@media (min-width: 576px) and (max-width: 767px) {
+				.blog .post {
+					max-width: none;
+				}
+			}
+
 			.blog .post .author {
 				display: flex;
 				flex-direction: column;
@@ -1324,6 +1342,13 @@ xxl
 				overflow: hidden;
 			}
 			
+			@media (min-width: 576px) and (max-width: 767px) {
+				.blog .post .author .image {
+					width: 60px;
+					height: 60px;
+				}
+			}
+
 			.blog .post .author h5 {
 				line-height: 22px;
 				color: #749D3E;
@@ -1351,6 +1376,13 @@ xxl
 				line-height: 38px;
 				margin: 0px;
 				padding: 0px 0px 10px;
+			}
+
+			@media  (max-width: 767px) {
+				.blog .post .about h2 {
+					font-size: 26px;
+					line-height: 32px;
+				}
 			}
 
 			.blog .post .about h2 a {
@@ -1425,7 +1457,7 @@ xxl
 				}
 			}
 
-			@media (min-width: 576px) and (max-width: 767px) {
+			@media (max-width: 576px) {
 				.blog .post {
 					display: flex;
 					flex-direction: column;
@@ -1586,7 +1618,18 @@ xxl
 			    padding: 15px;
 			}
 
-			@media (max-width: 767px) {
+			@media (max-width: 575px) {
+				.blog .featured .post-featured {
+					width: 100%;
+				}
+
+				.blog .featured .post-featured:nth-child(1),
+				.blog .featured .post-featured:nth-child(2) {
+					display: block;
+				}
+			}
+
+			@media (min-width: 576px) and (max-width: 767px) {
 				.blog .featured .post-featured {
 					width: 50%;
 				}

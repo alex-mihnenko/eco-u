@@ -34,9 +34,10 @@
         <hr class="indent sm">
 
         <div class="container">
-            <div class="grid-row ">
+            <div class="grid-row adaptive">
                 <div class="grid-col col-75">
                     <h1 class="h2"><?php echo $heading_title; ?></h1>
+                    <hr class="indent md hidden-xxl hidden-xl hidden-lg hidden-md">
                 </div>
                 
                 <div class="grid-col col-25">
@@ -57,7 +58,7 @@
 <div class="blog">
     <div class="container">
         
-        <div class="grid-row">
+        <div class="grid-row adaptive">
             <div class="grid-col col-75">
                 <?php echo $content_top; ?>
 
