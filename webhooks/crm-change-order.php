@@ -285,7 +285,7 @@ switch ($action) {
 										if ($rows_setting->num_rows > 0) {
 											$row_setting = $rows_setting->fetch_assoc();
 
-											$message = str_replace('[REPLACE]', $url, $row_setting['value']);
+											$message = mb_strtoupper(mb_substr($row_order['firstname'], 0, 1)) . mb_substr($row_order['firstname'], 1).', '.str_replace('[REPLACE]', $url, $row_setting['value']);
 
 											$url = HTTP_SERVER.'index.php?route=/api/sms/send';
 											$data = array('phone' => $row_order['telephone'], 'message' => $message);
