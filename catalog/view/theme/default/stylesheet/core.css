@@ -1624,7 +1624,8 @@ xxl
 
 			@media (max-width: 575px) {
 				.blog .featured .post-featured {
-					width: 100%;
+					width: 50%;
+			    	padding: 5px;
 				}
 
 				.blog .featured .post-featured:nth-child(1),
@@ -1722,6 +1723,12 @@ xxl
 				height: 300px;
 			}
 
+			@media (max-width: 575px) {
+				.blog .featured .post-featured .box .image {
+					height: 230px;
+				}
+			}
+
 			.blog .featured .post-featured .box .title {
 				display: block;
 				position: absolute;
@@ -1746,6 +1753,14 @@ xxl
 			    text-decoration: none;
 			    font-weight: 500;
 			    color: #FFFFFF;
+			
+			}
+
+			@media (max-width: 575px) {
+				.blog .featured .post-featured .box .title span {
+					font-size: 14px;
+			    	line-height: 18px;
+				}
 			}
 		/* Fitured */
 
