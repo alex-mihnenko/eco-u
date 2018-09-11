@@ -202,6 +202,12 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sms-testimonials-text"><?php echo $entry_sms_testimonials_text; ?></label>
+                <div class="col-sm-10">
+                  <textarea name="config_sms_testimonials_text" rows="3" placeholder="<?php echo $entry_sms_testimonials_text; ?>" id="config_sms_testimonials_text" class="form-control"><?php echo $config_sms_testimonials_text; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-composite-price"><?php echo $entry_composite_price; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="config_composite_price" value="<?php echo $config_composite_price; ?>" placeholder="<?php echo $entry_composite_price; ?>" id="input-composite-price" class="form-control" />

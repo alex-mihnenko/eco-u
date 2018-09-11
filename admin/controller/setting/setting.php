@@ -76,6 +76,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_location'] = $this->language->get('entry_location');
         $data['entry_sms_order_new_text'] = $this->language->get('entry_sms_order_new_text');
         $data['entry_sms_password_new_text'] = $this->language->get('entry_sms_password_new_text');
+        $data['entry_sms_testimonials_text'] = $this->language->get('entry_sms_testimonials_text');
         $data['entry_composite_price'] = $this->language->get('entry_composite_price');
         $data['entry_min_order_total'] = $this->language->get('entry_min_order_total');
         $data['entry_delivery_intervals'] = $this->language->get('entry_delivery_intervals');
@@ -423,16 +424,22 @@ class ControllerSettingSetting extends Controller {
 
 		$data['token'] = $this->session->data['token'];
 
-                if (isset($this->request->post['config_sms_order_new_text'])) {
+        if (isset($this->request->post['config_sms_order_new_text'])) {
 			$data['config_sms_order_new_text'] = $this->request->post['config_sms_order_new_text'];
 		} else {
 			$data['config_sms_order_new_text'] = $this->config->get('config_sms_order_new_text');
 		}
                 
-                if (isset($this->request->post['config_sms_password_new_text'])) {
+        if (isset($this->request->post['config_sms_password_new_text'])) {
 			$data['config_sms_password_new_text'] = $this->request->post['config_sms_password_new_text'];
 		} else {
 			$data['config_sms_password_new_text'] = $this->config->get('config_sms_password_new_text');
+		}
+
+		if (isset($this->request->post['config_sms_testimonials_text'])) {
+			$data['config_sms_testimonials_text'] = $this->request->post['config_sms_testimonials_text'];
+		} else {
+			$data['config_sms_testimonials_text'] = $this->config->get('config_sms_testimonials_text');
 		}
                 
                 if (isset($this->request->post['config_composite_price'])) {
