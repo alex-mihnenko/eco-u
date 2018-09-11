@@ -110,108 +110,125 @@
 	    }
 	// ---
 
+	// Curl
+		function connectPostAPI($url, $qdata, $auth='', $cookie='') {
+			// ---
+				$data = http_build_query($qdata);
 
-	function connectPostAPI($url, $qdata, $auth='', $cookie='') {
-		// ---
-			$data = http_build_query($qdata);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$url);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+				curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				if( !empty($auth) ){
+					curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+					curl_setopt($ch, CURLOPT_USERPWD, $auth);
+				}
+				curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+				$headers = ['Content-Type: application/x-www-form-urlencoded'];
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_HEADER, false);
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,$url);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
-			curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			if( !empty($auth) ){
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-				curl_setopt($ch, CURLOPT_USERPWD, $auth);
-			}
-			curl_setopt($ch, CURLOPT_COOKIE, $cookie);
-			$headers = ['Content-Type: application/x-www-form-urlencoded'];
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt($ch, CURLOPT_HEADER, false);
+				// Output
+				$output = curl_exec($ch);
+				$result = json_decode($output);
 
-			// Output
-			$output = curl_exec($ch);
-			$result = json_decode($output);
+				// Result
+				if( $result != null ){
+					curl_close ($ch);
+					return $result;
+				}
+				else {
+					curl_close ($ch);
+					return false;
+				}
+			// ---
+		}
 
-			// Result
-			if( $result != null ){
-				curl_close ($ch);
-				return $result;
-			}
-			else {
-				curl_close ($ch);
-				return false;
-			}
-		// ---
-	}
+		function connectGetAPI($url, $qdata, $auth='') {
+			// ---
+				$data = http_build_query($qdata);
 
-	function connectGetAPI($url, $qdata, $auth='') {
-		// ---
-			$data = http_build_query($qdata);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				if( !empty($auth) ){
+					curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+					curl_setopt($ch, CURLOPT_USERPWD, $auth);
+				}
+				curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 80);
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			if( !empty($auth) ){
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-				curl_setopt($ch, CURLOPT_USERPWD, $auth);
-			}
-			curl_setopt($ch, CURLOPT_URL,$url.'?'.$data);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 80);
+				// Output
+				$output = curl_exec($ch);
+				$result = json_decode($output);
 
-			// Output
-			$output = curl_exec($ch);
-			$result = json_decode($output);
+				// Result
+				if( $result != null ){
+					curl_close ($ch);
+					return $result;
+				}
+				else {
+					curl_close ($ch);
+					return false;
+				}
+			// ---
+		}
 
-			// Result
-			if( $result != null ){
-				curl_close ($ch);
-				return $result;
-			}
-			else {
-				curl_close ($ch);
-				return false;
-			}
-		// ---
-	}
+		function connectMSAPI($url, $qdata, $request, $auth='', $cookie='') {
+			// ---
+				$data = $qdata;
 
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$url);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $request);  
+				curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				if( !empty($auth) ){
+					curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+					curl_setopt($ch, CURLOPT_USERPWD, $auth);
+				}
+				curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+				$headers = ['Content-Type: application/json'];
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_HEADER, false);
 
-	function connectMSAPI($url, $qdata, $request, $auth='', $cookie='') {
-		// ---
-			$data = $qdata;
+				// Output
+				$output = curl_exec($ch);
+				$result = json_decode($output);
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,$url);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $request);  
-			curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			if( !empty($auth) ){
-				curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-				curl_setopt($ch, CURLOPT_USERPWD, $auth);
-			}
-			curl_setopt($ch, CURLOPT_COOKIE, $cookie);
-			$headers = ['Content-Type: application/json'];
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt($ch, CURLOPT_HEADER, false);
+				// Result
+				if( $result != null ){
+					curl_close ($ch);
+					return $result;
+				}
+				else {
+					curl_close ($ch);
+					return false;
+				}
+			// ---
+		}
 
-			// Output
-			$output = curl_exec($ch);
-			$result = json_decode($output);
+		function opencartAPI($url, $qdata) {
+			// ---
+				$data = http_build_query($qdata);
 
-			// Result
-			if( $result != null ){
-				curl_close ($ch);
-				return $result;
-			}
-			else {
-				curl_close ($ch);
-				return false;
-			}
-		// ---
-	}
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$url);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");  
+				curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+				// Output
+				$output = curl_exec($ch);
+				return $output;
+			// ---
+		}
+	// --
 
 	// Processors
 		function addressCrmToOc($address, $office = false){
@@ -331,5 +348,47 @@
 	        if( in_array($char,$alphabet, true) ){ return true; }
 	        else { return false; }
 	    }
+    // ---
+
+	// URL
+	    function createShortURL($query, $db){
+	    	$result = '';
+
+	    	$keyword = generateRandomString();
+	    	$q = "SELECT * FROM `".DB_PREFIX."url_short` WHERE `keyword`='".$keyword."' LIMIT 1;";
+			$rows_url = $db->query($q);
+
+			while ( $rows_url->num_rows > 0) {
+				// ---
+					$keyword = generateRandomString();
+			    	$q = "SELECT * FROM `".DB_PREFIX."url_short` WHERE `keyword`='".$keyword."' LIMIT 1;";
+					$rows_url = $db->query($q);
+				// ---
+			}
+
+			$q = "
+				INSERT INTO `".DB_PREFIX."url_short` SET 
+				`query` = '".$query."',
+				`keyword` = '".$keyword."'
+			";
+			
+			if ($db->query($q) === TRUE) {
+				return $keyword;
+			} else {
+				return false;
+			}
+		 }
+    // ---
+
+	// Helpers
+	    function generateRandomString($length = 8) {
+		    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		    $charactersLength = strlen($characters);
+		    $randomString = '';
+		    for ($i = 0; $i < $length; $i++) {
+		        $randomString .= $characters[rand(0, $charactersLength - 1)];
+		    }
+		    return $randomString;
+		}
     // ---
 // ---

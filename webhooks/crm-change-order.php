@@ -7,7 +7,7 @@
 	header('Content-Type: text/html; charset=utf-8');
 
 	$log = [];
-
+	
 	if( !isset($_GET['id']) ){
 		$log[] = 'Empty request data';
 
@@ -148,7 +148,7 @@ switch ($action) {
 							;";
 
 							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer addresses ['.$row_order['customer_id']'] has been updated';
+							    $log[] = 'OC customer addresses ['.$row_order['customer_id'].'] has been updated';
 							} else {
 								$log[] = 'OC customer addresses ['.$row_order['order_id'].'] has been not updated: '.$db->error;
 							}
@@ -193,7 +193,7 @@ switch ($action) {
 							;";
 
 							if ($db->query($q) === TRUE) {
-							    $log[] = 'OC customer addresses ['.$row_order['customer_id']'] has been updated';
+							    $log[] = 'OC customer addresses ['.$row_order['customer_id'].'] has been updated';
 							} else {
 								$log[] = 'OC customer addresses ['.$row_order['order_id'].'] has been not updated: '.$db->error;
 							}
@@ -223,39 +223,81 @@ switch ($action) {
 				$row_order = $rows_order->fetch_assoc();
 			// ---
 
-			// OC - get customer order
-				$q = "SELECT * FROM `ms_demand` WHERE `order_id`='".$order->externalId."' AND `ms_demand_id`<> '' AND `ms_customer_order_id`<> '' AND `customer_order_data`<> '' LIMIT 1;";
-				$rows_demand = $db->query($q);
+			// Demands
+				// OC - check demand
+					$q = "SELECT * FROM `ms_demand` WHERE `order_id`='".$order->externalId."' AND `ms_demand_id`<> '' AND `ms_customer_order_id`<> '' AND `customer_order_data`<> '' LIMIT 1;";
+					$rows_demand = $db->query($q);
 
-				if ($rows_demand->num_rows == 0) {
-					$log[] = 'No OC demand';
+					if ($rows_demand->num_rows == 0) {
+						$log[] = 'No OC demand';
 
-					$res['log'] = $log;
-					$res['mess']='Success';
-					echo json_encode($res); exit;
-				}
+						$res['log'] = $log;
+						$res['mess']='Success';
+						echo json_encode($res); exit;
+					}
 
-				$row_demand = $rows_demand->fetch_assoc();
+					$row_demand = $rows_demand->fetch_assoc();
+				// ---
+
+				// OC - create demand task
+					$q = "
+						INSERT INTO `ms_demand` SET 
+						`ms_demand_id` = '',
+						`ms_customer_order_id` = '".$row_demand['ms_customer_order_id']."',
+						`order_id` = '".$row_demand['order_id']."',
+						`customer_order_data` = '".$row_demand['customer_order_data']."',
+						`date_added` = '".time()."',
+						`deleted` = '0',
+						`completed` = '0'
+					";
+					
+					if ($db->query($q) === TRUE) {
+						$demand_id = $db->insert_id;
+
+					    $log[] = 'OC demand ['.$demand_id.'] has been inserted';
+					} else {
+						$log[] = 'OC demand has been not inserted: '.$db->error;
+					}
+				// ---
 			// ---
 
-			// OC - create demand task
-				$q = "
-					INSERT INTO `ms_demand` SET 
-					`ms_demand_id` = '',
-					`ms_customer_order_id` = '".$row_demand['ms_customer_order_id']."',
-					`order_id` = '".$row_demand['order_id']."',
-					`customer_order_data` = '".$row_demand['customer_order_data']."',
-					`date_added` = '".time()."',
-					`deleted` = '0',
-					`completed` = '0'
-				";
-				
-				if ($db->query($q) === TRUE) {
-					$demand_id = $db->insert_id;
+			// Testimonials
+				if( $order->status == 'complete' ){
+					$q = "SELECT * FROM `".DB_PREFIX."testimonials` WHERE `order_id`='".$order->externalId."' LIMIT 1;";
+					$rows_testimonials = $db->query($q);
 
-				    $log[] = 'OC demand ['.$demand_id.'] has been inserted';
-				} else {
-					$log[] = 'OC demand has been not inserted: '.$db->error;
+					if ($rows_testimonials->num_rows == 0) {
+						// ---
+							// Create url
+								$query = createShortURL('testimonials-add?o='.$row_order['order_id'].'&c='.$row_order['customer_id'], $db);
+								$url = str_replace('http://', '', HTTP_SERVER).''.$query;
+							// ---
+
+							// Send SMS
+								$q = "SELECT * FROM `".DB_PREFIX."url_short` WHERE `query`='".$query."' LIMIT 1;";
+								$rows_url = $db->query($q);
+
+								if ($rows_url->num_rows == 0) {
+									// ---
+										$q = "SELECT * FROM `".DB_PREFIX."setting` WHERE `key`='config_sms_testimonials_text' LIMIT 1;";
+										$rows_setting = $db->query($q);
+
+										if ($rows_setting->num_rows > 0) {
+											$row_setting = $rows_setting->fetch_assoc();
+
+											$message = str_replace('[REPLACE]', $url, $row_setting['value']);
+
+											$url = HTTP_SERVER.'index.php?route=/api/sms/send';
+											$data = array('phone' => $row_order['telephone'], 'message' => $message);
+											$result = opencartAPI($url, $data);
+
+											$log[] = 'Send SMS status is ' . $result;
+										}
+									// ---
+								}
+							// ---
+						// ---
+					}
 				}
 			// ---
 		// ---
@@ -263,7 +305,7 @@ switch ($action) {
 }
 
 
-/* DEBUG  */  file_put_contents('./crm-change-order.log', date("d.m.Y H:i", time()) . "" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
+/* DEBUG  */  /* file_put_contents('./crm-change-order.log', date("d.m.Y H:i", time()) . "" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX); */
 
 // Response
 	$res['log'] = $log;

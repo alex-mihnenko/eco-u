@@ -10,6 +10,15 @@ class ControllerStartupSeoUrl extends Controller {
 		if (isset($this->request->get['_route_'])) {
 			$parts = explode('/', $this->request->get['_route_']);
 
+			// Short URL
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_short WHERE keyword = '" . $this->db->escape($parts[0]) . "'");
+
+				if ($query->num_rows) {
+					header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+    				$this->response->redirect($query->row['query']);
+				}
+			// ---
+			
 			// remove any empty arrays from trailing
 			if (utf8_strlen(end($parts)) == 0) {
 				array_pop($parts);
