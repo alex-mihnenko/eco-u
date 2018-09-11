@@ -25,6 +25,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,500i,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.10.1/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" /> -->
+    <script src="<?php echo $base; ?>/catalog/view/javascript/jquery-3.2.1.min.js" type="text/javascript"></script>
 
     <?php foreach ($analytics as $analytic) { ?>
 	<?php echo $analytic; ?>
@@ -37,7 +38,7 @@
 <body class="page_2">
 <?php } ?>
 
-	<div class="wreaper">
+	<div class="wreaper" id="body">
 		<nav>
 			<a href="/" class="logo"><img src="/catalog/view/theme/default/img/logo.png" alt="ЭКО-Ю" title="ЭКО-Ю"></a>
 

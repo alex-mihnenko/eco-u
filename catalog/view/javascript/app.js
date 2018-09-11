@@ -126,7 +126,7 @@ $(document).ready(function() {
 		/* Dropdown */
 			$(document).find('.dropdown .list').css('visibility', 'visible');
 			
-			$(document).on('click', '.dropdown > [data-action="toggle"]', function(e){
+			$('#body').on('click', '.dropdown > [data-action="toggle"]', function(e){
 				// ---
 					var $this = $(this).parents('.dropdown');
 
@@ -145,7 +145,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$(document).on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
+			$('#body').on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
 				// ---
 					var $this = $(this).parents('.sub-dropdown');
 
@@ -162,7 +162,7 @@ $(document).ready(function() {
 				// ---
 			});
 			
-			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
+			$('#body').on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
 				// ---
 					var $this = $(this).parents('.dropdown');
 					$this.attr('data-style','default');
@@ -170,7 +170,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$(document).on('click', function(e){
+			$('#body').on('click', function(e){
 				// ---
 					// Check menu
 						if( $('nav .menu[data-marker="menu"]').attr('data-style') == 'open' ){
@@ -186,7 +186,7 @@ $(document).ready(function() {
 			});
 		/* Dropdown */
 
-		$(document).on('click', 'nav [data-action="search-open"]', function(){
+		$('#body').on('click', 'nav [data-action="search-open"]', function(){
 			// ---
 				var $this = $(this);
 				var $search = $this.parents('.flex').find('.search');
@@ -198,7 +198,7 @@ $(document).ready(function() {
 			// ---
 		});
 
-		$(document).on('click', 'nav [data-action="search-close"]', function(){
+		$('#body').on('click', 'nav [data-action="search-close"]', function(){
 			// ---
 				var $this = $(this);
 				var $search = $this.parents('.flex').find('.search');
@@ -215,7 +215,7 @@ $(document).ready(function() {
 			// ---
 		});
 		
-		$(document).on('keydown', 'nav [name="search"]', function(){
+		$('#body').on('keydown', 'nav [name="search"]', function(){
 			// ---
 				var $this = $(this);
 				
@@ -224,7 +224,7 @@ $(document).ready(function() {
 			// ---
 		});
 
-		$(document).on('keyup', 'nav [name="search"]', function(){
+		$('#body').on('keyup', 'nav [name="search"]', function(){
 			// ---
 				app.search.flag = false;
 
@@ -265,7 +265,7 @@ $(document).ready(function() {
 	    // ---
 
 		// Input phone
-			$(document).on('keyup change paste', '.modal-basket [name="telephone"]', function(){
+			$('#body').on('keyup change paste', '.modal-basket [name="telephone"]', function(){
 				// ---
 					$phone = $(this).val().replace(/\D/g,'');
 
@@ -277,7 +277,7 @@ $(document).ready(function() {
 		// ...
 
 		// Input address
-			$(document).on('keyup change paste', '.modal-basket input[name="address"]', function(){
+			$('#body').on('keyup change paste', '.modal-basket input[name="address"]', function(){
 				// ---
 					var $this = $(this);
 					var $form = $(this).parents('form');
@@ -301,7 +301,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$(document).on('change', '.modal-basket select[name="address"]', function(){
+			$('#body').on('change', '.modal-basket select[name="address"]', function(){
 				var $this = $(this);
 				var $form = $(this).parents('form');
 				var $modal = $(this).parents('.remodal');
@@ -330,18 +330,18 @@ $(document).ready(function() {
 		// ...
 
 		// Close
-			$(document).on('closing', '.remodal.modal-basket', function (e) {
+			$('#body').on('closing', '.remodal.modal-basket', function (e) {
 			  	LoadCart();
 			  	console.log('Basker modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			});
 		// ---
 
 		// Privacy
-			$(document).on('click', '.modal-basket .privacy span', function(){
+			$('#body').on('click', '.modal-basket .privacy span', function(){
 				app.modals.privacy.open();
 			});
 
-			$(document).on('closing', '.remodal.modal-privacy', function (e) {
+			$('#body').on('closing', '.remodal.modal-privacy', function (e) {
 				app.modals.basket.open();
 			  	console.log('Privacy modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			});
@@ -447,7 +447,7 @@ $(document).ready(function() {
 		// ---
 
 		// Form
-            $(document).on('submit', '.modal-basket form', function(){
+            $('#body').on('submit', '.modal-basket form', function(){
 				// Init
 					var $form = $(this);
 					var $modal = $(this).parents('.remodal');
@@ -616,7 +616,7 @@ $(document).ready(function() {
 			});
 
 
-            $(document).on('click', '.modal-basket .payment-method', function(){
+            $('#body').on('click', '.modal-basket .payment-method', function(){
 				// ---
 					var $this = $(this);
 					var $form = $(this).parents('form');
@@ -635,7 +635,7 @@ $(document).ready(function() {
 		// ---
 
 		// Add to cart
-			$(document).on('click', '.p-o_submit', function(e){
+			$('#body').on('click', '.p-o_submit', function(e){
 				// ---
 	                e.preventDefault();
 
@@ -666,7 +666,7 @@ $(document).ready(function() {
                 // ---
             });
 
-            $(document).on('click', '.product .c-p_submit', function(e){
+            $('#body').on('click', '.product .c-p_submit', function(e){
 	            e.preventDefault();
 
 	            if($(this).hasClass('sold')) return false;
@@ -700,7 +700,7 @@ $(document).ready(function() {
 
 	// Catalog
 		// Menu
-			$(document).on('click', '.all-l_a2 .list-products li a', function(e){
+			$('#body').on('click', '.all-l_a2 .list-products li a', function(e){
 				var $this = $(this);
 				var anchor = $this.attr('href');
 
@@ -761,7 +761,7 @@ $(document).ready(function() {
 		// ---
 
 		// Show more
-			$(document).on('click', '.show-more', function(e){
+			$('#body').on('click', '.show-more', function(e){
 				// ---
 		            var $button = $(this);
 		            var dataMode = $(this).data('mode');
@@ -871,7 +871,7 @@ $(document).ready(function() {
 		// Product modal
 			app.modals.product = $('[data-remodal-id="modal-product"]').remodal();
 
-			$(document).on('click', '[data-product] a.p-o_thumb', function(e){
+			$('#body').on('click', '[data-product] a.p-o_thumb', function(e){
 				var $this = $(this);
 				var href = $(this).attr('href');
 				var product_id = $(this).parents('[data-product]').attr('data-product');
@@ -1189,7 +1189,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$(document).on('click', '[data-action="repeat-confirm"]', function(e){
+			$('#body').on('click', '[data-action="repeat-confirm"]', function(e){
 				// ---
 					$body = $(this).parents('.body');
 					$order_id = $(this).attr('data-order-id');
@@ -1350,7 +1350,7 @@ $(document).ready(function() {
 		// Blog modal
 			app.modals.blog = $('[data-remodal-id="modal-blog"]').remodal();
 
-			$(document).on('click', '.blog .featured a.post-featured', function(e){
+			$('#body').on('click', '.blog .featured a.post-featured', function(e){
 				var $this = $(this);
 				var href = $(this).attr('href');
 				var post_id = $(this).attr('data-id');
@@ -1394,7 +1394,7 @@ $(document).ready(function() {
 	// Components
 		// Form
 			// Select
-				$(document).on('click', '.form-select .select', function(e){
+				$('#body').on('click', '.form-select .select', function(e){
 					// ---
 						$this = $(this);
 						$options = $this.parents('.options');
@@ -1417,7 +1417,7 @@ $(document).ready(function() {
 					// ---
 				});
 
-				$(document).on('focusout', '.form-select .select', function(e){
+				$('#body').on('focusout', '.form-select .select', function(e){
 					$this = $(this);
 					$this.attr('data-style', 'default');
 					$this.parents('[data-product]').css('z-index', '0');
@@ -1425,7 +1425,7 @@ $(document).ready(function() {
 					e.stopPropagation();
 				});
 
-				$(document).on('click', '.form-select .options .option', function(e){
+				$('#body').on('click', '.form-select .options .option', function(e){
 					// ---
 						$this = $(this);
 						$select = $this.parents('.select');
@@ -1522,7 +1522,7 @@ $(document).ready(function() {
 					// ---
 				});
 
-				$(document).on('change', '.form-select .select select', function(e){
+				$('#body').on('change', '.form-select .select select', function(e){
 					// ---
 						$this = $(this);
 						$value = $this.val();
@@ -1535,7 +1535,7 @@ $(document).ready(function() {
 			// ---
 
 			// Checkbox
-				$(document).on('click', '.form-checkbox', function(){
+				$('#body').on('click', '.form-checkbox', function(){
 					// ---
 						$this = $(this);
 						$form = $(this).parents('form');
@@ -1568,7 +1568,7 @@ $(document).ready(function() {
 		// ---
 
 		// Buttons
-			// $(document).on('mouseenter', '.btn-toggle button', function(){
+			// $('#body').on('mouseenter', '.btn-toggle button', function(){
 			// 	var $this = $(this);
 			// 	var value = parseInt($this.attr('data-value'));
 			// 	var count = 1;
@@ -1588,7 +1588,7 @@ $(document).ready(function() {
 			// 	});
 			// });
 
-			// $(document).on('mouseleave', '.btn-toggle', function(){
+			// $('#body').on('mouseleave', '.btn-toggle', function(){
 			// 	if( $(this).attr('data-set') !== 'true' ){
 			// 		$(this).find('button').each(function(key, val){
 			// 			$(this).removeClass('active');
@@ -1597,7 +1597,7 @@ $(document).ready(function() {
 			// 	}
 			// });
 			
-			$(document).on('click', '.btn-toggle button', function(){
+			$('#body').on('click', '.btn-toggle button', function(){
 				var $this = $(this);
 				var value = $this.attr('data-value');
 
@@ -1625,7 +1625,7 @@ $(document).ready(function() {
 	// ---
 
 	// Modals
-		$(document).on('click', '[data-action="modal"]', function(){
+		$('#body').on('click', '[data-action="modal"]', function(){
 			// ---
 				$('.modal[data-marker="'+$(this).attr('data-target')+'"]').modal('show');
 			// ---

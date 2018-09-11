@@ -1604,7 +1604,6 @@ xxl
 			    text-decoration: none;
 			    box-sizing: border-box;
 			}
-
 		/* Widget */
 
 		/* Fitured */
@@ -4701,6 +4700,33 @@ xxl
 			display: none !important;
 		}
 	/* Custom page */
+
+	/* Category page */
+		@media (max-width: 374px) {
+			.container .list-letter li {
+			    width: 100%;
+			}
+
+			.p-o_thumb {
+				height: 200px;
+			}
+
+			.p-o_thumb img {
+				width: 100%;
+				height: auto;
+			}
+
+			.p-o_link a {
+			    font-size: 17px;
+			    text-decoration: none;
+			    font-weight: 500;
+			    color: #585858;
+			    line-height: 1.25em;
+			    overflow: hidden;
+			    height: 2.5em;
+			}
+		}
+	/* Category page */
 
 	/* Product page*/
 	    @media (min-width: 375px) {

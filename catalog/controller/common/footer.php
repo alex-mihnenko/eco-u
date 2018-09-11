@@ -4,7 +4,7 @@ class ControllerCommonFooter extends Controller {
 		$this->load->language('common/footer');
 
 		// Scripts
-			$this->document->addScript('catalog/view/javascript/jquery-3.2.1.min.js');
+			//$this->document->addScript('catalog/view/javascript/jquery-3.2.1.min.js');
 			$this->document->addScript('catalog/view/javascript/jquery.liTabs.js');
 			$this->document->addScript('catalog/view/javascript/jquery.selectric.js');
 			$this->document->addScript('catalog/view/javascript/remodal.min.js');
