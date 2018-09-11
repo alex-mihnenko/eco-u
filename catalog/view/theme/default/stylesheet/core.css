@@ -1402,6 +1402,11 @@ xxl
 			    padding: 0px 0px 31px 0px;
 			}
 
+			.blog .post .about .description img {
+				width: 100% !important;
+				height: auto !important;
+			}
+
 			.blog .post .about .excerpt {
 				display: block;
 				width: 100%;
