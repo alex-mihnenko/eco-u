@@ -301,7 +301,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$('#body').on('change', '.modal-basket select[name="address"]', function(){
+			$(document).on('change', '.modal-basket select[name="address"]', function(){
 				var $this = $(this);
 				var $form = $(this).parents('form');
 				var $modal = $(this).parents('.remodal');
