@@ -252,7 +252,7 @@ $(document).ready(function() {
 	    // ---
 
         // Change Quantity
-	        $('.modal-basket').on('change', 'select.change-m-cart-quantity', function() {
+	        $(document).on('change', '.modal-basket select.change-m-cart-quantity', function() {
 	            var $this = $(this);
 
 	            var cartId = $this.data('cart-id');
@@ -265,7 +265,7 @@ $(document).ready(function() {
 	    // ---
 
 		// Input phone
-			$('#body').on('keyup change paste', '.modal-basket [name="telephone"]', function(){
+			$(document).on('keyup change paste', '.modal-basket [name="telephone"]', function(){
 				// ---
 					$phone = $(this).val().replace(/\D/g,'');
 
@@ -277,7 +277,7 @@ $(document).ready(function() {
 		// ...
 
 		// Input address
-			$('#body').on('keyup change paste', '.modal-basket input[name="address"]', function(){
+			$(document).on('keyup change paste', '.modal-basket input[name="address"]', function(){
 				// ---
 					var $this = $(this);
 					var $form = $(this).parents('form');
@@ -330,18 +330,18 @@ $(document).ready(function() {
 		// ...
 
 		// Close
-			$('#body').on('closing', '.remodal.modal-basket', function (e) {
+			$(document).on('closing', '.remodal.modal-basket', function (e) {
 			  	LoadCart();
 			  	console.log('Basker modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			});
 		// ---
 
 		// Privacy
-			$('#body').on('click', '.modal-basket .privacy span', function(){
+			$(document).on('click', '.modal-basket .privacy span', function(){
 				app.modals.privacy.open();
 			});
 
-			$('#body').on('closing', '.remodal.modal-privacy', function (e) {
+			$(document).on('closing', '.remodal.modal-privacy', function (e) {
 				app.modals.basket.open();
 			  	console.log('Privacy modal is closing' + (e.reason ? ', reason: ' + e.reason : ''));
 			});
@@ -424,7 +424,7 @@ $(document).ready(function() {
 		// ---
 
 		// Steps
-			$('.modal-basket').on('click', '[data-step]', function(){
+			$(document).on('click', '.modal-basket [data-step]', function(){
 				$this = $(this);
 				$modal = $(this).parents('.remodal');
 				$step = parseInt($(this).attr('data-step'));
@@ -447,7 +447,7 @@ $(document).ready(function() {
 		// ---
 
 		// Form
-            $('#body').on('submit', '.modal-basket form', function(){
+            $(document).on('submit', '.modal-basket form', function(){
 				// Init
 					var $form = $(this);
 					var $modal = $(this).parents('.remodal');
@@ -616,7 +616,7 @@ $(document).ready(function() {
 			});
 
 
-            $('#body').on('click', '.modal-basket .payment-method', function(){
+            $(document).on('click', '.modal-basket .payment-method', function(){
 				// ---
 					var $this = $(this);
 					var $form = $(this).parents('form');
