@@ -5563,6 +5563,12 @@ xxl
 		}
 	/* About page */
 
+	/* Cart */
+		.delivery-address-container .input-group {
+			display: block !important;
+		}
+	/* Cart */
+
 	/* Suggestions */
 		.suggestions-nowrap {
 		    white-space: nowrap;
