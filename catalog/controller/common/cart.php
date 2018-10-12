@@ -85,47 +85,72 @@ class ControllerCommonCart extends Controller {
             $data['order_price'] = $this->cart->getOrderPrice();
             
             
-            // Shipping
-            $date = new DateTime();
-            $mRus = Array(
-                '01' => 'января',
-                '02' => 'февраля',
-                '03' => 'марта',
-                '04' => 'апреля',
-                '05' => 'мая',
-                '06' => 'июня',
-                '07' => 'июля',
-                '08' => 'августа',
-                '09' => 'сентября',
-                '10' => 'октября',
-                '11' => 'ноября',
-                '12' => 'декабря'
-            );
-            
-            $order_time = explode(':',$this->config->get('config_order_time'));
-            
-            $data['delivery_date'] = Array();
-            if(((int)$date->format('H') < $order_time[0]) || ((int)$date->format('H') == $order_time[0] && (int)$date->format('i') < $order_time[1])) {                
-                $date->add(new DateInterval('P1D'));
-                $data['delivery_date'][] = Array(
-                    'format' => $date->format('d.m.Y'),
-                    'text' => 'Завтра '.$date->format('d')
+            // Delivery date
+                $date = new DateTime();
+
+                $mRus = Array(
+                    '01' => 'января',
+                    '02' => 'февраля',
+                    '03' => 'марта',
+                    '04' => 'апреля',
+                    '05' => 'мая',
+                    '06' => 'июня',
+                    '07' => 'июля',
+                    '08' => 'августа',
+                    '09' => 'сентября',
+                    '10' => 'октября',
+                    '11' => 'ноября',
+                    '12' => 'декабря'
                 );
-                $date->add(new DateInterval('P1D'));
-            } else {
-                $date->add(new DateInterval('P2D'));
-            }
-            $data['delivery_date'][] = Array(
-                'format' => $date->format('d.m.Y'),
-                'text' => 'Послезавтра '.$date->format('d')
-            );
-            for($i=0;$i<5;$i++) {
-                $date->add(new DateInterval('P1D'));
-                $data['delivery_date'][] = Array(
-                    'format' => $date->format('d.m.Y'),
-                    'text' => $date->format('d').' '.$mRus[$date->format('m')]
-                );
-            }
+
+                $last_date_availabel = $this->cart->getOrderLastAvailable();
+                $order_time = explode(':',$this->config->get('config_order_time'));
+                
+                $data['delivery_date'] = Array();
+
+                // Tommorow
+                if( $last_date_availabel < $date->format('Y').'-'.$date->format('m').'-'.$date->format('d') ){
+                    if(((int)$date->format('H') < $order_time[0]) || ((int)$date->format('H') == $order_time[0] && (int)$date->format('i') < $order_time[1])) {                
+                        $date->add(new DateInterval('P1D'));
+                        $data['delivery_date'][] = Array(
+                            'format' => $date->format('d.m.Y'),
+                            'text' => 'Завтра '.$date->format('d')
+                        );
+                        $date->add(new DateInterval('P1D'));
+                    } else {
+                        $date->add(new DateInterval('P2D'));
+                    }
+                }
+                else {
+                    $date->add(new DateInterval('P2D'));
+                }
+
+
+                // After tomorow
+                if( $last_date_availabel < $date->format('Y').'-'.$date->format('m').'-'.$date->format('d') ){
+                    $data['delivery_date'][] = Array(
+                        'format' => $date->format('d.m.Y'),
+                        'text' => 'Послезавтра '.$date->format('d')
+                    );
+                }
+                else {
+                    $date->add(new DateInterval('P2D'));
+                }
+
+
+                // One more dates
+                for($i=0;$i<5;$i++) {
+                    $date->add(new DateInterval('P1D'));
+
+                    if( $last_date_availabel < $date->format('Y').'-'.$date->format('m').'-'.$date->format('d') ){
+                        $data['delivery_date'][] = Array(
+                            'format' => $date->format('d.m.Y'),
+                            'text' => $date->format('d').' '.$mRus[$date->format('m')]
+                        );
+                    }
+                }
+            // ---
+
             
             $addresses = $this->customer->getAddresses();
             $arAddress = Array();
@@ -435,6 +460,7 @@ class ControllerCommonCart extends Controller {
             }
 
             $this->load->model('checkout/order');
+            $this->load->model('tool/addon');
 
             // Check discount
                 $data['discount'] = 0;
@@ -544,6 +570,28 @@ class ControllerCommonCart extends Controller {
                         }
                     // ---
                 }
+            // ---
+
+            // Check bonus
+                if($customer_id = $this->customer->isLogged()) {
+
+                    if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
+                        $data['bonus_apply'] = true;
+                    }
+
+                    $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
+
+                    if( $customer_bonus['bonus'] > 0 ){
+                        $data['bonus'] = $customer_bonus['bonus'];
+                    }
+                    else {
+                        $data['bonus'] = false;
+                    }
+                }
+                else {
+                    $data['bonus'] = false;
+                }
+
             // ---
         
             return $this->load->view('common/cart_page_cart', $data);

@@ -7,7 +7,7 @@
 	header('Content-Type: text/html; charset=utf-8');
 
 	$log = [];
-	
+
 	if( !isset($_GET['id']) ){
 		$log[] = 'Empty request data';
 
@@ -203,6 +203,28 @@ switch ($action) {
 					// ---
 				// ---
 			// ---
+
+			// Change delivery time
+				if( isset($order->delivery->date) && isset($order->delivery->time->from) && isset($order->delivery->time->to) ){
+					$date_arr = explode('-', $order->delivery->date);
+					$delivery_date = $date_arr[2].'.'.$date_arr[1].'.'.$date_arr[0];
+					$delivery_time = $delivery_date.' '.$order->delivery->time->from.'-'.$order->delivery->time->to;
+
+					// Edit order delivery time
+						$q = "
+							UPDATE `".DB_PREFIX."order` SET 
+							`delivery_time` = '".$delivery_time."' 
+							WHERE `order_id`='".$row_order['order_id']."'
+						;";
+
+						if ($db->query($q) === TRUE) {
+						    $log[] = 'OC order delivery time ['.$row_order['order_id'].'] has been updated';
+						} else {
+							$log[] = 'OC order delivery time ['.$row_order['order_id'].'] has been not updated: '.$db->error;
+						}
+					// ---
+				}
+			// ---
 		// ---
 	break;
 
@@ -261,45 +283,104 @@ switch ($action) {
 				// ---
 			// ---
 
-			// Testimonials
-				if( $order->status == 'complete' ){
-					$q = "SELECT * FROM `".DB_PREFIX."testimonials` WHERE `order_id`='".$order->externalId."' LIMIT 1;";
-					$rows_testimonials = $db->query($q);
+			// Custom for send-to-delivery
+				if( $order->status == 'send-to-delivery' ){
+					// OC Testimonials
+						$q = "SELECT * FROM `".DB_PREFIX."testimonials` WHERE `order_id`='".$order->externalId."' LIMIT 1;";
+						$rows_testimonials = $db->query($q);
 
-					if ($rows_testimonials->num_rows == 0) {
-						// ---
-							// Create url
-								$query = createShortURL('testimonials-add?o='.$row_order['order_id'].'&c='.$row_order['customer_id'], $db);
-								$url = str_replace('http://', '', HTTP_SERVER).''.$query;
+						if ($rows_testimonials->num_rows == 0) {
 							// ---
+								// Create url
+									$query = createShortURL('testimonials-add?o='.$row_order['order_id'].'&c='.$row_order['customer_id'], $db);
+									$url = str_replace('http://', '', HTTP_SERVER).''.$query;
+								// ---
 
-							// Send SMS
-								$q = "SELECT * FROM `".DB_PREFIX."url_short` WHERE `query`='".$query."' LIMIT 1;";
-								$rows_url = $db->query($q);
+								// Send SMS
+									$q = "SELECT * FROM `".DB_PREFIX."url_short` WHERE `query`='".$query."' LIMIT 1;";
+									$rows_url = $db->query($q);
 
-								if ($rows_url->num_rows == 0) {
-									// ---
-										$q = "SELECT * FROM `".DB_PREFIX."setting` WHERE `key`='config_sms_testimonials_text' LIMIT 1;";
-										$rows_setting = $db->query($q);
+									if ($rows_url->num_rows == 0) {
+										// ---
+											$q = "SELECT * FROM `".DB_PREFIX."setting` WHERE `key`='config_sms_testimonials_text' LIMIT 1;";
+											$rows_setting = $db->query($q);
 
-										if ($rows_setting->num_rows > 0) {
-											$row_setting = $rows_setting->fetch_assoc();
+											if ($rows_setting->num_rows > 0) {
+												$row_setting = $rows_setting->fetch_assoc();
 
-											$message = mb_strtoupper(mb_substr($row_order['firstname'], 0, 1)) . mb_substr($row_order['firstname'], 1).', '.str_replace('[REPLACE]', $url, $row_setting['value']);
+												$message = mb_strtoupper(mb_substr($row_order['firstname'], 0, 1)) . mb_substr($row_order['firstname'], 1).', '.str_replace('[REPLACE]', $url, $row_setting['value']);
 
-											$url = HTTP_SERVER.'index.php?route=/api/sms/send';
-											$data = array('phone' => $row_order['telephone'], 'message' => $message);
-											$result = opencartAPI($url, $data);
+												$url = HTTP_SERVER.'index.php?route=/api/sms/send';
+												$data = array('phone' => $row_order['telephone'], 'message' => $message);
+												$result = opencartAPI($url, $data);
 
-											$log[] = 'Send SMS status is ' . $result;
-										}
-									// ---
-								}
+												$log[] = 'Send SMS status is ' . $result;
+											}
+										// ---
+									}
+								// ---
 							// ---
-						// ---
-					}
+						}
+					// ---
 				}
 			// ---
+					
+			// Custom for complete
+				if( $order->status == 'complete' ){
+					// OC Bonus account
+						$q = "SELECT * FROM `".DB_PREFIX."bonus_account` ba WHERE ba.code='order_complete' AND ba.status='1' LIMIT 1;";
+						$rows_ba = $db->query($q);
+
+						if ($rows_ba->num_rows > 0) {
+							$row_ba = $rows_ba->fetch_assoc();
+
+							$ba_account_id = $row_ba['bonus_account_id'];
+							$ba_name = $row_ba['name'];
+							$ba_coin = $row_ba['coin'];
+							$ba_rate = $row_ba['rate'];
+
+
+							$q = "SELECT * FROM `".DB_PREFIX."order` o WHERE o.order_id='".$row_order['order_id']."' LIMIT 1;";
+							$rows_o = $db->query($q);
+
+							if ($rows_o->num_rows > 0) {
+								$row_o = $rows_o->fetch_assoc();
+								
+								$amount = $ba_coin * round($row_o['total'] / $ba_rate);
+							}
+							else {
+								$amount = 0;
+							}
+
+							// Add history
+								if( $amount > 0 ) {
+									$q = "
+										INSERT INTO `".DB_PREFIX."bonus_history` SET 
+										`bonus_account_id` = '" . $ba_account_id . "', 
+										`customer_id` = '" . $row_order['customer_id'] . "', 
+										`order_id` = '" . $row_order['order_id'] . "',
+										`amount` = '" . $amount . "',
+										`comment` = '',
+										`time` = '" . time() . "'
+									";
+									
+									if ($db->query($q) === TRUE) {
+										$bonus_history_id = $db->insert_id;
+
+									    $log[] = 'OC bonus account history ['.$bonus_history_id.'] has been inserted';
+									} else {
+										$log[] = 'OC bonus account history has been not inserted: '.$db->error;
+									}
+								}
+							// ---
+						}
+					// ---
+
+					// MS Reserved
+					// ---
+				}
+			// ---
+
 		// ---
 	break;
 }

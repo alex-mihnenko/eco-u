@@ -10,7 +10,7 @@ class ControllerAccountEdit extends Controller {
 			$this->response->redirect('/#modal');
 		}
 
-		$this->load->language('account/account');
+		$this->load->language('account/edit');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -96,6 +96,8 @@ class ControllerAccountEdit extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		
         $this->load->model('checkout/order');
+        $this->load->model('tool/addon');
+        
         $customer_id = $this->session->data['customer_id'];
         $data['orders'] = Array();
         $data['customer'] = Array();
@@ -191,6 +193,11 @@ class ControllerAccountEdit extends Controller {
                 }
             // ---
             
+            // Get bonus
+                $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
+                $data['bonus'] = $customer_bonus['bonus'];
+            // ---
+
             $addresses = $this->customer->getAddresses();
             $arAddress = Array();
             if(!empty($addresses)) {
@@ -206,10 +213,12 @@ class ControllerAccountEdit extends Controller {
                     'value' => ''
                 );
             }
+            
             $data['customer'] = Array(
                 'firstname' => $this->customer->getFirstName(),
                 'telephone' => $this->customer->getTelephone(),
                 'email' => $this->customer->getEmail(),
+                'vegan_card' => $this->customer->getVeganCard(),
                 'addresses' => $arAddress
             );
         }

@@ -111,7 +111,8 @@ class ControllerExtensionPaymentRbs extends Controller {
                 $this->model_checkout_order->addDetailPayment($order_number, $orderId, $this->config->get('config_paid_status_id'), false, $payment_total);
 
                 $this->session->data['success_order_id'] = $order_number;
-                $this->response->redirect($this->url->link('common/home', 'payment=rbs-success&order_id='.$order_number, true));
+                $this->session->data['order_id'] = $order_number;
+                $this->response->redirect($this->url->link('checkout/success', 'payment=rbs-success&order_id='.$order_number, true));
             } else {
                 $this->model_checkout_order->addDetailPayment($order_number, $orderId, $this->config->get('config_nopaid_status_id'), false, $payment_total);
                 $this->response->redirect($this->url->link('checkout/failure', '', true));

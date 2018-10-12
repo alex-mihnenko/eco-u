@@ -387,6 +387,14 @@ class ControllerCommonColumnLeft extends Controller {
 			// Marketing
 			$marketing = array();
 			
+			if ($this->user->hasPermission('access', 'marketing/bonus_account')) {
+				$marketing[] = array(
+					'name'	   => $this->language->get('text_bonus_account'),
+					'href'     => $this->url->link('marketing/bonus_account', 'token=' . $this->session->data['token'], true),
+					'children' => array()		
+				);	
+			}
+			
 			if ($this->user->hasPermission('access', 'marketing/marketing')) {
 				$marketing[] = array(
 					'name'	   => $this->language->get('text_marketing'),

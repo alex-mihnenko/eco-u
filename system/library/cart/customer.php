@@ -33,6 +33,7 @@ class Customer {
                         $this->customer_group_id = $customer_query->row['customer_group_id'];
                         $this->email = $customer_query->row['email'];
                         $this->telephone = $customer_query->row['telephone'];
+                        $this->vegan_card = $customer_query->row['vegan_card'];
                         $this->fax = $customer_query->row['fax'];
                         $this->newsletter = $customer_query->row['newsletter'];
                         $this->address_id = $customer_query->row['address_id'];
@@ -66,7 +67,8 @@ class Customer {
 			$this->lastname = $customer_query->row['lastname'];
 			$this->customer_group_id = $customer_query->row['customer_group_id'];
 			$this->email = $customer_query->row['email'];
-			$this->telephone = $customer_query->row['telephone'];
+            $this->telephone = $customer_query->row['telephone'];
+			$this->vegan_card = $customer_query->row['vegan_card'];
 			$this->fax = $customer_query->row['fax'];
 			$this->newsletter = $customer_query->row['newsletter'];
 			$this->address_id = $customer_query->row['address_id'];
@@ -117,7 +119,8 @@ class Customer {
     			$this->lastname = $customer_query->row['lastname'];
     			$this->customer_group_id = $customer_query->row['customer_group_id'];
     			$this->email = $customer_query->row['email'];
-    			$this->telephone = $customer_query->row['telephone'];
+                $this->telephone = $customer_query->row['telephone'];
+    			$this->vegan_card = $customer_query->row['vegan_card'];
     			$this->fax = $customer_query->row['fax'];
     			$this->newsletter = $customer_query->row['newsletter'];
     			$this->address_id = $customer_query->row['address_id'];
@@ -187,7 +190,8 @@ class Customer {
 		$this->lastname = '';
 		$this->customer_group_id = '';
 		$this->email = '';
-		$this->telephone = '';
+        $this->telephone = '';
+		$this->vegan_card = '';
 		$this->fax = '';
 		$this->newsletter = '';
 		$this->address_id = '';
@@ -231,7 +235,11 @@ class Customer {
 	}
 
 	public function getTelephone() {
-		return $this->telephone;
+        return $this->telephone;
+    }
+
+    public function getVeganCard() {
+		return $this->vegan_card;
 	}
 
 	public function getFax() {
@@ -356,9 +364,11 @@ class Customer {
                 $this->db->query("UPDATE ".DB_PREFIX."customer SET telephone = '".$this->db->escape($telephone)."' WHERE customer_id = ".(int)$this->customer_id);
             }
         }
+
         public function setEmail($email) {
             $this->db->query("UPDATE ".DB_PREFIX."customer SET email = '".$this->db->escape($email)."' WHERE customer_id = ".(int)$this->customer_id);
         }
+
         public function getPersonalDiscount($customer_id, $orders) {
             $totalCustomerOutcome = 0;
             if($orders !== false) {
@@ -380,6 +390,10 @@ class Customer {
             $query = $this->db->query($sql);
             
             return $query->row;
+        }
+
+        public function setVeganCard($vegan_card) {
+            $this->db->query("UPDATE ".DB_PREFIX."customer SET vegan_card = '".$this->db->escape($vegan_card)."' WHERE customer_id = ".(int)$this->customer_id);
         }
 
         // ---

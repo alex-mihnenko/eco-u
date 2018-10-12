@@ -930,6 +930,10 @@ class ModelCheckoutOrder extends Model {
         	if(isset($this->session->data['discount'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount', 'Скидка', '".$this->session->data['discount']."', '2')");
         	if(isset($this->session->data['discount_percentage'])) $this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'discount_percentage', 'Процент скидки', '".$this->session->data['discount_percentage']."', '2')");
         }
+
+        if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
+        	$this->db->query("INSERT INTO ".DB_PREFIX."order_total (order_id, code, title, value, sort_order) VALUES ('".$order_id."', 'bonus', 'Бонусная скидка', '".$this->session->data['bonus']."', '3')");
+        }
         
         return true;
     }

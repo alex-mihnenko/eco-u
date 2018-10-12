@@ -249,6 +249,14 @@ $(document).ready(function() {
 	                if(data.success) { LoadCart(); }
 	            }, "json");
 	        });
+
+	         $('.modal-basket').on('click', '[data-action="cart-clear"]', function() {
+	            $.post('/?route=ajax/index/cartClear',{}, function(data){
+                    // ---
+                    	LoadCart();
+                    // ---
+                }, "json");
+	        });
 	    // ---
 
         // Change Quantity
@@ -352,7 +360,9 @@ $(document).ready(function() {
 				$this = $(this);
 				$modal = $(this).parents('.remodal');
 
-				$this.hide();
+				//$this.hide();
+				$this.parents('.cart-page-total').addClass('light');
+				$this.parents('.cart-page-total-mobile').addClass('light');
 				$modal.find('.coupon .apply').show();
 			});
 
@@ -418,6 +428,35 @@ $(document).ready(function() {
 	                    // ---
 	                }, "json");
 	            }
+
+				return false;
+			});
+		// ---
+
+		// Bonus
+			$('.modal-basket').on('click', '[data-action="apply-bonus"]', function(){
+
+				var $modal = $(this).parents('.remodal');
+
+                $.post('/?route=ajax/index/ajaxApplyBonus',{}, function(data){
+                    // ---
+                    	console.log(data);
+
+                    	if( data.status == 'error' ) {
+                    		// ---
+                    			$modal.find('.modal .message-error').html(data.message);
+                    			$modal.find('.modal .message-error').show();
+                    		// ---
+                    	}
+                    	else{
+                    		// ---
+                    			LoadCart();
+                    		// ---
+                    	}
+
+						return false;
+                    // ---
+                }, "json");
 
 				return false;
 			});
@@ -538,7 +577,6 @@ $(document).ready(function() {
 												            else if( totallast > 1 && totallast < 5 )  { currency = 'рубля'; }
 												            else { currency = 'рублей'; }
 												        }
-
 						                            // ---
 
 						                            $form.find('.cart-total-price [data-type="value"]').html(newtotal+' '+currency);
@@ -600,6 +638,11 @@ $(document).ready(function() {
 						                    	if( typeof yaCounter33704824 != 'undefined' ){
 						                        	yaCounter33704824.reachGoal('checkout-success');
 						                        }
+
+				                            	// Redirect to success page
+						                        setTimeout(function(){
+						                        	document.location = data.success;
+				                            	}, 3500);
 						                    }
 			                        	// ---
 			                        }
@@ -1228,7 +1271,7 @@ $(document).ready(function() {
 		// ---
 
 		// Profile
-			$('.f-p_submit').click(function(){
+			$('.account-edit-btn').click(function(){
 	            var addresses = [];
 	            $('input[data-name="customer_address"].f-p_input').each(function(i, item, arr){
 	                var address_id = $(item).attr('data-target-id');
@@ -1244,6 +1287,7 @@ $(document).ready(function() {
 	            var firstname = $('input[data-name="customer_firstname"].f-p_input').val();
 	            var telephone = $('input[data-name="customer_telephone"].f-p_input').val();
 	            var email = $('input[data-name="customer_email"].f-p_input').val();
+	            var vegan_card = $('input[name="vegan_card"]').val();
 	            var email_hidden = $('input[data-name="customer_email_virtual"].f-p_input').val();
 	            if($('#myId1').prop('checked') && (!email.match(/^[0-9a-z-\.]+\@[0-9a-z-]{2,}\.[a-z]{2,}$/i)) || email.match(/^[0-9]+\@eco\-u\.ru/i)) {
 	                $('.f-p_input[data-name="customer_email"]').addClass('input-error_2');
@@ -1261,6 +1305,7 @@ $(document).ready(function() {
 	                firstname: firstname,
 	                telephone: telephone,
 	                email: email,
+	                vegan_card: vegan_card,
 	                newsletter: newsletter
 	            }, function(msg){
 	                if(msg.status == 'success') {
@@ -1268,9 +1313,27 @@ $(document).ready(function() {
 	                        $('.f-p_input[data-target-id="'+item.id+'"]').val(item.value);
 	                    });
 	                    $('.f-p_input').removeClass('input-error_2');
-	                    $('.f-p_submit').html('Изменения сохранены').addClass('changes-applied');
+	                    $('.account-edit-btn').html('Изменения сохранены').addClass('changes-applied');
 	                    setTimeout(function(){
-	                        $('.f-p_submit').html('Сохранить изменения').removeClass('changes-applied');
+	                        $('.account-edit-btn').html('Сохранить изменения').removeClass('changes-applied');
+	                    }, 3000);
+	                } else {
+	                    
+	                }
+	            }, "json");
+	        });
+
+	        $('.account-edit-vegan-card').click(function(){
+	            var vegan_card = $('input[name="vegan_card"]').val();
+
+	            $.post('/?route=ajax/index/ajaxSetCustomerVeganCard', {
+	                vegan_card: vegan_card
+	            }, function(msg){
+	                if(msg.status == 'success') {
+	                    $('.account-edit-vegan-card').html('Изменения сохранены').addClass('changes-applied');
+
+	                    setTimeout(function(){
+	                        $('.account-edit-vegan-card').html('Сохранить изменения').removeClass('changes-applied');
 	                    }, 3000);
 	                } else {
 	                    
@@ -1280,12 +1343,12 @@ $(document).ready(function() {
 		// ---
 
 		// Testimonials
-			if( $('#account-testimonials').length > 0 ){
-				accountTestimonialsLoadItems();
-			}
+			// if( $('#account.testimonials').length > 0 ){
+			// 	accountTestimonialsLoadItems();
+			// }
 
 
-			$('#account-testimonials').on('submit', 'form.post', function(){
+			$('#account.testimonials').on('submit', 'form.post', function(){
 				var form = $(this);
 				var text = $(this).find('[name="text"]').val();
 				var rating = $(this).find('[name="rating"]').val();
@@ -1307,7 +1370,7 @@ $(document).ready(function() {
 				return false;
 			});
 
-			$('#account-testimonials').on('submit', 'form.answer', function(){
+			$('#account.testimonials').on('submit', 'form.answer', function(){
 				var form = $(this);
 				var text = $(this).find('[name="text"]').val();
 				var parent_id = $(this).find('[name="parent_id"]').val();
@@ -1326,23 +1389,41 @@ $(document).ready(function() {
 				return false;
 			});
 
-			$('#account-testimonials').on('click', '[data-action="testimonial-answer"]', function(){
+			$('#account.testimonials').on('click', '[data-action="testimonial-answer"]', function(){
 				// ---
 					var $this = $(this);
 					var parent_id = $this.parents('.item').attr('data-id');
 
-					$('#account-testimonials').find('form.answer [name="parent_id"]').val(parent_id);
-					$('#account-testimonials').find('form.answer').attr('data-view','visible');
+					$('#account.testimonials').find('form.answer [name="parent_id"]').val(parent_id);
+					$('#account.testimonials').find('form.answer').attr('data-view','visible');
 
 					$("html, body").animate({ scrollTop: $('#form-testimonials-answer').offset().top - 50 });
 				// ---
 			});
 
-			$('#account-testimonials form.answer').on('click', '[data-action="close"]', function(){
+			$('#account.testimonials form.answer').on('click', '[data-action="close"]', function(){
 				// ---
-					$('#account-testimonials').find('form.answer').attr('data-view','none');
+					$('#account.testimonials').find('form.answer').attr('data-view','none');
 				// ---
 			});
+
+
+			$('#account.testimonials').on('click', '.item [data-action="delete"]', function(){
+				// ---
+					var $this = $(this);
+					var testimonials_id = $this.parents('.item').attr('data-id');
+
+
+					$.post('/?route=account/testimonials/deleteItem', {testimonials_id:testimonials_id}, function(data){
+					// ---
+						accountTestimonialsLoadItems();
+					// ---
+				}, 'json');
+
+				return true;
+				// ---
+			});
+
 		// ---
 	// ---
 
@@ -2031,11 +2112,11 @@ $(document).ready(function() {
 			$.post('/?route=account/testimonials/getItems', {}, function(data){
 				// ---
 					if ( data.result == true ){
-						$('#account-testimonials').find('.testimonials-list').html('');
+						$('#account.testimonials').find('.testimonials-list').html('');
 
 						$.each(data.items, function(key, item){
 							// ---
-								$('#account-testimonials').find('.testimonials-list').append(item);
+								$('#account.testimonials').find('.testimonials-list').append(item);
 							// ---
 						});
 					}

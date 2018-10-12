@@ -3,16 +3,19 @@ include(DIR_APPLICATION . "../_lib.php");
 
 class ControllerAccountTestimonials extends Controller {
 	public function index() {
-		if (!$this->customer->isLogged()) {
-            unset($this->session->data['redirect']);
-            $this->session->data['redirect'] = $this->url->link('account/testimonials', '', true);
+		// Init
+			if (!$this->customer->isLogged()) {
+	            unset($this->session->data['redirect']);
+	            $this->session->data['redirect'] = $this->url->link('account/testimonials', '', true);
 
-			$this->response->redirect('/#modal');
-		}
+				$this->response->redirect('/#modal');
+			}
 
-		$this->load->language('account/testimonials');
-
-		$this->document->setTitle($this->language->get('heading_title'));
+			$this->load->language('account/testimonials');
+			$this->load->model('account/testimonials');
+			
+			$this->document->setTitle($this->language->get('heading_title'));
+		// ---
 
 		// Post
 			if ($this->request->server['REQUEST_METHOD'] == 'POST') {
@@ -60,6 +63,87 @@ class ControllerAccountTestimonials extends Controller {
 			$data['header'] = $this->load->controller('common/header');
 		// ---
 
+		// Get customer
+            $customer_id = $this->customer->isLogged();
+    	// ---
+
+		// Get items
+			$results = $this->model_account_testimonials->getItems($customer_id);
+			$data['items'] = array();
+
+	        $months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+	        foreach ($results as $key => $item) {
+              	// ---
+              		// Get childs
+              			$childs_html = '';
+              			$childs = $this->model_account_testimonials->getChilds($item['testimonials_id']);
+
+              			if( $childs != false ){
+              				foreach ($childs as $key_child => $child) {
+	              				// ---
+	              					$childs_html .= '
+	              						<div class="child">
+				              				<div class="author">
+				              					<div class="image" style=" background: url('.$this->model_tool_image->resize($child['image'], 100, 100).') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
+				              				</div>
+				              				<div class="body">
+					              				<div class="about">
+					              					<span> <span class="firstname">'.$child['author'].'</span>, '.date('j', $child['date_added']).' '.$months[intval(date('m', $child['date_added']))].' '.date('Y', $child['date_added']).'</span>
+					              				</div>
+					              				<div class="text">
+					              					<p>'.$child['text'].'</p>
+					              				</div>
+				              				</div>
+				              			</div>
+	              					';
+	              				// ---
+              				}
+	              			
+	              			$childs_html .= '<button type="button" class="answer" data-action="testimonial-answer">Ответить</button>';
+              			}
+              		// ---
+
+              		// Rating
+              			$rating = '<div class="rating">';
+
+	              		for ($i=1; $i <=5 ; $i++) { 
+	              			// ---
+	              				if( $i <= $item['rating'] ){
+              						$rating .= '<i class="fa fa-star red"></i>';
+	              				}
+	              				else {
+              						$rating .= '<i class="fa fa-star-o"></i>';
+	              				}
+	              			// ---
+	              		}
+
+              			$rating .= '</div>';
+              		// ---
+
+              		$data['items'][] = '
+              			<div class="item" data-id="'.$item['testimonials_id'].'" data-user-id="'.$item['user_id'].'">
+				            <div class="body">
+	              				<div class="about">
+	              					'.$rating.'
+	              					<span>'.date('j', $item['date_added']).' '.$months[intval(date('m', $item['date_added']))].' '.date('Y', $item['date_added']).'</span>
+	              				</div>
+	              				<div class="text">
+	              					<i class="svg" data-src="icon-speak-bubble.svg">'.loadSvg('src', 'icon-speak-bubble.svg').'</i>
+	              					<p>'.$item['text'].'</p>
+	              				</div>
+
+	              				<div class="childs">
+	              					'.$childs_html.'
+	              				</div>
+              				</div>
+              				<button data-action="delete" class="close" data-id="'.$item['testimonials_id'].'"></button>
+              			</div>
+              		';
+              	// ---
+            }
+		// ---
+
 		$this->response->setOutput($this->load->view('account/testimonials', $data));
 	}
 
@@ -98,6 +182,7 @@ class ControllerAccountTestimonials extends Controller {
 				// ---
 
 				$this->load->language('account/testimonials');
+				$this->load->model('tool/addon');
         	// ---
 
         	// Get customer
@@ -116,12 +201,17 @@ class ControllerAccountTestimonials extends Controller {
 	            $result = $this->model_account_testimonials->addItem($customer_id, $customer['firstname'], $text, $parent_id, $rating, $order_id);
 
 	            if( $result == false ){
-	              $response->result = false;
-	              $response->message = $this->language->get('add_success');
+
+	              	$response->result = false;
+	            	$response->message = $this->language->get('add_error');
 	            }
 	            else{
-	              $response->result = true;
-	              $response->message = $this->language->get('add_error');
+            		// Bonus account
+	              		$response->bonus = $this->model_tool_addon->setBonus('testimonials', $customer_id);
+	          		// ---
+
+	            	$response->result = true;
+	            	$response->message = $this->language->get('add_success');
 	            }
         	// ---
 
@@ -248,6 +338,7 @@ class ControllerAccountTestimonials extends Controller {
 		              					<span>'.date('j', $item['date_added']).' '.$months[intval(date('m', $item['date_added']))].' '.date('Y', $item['date_added']).'</span>
 		              				</div>
 		              				<div class="text">
+		              					<i class="svg" data-src="icon-speak-bubble.svg">'.loadSvg('src', 'icon-speak-bubble.svg').'</i>
 		              					<p>'.$item['text'].'</p>
 		              				</div>
 
@@ -255,6 +346,7 @@ class ControllerAccountTestimonials extends Controller {
 		              					'.$childs_html.'
 		              				</div>
 	              				</div>
+	              				<button data-action="delete" class="close" data-id="'.$item['testimonials_id'].'"></button>
 	              			</div>
 	              		';
 	              	// ---
@@ -265,6 +357,35 @@ class ControllerAccountTestimonials extends Controller {
         	// ---
 
         	// Response
+        	$response->status = 'success';
+          
+        	echo json_encode($response);
+        	exit;
+        // ---
+    }
+
+    public function deleteItem() {
+        // ---
+        	// Init
+	            $testimonials_id = $this->request->post['testimonials_id'];
+	            $response = new stdClass();
+
+	            $log = [];
+
+				$this->load->language('account/testimonials');
+        	// ---
+
+        	// Delete
+	            $this->load->model('account/testimonials');
+	            
+	            $result = $this->model_account_testimonials->deleteItem($testimonials_id);
+
+	            $response->result = $result;
+        	// ---
+
+
+        	// Response
+        	$response->log = $log;
         	$response->status = 'success';
           
         	echo json_encode($response);

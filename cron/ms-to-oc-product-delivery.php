@@ -60,7 +60,7 @@
 					// ---
 						// Get order positions
 							$url = 'https://online.moysklad.ru/api/remap/1.1/entity/purchaseorder/'.$purchaseorder_id.'/positions';
-							$data = array('limit' => 100, 'offset' => (int)$config->page*100);
+							$data = array('limit' => 100, 'offset' => 0);
 
 							$positions = connectGetAPI($url, $data, MS_AUTH);
 						// --

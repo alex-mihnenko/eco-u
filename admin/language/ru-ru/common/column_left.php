@@ -31,6 +31,7 @@ $_['text_layout']                    = 'Макеты';
 $_['text_localisation']              = 'Локализация';
 $_['text_location']                  = 'Местонахождение';
 $_['text_contact']                   = 'Почта';
+$_['text_bonus_account']             = 'Бонусный счет';
 $_['text_marketing']                 = 'Маркетинг';
 $_['text_menu']                      = 'Меню';
 $_['text_modification']              = 'Модификаторы';

@@ -6,6 +6,9 @@ $_['heading_title']    = 'Личный кабинет';
 $_['text_account']     = 'Заказы';
 $_['text_edit']        = 'Личные данные';
 $_['text_testimonials'] = 'Отзывы';
+$_['text_vegan_card']   = 'Vegetarian Card';
+$_['text_bonus']        = 'Бонусы';
+
 $_['text_register']    = 'Регистрация';
 $_['text_login']       = 'Вход';
 $_['text_logout']      = 'Выход';

@@ -19,6 +19,17 @@ class ModelAccountTestimonials extends Model {
 		// ---
 	}
 
+	public function deleteItem($testimonials_id) {
+		// ---
+			$query = $this->db->query("
+				DELETE FROM `" . DB_PREFIX . "testimonials`  
+				WHERE testimonials_id = '".$testimonials_id."'
+			;");
+
+			return $query;
+		// ---
+	}
+
 	public function getItems($customer_id) {
 		// ---
 			if( $customer_id > 0 ) { 

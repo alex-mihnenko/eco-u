@@ -26,6 +26,9 @@ class ControllerCommonFooter extends Controller {
 			$this->document->addScript('catalog/view/javascript/input-mask/inputmask.min.js');
 			$this->document->addScript('catalog/view/javascript/input-mask/jquery.inputmask.js');
 
+			$this->document->addScript('catalog/view/javascript/bootstrap/b1760e6b3b.js');
+			$this->document->addScript('catalog/view/javascript/bootstrap/popper.min.js');
+			$this->document->addScript('catalog/view/javascript/bootstrap/bootstrap.min.js');
 			$this->document->addScript('catalog/view/javascript/my_scripts.js');
 			$this->document->addScript('catalog/view/javascript/app.js');
 		// ---
@@ -124,6 +127,10 @@ class ControllerCommonFooter extends Controller {
 			$data['jsversion'] = $this->session->data['jsversion'];
 		// ---
 
+		if( isset( $this->session->data['ga_order_id'] ) ){
+			$data['order_id'] = $this->session->data['ga_order_id'];
+			unset($this->session->data['ga_order_id']);
+		}
 
 		return $this->load->view('common/footer', $data);
 	}

@@ -8,6 +8,9 @@ class ControllerExtensionModuleAccount extends Controller {
 		$data['text_account'] = $this->language->get('text_account');
 		$data['text_edit'] = $this->language->get('text_edit');
 		$data['text_testimonials'] = $this->language->get('text_testimonials');
+		$data['text_vegan_card'] = $this->language->get('text_vegan_card');
+		$data['text_bonus'] = $this->language->get('text_bonus');
+		
 		$data['text_register'] = $this->language->get('text_register');
 		$data['text_login'] = $this->language->get('text_login');
 		$data['text_logout'] = $this->language->get('text_logout');
@@ -27,6 +30,8 @@ class ControllerExtensionModuleAccount extends Controller {
 		$data['account'] = $this->url->link('account/account', '', true);
 		$data['testimonials'] = $this->url->link('account/testimonials', '', true);
 		$data['edit'] = $this->url->link('account/edit', '', true);
+		$data['vegan_card'] = $this->url->link('account/vegan_card', '', true);
+		$data['bonus'] = $this->url->link('account/bonus', '', true);
 		
 		$data['register'] = $this->url->link('account/register', '', true);
 		$data['login'] = $this->url->link('account/login', '', true);

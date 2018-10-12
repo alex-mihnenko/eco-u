@@ -160,7 +160,74 @@
                   <input type="text" name="mpn" value="<?php echo $mpn; ?>" placeholder="<?php echo $entry_mpn; ?>" id="input-mpn" class="form-control" />
                 </div>
               </div>
-    
+              
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-special-price"><?php echo $entry_special_price; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="special_price" value="<?php echo $special_price; ?>" placeholder="<?php echo $entry_special_price; ?>" id="input-special-price" class="form-control" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-available-in-time"><?php echo $entry_available_in_time; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="available_in_time" value="<?php echo $available_in_time; ?>" placeholder="<?php echo $entry_available_in_time; ?>" id="input-available-in-time" class="form-control" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-minimum"><span data-toggle="tooltip" title="<?php echo $help_minimum; ?>"><?php echo $entry_minimum; ?></span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="minimum" value="<?php echo $minimum; ?>" placeholder="<?php echo $entry_minimum; ?>" id="input-minimum" class="form-control" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-subtract"><?php echo $entry_subtract; ?></label>
+                <div class="col-sm-10">
+                  <select name="subtract" id="input-subtract" class="form-control">
+                    <?php if ($subtract) { ?>
+                    <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                    <option value="0"><?php echo $text_no; ?></option>
+                    <?php } else { ?>
+                    <option value="1"><?php echo $text_yes; ?></option>
+                    <option value="0" selected="selected"><?php echo $text_no; ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><?php echo $entry_shipping; ?></label>
+                <div class="col-sm-10">
+                  <label class="radio-inline">
+                    <?php if ($shipping) { ?>
+                    <input type="radio" name="shipping" value="1" checked="checked" />
+                    <?php echo $text_yes; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="shipping" value="1" />
+                    <?php echo $text_yes; ?>
+                    <?php } ?>
+                  </label>
+                  <label class="radio-inline">
+                    <?php if (!$shipping) { ?>
+                    <input type="radio" name="shipping" value="0" checked="checked" />
+                    <?php echo $text_no; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="shipping" value="0" />
+                    <?php echo $text_no; ?>
+                    <?php } ?>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="sort_order" value="<?php echo $sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
+                </div>
+              </div>
+              
               <!--<div class="form-group">
                 <label class="col-sm-2 control-label" for="input-location"><?php echo $entry_location; ?></label>
                 <div class="col-sm-10">
@@ -240,12 +307,6 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-special-price"><?php echo $entry_special_price; ?></label>
-                <div class="col-sm-10">
-                  <input type="text" name="special_price" value="<?php echo $special_price; ?>" placeholder="<?php echo $entry_special_price; ?>" id="input-special-price" class="form-control" />
-                </div>
-              </div>
-              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-weight-variants"><?php echo $entry_weight_variants; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="weight_variants" value="<?php echo $weight_variants; ?>" placeholder="<?php echo $entry_weight_variants; ?>" id="input-weight-variants" class="form-control" />
@@ -261,12 +322,6 @@
                 <label class="col-sm-2 control-label" for="input-shelf-life"><?php echo $entry_shelf_life; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="shelf_life" value="<?php echo $shelf_life; ?>" placeholder="<?php echo $entry_shelf_life; ?>" id="input-shelf-life" class="form-control" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-available-in-time"><?php echo $entry_available_in_time; ?></label>
-                <div class="col-sm-10">
-                  <input type="text" name="available_in_time" value="<?php echo $available_in_time; ?>" placeholder="<?php echo $entry_available_in_time; ?>" id="input-available-in-time" class="form-control" />
                 </div>
               </div>
                 
@@ -289,26 +344,6 @@
                 <label class="col-sm-2 control-label" for="input-quantity"><?php echo $entry_quantity; ?></label>
                 <div class="col-sm-10">
                   <input type="text" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-minimum"><span data-toggle="tooltip" title="<?php echo $help_minimum; ?>"><?php echo $entry_minimum; ?></span></label>
-                <div class="col-sm-10">
-                  <input type="text" name="minimum" value="<?php echo $minimum; ?>" placeholder="<?php echo $entry_minimum; ?>" id="input-minimum" class="form-control" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-subtract"><?php echo $entry_subtract; ?></label>
-                <div class="col-sm-10">
-                  <select name="subtract" id="input-subtract" class="form-control">
-                    <?php if ($subtract) { ?>
-                    <option value="1" selected="selected"><?php echo $text_yes; ?></option>
-                    <option value="0"><?php echo $text_no; ?></option>
-                    <?php } else { ?>
-                    <option value="1"><?php echo $text_yes; ?></option>
-                    <option value="0" selected="selected"><?php echo $text_no; ?></option>
-                    <?php } ?>
-                  </select>
                 </div>
               </div>
               <div class="form-group">
@@ -337,29 +372,6 @@
                     <?php } ?>
                     <?php } ?>
                   </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label"><?php echo $entry_shipping; ?></label>
-                <div class="col-sm-10">
-                  <label class="radio-inline">
-                    <?php if ($shipping) { ?>
-                    <input type="radio" name="shipping" value="1" checked="checked" />
-                    <?php echo $text_yes; ?>
-                    <?php } else { ?>
-                    <input type="radio" name="shipping" value="1" />
-                    <?php echo $text_yes; ?>
-                    <?php } ?>
-                  </label>
-                  <label class="radio-inline">
-                    <?php if (!$shipping) { ?>
-                    <input type="radio" name="shipping" value="0" checked="checked" />
-                    <?php echo $text_no; ?>
-                    <?php } else { ?>
-                    <input type="radio" name="shipping" value="0" />
-                    <?php echo $text_no; ?>
-                    <?php } ?>
-                  </label>
                 </div>
               </div>
               <div class="form-group">
@@ -443,12 +455,6 @@
                     <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
                     <?php } ?>
                   </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
-                <div class="col-sm-10">
-                  <input type="text" name="sort_order" value="<?php echo $sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
                 </div>
               </div>
             </div>

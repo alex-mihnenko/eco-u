@@ -19,28 +19,36 @@
     	<div class="width-1418">
     		<ul class="list-advantage">
     			<li>
-    				<div class="l-a_thumb">
-    					<div class="l-a_icon l-a_1"></div>
-    				</div>
-    				<div class="l-a_title">Выбирайте из&nbsp;более 700 редких и&nbsp;полезных продуктов</div>
+                    <a href="#modal-category-advantage-1">
+        				<div class="l-a_thumb">
+        					<div class="l-a_icon l-a_1"></div>
+        				</div>
+        				<div class="l-a_title">Выбирайте из&nbsp;более 700 редких и&nbsp;полезных продуктов</div>
+                    </a>
     			</li>
     			<li>
-    				<div class="l-a_thumb">
-    					<div class="l-a_icon l-a_2"></div>
-    				</div>
-    				<div class="l-a_title">Покупайте свежие и&nbsp;качественные продукты</div>
+                    <a href="#modal-category-advantage-2">
+        				<div class="l-a_thumb">
+        					<div class="l-a_icon l-a_2"></div>
+        				</div>
+        				<div class="l-a_title">Покупайте свежие и&nbsp;качественные продукты</div>
+                    </a>
     			</li>
     			<li>
-    				<div class="l-a_thumb">
-    					<div class="l-a_icon l-a_3"></div>
-    				</div>
-    				<div class="l-a_title">Используйте только натуральную био-упаковку</div>
+                    <a href="#modal-category-advantage-3">
+        				<div class="l-a_thumb">
+        					<div class="l-a_icon l-a_3"></div>
+        				</div>
+        				<div class="l-a_title">Используйте только натуральную био-упаковку</div>
+                    </a>
     			</li>
     			<li>
-    				<div class="l-a_thumb">
-    					<div class="l-a_icon l-a_4"></div>
-    				</div>
-    				<div class="l-a_title">Доставка по&nbsp;Москве за&nbsp;290 рублей или бесплатно от&nbsp;3&nbsp;500 рублей</div>
+                    <a href="#modal-category-advantage-4">
+        				<div class="l-a_thumb">
+        					<div class="l-a_icon l-a_4"></div>
+        				</div>
+        				<div class="l-a_title">Доставка по&nbsp;Москве за&nbsp;290 рублей или бесплатно от&nbsp;3&nbsp;500 рублей</div>
+                    </a>
     			</li>
     		</ul>
     	</div>
@@ -396,9 +404,67 @@
     <!-- END Products -->
 <!-- END catalog -->
 
-<!-- Content top -->
-    <?php echo $content_bottom; ?>
-<!-- END Content top -->
+<!-- Category modals -->
+     <div class="remodal" data-remodal-id="modal-category-advantage-1">
+        <button data-remodal-action="close" class="remodal-close"></button>
+
+        <div class="body">
+            <h2 class="h3">Выбирайте из более 700 товаров</h2>
+            <hr class="indent md">
+
+            <p>
+                В ассортименте нашего магазина вы можете найти всенеобходимое для полноценного и здорового питания для всей семьи.
+                <br><br>
+                Мы собрали качественные и натуральные продукты со всей России и ближнего зарубежья.
+            </p>
+        </div>
+    </div>
+
+    <div class="remodal" data-remodal-id="modal-category-advantage-2">
+        <button data-remodal-action="close" class="remodal-close"></button>
+
+        <div class="body">
+            <h2 class="h3">Покупайте свежие и качественные</h2>
+            <hr class="indent md">
+
+            <p>
+                Выбираем только те продукты, которые не обрабатывают химикатами и термически; которые не содержат продуктов животного происхождения и вредных добавок например: поваренная соль, рафинированные продукты, сложных химических элементов. 
+            </p>
+        </div>
+    </div>
+
+    <div class="remodal" data-remodal-id="modal-category-advantage-3">
+        <button data-remodal-action="close" class="remodal-close"></button>
+
+        <div class="body">
+            <h2 class="h3">Используйте только натуральную-био упаковку</h2>
+            <hr class="indent md">
+
+            <p>
+                Приоритетной задачей для нас является использование пластика в повседневной жизни или полностью отказаться от него, поэтому в упаковке используются только легко восполняемые материалы такие как бумага и стекло.
+                <br><br>
+                А весь пластик, который остается у нас в магазине мы сортируем и сдаем на утилизацию.
+            </p>
+        </div>
+    </div>
+
+    <div class="remodal" data-remodal-id="modal-category-advantage-4">
+        <button data-remodal-action="close" class="remodal-close"></button>
+
+        <div class="body">
+            <h2 class="h3">Доставим уже на следующий день</h2>
+            <hr class="indent md">
+
+            <p>
+                Сумма минимального заказа составляет 1000 рублей.
+                <br><br>
+                Доставка в пределах МКАД всего за 290 рублей, а при сумме заказа более 3 500 руб - бесплатно.
+                <br><br>
+                Стоимость доставки за МКАД составляет плюс 20 рублей за каждый километр от МКАД к стоимости доставки.
+            </p>
+        </div>
+    </div>
+<!-- END Category modals -->
 
 
 <!-- Footer -->

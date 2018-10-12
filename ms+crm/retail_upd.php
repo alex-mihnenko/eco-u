@@ -44,7 +44,7 @@ if($_GET['type']){
 		
 		foreach($res['order']['items'] as $kg=>$vg){
 			// ---
-				if ( $qOrderProduct = mysql_query("SELECT `order_product_id` FROM `oc_order_product` WHERE `order_id`=".$num." AND `product_id`='{$vg['offer']['externalId']}';") ) $nOrderProduct = mysql_num_rows($qOrderProduct);
+				if ( $q = mysql_query("SELECT `order_product_id` FROM `oc_order_product` WHERE `order_id`=".$num." AND `product_id`='".$vg['offer']['externalId']."' AND `quantity`='".$vg['quantity']."';") ) $nOrderProduct = mysql_num_rows($q);
 				else $nOrderProduct = 0;
 
 				$totalg=$vg['initialPrice']*$vg['quantity'];
@@ -52,13 +52,13 @@ if($_GET['type']){
 				if( $nOrderProduct==0 ){
 					// ---
 						// Get product
-							if ( $qProduct = mysql_query("SELECT * FROM `oc_product` WHERE `product_id`='{$vg['offer']['externalId']}';") ) $nProduct = mysql_num_rows($qProduct);
+							if ( $qProduct = mysql_query("SELECT * FROM `oc_product` WHERE `product_id`='".$vg['offer']['externalId']."';") ) $nProduct = mysql_num_rows($qProduct);
 							else $nProduct = 0;
 						// ---
 
 						if( $nProduct>0 ){
 							// ---
-								$rowProduct = mysql_fetch_assoc($qOrderProduct);
+								$rowProduct = mysql_fetch_assoc($q);
 
 								$qInsert = mysql_query("
 									INSERT INTO `oc_order_product` SET 
@@ -78,6 +78,8 @@ if($_GET['type']){
 								$opid=mysql_insert_id();
 
 								$log[] = "New product in order: [".$opid."] SQL Error Insert: [".mysql_error()."]";
+
+								$ndel[]=$opid;
 							// ---
 						}
 
@@ -85,7 +87,7 @@ if($_GET['type']){
 				}
 				else {
 					// ---
-						$rowProduct = mysql_fetch_assoc($qOrderProduct);
+						$rowProduct = mysql_fetch_assoc($q);
 						$opid=$rowProduct['order_product_id'];
 
 						$qUpdate = mysql_query("
@@ -99,10 +101,11 @@ if($_GET['type']){
 						");
 
 						$log[] = "Update product in order: [".$opid."] SQL Error Update: [".mysql_error()."]";
+						
+						$ndel[]=$opid;
 					// ---
 				}
 			
-				$ndel[]=$opid;
 			// ---
 		}
 	// ---
@@ -271,24 +274,6 @@ if($_GET['type']){
 			}
 		// ---
 	}
-	else if($res['order']['status']=='complete'){
-		// ---
-			if(!$ms_lead_id) $ms_lead_id=$VMS['id'];
-	
-			$ms_data=null;
-			$POS=ms_query($VMS['positions']['meta']['href']);
-
-			foreach($POS['rows'] as $kp=>$vp){
-				$vp['reserve']=0;
-				//$vp['shipped']=0;
-				$ms_data['positions'][]=$vp;	
-			}
-			
-			$link='https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$ms_lead_id;
-			$json = ms_query_send($link, $ms_data, 'PUT');
-		// ---
-	}
-
 
 	// Show log
 	print_r($log);

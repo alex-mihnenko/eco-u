@@ -40,27 +40,30 @@
 // Get orders
 	$q = "
 		SELECT 
-		payment_method,
-		customer_id,
-		order_id,
-		customer_id,
-		firstname,
-		lastname,
-		email,
-		telephone,
-		comment,
-		total, 
-		order_status_id,
-		date_added,
-		payment_code,
-		shipping_address_1,
-		shipping_address_2,
-		shipping_method,
-		shipping_code,
-		shipping_custom_field,
-		delivery_time
+		o.payment_method,
+		o.customer_id,
+		o.order_id,
+		o.customer_id,
+		o.firstname,
+		o.lastname,
+		o.email,
+		o.telephone,
+		o.comment,
+		o.total, 
+		o.order_status_id,
+		o.date_added,
+		o.payment_code,
+		o.shipping_address_1,
+		o.shipping_address_2,
+		o.shipping_method,
+		o.shipping_code,
+		o.shipping_custom_field,
+		o.delivery_time,
+		c.sex
 
 		FROM ".DB_PREFIX."order o 
+		
+		LEFT JOIN ".DB_PREFIX."customer c ON c.customer_id = o.customer_id 
 
 		WHERE o.rcrm_status<>'sended' AND o.order_id>0 AND o.order_status_id>0 ORDER BY o.date_modified DESC LIMIT 50;
     ";
@@ -92,6 +95,7 @@
 			$customer['firstName'] = $row_order['firstname'];
 			$customer['lastName'] = $row_order['lastname'];
 			$customer['phone'] = $row_order['telephone'];
+			$customer['sex'] = $row_order['sex'];
 
 
 			$q = "SELECT * FROM `".DB_PREFIX."customer` WHERE `customer_id` = '".$row_order['customer_id']."' AND `rcrm_id`='' LIMIT 1;";
@@ -172,7 +176,7 @@
 						}
 						else if( $row_discounts['code'] == 'coupon' ) {
 							$order_discount_manual_amount = floatval($row_discounts['value']);
-							$order['managerComment'] .= "Скидка ".$row_discounts['value']." по купону\n";
+							$order['managerComment'] .= "Скидка ".intval($row_discounts['value'])." по купону\n";
 						}
 						else if(
 							$row_discounts['code'] == 'discount_percentage' ) { $order_discount_manual_percent = floatval($row_discounts['value']);

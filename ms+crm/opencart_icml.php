@@ -16,8 +16,8 @@ include("opencart_inc.php");
 
 
 
-echo("<yml_catalog date=\"2016-12-10 22:27:15\">
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<yml_catalog date=\"2016-12-10 22:27:15\">
 <shop>
 <name>Eco-u</name>
 <company>Eco-u</company>
@@ -64,13 +64,13 @@ echo("</categories><offers>");
 		while(list($pcatid)=mysql_fetch_row($resp)){
 			echo("<categoryId>$pcatid</categoryId>");
 		}
-		$img="http://eco-u.ru/image/$image";
+		$img="https://eco-u.ru/image/$image";
 		if($purchaseprice) echo("<purchasePrice>$purchaseprice</purchasePrice>");
 		echo("<picture>$img</picture>");
 		$resp=mysql_query("select keyword from oc_url_alias where query='product_id=$EL_ID'");
 		list($keyword)=mysql_fetch_row($resp);
 		//$keyword=str_replace($keyword);
-		echo("<url>http://eco-u.ru/eda/$keyword</url>");
+		echo("<url>https://eco-u.ru/eda/$keyword</url>");
 
 
 		// Price
@@ -119,7 +119,7 @@ echo("</categories><offers>");
 		 	echo("<price>$price</price>");
 			echo("<picture>$img</picture>");
 			echo("<xmlId>$xmlId#$xmlId2</xmlId>");
-			echo("<url>http://eco-u.ru/$keyword</url>");
+			echo("<url>https://eco-u.ru/$keyword</url>");
 			echo("<param name=\"Артикул\" code=\"article\">$sku</param>");
 		
 			$ms_povi_arr=explode(",",$ms_povi);

@@ -268,25 +268,15 @@ class ControllerProductCategory extends Controller {
 
 
 					$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
-		            $catSortTime = false; //$this->cache->get('latest_category_sort');
-		                        
-		            $cacheRequired = false; //$this->model_catalog_product->isCacheRequired();
+		            $results = $this->model_catalog_product->getProducts($filter_data);
 
-		            if(!$catSortTime || !$cacheRequired) {
-		                $catSortTime = 0;
-		                $results = $this->model_catalog_product->getProducts($filter_data);
-		                //$data['products_asorted'] = array();
-		                $data['products_catsorted'] = array();
-		            } else {
-		                //$data['products_asorted'] = unserialize($this->cache->get('category_products_asorted'));
-		                $data['products_catsorted'] = unserialize($this->cache->get('category_products_catsorted'));
-		            }
+		            $data['products_catsorted'] = array();
 		        // ---
                         
 	            // Add
 		            $iCount = 0;
 
-		            if(!$cacheRequired) foreach($data['categories'] as $category_middle) {
+		    		foreach($data['categories'] as $category_middle) {
 
 		                $data['products_catsorted'][$category_middle['id']] = array(
 		                    'id' => $category_middle['id'],
@@ -389,14 +379,6 @@ class ControllerProductCategory extends Controller {
 		                        $data['products_catsorted'][$category_middle['id']]['sub'][$category['id']][] = $arProducts;
 		                    }
 		                }
-		            }
-	            // ---
-	                        
-	            // Set cache
-		            if(!$cacheRequired) {
-		                $this->cache->set('latest_category_sort', time());
-		                //$this->cache->set('category_products_asorted', serialize($data['products_asorted']));
-		                $this->cache->set('category_products_catsorted', serialize($data['products_catsorted']));
 		            }
 	            // ---
 		    // ---

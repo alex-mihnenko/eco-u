@@ -10,7 +10,7 @@
 		* 
 		FROM ms_demand msd 
 
-		WHERE msd.order_id > 0 AND msd.completed = 0 ORDER BY msd.date_added ASC;
+		WHERE msd.demand_id > 0 AND msd.order_id > 0 AND msd.completed = 0 ORDER BY msd.date_added ASC;
     ";
 
 	$rows_demand = $db->query($q);
@@ -25,6 +25,7 @@
 		// ---
 	}
 // ---
+
 
 // Go-round tasks
 	while ( $row_demand = $rows_demand->fetch_assoc() ) {
@@ -88,6 +89,48 @@
 					}
 
 					$log[] = '#Complete ['.$row_demand['demand_id'].'] has been proccessed';
+				// ---
+
+				// Clear reserves
+					// OC - check order
+						$q = "SELECT * FROM `".DB_PREFIX."order` WHERE `order_id`='".$row_demand['order_id']."' LIMIT 1;";
+						$rows_order = $db->query($q);
+
+						if ($rows_order->num_rows > 0) {
+							$row_order = $rows_order->fetch_assoc();
+								// ---
+									if ($row_order['order_status_id'] == 5) {
+
+									// Get customer order
+										$urlGetCustomerOrder = 'https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$row_demand['ms_customer_order_id'];
+										$dataGetCustomerOrder = array();
+										$resoponseGetCustomerOrder = connectMSAPI($urlGetCustomerOrder, $dataGetCustomerOrder, 'GET', MS_AUTH);
+									// ---
+
+									// Put customer order
+										if( isset($resoponseGetCustomerOrder->positions->meta->href) ){
+											$urlGetOrderPositions = $resoponseGetCustomerOrder->positions->meta->href;
+											$dataGetOrderPositions = array();
+											$resoponseGetOrderPositions = connectMSAPI($urlGetOrderPositions, $dataGetOrderPositions, 'GET', MS_AUTH);
+
+											$dataPutCustomerOrder = array();
+
+											foreach ($resoponseGetOrderPositions->rows as $key => $position) {
+												$position->reserve = 0;
+												$dataPutCustomerOrder['positions'][] = $position;
+											}
+
+											$urlPutCustomerOrder = 'https://online.moysklad.ru/api/remap/1.1/entity/customerorder/'.$row_demand['ms_customer_order_id'];
+											$resoponsePutCustomerOrder = connectMSAPI($urlPutCustomerOrder, json_encode($dataPutCustomerOrder), 'PUT', MS_AUTH);
+											
+											$log[] = 'MS Reserves ['.$row_demand['demand_id'].'] satus '.json_encode($resoponsePutCustomerOrder);
+										}
+									// ---
+								// ---
+							}
+						}
+
+					// ---
 				// ---
 			// ---
 		}

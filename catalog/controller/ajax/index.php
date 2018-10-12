@@ -4,6 +4,19 @@ class ControllerAjaxIndex extends Controller {
   const RETAILCRM_KEY = 'AuNf4IgJFHTmZQu7PwTKuPNQch5v03to';
   const MS_AUTH = 'admin@mail195:b41fd841edc5';
 
+  // Cart
+    public function cartClear() {
+      $this->cart->clear();
+      
+      $response->status = 'success';
+      $response->message = 'Корзина очищена';
+      
+
+      echo json_encode($response);
+      exit;
+    }
+  // ---
+
   // Customers
     // Registration
       public function ajaxRegisterCustomer() {
@@ -28,6 +41,77 @@ class ControllerAjaxIndex extends Controller {
       }
     // ---
     
+    // Change customer
+      public function ajaxSetCustomerData() {
+        $arRequest = $this->request->post;
+        $arRequest['telephone'] = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
+        
+        $this->load->model('dadata/index');
+        $structure = Array();
+        $record = Array();
+        foreach($arRequest['addresses'] as $address) {
+            $structure[] = "ADDRESS";
+            $record[] = $address['value'];
+        }
+        $result = $this->model_dadata_index->cleanRecord($structure, $record);
+        $toReplace = Array();
+        foreach($arRequest['addresses'] as $i => $address) {
+              if(in_array($result['data'][0][$i]['qc'], Array(0,3))) {
+                  $this->customer->setAddress($address['address_id'], $result['data'][0][$i]['result']);
+                  $toReplace[] = Array(
+                      'value' => $result['data'][0][$i]['result'],
+                      'id' => $address['address_id']
+                  );
+              } else {
+                  $this->customer->setAddress($address['address_id'], $address['value']);
+              }
+        }
+        
+        $this->customer->setFirstName($arRequest['firstname']);
+        $this->customer->setTelephone($arRequest['telephone']);
+        $this->customer->setEmail($arRequest['email']);
+        $this->customer->setVeganCard($arRequest['vegan_card']);
+        if(isset($arRequest['newsletter'])) $this->customer->setNewsletter($arRequest['newsletter']);
+
+        // Change CRM
+          $this->load->model('account/customer');
+          $customer_data = $this->model_account_customer->getCustomer($this->customer->isLogged());
+
+          if( !empty($customer_data['rcrm_id']) ) {
+            // ---
+              $customerData['firstName'] = $arRequest['firstname'];
+              $customerData['email'] = $arRequest['email'];
+
+              $customerCustomFields['customer_vegan_card'] = $arRequest['vegan_card'];
+              $customerData['customFields'] = $customerCustomFields;
+
+              $url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer_data['rcrm_id'].'/edit';
+
+              $qdata = array(
+                'apiKey' => self::RETAILCRM_KEY,
+                'by' => 'id',
+                'customer' => json_encode($customerData)
+              );
+
+              $res = $this->connectPostAPI($url, $qdata);
+
+              $response->res = $res;
+              $response->data = $customerData;
+            // ---
+          }
+        // ----
+
+        $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
+      }
+
+      public function ajaxSetCustomerVeganCard() {
+        $arRequest = $this->request->post;
+       
+        $this->customer->setVeganCard($arRequest['vegan_card']);
+        $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
+      }
+    // ---
+
     // SMS Confirm
       public function ajaxSendConfirmationSms() {
             $this->load->model('sms/confirmation');
@@ -458,6 +542,42 @@ class ControllerAjaxIndex extends Controller {
             echo json_encode($response);
             exit;
           }
+          // ---
+        // ---
+      }
+    // ---
+
+    // Apply bonus
+      public function ajaxApplyBonus() {
+        // ---
+          // Init
+            $response = new stdClass();
+            
+            $this->load->model('tool/addon');
+          // ---
+
+          // Processing
+            unset($this->session->data['bonus_apply']);
+            unset($this->session->data['bonus']);
+
+            $this->session->data['bonus_apply'] = true;
+
+            if($customer_id = $this->customer->isLogged()) {
+              $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
+
+              if( $customer_bonus['bonus'] > 0 ){
+                  $this->session->data['bonus'] = $customer_bonus['bonus'];
+              }
+              else {
+                  $this->session->data['bonus'] = false;
+              }
+            }
+
+            $response->status = 'success';
+            $response->message = 'Бонусы успешно применены';
+
+            echo json_encode($response);
+            exit;
           // ---
         // ---
       }
@@ -1150,6 +1270,17 @@ class ControllerAjaxIndex extends Controller {
             $this->session->data['coupon'] = $data['coupon'];
         // ---
 
+        // Check bonus
+            if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
+                $response->bonus_apply = true;
+                $response->bonus = intval($this->session->data['bonus']);
+            }
+            else {
+              $response->bonus_apply = false;
+              $response->bonus = 0;
+            }
+        // ---
+
         // Get subtotal
           unset($this->session->data['subtotal']);
           unset($this->session->data['total']);
@@ -1466,6 +1597,11 @@ class ControllerAjaxIndex extends Controller {
         // Get total
           $this->session->data['total'] = round($totalproducts - $totaldiscount,2) + $this->session->data['shipping_price'];
           $response->total = $this->session->data['total'];
+
+          if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
+            $response->total = $response->total - $this->session->data['bonus'];
+            $this->session->data['total'] = $response->total;
+          }
         // ---
 
         // Response
@@ -1495,10 +1631,12 @@ class ControllerAjaxIndex extends Controller {
           $response = new stdClass();
 
           $this->load->model('checkout/order');
+          $this->load->model('tool/addon');
         // ---
         
         // Create order
           $order_id = (int)$this->ajaxAddOrder(true);
+          $this->session->data['order_id'] = $order_id;
         // ---
         
         // Roistat
@@ -1511,6 +1649,18 @@ class ControllerAjaxIndex extends Controller {
           $customer = $this->model_account_customer->getCustomerByTelephone($telephone);
 
           if( empty($customer) ) {
+            // Check sex
+              $this->load->model('tool/dadata');
+
+              $dadataStandart = $this->model_tool_dadata->clean('name', $firstname);
+              $sex = '';
+
+              if( isset($dadataStandart[0]['gender']) ){
+                if( $dadataStandart[0]['gender'] == 'М' ) { $sex = 'male'; }
+                else if( $dadataStandart[0]['gender'] == 'Ж' ) { $sex = 'female'; }
+              }
+            // ---
+
             // Create new customer
               $password = $this->model_account_customer->generatePassword();
 
@@ -1521,6 +1671,7 @@ class ControllerAjaxIndex extends Controller {
                 'telephone' => $telephone,
                 'fax' => '',
                 'password' => $password,
+                'sex' => $sex,
                 //'address_1' => $this->session->data['shipping_address_1']
               );
 
@@ -1559,6 +1710,14 @@ class ControllerAjaxIndex extends Controller {
         // ---
 
         // Checkout
+          // Bonus account
+              $this->model_tool_addon->setBonus('order_weekly', $customer_id, $order_id);
+
+              if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
+                $this->model_tool_addon->setBonus('apply', $customer_id, $order_id, $this->session->data['bonus'], 'Оплата заказа');
+              }
+          // ---
+
           $this->model_checkout_order->setPayment($order_id, $this->request->post['payment_code']);
 
           $payment_method_online = $this->request->post['payment_code'] == 'cod' ? false : true;
@@ -1596,6 +1755,8 @@ class ControllerAjaxIndex extends Controller {
 
                   // Clear cart
                   $this->cart->clear();
+                  unset($this->session->data['bonus_apply']);
+                  unset($this->session->data['bonus']);
 
                   // Send sms        
                   $this->load->model('sms/confirmation');
@@ -1616,9 +1777,12 @@ class ControllerAjaxIndex extends Controller {
                 // ---
                   // Add paymant detail
                   $this->model_checkout_order->addDetailPayment($order_id, $order_id.'-'.$this->request->post['payment_code'], $this->config->get('config_order_status_id'), true, $this->session->data['total']);
+                  $response->success = $this->url->link('checkout/success', '', true);
 
                   // Clear cart
                   $this->cart->clear();
+                  unset($this->session->data['bonus_apply']);
+                  unset($this->session->data['bonus']);
 
                   // Send sms        
                   $this->load->model('sms/confirmation');
@@ -2456,9 +2620,21 @@ class ControllerAjaxIndex extends Controller {
                       $rating .= '</div>';
                     // ---
 
+                    // Status
+                      if( $item['status'] == 0 ) {
+                        $class_status = 'disabled';
+                        $btn_approve = '<a href="#testimonial" data-action="testimonial-approve" data-id="'.$item['testimonials_id'].'" ><i class="fa fa-check"></i> Опубликовать</a>';
+                      }
+                      else {
+                        $class_status = 'enabled';
+                        $btn_approve = '';
+                      }
+                    // ---
+
                     $testimonails[] = '
-                      <div class="panel testimonial" data-id="'.$item['testimonials_id'].'">
+                      <div class="panel testimonial '.$class_status.'" data-id="'.$item['testimonials_id'].'">
                           <div class="body">
+                            '.$btn_approve.'
                             <div class="about">
                               '.$rating.'
                               <span><b>'.$item['author'].'</b>, </span>
@@ -2523,6 +2699,132 @@ class ControllerAjaxIndex extends Controller {
                   else{
                     $response->result = true;
                     $response->message = 'Ответ добавлен';
+                  }
+                // ---
+              }
+          // ---
+
+          $response->status = 'success';
+
+          echo json_encode($response);
+          exit;
+        }
+
+        public function chormeApproveTestimonial() {
+          // ---
+            header("Access-Control-Allow-Origin: *");
+
+            // Init
+              $customerId = intval($this->request->post['customerId']);
+              $testimonial_id = $this->request->post['testimonial_id'];
+              $response = new stdClass();
+
+              $this->load->model('tool/addon');
+            // ---
+
+            // Proccessing
+              $response->approve = $this->model_tool_addon->approveTestimonial($testimonial_id);
+            // ---
+
+            $response->status = 'success';
+            $response->message = 'Успешно';
+
+            echo json_encode($response);
+            exit;
+          // ---
+        }
+
+        public function chormeGetBonusHistory() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $internal_id = $this->request->post['customer_id'];
+
+            $response = new stdClass();
+
+            $this->load->model('tool/addon');
+          // ---
+
+          // Get items
+            $customer = $this->model_tool_addon->getCustomerByCRMId($internal_id);
+
+            $results = $this->model_tool_addon->getCustomerHystory($customer['customer_id']);
+            $history = array();
+            
+
+            if( $results == false ){
+              $response->result = false;
+              $response->message = 'Бонусная история пуста';
+            }
+            else{
+                $response->result = true;
+                $response->message = 'История успешна загружена';
+
+                $months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+                foreach ($results as $key => $item) {
+                  // ---
+                    $history[] = '
+                      <div class="panel bonus-history" data-id="'.$item['bonus_history_id'].'">
+                          <div class="body">
+                            <div class="text">
+                              <span><i class="fa fa-calendar"></i> '.date('j', $item['time']).' '.$months[intval(date('m', $item['time']))].' '.date('Y', $item['time']).'</span>
+                              <hr class="indent xxs">
+                              <span><b>'.$item['amount'].'</b> '.$item['name'].' '.$item['comment'].'</span>
+                            </div>
+                          </div>
+                      </div>
+                    ';
+                  // ---
+                }
+
+                $response->history = $history;
+            }
+          // ---
+
+          $response->status = 'success';
+          $response->message = 'Успешно';
+
+          echo json_encode($response);
+          exit;
+        }
+
+        public function chormeSetBonusHistory() {
+          header("Access-Control-Allow-Origin: *");
+
+          // Init
+            $internal_customer_id = $this->request->post['customer_id'];
+            $internal_order_id = $this->request->post['order_id'];
+
+            $amount = $this->request->post['amount'];
+            $comment = $this->request->post['comment'];
+
+            $response = new stdClass();
+
+            $this->load->model('tool/addon');
+          // ---
+
+          // Get customer
+              $customer = $this->model_tool_addon->getCustomerByCRMId($internal_customer_id);
+              $response->customer = $customer;
+          // ---
+
+          // Set
+              if( $customer == false ){
+                $response->result = false;
+                $response->message = 'Нет покупателя в OC';
+              }
+              else {
+                // ---
+                  $result = $this->model_tool_addon->setBonus('widget', $customer['customer_id'], 0,  $amount, $comment);
+
+                  if( $result == false ){
+                    $response->result = false;
+                    $response->message = 'История не была сохранена';
+                  }
+                  else{
+                    $response->result = true;
+                    $response->message = 'История добавлена';
                   }
                 // ---
               }
@@ -2983,6 +3285,7 @@ class ControllerAjaxIndex extends Controller {
           $data['products'] = Array();
           $total = 0;
           $totalCount = 0;
+
           if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
               $products = $this->cart->getProducts();
               $totalCount = count($products);
@@ -2990,6 +3293,7 @@ class ControllerAjaxIndex extends Controller {
                 $total += round($product['total']);
               }
           }
+          
           $data['total'] = floor($total);
           $data['count'] = $totalCount;
           
@@ -3211,38 +3515,6 @@ class ControllerAjaxIndex extends Controller {
         }
         
         $this->response->setOutput(json_encode(Array('status' => 'success', 'orders' => $arOrders)));
-    }
-    
-    public function ajaxSetCustomerData() {
-        $arRequest = $this->request->post;
-        $arRequest['telephone'] = str_replace(Array('(', ')', '+', '-', ' '), '', $arRequest['telephone']);
-        
-        $this->load->model('dadata/index');
-        $structure = Array();
-        $record = Array();
-        foreach($arRequest['addresses'] as $address) {
-            $structure[] = "ADDRESS";
-            $record[] = $address['value'];
-        }
-        $result = $this->model_dadata_index->cleanRecord($structure, $record);
-        $toReplace = Array();
-        foreach($arRequest['addresses'] as $i => $address) {
-              if(in_array($result['data'][0][$i]['qc'], Array(0,3))) {
-                  $this->customer->setAddress($address['address_id'], $result['data'][0][$i]['result']);
-                  $toReplace[] = Array(
-                      'value' => $result['data'][0][$i]['result'],
-                      'id' => $address['address_id']
-                  );
-              } else {
-                  $this->customer->setAddress($address['address_id'], $address['value']);
-              }
-        }
-        
-        $this->customer->setFirstName($arRequest['firstname']);
-        $this->customer->setTelephone($arRequest['telephone']);
-        $this->customer->setEmail($arRequest['email']);
-        if(isset($arRequest['newsletter'])) $this->customer->setNewsletter($arRequest['newsletter']);
-        $this->response->setOutput(json_encode(Array('status' => 'success', 'dadata' => $toReplace)));
     }
     
     private function clearTelephone($telephone) {

@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']      = 'Учетная запись';
+$_['heading_title']      = 'Личные данные';
 
 
 // Text

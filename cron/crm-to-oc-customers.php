@@ -98,7 +98,8 @@
 							`code`='',
 							`discount`='0',
 							`date_added`='".$createdAt."',
-							`rcrm_id`='".$id_internal."'
+							`rcrm_id`='".$id_internal."',
+							`vegan_card`=''
 						";
 						
 						if ($db->query($q) === TRUE) {
