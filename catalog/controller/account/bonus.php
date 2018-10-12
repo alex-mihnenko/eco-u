@@ -111,6 +111,7 @@ class ControllerAccountBonus extends Controller {
             );
 
             // Get bonus
+            	$data['bonus'] = 0;
                 $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
                 $data['bonus'] = $customer_bonus['bonus'];
             // ---

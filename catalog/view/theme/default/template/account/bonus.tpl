@@ -19,14 +19,12 @@
             </div>
             <hr class="indent xs">
 
-            <?php if( isset($bonus) ) { ?>
-                <?php if( $bonus > 0 ) { ?>
-                    <div class="ecoins">
-                        <p><i class="svg" data-src="icon-ecoin-sample.svg"><?php loadSvg('name', 'icon-ecoin-sample.svg'); ?></i> <?php echo $bonus; ?></p>
-                    </div>
-                <?php } else { ?>
-                    <h3 class="h3 text-color-green">Нет бонусов</h3>
-                <?php } ?>
+            <?php if( $bonus > 0 ) { ?>
+                <div class="ecoins">
+                    <p><i class="svg" data-src="icon-ecoin-sample.svg"><?php loadSvg('name', 'icon-ecoin-sample.svg'); ?></i> <?php echo $bonus; ?></p>
+                </div>
+            <?php } else { ?>
+                <h3 class="h3 text-color-green">Нет бонусов</h3>
             <?php } ?>
             <hr class="indent md">
 
