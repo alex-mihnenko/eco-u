@@ -1177,25 +1177,25 @@ class ControllerAjaxIndex extends Controller {
                 // ---
 
                 // Cumulative discount
-                    $totalCustomerOutcome = 0;
+                    // $totalCustomerOutcome = 0;
 
-                    if($orders !== false) {
-                        foreach($orders as $order) {
-                            if($order['order_status_id'] == 5) {
-                                $totalCustomerOutcome += $order['total'];
-                            }
-                        }
-                    }
+                    // if($orders !== false) {
+                    //     foreach($orders as $order) {
+                    //         if($order['order_status_id'] == 5) {
+                    //             $totalCustomerOutcome += $order['total'];
+                    //         }
+                    //     }
+                    // }
 
-                    $customer_discount = floor($totalCustomerOutcome/10000);
-                    if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
+                    // $customer_discount = floor($totalCustomerOutcome/10000);
+                    // if( $customer_discount > intval($this->config->get('config_max_discount')) ) $customer_discount = intval($this->config->get('config_max_discount'));
                     
-                    $order_discount = $customer_discount/100;
-                    $basePrice = $this->cart->getTotal();
+                    // $order_discount = $customer_discount/100;
+                    // $basePrice = $this->cart->getTotal();
 
 
-                    $cumulative_discount = $order_discount * $basePrice;
-                    $cumulative_discount_percentage = $customer_discount;
+                    // $cumulative_discount = $order_discount * $basePrice;
+                    // $cumulative_discount_percentage = $customer_discount;
                 // ---
             }
 
