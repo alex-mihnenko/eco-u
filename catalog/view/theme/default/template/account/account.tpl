@@ -32,8 +32,8 @@
             
             <div class="d-none d-md-block">
                 <div class="row header">
-                    <div class="col-md-3"><span>Дата</span></div>
                     <div class="col-md-2"><span>Номер заказа</span></div>
+                    <div class="col-md-3"><span>Дата</span></div>
                     <div class="col-md-3"><span>Статус</span></div>
                     <div class="col-md-2"><span>Сумма</span></div>
                     <div class="col-md-2"></div>
