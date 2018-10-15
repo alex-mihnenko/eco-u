@@ -25,74 +25,107 @@ if($argv[1]=='1'){
 		$link="https://online.moysklad.ru/api/remap/1.1/entity/productfolder?limit=$limit&offset=$offset";
 		$json=ms_query($link);
 		
+
 		foreach($json['rows'] as $k=>$v){
 			//$res=mysql_query("select category_id from oc_category_description where name='".addslashes($v['name'])."'");
 			//list($cat_id)=mysql_fetch_row($res);
-			$res=mysql_query("select site_id,id from ms_cats where ms_id='{$v['id']}'");
-			list($cat_id,$chid)=mysql_fetch_row($res);
-			$tmpx=explode("/",$v['productFolder']['meta']['href']);
-			$tmp_ms_par_cat=$tmpx[8];
-			$respr=mysql_query("select site_id from ms_cats where ms_id='$tmp_ms_par_cat'");
-			list($par_cat_id)=mysql_fetch_row($respr);
 
-			if((!$chid)&&($cat_id)){
-				//mysql_query("insert into ms_cats set  ms_id='{$v['id']}',ms_name='".addslashes($v['name'])."',site_id='$cat_id'");
-			}elseif((!$chid)&&(!$cat_id)){
-				mysql_query("insert into oc_category set parent_id='$par_cat_id',status='1'");
-				$cat_id=mysql_insert_id();
-				mysql_query("insert into oc_category_description set category_id='$cat_id',meta_title='".addslashes($v['name'])."', language_id='1',name='".addslashes($v['name'])."'");	
-				mysql_query("delete from oc_url_alias where query='category_id=$cat_id'");
-				mysql_query("insert into oc_url_alias set query='category_id=$cat_id',keyword='".slugify($v['name'])."'");
-				mysql_query("insert into oc_category_to_store set  category_id='$cat_id',store_id='0'");
-					
-				if($par_cat_id){
-					$par_cat_id2=get_parent_id ($par_cat_id);
-				}
-				
-				if($par_cat_id&&$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='2'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='1'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id2',level='0'");
-				}
-				
-				if($par_cat_id&&!$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='1'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='0'");
-				}
+			if( isset($v['productFolder']) ){
+				// ---
+					$res=mysql_query("SELECT site_id, id FROM ms_cats WHERE ms_id='".$v['id']."'");
+					list($cat_id,$chid)=mysql_fetch_row($res);
 
-				if(!$par_cat_id&&!$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='0'");
-				}
-				
-			    mysql_query("insert into ms_cats set  ms_id='{$v['id']}',ms_name='".addslashes($v['name'])."',site_id='$cat_id'");
-			}elseif($chid){
-				//$res=mysql_query("select category_id from oc_category_description where name='".addslashes($v['pathName'])."'");
-				//list($par_cat_id)=mysql_fetch_row($res);
-				mysql_query("delete from oc_category_path where category_id='$cat_id'");
+					$tmpx=explode("/",$v['productFolder']['meta']['href']);
+					$tmp_ms_par_cat=$tmpx[8];
 
-				if($par_cat_id){
-					$par_cat_id2=get_parent_id ($par_cat_id);
-				}
-					
-				if($par_cat_id&&$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='2'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='1'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id2',level='0'");
-				}
-				
-				if($par_cat_id&&!$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='1'");
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='0'");
-				}
+					$respr=mysql_query("SELECT site_id FROM ms_cats WHERE ms_id='".$tmp_ms_par_cat."'");
+					list($par_cat_id)=mysql_fetch_row($respr);
 
-				if(!$par_cat_id&&!$par_cat_id2){
-			        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='0'");
-				}
+					if((!$chid)&&($cat_id)){
+						//mysql_query("INSERT INTO ms_cats set ms_id='".$v['id']."',ms_name='".addslashes($v['name'])."',site_id='$cat_id'");
+					}elseif((!$chid) && (!$cat_id)){
+						mysql_query("
+							INSERT INTO oc_category SET 
+								`image`='',
+								`parent_id`='".intval($par_cat_id)."',
+								`top`='0',
+								`column`='0',
+								`sort_order`='0',
+								`status`='1',
+								`date_added` = NOW(),
+								`date_modified` = NOW()
+						;");
 
-				mysql_query("update oc_category_description set name='".addslashes($v['name'])."' where category_id='$cat_id' and language_id='1' ");	
-				mysql_query("update oc_category set parent_id='$par_cat_id' where category_id='$cat_id'");
+						echo "INSERT INTO oc_category ERROR: ".mysql_error();
+
+						$cat_id=mysql_insert_id();
+						
+						mysql_query("
+							INSERT INTO oc_category_description SET 
+								category_id='".$cat_id."',
+								language_id='1',
+								name='".addslashes($v['name'])."',
+								description='',
+								meta_title='".addslashes($v['name'])."',
+								meta_description='',
+								meta_keyword=''
+						;");	
+
+						echo "INSERT INTO oc_category_description ERROR: ".mysql_error();
+						
+						mysql_query("DELETE FROM oc_url_alias WHERE query='category_id=$cat_id'");
+						mysql_query("INSERT INTO oc_url_alias SET query='category_id=$cat_id',keyword='".slugify($v['name'])."'");
+						mysql_query("INSERT INTO oc_category_to_store SET  category_id='$cat_id',store_id='0'");
+							
+						if($par_cat_id){
+							$par_cat_id2=get_parent_id ($par_cat_id);
+						}
+						
+						if($par_cat_id&&$par_cat_id2){
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$cat_id', level='2'");
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$par_cat_id', level='1'");
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$par_cat_id2', level='0'");
+						}
+						
+						if($par_cat_id&&!$par_cat_id2){
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$cat_id', level='1'");
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$par_cat_id', level='0'");
+						}
+
+						if(!$par_cat_id&&!$par_cat_id2){
+					        mysql_query("INSERT INTO oc_category_path SET category_id='$cat_id', path_id='$cat_id', level='0'");
+						}
+						
+					    mysql_query("INSERT INTO ms_cats SET ms_id='".$v['id']."', ms_name='".addslashes($v['name'])."', site_id='".$cat_id."';");
+					}elseif($chid){
+						//$res=mysql_query("select category_id from oc_category_description where name='".addslashes($v['pathName'])."'");
+						//list($par_cat_id)=mysql_fetch_row($res);
+						mysql_query("delete from oc_category_path where category_id='$cat_id'");
+
+						if($par_cat_id){
+							$par_cat_id2=get_parent_id ($par_cat_id);
+						}
+							
+						if($par_cat_id&&$par_cat_id2){
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='2'");
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='1'");
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id2',level='0'");
+						}
+						
+						if($par_cat_id&&!$par_cat_id2){
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='1'");
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$par_cat_id',level='0'");
+						}
+
+						if(!$par_cat_id&&!$par_cat_id2){
+					        mysql_query("insert into oc_category_path set category_id='$cat_id',path_id='$cat_id',level='0'");
+						}
+
+						mysql_query("update oc_category_description set name='".addslashes($v['name'])."' where category_id='$cat_id' and language_id='1' ");	
+						mysql_query("update oc_category set parent_id='$par_cat_id' where category_id='$cat_id'");
+					}
+				// ---
 			}
-
 		}//foreach
 
 		if(!count($json['rows'])) { $CHECK_MS=false; echo("###GOODS END###\n");} 
