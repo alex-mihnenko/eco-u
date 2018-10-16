@@ -68,7 +68,7 @@
 			// ---
 
 			// Save and edit
-	            $q = "SELECT * FROM `".DB_PREFIX."customer` WHERE `telephone`='".$telephone."' LIMIT 1;";
+	            $q = "SELECT * FROM `".DB_PREFIX."customer` WHERE `email`='".$email."' AND `telephone`='".$telephone."' LIMIT 1;";
 				$rows_customer = $db->query($q);
 
 				if ($rows_customer->num_rows == 0) {
