@@ -134,13 +134,13 @@
 					$row_customer = $rows_customer->fetch_assoc();
 
 					$q = "
-						UPDATE `".DB_PREFIX."customer` SET
+						UPDATE `".DB_PREFIX."customer` SET 
 						`rcrm_id` = '".$id_internal."' 
-						WHERE `customer_id`=".$row_customer["customer_id"].";
+						WHERE customer_id = ".$row_customer["customer_id"].";
 					";
 
 					if ($db->query($q) === TRUE) {
-					    $log[] = 'OC customer success update '.$row_customer["customer_id"];
+					    $log[] = 'OC customer success update ' . $row_customer["customer_id"];
 					} else {
 					    $log[] = 'OC customer error updating record: ' . $db->error;
 					}
@@ -367,6 +367,8 @@
 					}
 				*/
 			// ---
+
+			$count++;
 		// ---
 	}
 
