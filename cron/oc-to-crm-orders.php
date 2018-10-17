@@ -165,21 +165,28 @@
 				$order_discount_manual_amount = 0;
 				$order_discount_manual_percent = 0;
 
-				$q = "SELECT * FROM `".DB_PREFIX."order_total` WHERE `order_id`='".$row_order['order_id']."' AND (`code` LIKE '%discount%' OR `code` LIKE '%coupon%');";
+				$q = "SELECT * FROM `".DB_PREFIX."order_total` WHERE `order_id`='".$row_order['order_id']."';";
 				$rows_discounts = $db->query($q);
 
 
 				if ($rows_discounts->num_rows > 0) {
 					while ( $row_discounts = $rows_discounts->fetch_assoc() ) {
 						if( $row_discounts['code'] == 'discount' ) {
-							$order_discount_manual_amount = floatval($row_discounts['value']);
+							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
 						}
-						else if( $row_discounts['code'] == 'coupon' ) {
-							$order_discount_manual_amount = floatval($row_discounts['value']);
+						
+						if( $row_discounts['code'] == 'coupon' ) {
+							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
 							$order['managerComment'] .= "Скидка ".intval($row_discounts['value'])." по купону\n";
 						}
-						else if(
-							$row_discounts['code'] == 'discount_percentage' ) { $order_discount_manual_percent = floatval($row_discounts['value']);
+						
+						if( $row_discounts['code'] == 'bonus' ) {
+							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
+							$order['managerComment'] .= "Скидка ".intval($row_discounts['value'])." бонусов\n";
+						}
+						
+						if( $row_discounts['code'] == 'discount_percentage' ) {
+							$order_discount_manual_percent = floatval($row_discounts['value']);
 						}
 					}
 				}
@@ -190,6 +197,7 @@
 			$order['phone'] = $row_order['telephone'];
 			$order['email'] = $row_order['email'];
 			$order['customerComment'] = $row_order['comment'];
+			$order['discountManualAmount'] = $order_discount_manual_amount;
 
 			$order['weight'] = 0; // Will be changed -> Set items
 
