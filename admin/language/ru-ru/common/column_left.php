@@ -47,6 +47,7 @@ $_['text_report_sale_tax']           = 'Налоги';
 $_['text_report_sale_shipping']      = 'Доставка';
 $_['text_report_sale_return']        = 'Возвраты';
 $_['text_report_sale_coupon']        = 'Купоны';
+$_['text_report_ms_loss']        	 = 'Создать списание';
 $_['text_report_product']            = 'Товары';
 $_['text_report_product_viewed']     = 'Просмотрено';
 $_['text_report_product_purchased']  = 'Куплено';

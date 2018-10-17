@@ -36,6 +36,7 @@ $_['entry_name']        = 'Название';
 $_['entry_category']    = 'Категория';
 $_['entry_quantity']    = 'Количество';
 $_['entry_purchase_price']    = 'Цена закупки';
+$_['entry_price']    = 'Цена продажи';
 $_['entry_total']    = 'Итого';
 
 // Button

@@ -97,6 +97,14 @@
               <hr class="indent sm">
             </div>
 
+            <div class="col-xs-6 col-sm-6 col-md-4">
+              <label class="control-label" for="input-name"><?php echo $entry_price; ?> (<?php echo $text_price; ?>)</label>
+              <hr class="indent xxs">
+
+              <input type="number" name="price" value="<?php echo $product_info['price']; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control input-lg"/>
+              <hr class="indent sm">
+            </div>
+
           </div>
 
           <hr class="indent sm">

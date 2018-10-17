@@ -198,8 +198,8 @@ class ControllerProcurementProducts extends Controller {
 			foreach ($products as $key => $product) {
 				// ---
 					// Get categories
-							$category = $this->model_procurement_product->getProductCategory($product['product_id']);
-							$products[$key]['category'] = $category['category_id'];
+						$category = $this->model_procurement_product->getProductCategory($product['product_id']);
+						$products[$key]['category'] = $category['category_id'];
 					// ---
 					
 					if( $product['minimum'] > $product['quantity'] ) {
@@ -352,6 +352,7 @@ class ControllerProcurementProducts extends Controller {
 			$data['entry_name'] = $this->language->get('entry_name');
 			$data['entry_quantity'] = $this->language->get('entry_quantity');
 			$data['entry_purchase_price'] = $this->language->get('entry_purchase_price');
+			$data['entry_price'] = $this->language->get('entry_price');
 			$data['entry_total'] = $this->language->get('entry_total');
 
 			$data['button_save'] = $this->language->get('button_save');

@@ -1594,7 +1594,8 @@ class ControllerCatalogProduct extends Controller {
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'model'      => $result['model'],
 					'option'     => $option_data,
-					'price'      => $result['price']
+					'price'      => $result['price'],
+					'ms_id'      => $result['ms_id']
 				);
 			}
 		}

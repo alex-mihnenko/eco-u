@@ -25,7 +25,7 @@ class ModelProcurementProcurement extends Model {
 
 	public function sendProcurement($procurement_id) {
 		// ---
-			$msauth = 'admin@mail195:134679';
+			$msauth = 'admin@mail195:b41fd841edc5';
 			$log = array();
 
 			// Get MS meta

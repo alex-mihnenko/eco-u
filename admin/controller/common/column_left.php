@@ -855,6 +855,14 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => $report_marketing	
 				);		
 			}
+
+			if ($this->user->hasPermission('access', 'report/ms_loss')) {		
+				$report[] = array(
+					'name'	   => $this->language->get('text_report_ms_loss'),
+					'href'     => $this->url->link('report/ms_loss', 'token=' . $this->session->data['token'], true),
+					'children' => array()
+				);
+			}
 			
 			if ($report) {	
 				$data['menus'][] = array(

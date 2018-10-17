@@ -64,7 +64,7 @@ class ModelProcurementProduct extends Model {
 		$sql = "
 			SELECT pp.procurement_product_id, pp.product_id, pp.quantity, pp.purchased, pp.not_purchased, pd.name, pp.purchase_price, pp.total_price, 
 			pp.weight_class_id as weight_class_id, wcd.unit as weight_class,
-			p.minimum, p.weight, p.image_preview as image, p.manufacturer_id as manufacturer_id,
+			p.minimum, p.weight, p.price, p.image_preview as image, p.manufacturer_id as manufacturer_id,
 			sr.supplier_id as supplier_id, sr.name as supplier, 
 			mr.name as manufacturer
 			FROM ".DB_PREFIX."procurement_product pp 
