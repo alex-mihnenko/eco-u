@@ -65,6 +65,10 @@
 
               <h1 data-target="name"><?php echo $product_info['name']; ?></h1>
               <h2><?php echo $text_weight_title; ?> <span data-target="weight"><?php echo intval($product_info['weight']); ?></span> <?php echo $text_weight; ?></h2>
+              <hr class="indent xxs">
+              
+              <label class="control-label" for="input-name"><?php echo $entry_price; ?></label>
+              <p><?php echo $product_info['price']; ?> <?php echo $text_price; ?></p>
             </div>
           </div>
 
@@ -94,14 +98,6 @@
               <hr class="indent xxs">
 
               <input type="number" name="total_price" value="<?php echo ($product_info['total_price']); ?>" placeholder="<?php echo $entry_total; ?>" id="input-total_price" class="form-control input-lg"/>
-              <hr class="indent sm">
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4">
-              <label class="control-label" for="input-name"><?php echo $entry_price; ?> (<?php echo $text_price; ?>)</label>
-              <hr class="indent xxs">
-
-              <input type="number" name="price" value="<?php echo $product_info['price']; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control input-lg"/>
               <hr class="indent sm">
             </div>
 

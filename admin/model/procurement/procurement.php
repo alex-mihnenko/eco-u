@@ -137,9 +137,9 @@ class ModelProcurementProcurement extends Model {
 									// ---
 										// Check quantity
 											if( $position['minimum'] > $position['quantity'] ) {
-												$position['quantity'] = intval($position['minimum']);
+												$position['quantity'] = floatval($position['minimum']);
 											}
-											else { $position['quantity'] = intval($position['quantity']); }
+											else { $position['quantity'] = floatval($position['quantity']); }
 
 											if( $position['quantity'] < 1 ) {
 												$position['quantity'] = 1;
