@@ -171,9 +171,9 @@
 
 				if ($rows_discounts->num_rows > 0) {
 					while ( $row_discounts = $rows_discounts->fetch_assoc() ) {
-						if( $row_discounts['code'] == 'discount' ) {
-							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
-						}
+						// if( $row_discounts['code'] == 'discount' ) {
+						// 	$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
+						// }
 						
 						if( $row_discounts['code'] == 'coupon' ) {
 							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
