@@ -176,7 +176,7 @@
 						// }
 						
 						if( $row_discounts['code'] == 'coupon' ) {
-							$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
+							//$order_discount_manual_amount = $order_discount_manual_amount + floatval($row_discounts['value']);
 							$order['managerComment'] .= "Скидка ".intval($row_discounts['value'])." по купону\n";
 						}
 						
