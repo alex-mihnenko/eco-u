@@ -76,8 +76,7 @@
 							
 							$q = "
 								UPDATE `".DB_PREFIX."product` SET 
-								`purchase_price` = '".$buyPrice."',
-								`minimum` = '".$minimumBalance."'
+								`purchase_price` = '".$buyPrice."' 
 								WHERE `product_id` = '".$product_id."'
 							";
 							
