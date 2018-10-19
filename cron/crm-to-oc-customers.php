@@ -386,7 +386,7 @@
 	// ---
 // ---
 
-/* DEBUG  */  file_put_contents('./crm-to-oc-customers.log', date("d.m.Y H:i", time()) . "\n" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
+/* DEBUG  */  file_put_contents('crm-to-oc-customers.log', date("d.m.Y H:i", time()) . "\n" . json_encode($log,JSON_UNESCAPED_UNICODE)."\n\n", FILE_APPEND | LOCK_EX);
 
 // Response
 	$res['log'] = $log;
