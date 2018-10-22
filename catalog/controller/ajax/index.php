@@ -1711,8 +1711,6 @@ class ControllerAjaxIndex extends Controller {
 
         // Checkout
           // Bonus account
-              $this->model_tool_addon->setBonus('order_weekly', $customer_id, $order_id);
-
               if( isset($this->session->data['bonus_apply']) && $this->session->data['bonus_apply'] == true ){
                 $this->model_tool_addon->setBonus('apply', $customer_id, $order_id, $this->session->data['bonus'], 'Оплата заказа');
               }
@@ -2750,6 +2748,8 @@ class ControllerAjaxIndex extends Controller {
 
             $results = $this->model_tool_addon->getCustomerHystory($customer['customer_id']);
             $history = array();
+
+            $total = 0;
             
 
             if( $results == false ){
@@ -2775,10 +2775,24 @@ class ControllerAjaxIndex extends Controller {
                           </div>
                       </div>
                     ';
+
+                    $total = $total + floatval($item['amount']);
                   // ---
                 }
 
-                $response->history = $history;
+                $history[] = '
+                    <div class="panel bonus-history" data-id="total">
+                        <div class="body">
+                          <div class="text">
+                            <span><i class="fa fa-clone"></i> '.date('j', time()).' '.$months[intval(date('m', time()))].' '.date('Y', time()).'</span>
+                            <hr class="indent xxs">
+                            <span><b>'.$total.'</b> Бонусный счет</span>
+                          </div>
+                        </div>
+                    </div>
+                  ';
+
+                $response->history = array_reverse($history);
             }
           // ---
 

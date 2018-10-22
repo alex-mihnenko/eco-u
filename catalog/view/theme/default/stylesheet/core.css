@@ -786,13 +786,24 @@ xxl
 					height: auto;
 					box-sizing: border-box;
 					padding: 5px;
-					background-color: #eff4e9;
+					background-color: #6d943a;
 					border-radius: 3px;
 					-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.25);
 					box-shadow: 0px 0px 10px rgba(0,0,0,.25);
 					cursor: pointer;
 
 					text-align: center;
+
+					-webkit-transition: background-color .25s;
+					-moz-transition: background-color .25s;
+					-ms-transition: background-color .25s;
+					-o-transition: background-color .25s;
+					transition: background-color .25s;
+				}
+
+				.remodal.modal-basket .cart-page-total .bonus:hover .body,
+				.remodal.modal-basket .cart-page-total .coupon:hover .body {
+					background-color: #83AA4F;
 				}
 				
 				.remodal.modal-basket .cart-page-total .bonus .body a {
@@ -806,7 +817,7 @@ xxl
 					margin-bottom: 5px;
 					font-size: 22px;
 	    			font-weight: 500;
-					color: #e2617f;
+					color: #FFFFFF;
 				}
 
 				.remodal.modal-basket .cart-page-total .bonus .body span img,
@@ -820,7 +831,7 @@ xxl
 
 				.remodal.modal-basket .cart-page-total .bonus .body p,
 				.remodal.modal-basket .cart-page-total .coupon .body p {
-					color: #adc794;
+					color: #FFFFFF;
 				}
 
 				.remodal.modal-basket .cart-page-total .total {

@@ -138,6 +138,72 @@ class ControllerCheckoutConfirm extends Controller {
 				$order_data['custom_field'] = $this->session->data['guest']['custom_field'];
 			}
 
+			// FIX
+				// Payment Methods
+					$method_data = array();
+
+					$this->load->model('extension/extension');
+
+					$results = $this->model_extension_extension->getExtensions('payment');
+
+					$recurring = $this->cart->hasRecurringProducts();
+
+					foreach ($results as $result) {
+						if ($this->config->get($result['code'] . '_status')) {
+							$this->load->model('extension/payment/' . $result['code']);
+
+							$method = $this->{'model_extension_payment_' . $result['code']}->getMethod($this->session->data['payment_address'], $total);
+
+							if ($method) {
+								if ($recurring) {
+									if (property_exists($this->{'model_extension_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_extension_payment_' . $result['code']}->recurringPayments()) {
+										$method_data[$result['code']] = $method;
+									}
+								} else {
+									$method_data[$result['code']] = $method;
+								}
+							}
+						}
+					}
+
+					$sort_order = array();
+
+					foreach ($method_data as $key => $value) {
+						$sort_order[$key] = $value['sort_order'];
+					}
+
+					array_multisort($sort_order, SORT_ASC, $method_data);
+
+					$this->session->data['payment_methods'] = $method_data;
+
+					
+					if (isset($this->session->data['payment_methods'])) {
+						$data['payment_methods'] = $this->session->data['payment_methods'];
+					} else {
+						$data['payment_methods'] = array();
+					}
+
+					
+					$this->session->data['payment_method'] = $this->session->data['payment_methods']['free_checkout'];
+					//$this->session->data['payment_method']['code'] = 'free_checkout';
+					$this->session->data['comment']; = '';
+				// ---
+
+
+				$this->session->data['payment_address']['firstname'] = $this->session->data['guest']['firstname'];
+				$this->session->data['payment_address']['lastname'] = $this->session->data['guest']['lastname'];
+				$this->session->data['payment_address']['company'] = '';
+				$this->session->data['payment_address']['address_1'] = '';
+				$this->session->data['payment_address']['address_2'] = '';
+				$this->session->data['payment_address']['city'] = '';
+				$this->session->data['payment_address']['postcode'] = '';
+				$this->session->data['payment_address']['zone'] = '';
+				$this->session->data['payment_address']['zone_id'] = 0;
+				$this->session->data['payment_address']['country'] = '';
+				$this->session->data['payment_address']['country_id'] = 0;
+				$this->session->data['payment_address']['address_format'] = '';
+			// --
+
 			$order_data['payment_firstname'] = $this->session->data['payment_address']['firstname'];
 			$order_data['payment_lastname'] = $this->session->data['payment_address']['lastname'];
 			$order_data['payment_company'] = $this->session->data['payment_address']['company'];
@@ -151,6 +217,7 @@ class ControllerCheckoutConfirm extends Controller {
 			$order_data['payment_country_id'] = $this->session->data['payment_address']['country_id'];
 			$order_data['payment_address_format'] = $this->session->data['payment_address']['address_format'];
 			$order_data['payment_custom_field'] = (isset($this->session->data['payment_address']['custom_field']) ? $this->session->data['payment_address']['custom_field'] : array());
+
 
 			if (isset($this->session->data['payment_method']['title'])) {
 				$order_data['payment_method'] = $this->session->data['payment_method']['title'];

@@ -327,7 +327,7 @@ switch ($action) {
 					
 			// Custom for complete
 				if( $order->status == 'complete' ){
-					// OC Bonus account
+					// OC bonus for complere
 						$q = "SELECT * FROM `".DB_PREFIX."bonus_account` ba WHERE ba.code='order_complete' AND ba.status='1' LIMIT 1;";
 						$rows_ba = $db->query($q);
 
@@ -352,14 +352,130 @@ switch ($action) {
 								$amount = 0;
 							}
 
+							$q = "
+								INSERT INTO `".DB_PREFIX."bonus_history` SET 
+								`bonus_account_id` = '" . $ba_account_id . "', 
+								`customer_id` = '" . $row_order['customer_id'] . "', 
+								`order_id` = '" . $row_order['order_id'] . "',
+								`amount` = '" . $amount . "',
+								`comment` = '',
+								`time` = '" . time() . "'
+							";
+							
+							if ($db->query($q) === TRUE) {
+								$bonus_history_id = $db->insert_id;
+
+							    $log[] = 'OC bonus account history ['.$bonus_history_id.'] has been inserted';
+							} else {
+								$log[] = 'OC bonus account history has been not inserted: '.$db->error;
+							}
+						}
+					// ---
+
+					// OC bonus weekly
+						$unix_today = mktime(0, 0, 0, date('n',time()), date('j',time()), date('Y',time()));
+						$unix_today_ago_week = mktime(0, 0, 0, date('n',time()-604800), date('j',time()-604800), date('Y',time()-604800));
+						$unix_today_ago_two_week = mktime(0, 0, 0, date('n',time()-1209600), date('j',time()-1209600), date('Y',time()-1209600));
+						$unix_today_ago_four_week = mktime(0, 0, 0, date('n',time()-2419200), date('j',time()-2419200), date('Y',time()-2419200));
+
+						$q = "
+							SELECT * FROM `".DB_PREFIX."bonus_account` ba 
+							WHERE ba.code='order_weekly' AND ba.status='1' LIMIT 1
+						;";
+
+						$rows_bonus_account = $db->query($q);
+						
+						if ($rows_bonus_account->num_rows > 0) {
+							$row_bonus_account = $rows_bonus_account->fetch_assoc();
+
+							$ba_account_id = $row_bonus_account['bonus_account_id'];
+							$ba_name = $row_bonus_account['name'];
+							$ba_coin = intval($row_bonus_account['coin']);
+							$ba_rate = $row_bonus_account['rate'];
+							
+							// One per week
+								$q = "
+									SELECT * FROM `".DB_PREFIX."bonus_history` bh 
+									LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id
+									WHERE bh.customer_id = '".$row_order['customer_id']."' AND ba.code = 'order_weekly' AND bh.time > '" . $unix_today_ago_week . "' LIMIT 1
+								;";
+								
+								$rows_bonus_history = $this->db->query($q);
+
+								if ($rows_bonus_history->num_rows > 0) {
+									$q = "
+										SELECT * FROM `".DB_PREFIX."order` o 
+										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_week) . "' LIMIT 1
+									;";
+									
+									$rows_order = $this->db->query($sql);
+									
+									if ($rows_order->num_rows > 0) {
+										$bh_amount = $ba_coin;
+									}
+									else {
+										$bh_amount = 0;
+									}
+
+								}
+							// ---
+
 							// Add history
-								if( $amount > 0 ) {
+								if( $bh_amount != 0 ) {
 									$q = "
 										INSERT INTO `".DB_PREFIX."bonus_history` SET 
 										`bonus_account_id` = '" . $ba_account_id . "', 
 										`customer_id` = '" . $row_order['customer_id'] . "', 
 										`order_id` = '" . $row_order['order_id'] . "',
-										`amount` = '" . $amount . "',
+										`amount` = '" . $bh_amount . "',
+										`comment` = '',
+										`time` = '" . time() . "'
+									";
+									
+									if ($db->query($q) === TRUE) {
+										$bonus_history_id = $db->insert_id;
+
+									    $log[] = 'OC bonus account history ['.$bonus_history_id.'] has been inserted';
+									} else {
+										$log[] = 'OC bonus account history has been not inserted: '.$db->error;
+									}
+								}
+							// ---
+
+							// One per two week
+								$q = "
+									SELECT * FROM `".DB_PREFIX."bonus_history` bh 
+									LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id
+									WHERE bh.customer_id = '".$row_order['customer_id']."' AND ba.code = 'order_monthly' AND bh.time > '" . $unix_today_ago_two_week . "' LIMIT 1
+								;";
+								
+								$rows_bonus_history = $this->db->query($q);
+
+								if ($rows_bonus_history->num_rows > 0) {
+									$q = "
+										SELECT * FROM `".DB_PREFIX."order` o 
+										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_four_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' LIMIT 1
+									;";
+									
+									$rows_order = $this->db->query($sql);
+									
+									if ($rows_order->num_rows > 0) {
+										$bh_amount = $ba_coin;
+									}
+									else {
+										$bh_amount = 0;
+									}
+								}
+							// ---
+
+							// Add history
+								if( $bh_amount != 0 ) {
+									$q = "
+										INSERT INTO `".DB_PREFIX."bonus_history` SET 
+										`bonus_account_id` = '" . $ba_account_id . "', 
+										`customer_id` = '" . $row_order['customer_id'] . "', 
+										`order_id` = '" . $row_order['order_id'] . "',
+										`amount` = '" . $bh_amount . "',
 										`comment` = '',
 										`time` = '" . time() . "'
 									";

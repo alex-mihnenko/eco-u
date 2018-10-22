@@ -434,7 +434,7 @@ class ModelToolAddon extends Model {
 					else{
             			return false;
 					}
-				// --
+				// ---
 		        
 			// ---
 		}
@@ -459,7 +459,7 @@ class ModelToolAddon extends Model {
 			$sql = "
 				SELECT * FROM `".DB_PREFIX."bonus_history` bh 
 				LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id  
-				WHERE bh.customer_id='".$customer_id."' ORDER BY bh.time DESC
+				WHERE bh.customer_id='".$customer_id."' ORDER BY bh.time ASC
 			;";
 
 			$query = $this->db->query($sql);
