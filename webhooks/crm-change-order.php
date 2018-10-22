@@ -245,44 +245,6 @@ switch ($action) {
 				$row_order = $rows_order->fetch_assoc();
 			// ---
 
-			// Demands
-				// OC - check demand
-					$q = "SELECT * FROM `ms_demand` WHERE `order_id`='".$order->externalId."' AND `ms_demand_id`<> '' AND `ms_customer_order_id`<> '' AND `customer_order_data`<> '' LIMIT 1;";
-					$rows_demand = $db->query($q);
-
-					if ($rows_demand->num_rows == 0) {
-						$log[] = 'No OC demand';
-
-						$res['log'] = $log;
-						$res['mess']='Success';
-						echo json_encode($res); exit;
-					}
-
-					$row_demand = $rows_demand->fetch_assoc();
-				// ---
-
-				// OC - create demand task
-					$q = "
-						INSERT INTO `ms_demand` SET 
-						`ms_demand_id` = '',
-						`ms_customer_order_id` = '".$row_demand['ms_customer_order_id']."',
-						`order_id` = '".$row_demand['order_id']."',
-						`customer_order_data` = '".$row_demand['customer_order_data']."',
-						`date_added` = '".time()."',
-						`deleted` = '0',
-						`completed` = '0'
-					";
-					
-					if ($db->query($q) === TRUE) {
-						$demand_id = $db->insert_id;
-
-					    $log[] = 'OC demand ['.$demand_id.'] has been inserted';
-					} else {
-						$log[] = 'OC demand has been not inserted: '.$db->error;
-					}
-				// ---
-			// ---
-
 			// Custom for send-to-delivery
 				if( $order->status == 'send-to-delivery' ){
 					// OC Testimonials
@@ -327,6 +289,44 @@ switch ($action) {
 					
 			// Custom for complete
 				if( $order->status == 'complete' ){
+					// Demands
+						// OC - check demand
+							$q = "SELECT * FROM `ms_demand` WHERE `order_id`='".$order->externalId."' AND `ms_demand_id`<> '' AND `ms_customer_order_id`<> '' AND `customer_order_data`<> '' LIMIT 1;";
+							$rows_demand = $db->query($q);
+
+							if ($rows_demand->num_rows == 0) {
+								$log[] = 'No OC demand';
+
+								$res['log'] = $log;
+								$res['mess']='Success';
+								echo json_encode($res); exit;
+							}
+
+							$row_demand = $rows_demand->fetch_assoc();
+						// ---
+
+						// OC - create demand task
+							$q = "
+								INSERT INTO `ms_demand` SET 
+								`ms_demand_id` = '',
+								`ms_customer_order_id` = '".$row_demand['ms_customer_order_id']."',
+								`order_id` = '".$row_demand['order_id']."',
+								`customer_order_data` = '".$row_demand['customer_order_data']."',
+								`date_added` = '".time()."',
+								`deleted` = '0',
+								`completed` = '0'
+							";
+							
+							if ($db->query($q) === TRUE) {
+								$demand_id = $db->insert_id;
+
+							    $log[] = 'OC demand ['.$demand_id.'] has been inserted';
+							} else {
+								$log[] = 'OC demand has been not inserted: '.$db->error;
+							}
+						// ---
+					// ---
+							
 					// OC bonus for complere
 						$q = "SELECT * FROM `".DB_PREFIX."bonus_account` ba WHERE ba.code='order_complete' AND ba.status='1' LIMIT 1;";
 						$rows_ba = $db->query($q);
