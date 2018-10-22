@@ -288,7 +288,7 @@ switch ($action) {
 			// ---
 					
 			// Custom for complete
-				if( $order->status == 'complete' ){
+				if( $order->status == 'send-to-delivery' ){
 					// Demands
 						// OC - check demand
 							$q = "SELECT * FROM `ms_demand` WHERE `order_id`='".$order->externalId."' AND `ms_demand_id`<> '' AND `ms_customer_order_id`<> '' AND `customer_order_data`<> '' LIMIT 1;";
@@ -326,7 +326,11 @@ switch ($action) {
 							}
 						// ---
 					// ---
-							
+				}
+			// ---
+				
+			// Custom for complete
+				if( $order->status == 'complete' ){
 					// OC bonus for complere
 						$q = "SELECT * FROM `".DB_PREFIX."bonus_account` ba WHERE ba.code='order_complete' AND ba.status='1' LIMIT 1;";
 						$rows_ba = $db->query($q);
