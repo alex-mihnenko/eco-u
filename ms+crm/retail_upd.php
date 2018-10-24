@@ -166,6 +166,7 @@ if($_GET['type']){
 						INSERT INTO ms_demand SET 
 						ms_demand_id='',
 						ms_customer_order_id='".$ms_lead_id."',
+						ms_customer_order_status='0',
 						order_id='".$num."',
 						customer_order_data='".$ms_lead_id_meta."',
 						date_added='".time()."',
