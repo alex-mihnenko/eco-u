@@ -406,7 +406,7 @@ switch ($action) {
 								
 								$rows_bonus_history = $this->db->query($q);
 
-								if ($rows_bonus_history->num_rows > 0) {
+								if ($rows_bonus_history->num_rows == 0) {
 									$q = "
 										SELECT * FROM `".DB_PREFIX."order` o 
 										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_week) . "' LIMIT 1
@@ -421,6 +421,9 @@ switch ($action) {
 										$bh_amount = 0;
 									}
 
+								}
+								else {
+									$bh_amount = 0;
 								}
 							// ---
 
@@ -455,7 +458,7 @@ switch ($action) {
 								
 								$rows_bonus_history = $this->db->query($q);
 
-								if ($rows_bonus_history->num_rows > 0) {
+								if ($rows_bonus_history->num_rows == 0) {
 									$q = "
 										SELECT * FROM `".DB_PREFIX."order` o 
 										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_four_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' LIMIT 1
@@ -469,6 +472,9 @@ switch ($action) {
 									else {
 										$bh_amount = 0;
 									}
+								}
+								else {
+									$bh_amount = 0;
 								}
 							// ---
 
