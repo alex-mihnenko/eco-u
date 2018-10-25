@@ -99,14 +99,14 @@
 										</div>
 									</div>
 								</div>
-								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
-								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
-								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
-								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
+								<!-- <a href="/about/#delivery" class="item" target="_blank">Доставка</a> -->
+								<!-- <a href="/about/#payment" class="item" target="_blank">Оплата</a> -->
+								<!-- <a href="/about/#return" class="item" target="_blank">Возвраты</a> -->
+								<!-- <a href="/about/#contacts" class="item" target="_blank">Контакты</a> -->
 								<a href="/blog" class="item">Блог</a>
-								<a href="/testimonials" class="item">Отзывы</a>
-								<a href="/about" class="item" target="_blank">О нас</a>
-								<a href="/vacancys" class="item" target="_blank">Вакансии</a>
+								<a href="/testimonials" class="item">Отзывы о магазине</a>
+								<a href="/about" class="item">Как мы работаем</a>
+								<a href="/vacancys" class="item">Наши вакансии</a>
 							</div>
 						</div>
 					</div>
@@ -119,16 +119,16 @@
 
 							<div class="list">
 								<a href="/#l-p_35" class="item" data-action="scrollto" scroll-anchor="#l-p_35">Каталог товаров</a>
-								<a href="/#l-p_new" class="item" data-action="scrollto" scroll-anchor="#l-p_new">Новинки</a>
+								<!-- <a href="/#l-p_new" class="item" data-action="scrollto" scroll-anchor="#l-p_new">Новинки</a> -->
 								<!-- <a href="/#l-p_sale" class="item" data-action="scrollto" scroll-anchor="#l-p_sale">Скидки</a> -->
-								<a href="/about/#delivery" class="item" target="_blank">Доставка</a>
-								<a href="/about/#payment" class="item" target="_blank">Оплата</a>
-								<a href="/about/#return" class="item" target="_blank">Возвраты</a>
-								<a href="/about/#contacts" class="item" target="_blank">Контакты</a>
+								<!-- <a href="/about/#delivery" class="item" target="_blank">Доставка</a> -->
+								<!-- <a href="/about/#payment" class="item" target="_blank">Оплата</a> -->
+								<!-- <a href="/about/#return" class="item" target="_blank">Возвраты</a> -->
+								<!-- <a href="/about/#contacts" class="item" target="_blank">Контакты</a> -->
 								<a href="/blog" class="item">Блог</a>
-								<a href="/testimonials" class="item">Отзывы</a>
-								<a href="/about" class="item" target="_blank">О нас</a>
-								<a href="/vacancys" class="item" target="_blank">Вакансии</a>
+								<a href="/testimonials" class="item">Отзывы о магазине</a>
+								<a href="/about" class="item">Как мы работаем</a>
+								<a href="/vacancys" class="item">Наши вакансии</a>
 							</div>
 						</div>
 

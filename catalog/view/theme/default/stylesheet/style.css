@@ -184,7 +184,7 @@ table {
 body {
 	font-family: 'Roboto', sans-serif;
 	line-height: 1;
-	max-width: 1920px;
+	/*max-width: 1920px;*/
 	margin: 0 auto;
 	/*background: #F5F7F9;*/
 /*Делает шрифт лучше
@@ -1242,13 +1242,14 @@ footer {
 	margin: 15px 15px 5px 15px;
 }
 .p-o_link a {
+	display: block;
 	font-size: 17px;
 	text-decoration: none;
 	font-weight: 500;
 	color: #585858;
 	line-height: 1.25em;
 	overflow: hidden;
-	height: 2.5em;
+	min-height: 41px;
 }
 .p-o_link a:hover {
 	text-decoration: underline;

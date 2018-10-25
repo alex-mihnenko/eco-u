@@ -63,8 +63,12 @@ $(document).ready(function() {
 					Cookies.set('flags-modal-oneoff-coupon', true, { expires: 30 });
 
 					setTimeout(function(){
-						$('.modal[data-marker="modal-oneoff-coupon"]').modal('show');
-					}, 30000);
+						//$('.modal[data-marker="modal-oneoff-coupon"]').modal('show');
+						$('.adversting[data-target="modal-oneoff-coupon"]').css('display','block');
+						setTimeout(function(){
+							$('.adversting[data-target="modal-oneoff-coupon"]').attr('data-visible','true');
+						}, 500);
+					}, 10000);
 				// ---
 			}
 		// ---
@@ -527,6 +531,7 @@ $(document).ready(function() {
 					});
 
 					if( !validation ){ return false; }
+
 				// ---
 
 				// Send request
@@ -534,7 +539,6 @@ $(document).ready(function() {
 						// Get shipping price
 							$button.html('Подождите');
 							$button.attr('disabled','true');
-
 						
 							calculateDistanceFromMKAD(function(){
             					// ---
@@ -709,7 +713,7 @@ $(document).ready(function() {
                 // ---
             });
 
-            $('#body').on('click', '.product .c-p_submit', function(e){
+            $(document).on('click', '.product .c-p_submit', function(e){
 	            e.preventDefault();
 
 	            if($(this).hasClass('sold')) return false;
@@ -1706,7 +1710,7 @@ $(document).ready(function() {
 	// ---
 
 	// Modals
-		$('#body').on('click', '[data-action="modal"]', function(){
+		$(document).on('click', '[data-action="modal"]', function(){
 			// ---
 				$('.modal[data-marker="'+$(this).attr('data-target')+'"]').modal('show');
 			// ---
@@ -1820,7 +1824,7 @@ $(document).ready(function() {
 					$('a[data-marker="auth-button"]').removeAttr('data-remodal-target');
 					$('a[data-marker="auth-button"]').attr('href','/account');
 
-					if( window.location.pathname == '/account' ){
+					if( window.location.pathname.indexOf('/account')>=0 ){
 						$('a[data-marker="auth-button"').css('display','none');
 						$('a[data-marker="logout-button"]').css('display','block');
 					}
@@ -1940,98 +1944,105 @@ $(document).ready(function() {
 
     function calculateDistanceFromMKAD(callback){
     	// ---
+
 	        var startPoint = [55.7533,37.6225]; // Moscow geo center
 
 	        // Calculation end point
 	        	var address = $('.modal-basket [name="address"]').val();
 
-	        	ymaps.geocode(address, { results: 1 }).then(function (res) {
-			        var firstGeoObject = res.geoObjects.get(0);
-			        var endPoint = firstGeoObject.geometry.getCoordinates();
+	        	ymaps.geocode(address, { results: 1 }).then(
+		        	function (res) {
+				        var firstGeoObject = res.geoObjects.get(0);
+				        var endPoint = firstGeoObject.geometry.getCoordinates();
 
-			        // Create route
-			        	ymaps.route([startPoint,endPoint]).then(function (res) {
-			        		// ---
-				                // Объединим в выборку все сегменты маршрута.
-				                var pathsObjects = ymaps.geoQuery(res.getPaths());
-				                var edges = [];
+	    				console.log('#DEBUG');
 
-				                // Переберем все сегменты и разобьем их на отрезки.
-				                pathsObjects.each(function (path) {
-				                    var coordinates = path.geometry.getCoordinates();
-				                    for (var i = 1, l = coordinates.length; i < l; i++) {
-				                        edges.push({
-				                            type: 'LineString',
-				                            coordinates: [coordinates[i], coordinates[i - 1]]
-				                        });
-				                    }
-				                });
-				                
-				                var routeObjects = ymaps.geoQuery(edges).add(res.getWayPoints()).add(res.getViaPoints()).setOptions('strokeWidth', 3).addToMap(app.map);
-				                
-				                var objectsInMoscow = routeObjects.searchInside(app.mkad);
-				                var boundaryObjects = routeObjects.searchIntersect(app.mkad);
+				        // Create route
+				        	ymaps.route([startPoint,endPoint]).then(function (res) {
+				        		// ---
+					                // Объединим в выборку все сегменты маршрута.
+					                var pathsObjects = ymaps.geoQuery(res.getPaths());
+					                var edges = [];
 
-				                //routeObjects.setOptions({strokeColor: '#EEEEEE00'});
-				                //routeObjects.remove(objectsInMoscow).setOptions({strokeColor: '#FF0000FF'});
-				                var outerObject = routeObjects.remove(objectsInMoscow);
+					                // Переберем все сегменты и разобьем их на отрезки.
+					                pathsObjects.each(function (path) {
+					                    var coordinates = path.geometry.getCoordinates();
+					                    for (var i = 1, l = coordinates.length; i < l; i++) {
+					                        edges.push({
+					                            type: 'LineString',
+					                            coordinates: [coordinates[i], coordinates[i - 1]]
+					                        });
+					                    }
+					                });
+					                
+					                var routeObjects = ymaps.geoQuery(edges).add(res.getWayPoints()).add(res.getViaPoints()).setOptions('strokeWidth', 3).addToMap(app.map);
+					                
+					                var objectsInMoscow = routeObjects.searchInside(app.mkad);
+					                var boundaryObjects = routeObjects.searchIntersect(app.mkad);
 
-				                if( outerObject.getLength() > 0 ){
-					                var this_coordinates = outerObject.get(0).geometry.getCoordinates();
+					                //routeObjects.setOptions({strokeColor: '#EEEEEE00'});
+					                //routeObjects.remove(objectsInMoscow).setOptions({strokeColor: '#FF0000FF'});
+					                var outerObject = routeObjects.remove(objectsInMoscow);
 
-					                ymaps.route([this_coordinates[0],endPoint]).then(function (res) {
+					                if( outerObject.getLength() > 0 ){
+						                var this_coordinates = outerObject.get(0).geometry.getCoordinates();
+
+						                ymaps.route([this_coordinates[0],endPoint]).then(function (res) {
+						                	// ---
+							                	var deliverydistance = Math.ceil(res.properties._data.RouterRouteMetaData.length / 1000);
+							                	console.log('Delivery distance is ' + deliverydistance);
+							                	$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+
+							                	callback();
+							                // ---
+						                },
+									    function(e) {
+										  // Rejected
+										  	console.log("Rejected ymaps", e);
+
+										  	var deliverydistance = -1;
+											$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+
+						    				callback();
+										  // ---
+										});
+					                }
+					                else {
 					                	// ---
-						                	var deliverydistance = Math.ceil(res.properties._data.RouterRouteMetaData.length / 1000);
-						                	console.log('Delivery distance is ' + deliverydistance);
-						                	$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+										  	console.log("Point into MKAD");
 
-						                	callback();
-						                // ---
-					                },
-								    function(e) {
-									  // Rejected
-									  	console.log("Rejected ymaps", e);
+					                		var deliverydistance = 0;
+											$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 
-									  	var deliverydistance = -1;
-										$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+											callback();
+					                	// ---
+					                }
+					        	// ---
+					        },
+						    function(e) {
+								// Rejected
+								  	console.log("Rejected ymaps", e);
 
-					    				callback();
-									  // ---
-									});
-				                }
-				                else {
-				                	// ---
-									  	console.log("Point into MKAD");
+								  	var deliverydistance = -1;
+									$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 
-				                		var deliverydistance = 0;
-										$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
+				    				callback();
+								// ---
+							});
+				        // ---
+				    },
+				    function(e) {
+						// Rejected
+						  	console.log("Rejected ymaps", e);
 
-										callback();
-				                	// ---
-				                }
-				        	// ---
-				        },
-					    function(e) {
-							// Rejected
-							  	console.log("Rejected ymaps", e);
+						  	var deliverydistance = -1;
+							$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
 
-							  	var deliverydistance = -1;
-								$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
-
-			    				callback();
-							// ---
-						});
-			        // ---
-			    },
-			    function(e) {
-					// Rejected
-					  	console.log("Rejected ymaps", e);
-
-					  	var deliverydistance = -1;
-						$('.modal-basket [name="deliverydistance"]').val(deliverydistance);
-
-	    				callback();
-					// ---
+		    				callback();
+						// ---
+					}
+				).catch(error => {
+				    callback();
 				});
 	        // ---
 	    // ---
