@@ -2041,7 +2041,7 @@ $(document).ready(function() {
 		    				callback();
 						// ---
 					}
-				).catch(error => {
+				).catch(function(e){
 				    callback();
 				});
 	        // ---
