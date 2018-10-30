@@ -1479,7 +1479,7 @@ $(document).ready(function() {
 	// Components
 		// Form
 			// Select
-				$('#body').on('click', '.form-select .select', function(e){
+				$(document).on('click', '.form-select .select', function(e){
 					// ---
 						$this = $(this);
 						$options = $this.parents('.options');
@@ -1502,7 +1502,7 @@ $(document).ready(function() {
 					// ---
 				});
 
-				$('#body').on('focusout', '.form-select .select', function(e){
+				$(document).on('focusout', '.form-select .select', function(e){
 					$this = $(this);
 					$this.attr('data-style', 'default');
 					$this.parents('[data-product]').css('z-index', '0');
@@ -1510,7 +1510,7 @@ $(document).ready(function() {
 					e.stopPropagation();
 				});
 
-				$('#body').on('click', '.form-select .options .option', function(e){
+				$(document).on('click', '.form-select .options .option', function(e){
 					// ---
 						$this = $(this);
 						$select = $this.parents('.select');
@@ -1607,7 +1607,7 @@ $(document).ready(function() {
 					// ---
 				});
 
-				$('#body').on('change', '.form-select .select select', function(e){
+				$(document).on('change', '.form-select .select select', function(e){
 					// ---
 						$this = $(this);
 						$value = $this.val();
@@ -1620,7 +1620,7 @@ $(document).ready(function() {
 			// ---
 
 			// Checkbox
-				$('#body').on('click', '.form-checkbox', function(){
+				$(document).on('click', '.form-checkbox', function(){
 					// ---
 						$this = $(this);
 						$form = $(this).parents('form');
