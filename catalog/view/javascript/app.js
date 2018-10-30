@@ -42,17 +42,17 @@ $(document).ready(function() {
 		checkHash();
 		
 		// EnjoyHint
-			if( $('.qwe').find('.list-products').length > 0 ){
-				// ---
-					var enjoyhintVMFlag = Cookies.get('flags-enjoyhint-vertical-menu');
-					if( typeof enjoyhintVMFlag == 'undefined' ){
-						// ---
-							app.dashboard.enjoyhint = false;
-							Cookies.set('flags-enjoyhint-vertical-menu', true, { expires: 90 });
-						// ---
-					}
-				// ---
-			}
+			// if( $('.qwe').find('.list-products').length > 0 ){
+			// 	// ---
+			// 		var enjoyhintVMFlag = Cookies.get('flags-enjoyhint-vertical-menu');
+			// 		if( typeof enjoyhintVMFlag == 'undefined' ){
+			// 			// ---
+			// 				app.dashboard.enjoyhint = false;
+			// 				Cookies.set('flags-enjoyhint-vertical-menu', true, { expires: 90 });
+			// 			// ---
+			// 		}
+			// 	// ---
+			// }
 		// ---
 
 		// Modal coupon
@@ -867,7 +867,7 @@ $(document).ready(function() {
 		// ---
 
 		// Products modal
-			$("#category .tabs__block").on('click', '.n-p_list', function(e){
+			$(document).on('click', '#category .tabs__block .n-p_list', function(e){
 		        var tag = $(this).data('tag');
 		        var modalElement = $('.remodal[data-remodal-id="modal5"]');
 		        modalElement.find('.l-m_title').html('');
