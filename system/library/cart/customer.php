@@ -112,6 +112,7 @@ class Customer {
                     }
     			 
                  $this->session->data['customer_id'] = $customer_query->row['customer_id'];
+                 $this->session->data['vegan_card'] = $customer_query->row['vegan_card'];
                 // ---
 
     			$this->customer_id = $customer_query->row['customer_id'];

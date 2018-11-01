@@ -169,8 +169,9 @@
                 </div>
             <?php } ?>
         </div>
+        
+        <hr class="indent xs">
     </div>
-    <hr class="indent xs">
 
     <div class="coupon">
         <div class="apply">
@@ -178,7 +179,14 @@
             <button class="btn btn-bordered btn-sm btn-inline margin xs" type="button" data-action="send-apply-coupon">OK</button>
         </div>
     </div>
-    <hr class="indent xs">
+
+    <?php if($vegan_discount) { ?>
+        <hr class="indent xs">
+        <div class="text-align-center">
+            <p>Дополнительная скидка 5% по Vegetarian Card</p>
+        </div>
+        <hr class="indent xs">
+    <?php } ?>
 
     
     <?php if($error_total) { ?>

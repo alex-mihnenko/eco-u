@@ -1216,6 +1216,13 @@ footer {
 	box-shadow: 0 5px 27px rgba(0,0,0,.11);
 	padding: 0 0 23px 0;
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.box-p_o {
+		width: 100%;
+	}
+}
+
 .p-o_shadow {
 
 }
@@ -1239,8 +1246,9 @@ footer {
 
 .p-o_link {
 	box-sizing: border-box;
-	margin: 15px 15px 5px 15px;
+	margin: 15px 10px 5px 10px;
 }
+
 .p-o_link a {
 	display: block;
 	font-size: 17px;
@@ -1251,18 +1259,25 @@ footer {
 	overflow: hidden;
 	min-height: 41px;
 }
+
+@media (max-width: 767px) {
+	.p-o_link a {
+		min-height: 30px;
+	}
+}
+
 .p-o_link a:hover {
 	text-decoration: underline;
 }
 .p-o_select {
 	float: left;
-	width: 87px;
+	width: 75px;
 	height: 33px;
-	margin: 18px 0 0 15px;
+	margin: 18px 0 0 10px;
 }
 .p-o_right {
 	float: right;
-	margin: 13px 15px 0 0;
+	margin: 13px 10px 0 0;
 }
 .p-o_price {
 	float: left;
@@ -1280,9 +1295,16 @@ footer {
 	-webkit-box-shadow: 0 5px 10px rgba(6,21,38,.17);
 	box-shadow: 0 5px 10px rgba(6,21,38,.17);
 	box-sizing: border-box;
-	padding: 10px 9px 7px 14px;
+	padding: 10px 6px 7px 8px;
 	margin: 5px 0 0 0px;
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.p-o_price {
+		font-size: 14px;
+	}
+}
+
 .p-o_price span {
 	font-size: 14px;
 	color: #868A8D;
@@ -4629,12 +4651,24 @@ a.btn-back-to-cat:hover {
 .p-o_short-descr {
     font-size:12px;
 	color: #868281;
-    margin:5px 15px;
+    margin: 5px 5px;
     line-height:1.25em;
     height: 32px;
     overflow:hidden;
     text-overflow: ellipsis;
 }
+@media (min-width: 1200px) {
+	.p-o_short-descr {
+		margin: 5px 10px;
+	}
+}
+
+@media (max-width: 1199px) {
+	.p-o_short-descr {
+    	margin: 5px 0px;
+	}
+}
+
 .m-basket_title {
 	font-weight: 500;
     font-size: 30px;
@@ -5702,7 +5736,7 @@ select.ca-i_input.input-error_3 {
 	}
 	.p-o_select,
 	.container .p-o_select {
-		width: 50px;
+		width: 42px;
 		height: 18px;
 		margin: 14px 0 0 10px;
 	}
@@ -5723,8 +5757,8 @@ select.ca-i_input.input-error_3 {
 	.p-o_submit,
 	.p-o_submit2,
 	.n-a_time {
-	    width: 22px;
-	    height: 22px;
+	    width: 20px;
+	    height: 20px;
 	    background-size: 12px 13px;
 	    -moz-border-radius: 4px;
 	    -webkit-border-radius: 4px;
@@ -7019,12 +7053,13 @@ select.ca-i_input.input-error_3 {
 	.h-box_left {
 		width: 35%;
 	}
-        .p-o_short-descr
-        {
-            font-size:10px;
-            padding:5px 0px;
-            height: 2em;
-        }
+    .p-o_short-descr {
+        font-size:10px;
+        padding:5px 10px;
+        height: auto;
+        min-height: 22px;
+    }
+
 	.h-box_center {
 		width: 30%;
 	}
@@ -7179,7 +7214,8 @@ select.ca-i_input.input-error_3 {
 	.p-o_link a {
 		font-size: 11px;
 		line-height: 13px;
-		height: 26px;
+		height: auto;
+		max-height: none;
 	}
 	.c-p_title {
 		/*display: none;*/

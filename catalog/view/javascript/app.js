@@ -130,7 +130,7 @@ $(document).ready(function() {
 		/* Dropdown */
 			$(document).find('.dropdown .list').css('visibility', 'visible');
 			
-			$('#body').on('click', '.dropdown > [data-action="toggle"]', function(e){
+			$(document).on('click', '.dropdown > [data-action="toggle"]', function(e){
 				// ---
 					var $this = $(this).parents('.dropdown');
 
@@ -149,7 +149,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$('#body').on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
+			$(document).on('click', '.dropdown .sub-dropdown > [data-action="toggle"]', function(){
 				// ---
 					var $this = $(this).parents('.sub-dropdown');
 
@@ -166,7 +166,7 @@ $(document).ready(function() {
 				// ---
 			});
 			
-			$('#body').on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
+			$(document).on('click', '.dropdown .item:not(.sub-dropdown)', function(e){
 				// ---
 					var $this = $(this).parents('.dropdown');
 					$this.attr('data-style','default');
@@ -174,7 +174,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$('#body').on('click', function(e){
+			$(document).on('click', function(e){
 				// ---
 					// Check menu
 						if( $('nav .menu[data-marker="menu"]').attr('data-style') == 'open' ){
@@ -190,7 +190,7 @@ $(document).ready(function() {
 			});
 		/* Dropdown */
 
-		$('#body').on('click', 'nav [data-action="search-open"]', function(){
+		$(document).on('click', 'nav [data-action="search-open"]', function(){
 			// ---
 				var $this = $(this);
 				var $search = $this.parents('.flex').find('.search');
@@ -202,7 +202,7 @@ $(document).ready(function() {
 			// ---
 		});
 
-		$('#body').on('click', 'nav [data-action="search-close"]', function(){
+		$(document).on('click', 'nav [data-action="search-close"]', function(){
 			// ---
 				var $this = $(this);
 				var $search = $this.parents('.flex').find('.search');
@@ -219,7 +219,7 @@ $(document).ready(function() {
 			// ---
 		});
 		
-		$('#body').on('keydown', 'nav [name="search"]', function(){
+		$(document).on('keydown', 'nav [name="search"]', function(){
 			// ---
 				var $this = $(this);
 				
@@ -228,7 +228,7 @@ $(document).ready(function() {
 			// ---
 		});
 
-		$('#body').on('keyup', 'nav [name="search"]', function(){
+		$(document).on('keyup', 'nav [name="search"]', function(){
 			// ---
 				app.search.flag = false;
 
@@ -682,7 +682,7 @@ $(document).ready(function() {
 		// ---
 
 		// Add to cart
-			$('#body').on('click', '.p-o_submit', function(e){
+			$(document).on('click', '.p-o_submit', function(e){
 				// ---
 	                e.preventDefault();
 
@@ -747,7 +747,7 @@ $(document).ready(function() {
 
 	// Catalog
 		// Menu
-			$('#body').on('click', '.all-l_a2 .list-products li a', function(e){
+			$(document).on('click', '.all-l_a2 .list-products li a', function(e){
 				var $this = $(this);
 				var anchor = $this.attr('href');
 
@@ -808,7 +808,7 @@ $(document).ready(function() {
 		// ---
 
 		// Show more
-			$('#body').on('click', '.show-more', function(e){
+			$(document).on('click', '.show-more', function(e){
 				// ---
 		            var $button = $(this);
 		            var dataMode = $(this).data('mode');
@@ -918,7 +918,7 @@ $(document).ready(function() {
 		// Product modal
 			app.modals.product = $('[data-remodal-id="modal-product"]').remodal();
 
-			$('#body').on('click', '[data-product] a.p-o_thumb', function(e){
+			$(document).on('click', '[data-product] a.p-o_thumb', function(e){
 				var $this = $(this);
 				var href = $(this).attr('href');
 				var product_id = $(this).parents('[data-product]').attr('data-product');
@@ -1236,7 +1236,7 @@ $(document).ready(function() {
 				// ---
 			});
 
-			$('#body').on('click', '[data-action="repeat-confirm"]', function(e){
+			$(document).on('click', '[data-action="repeat-confirm"]', function(e){
 				// ---
 					$body = $(this).parents('.body');
 					$order_id = $(this).attr('data-order-id');
@@ -1435,7 +1435,7 @@ $(document).ready(function() {
 		// Blog modal
 			app.modals.blog = $('[data-remodal-id="modal-blog"]').remodal();
 
-			$('#body').on('click', '.blog .featured a.post-featured', function(e){
+			$(document).on('click', '.blog .featured a.post-featured', function(e){
 				var $this = $(this);
 				var href = $(this).attr('href');
 				var post_id = $(this).attr('data-id');
@@ -1653,7 +1653,7 @@ $(document).ready(function() {
 		// ---
 
 		// Buttons
-			// $('#body').on('mouseenter', '.btn-toggle button', function(){
+			// $(document).on('mouseenter', '.btn-toggle button', function(){
 			// 	var $this = $(this);
 			// 	var value = parseInt($this.attr('data-value'));
 			// 	var count = 1;
@@ -1673,7 +1673,7 @@ $(document).ready(function() {
 			// 	});
 			// });
 
-			// $('#body').on('mouseleave', '.btn-toggle', function(){
+			// $(document).on('mouseleave', '.btn-toggle', function(){
 			// 	if( $(this).attr('data-set') !== 'true' ){
 			// 		$(this).find('button').each(function(key, val){
 			// 			$(this).removeClass('active');
@@ -1682,7 +1682,7 @@ $(document).ready(function() {
 			// 	}
 			// });
 			
-			$('#body').on('click', '.btn-toggle button', function(){
+			$(document).on('click', '.btn-toggle button', function(){
 				var $this = $(this);
 				var value = $this.attr('data-value');
 

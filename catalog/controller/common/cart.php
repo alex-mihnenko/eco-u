@@ -475,6 +475,15 @@ class ControllerCommonCart extends Controller {
                 if($customer_id = $this->customer->isLogged()) {
                     $orders = $this->model_checkout_order->getPersonalOrders($customer_id);
 
+                    // Vegan discount
+                        if( isset($this->session->data['vegan_card']) && !empty($this->session->data['vegan_card']) ){
+                            $data['vegan_discount'] = true;
+                        }
+                        else {
+                            $data['vegan_discount'] = false;
+                        }
+                    // ---
+
                     // Personal discount
                         $customer_discount = (int)$this->customer->getCustomerDiscount($customer_id);
                         

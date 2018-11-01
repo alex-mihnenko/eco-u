@@ -1176,6 +1176,19 @@ class ControllerAjaxIndex extends Controller {
                     $personal_discount_percentage = $customer_discount;
                 // ---
 
+                // Vegan discount
+                    if( isset($this->session->data['vegan_card']) && !empty($this->session->data['vegan_card']) ){
+                      $basePrice = $this->cart->getTotal();
+                      $order_discount = 5/100;
+
+                      $vegan_discount = $order_discount * $basePrice;
+                      $vegan_discount_percentage = 5;
+
+                      $personal_discount = $personal_discount + $vegan_discount;
+                      $personal_discount_percentage = $personal_discount_percentage + $vegan_discount_percentage;
+                    }
+                // ---
+
                 // Cumulative discount
                     // $totalCustomerOutcome = 0;
 
