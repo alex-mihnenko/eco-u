@@ -566,7 +566,16 @@ class ControllerAjaxIndex extends Controller {
               $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
 
               if( $customer_bonus['bonus'] > 0 ){
-                  $this->session->data['bonus'] = $customer_bonus['bonus'];
+                // ---
+                  $cartLimit = intval($this->cart->getTotal() * 0.2);
+                  
+                  if( $cartLimit >= intval($customer_bonus['bonus'])) {
+                    $this->session->data['bonus'] = $customer_bonus['bonus'];
+                  }
+                  else {
+                    $this->session->data['bonus'] = $cartLimit;
+                  }
+                // ---
               }
               else {
                   $this->session->data['bonus'] = false;
@@ -2777,8 +2786,15 @@ class ControllerAjaxIndex extends Controller {
 
                 foreach ($results as $key => $item) {
                   // ---
+                    if( $item['status'] == 0 ){
+                      $class_bonus_history = 'disabled';
+                    }
+                    else {
+                      $class_bonus_history = '';
+                    }
+
                     $history[] = '
-                      <div class="panel bonus-history" data-id="'.$item['bonus_history_id'].'">
+                      <div class="panel bonus-history '.$class_bonus_history.'" data-id="'.$item['bonus_history_id'].'">
                           <div class="body">
                             <div class="text">
                               <span><i class="fa fa-calendar"></i> '.date('j', $item['time']).' '.$months[intval(date('m', $item['time']))].' '.date('Y', $item['time']).'</span>
@@ -2789,7 +2805,9 @@ class ControllerAjaxIndex extends Controller {
                       </div>
                     ';
 
-                    $total = $total + floatval($item['amount']);
+                    if( $item['status'] == 1 ){
+                      $total = $total + floatval($item['amount']);
+                    }
                   // ---
                 }
 

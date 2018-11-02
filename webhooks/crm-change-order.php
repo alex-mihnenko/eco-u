@@ -363,7 +363,8 @@ switch ($action) {
 								`order_id` = '" . $row_order['order_id'] . "',
 								`amount` = '" . $amount . "',
 								`comment` = '',
-								`time` = '" . time() . "'
+								`time` = '" . time() . "',
+								`stats` = '1'
 							";
 							
 							if ($db->query($q) === TRUE) {
@@ -436,7 +437,8 @@ switch ($action) {
 										`order_id` = '" . $row_order['order_id'] . "',
 										`amount` = '" . $bh_amount . "',
 										`comment` = '',
-										`time` = '" . time() . "'
+										`time` = '" . time() . "',
+										`status` = '1'
 									";
 									
 									if ($db->query($q) === TRUE) {
@@ -487,7 +489,8 @@ switch ($action) {
 										`order_id` = '" . $row_order['order_id'] . "',
 										`amount` = '" . $bh_amount . "',
 										`comment` = '',
-										`time` = '" . time() . "'
+										`time` = '" . time() . "',
+										`status` = '1'
 									";
 									
 									if ($db->query($q) === TRUE) {

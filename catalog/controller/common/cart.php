@@ -591,7 +591,16 @@ class ControllerCommonCart extends Controller {
                     $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
 
                     if( $customer_bonus['bonus'] > 0 ){
-                        $data['bonus'] = $customer_bonus['bonus'];
+                        // $data['bonus'] = $customer_bonus['bonus'];
+
+                        $cartLimit = intval($this->cart->getTotal() * 0.2);
+                  
+                        if( $cartLimit >= intval($customer_bonus['bonus'])) {
+                            $data['bonus'] = $customer_bonus['bonus'];
+                        }
+                        else {
+                            $data['bonus'] = $cartLimit;
+                        }
                     }
                     else {
                         $data['bonus'] = false;

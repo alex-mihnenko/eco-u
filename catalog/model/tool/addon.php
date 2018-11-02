@@ -426,7 +426,8 @@ class ModelToolAddon extends Model {
 							`order_id` = '" . $order_id . "',
 							`amount` = '" . $bh_amount . "',
 							`comment` = '" . $comment . "',
-							`time` = '" . time() . "'
+							`time` = '" . time() . "',
+							`status` = '1'
 						;");
             			
             			return true;
