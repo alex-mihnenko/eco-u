@@ -85,7 +85,7 @@ class ControllerAccountTestimonials extends Controller {
 	              					$childs_html .= '
 	              						<div class="child">
 				              				<div class="author">
-				              					<div class="image" style=" background: url('.$this->model_tool_image->resize($child['image'], 100, 100).') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
+				              					<div class="image" style=" background: url('.$child['image'], 100, 100.') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
 				              				</div>
 				              				<div class="body">
 					              				<div class="about">
@@ -294,7 +294,7 @@ class ControllerAccountTestimonials extends Controller {
 		              					$childs_html .= '
 		              						<div class="child">
 					              				<div class="author">
-					              					<div class="image" style=" background: url('.$this->model_tool_image->resize($child['image'], 100, 100).') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
+					              					<div class="image" style=" background: url('.$child['image'], 100, 100.') no-repeat center center scroll; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
 					              				</div>
 					              				<div class="body">
 						              				<div class="about">
