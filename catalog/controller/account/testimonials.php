@@ -13,6 +13,7 @@ class ControllerAccountTestimonials extends Controller {
 
 			$this->load->language('account/testimonials');
 			$this->load->model('account/testimonials');
+			$this->load->model('tool/image');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
 		// ---
