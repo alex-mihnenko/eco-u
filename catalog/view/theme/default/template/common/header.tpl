@@ -210,7 +210,7 @@
 				<div class="t-c_box">
 					<div class="t-c_title">Войти</div>
 
-					<form id="form-auth" class="js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
+					<form class="form-auth js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
 						<div class="t-c_input">
 							<input type="text" placeholder="Номер телефона" class="input" name="phone" required="">
 							<span class="underline"></span>
@@ -287,6 +287,40 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="remodal modal-bonus-auth modal-sm" data-remodal-id="modal-bonus-auth">
+			<button data-remodal-action="close" class="remodal-close"></button>
+
+
+			<div class="body t-c_box">
+				<div class="form">
+
+					<div class="t-c_title" style="text-align: center; margin-bottom: 10px;">Войдите в личный кабинет</div>
+					<p>Чтобы присоединиться к бонусной программе необходимо войти в свой личный кабинет</p>
+					<hr class="indent sm">
+
+					<form class="form-auth js-hide_1" action="/auth.php" method="POST" target="ph_iframe">
+						<div class="t-c_input">
+							<input type="text" placeholder="Номер телефона" class="input" name="phone" required="">
+							<span class="underline"></span>
+						</div>
+						<div class="t-c_input">
+							<input name="password" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" class="input i-2" required="">
+							<span class="underline"></span>
+						</div>
+	                    
+	                    <div class="message-error"></div>
+						<input type="submit" value="Войти" class="m-p_entrance">
+						
+						<div>
+							<div class="m-p_forgot" data-action="auth-recovery-init">Напомнить пароль?</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
 
 		<div class="remodal modal-phone modal-sm" data-remodal-id="modal-phone">
 			<button data-remodal-action="close" class="remodal-close"></button>
@@ -442,8 +476,6 @@
 
 			</div>
 		</div>
-
-
 
 		<div class="remodal modal-bonus-program" data-remodal-id="modal-bonus-program">
 			<button data-remodal-action="close" class="remodal-close"></button>

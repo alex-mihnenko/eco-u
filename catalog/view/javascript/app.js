@@ -943,6 +943,7 @@ $(document).ready(function() {
 
 	// Account
 		app.modals.auth = $('[data-remodal-id="modal"]').remodal();
+		app.modals.auth_bonus = $('[data-remodal-id="modal-bonus-auth"]').remodal();
 		app.modals.recovery = $('[data-remodal-id="modal-recovery"]').remodal();
 		app.modals.phone = $('[data-remodal-id="modal-phone"]').remodal();
 
@@ -955,7 +956,7 @@ $(document).ready(function() {
 		});
 
 		// Auth
-			$('#form-auth').submit(function(){
+			$('.form-auth').submit(function(){
 				console.log('Auth init');
 				
 				var $form = $(this);
@@ -1034,14 +1035,15 @@ $(document).ready(function() {
 		// ---
 
 		// Recovery
-			$('[data-remodal-id="modal"]').on('click', '[data-action="auth-recovery-init"]', function(){
+			$('.remodal').on('click', '[data-action="auth-recovery-init"]', function(){
 				// ---
-					var $form = $(this).parents('#form-auth');
+					var $form = $(this).parents('.form-auth');
 					var telephone = $form.find('[name="phone"]').val();
 					
 					app.modals.auth.close();
+					app.modals.auth_bonus.close();
 
-			        $('#form-recovery').find('[name="phone"]').val(telephone);
+			        $('.form-recovery').find('[name="phone"]').val(telephone);
 
 					setTimeout(function(){
 						app.modals.recovery.open();

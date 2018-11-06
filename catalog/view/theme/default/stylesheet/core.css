@@ -249,7 +249,7 @@ xxl
 
 	p.xs {
 		font-size: 14px !important;
-	    line-height: 24px !important;
+	    line-height: 18px !important;
 	    font-weight: 400 !important;;
 	    color: #767B81 !important;;
 	    box-sizing: border-box !important;;
@@ -277,6 +277,20 @@ xxl
 	    color: #868281;
 	    box-sizing: border-box;
 	    padding: 0 0 5px;
+	}
+
+	ul.list.colors {
+		list-style: none;
+		padding: 0;
+	}
+
+	ul.list.colors > li {
+		margin-bottom: 20px;
+	}
+
+	ul.list.colors.green > li > i {
+		color: #749D3E;
+		margin-right: 5px;
 	}
 
 	.link {
@@ -1699,6 +1713,199 @@ xxl
 				width: 60px;
 				height: 60px;
 			}
+
+			/* History */
+				#account .bonus-list .header {
+					border-bottom: 1px solid #E6E6E6;
+				}
+
+				@media (max-width: 767px) {
+					#account .bonus-list .header {
+						padding: 10px 0px 10px;
+					}
+				}
+
+				#account .bonus-list .row > div {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					align-content: center;
+					min-height: 54px;
+				}
+
+				@media (max-width: 767px) {
+					#account .bonus-list .row > div {
+						min-height: auto;
+					}
+				}
+
+				@media (max-width: 575px) {
+					#account .bonus-list .row > .col-xs-6 {
+						width: 50%;
+					}
+
+					#account .bonus-list .row > div {
+						justify-content: center;
+						align-items: flex-start;
+						align-content: center;
+						text-align: left;
+					}
+				}
+
+				#account .bonus-list .header span {
+					display: block;
+					box-sizing: border-box;
+					padding-top: 15px;
+					padding-bottom: 15px;
+
+					font-size: 12px;
+				    font-weight: 700;
+				    line-height: 12px;
+				    box-sizing: border-box;
+				    color: #585858;
+				    text-decoration: none;
+				    text-transform: uppercase;
+				}
+
+				@media (max-width: 991px) {
+					#account .bonus-list .header span {
+						font-size: 11px;
+					}
+				}
+
+				#account .bonus-list .header p, #account .bonus-list .header span {
+					display: inline-flex !important;
+					padding: 0 !important;
+				}
+
+
+				#account .bonus-list .body .order {
+					border-bottom: 1px solid #E6E6E6;
+					background-color: #FFFFFF;
+
+					-webkit-transition: background-color .5s;
+					-moz-transition: background-color .5s;
+					-ms-transition: background-color .5s;
+					-o-transition: background-color .5s;
+					transition: background-color .5s;
+				}
+				
+				#account .bonus-list .body .order div[data-action="order-about"] {
+					cursor: pointer;
+				}
+				
+				#account .bonus-list .body .order:hover {
+					background-color: #f2f2f2;
+				}
+
+				@media (min-width: 576px) and (max-width: 767px) {
+					#account .bonus-list .body .order:nth-child(odd) {
+						background-color: #f2f2f2;
+					}
+
+					#account .bonus-list .body .order {
+						padding-top: 10px;
+						padding-bottom: 10px;
+					}
+				}
+
+				@media (max-width: 575px) {
+					#account .bonus-list .body .order:nth-child(odd) {
+						background-color: #f2f2f2;
+					}
+
+					#account .bonus-list .body .order {
+						padding-top: 10px;
+						padding-bottom: 10px;
+					}
+
+					#account .bonus-list .body .order .col-xs-4{
+						-ms-flex: 0 0 33.333333%;
+					    flex: 0 0 33.333333%;
+					    max-width: 33.333333%;
+					}
+
+					#account .bonus-list .body .order .col-sm-8 {
+					    -ms-flex: 0 0 66.666667%;
+					    flex: 0 0 66.666667%;
+					    max-width: 66.666667%;
+					}
+
+					#account .bonus-list .body .order .col-sm-4 {
+					    -ms-flex: 0 0 33.333333%;
+					    flex: 0 0 33.333333%;
+					    max-width: 33.333333%;
+					}
+				}
+
+				#account .bonus-list .body .order span {
+					display: block;
+					box-sizing: border-box;
+					padding-top: 25px;
+					padding-bottom: 25px;
+
+					font-size: 14px;
+				    font-weight: 700;
+				    line-height: 18px;
+				    box-sizing: border-box;
+				    color: #585858;
+				    text-decoration: none;
+				}
+
+				#account .bonus-list .body .order p.xs {
+					font-size: 10px !important;
+				    line-height: 10px !important;
+				}
+
+				@media (min-width: 576px) and (max-width: 767px) {
+					#account .bonus-list .body .order span {
+						padding-top: 5px;
+						padding-bottom: 5px;
+					}
+				}
+
+				@media (max-width: 575px) {
+					#account .bonus-list .body .order span {
+						padding-top: 5px;
+						padding-bottom: 5px;
+					}
+				}
+
+
+				#account .bonus-list .body .order .btn {
+					display: inline-block;
+					margin-top: 16px;
+
+					width: auto;
+					min-width: 96px;
+					box-sizing: border-box;
+					padding: 10px 10px;
+
+					font-size: 12px;
+				    font-weight: 700;
+				    line-height: 12px;
+				    box-sizing: border-box;
+				    text-decoration: none;
+				    text-transform: uppercase;
+				}
+
+				@media (min-width: 576px) and (max-width: 767px) {
+					#account .bonus-list .body .order .btn {
+						margin-top: 0px;
+					}
+				}
+
+				@media (max-width: 575px) {
+					#account .bonus-list .body .order .btn {
+						min-width: 74px;
+						margin-top: 0px;
+
+						font-size: 10px;
+					    line-height: 10px;
+					}
+				}
+			/* History */
 		/* Bonus */
 
 		/* Order about */
@@ -1808,13 +2015,13 @@ xxl
 					}
 
 					.remodal.modal-order-about .delivery p {
-					    font-size: 12px;
-					    line-height: 16px;
+					    font-size: 12px !important;
+					    line-height: 16px !important;
 					}
 
 					.remodal.modal-order-about .delivery p.xs {
-					    font-size: 10px;
-					    line-height: 14px;
+					    font-size: 10px !important;
+					    line-height: 14px !important;
 					}
 				}
 			/* Delivery */

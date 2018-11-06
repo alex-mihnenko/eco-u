@@ -609,7 +609,6 @@ class ControllerCommonCart extends Controller {
                 else {
                     $data['bonus'] = false;
                 }
-
             // ---
         
             return $this->load->view('common/cart_page_cart', $data);

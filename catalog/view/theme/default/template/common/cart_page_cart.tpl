@@ -87,12 +87,21 @@
                     </div>
                 <?php } ?>
             <?php } else { ?> 
-                <div class="body">
-                    <a href="#modal-bonus-program">
-                        <span><img src="/catalog/view/theme/default/img/cart/icon-ecoin.png" /></span>
-                        <p>У вас пока нет <br class="d-block d-sm-none">бонусов</p>
-                    </a>
-                </div>
+                <?php if( $islogged == false ) { ?>
+                    <div class="body">
+                        <a href="#modal-bonus-auth">
+                            <span><img src="/catalog/view/theme/default/img/cart/icon-ecoin.png" /></span>
+                            <p>Пока нет <br class="d-block d-sm-none">бонусов</p>
+                        </a>
+                    </div>
+                <?php } else { ?> 
+                    <div class="body">
+                        <a href="#modal-bonus-program">
+                            <span><img src="/catalog/view/theme/default/img/cart/icon-ecoin.png" /></span>
+                            <p>Пока нет <br class="d-block d-sm-none">бонусов</p>
+                        </a>
+                    </div>
+                <?php } ?>
             <?php } ?>
         </div>
 

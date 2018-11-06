@@ -458,7 +458,7 @@ class ModelToolAddon extends Model {
 
 		public function getCustomerHystory($customer_id) {
 			$sql = "
-				SELECT * FROM `".DB_PREFIX."bonus_history` bh 
+				SELECT bh.bonus_history_id, bh.time, bh.amount, bh.comment, ba.name, bh.status FROM `".DB_PREFIX."bonus_history` bh 
 				LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id  
 				WHERE bh.customer_id='".$customer_id."' ORDER BY bh.time ASC
 			;";

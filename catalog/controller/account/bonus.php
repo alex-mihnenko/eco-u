@@ -115,6 +115,10 @@ class ControllerAccountBonus extends Controller {
                 $customer_bonus = $this->model_tool_addon->getCustomerTotalBonusAmount($customer_id);
                 $data['bonus'] = $customer_bonus['bonus'];
             // ---
+
+            // History
+                $data['bonuses'] = $this->model_tool_addon->getCustomerHystory($customer_id);
+            // ---
         }
         
         $this->response->setOutput($this->load->view('account/bonus', $data));
