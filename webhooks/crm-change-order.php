@@ -1,7 +1,7 @@
 ﻿<?php
 // Init
 	header("Access-Control-Allow-Origin: *");
-	
+
 	include("../_lib.php");
 
 	header('Content-Type: text/html; charset=utf-8');
@@ -36,7 +36,7 @@
 
 	$order = $result->order;
 	$customer = $result->order->customer;
-	
+
 	$log[] = 'Order status is '.$order->status;
 
 	$action = '';
@@ -90,7 +90,7 @@ switch ($action) {
 						// ---
 					}
 				// ---
-					
+
 				// Save address
 					// To CRM
 						if( isset($customer->address) ){
@@ -118,12 +118,12 @@ switch ($action) {
 								$customerCustomFields = array();
 
 								$customerCustomFields['customer_delivery_address_type'] = $order->customFields->order_delivery_address_type;
-								
+
 								$customerData['customFields'] = $customerCustomFields;
 							}
 						// ---
 
-						
+
 						// Save  address
 							$url = 'https://eco-u.retailcrm.ru/api/v5/customers/'.$customer->id.'/edit';
 
@@ -142,8 +142,8 @@ switch ($action) {
 					// To OC
 						// Edit customer addresses
 							$q = "
-								UPDATE `".DB_PREFIX."address` SET 
-								`custom_field` = '' 
+								UPDATE `".DB_PREFIX."address` SET
+								`custom_field` = ''
 								WHERE `customer_id`='".$row_order['customer_id']."'
 							;";
 
@@ -162,7 +162,7 @@ switch ($action) {
 						if ($rows_address->num_rows == 0 && !empty($order_address['text']) ) {
 							// ---
 								$q = "
-									INSERT INTO `".DB_PREFIX."address` SET 
+									INSERT INTO `".DB_PREFIX."address` SET
 									`customer_id` = '".$row_order['customer_id']."',
 									`firstname` = '".$row_order['firstname']."',
 									`lastname` = '".$row_order['lastname']."',
@@ -175,7 +175,7 @@ switch ($action) {
 									`zone_id` = '0',
 									`custom_field` = '".$oc_address_type."'
 								";
-								
+
 								if ($db->query($q) === TRUE) {
 								    $log[] = 'OC customer address ['.$row_order['customer_id'].'] has been inserted';
 								} else {
@@ -187,8 +187,8 @@ switch ($action) {
 							$row_address = $rows_address->fetch_assoc();
 
 							$q = "
-								UPDATE `".DB_PREFIX."address` SET 
-								`custom_field` = '".$oc_address_type."' 
+								UPDATE `".DB_PREFIX."address` SET
+								`custom_field` = '".$oc_address_type."'
 								WHERE `customer_id`='".$row_order['customer_id']."' AND `address_id`='".$row_address['address_id']."'
 							;";
 
@@ -212,8 +212,8 @@ switch ($action) {
 
 					// Edit order delivery time
 						$q = "
-							UPDATE `".DB_PREFIX."order` SET 
-							`delivery_time` = '".$delivery_time."' 
+							UPDATE `".DB_PREFIX."order` SET
+							`delivery_time` = '".$delivery_time."'
 							WHERE `order_id`='".$row_order['order_id']."'
 						;";
 
@@ -286,7 +286,7 @@ switch ($action) {
 					// ---
 				}
 			// ---
-					
+
 			// Custom for complete
 				if( $order->status == 'send-to-delivery' ){
 					// Demands
@@ -307,7 +307,7 @@ switch ($action) {
 
 						// OC - create demand task
 							$q = "
-								INSERT INTO `ms_demand` SET 
+								INSERT INTO `ms_demand` SET
 								`ms_demand_id` = '',
 								`ms_customer_order_id` = '".$row_demand['ms_customer_order_id']."',
 								`order_id` = '".$row_demand['order_id']."',
@@ -316,7 +316,7 @@ switch ($action) {
 								`deleted` = '0',
 								`completed` = '0'
 							";
-							
+
 							if ($db->query($q) === TRUE) {
 								$demand_id = $db->insert_id;
 
@@ -328,7 +328,7 @@ switch ($action) {
 					// ---
 				}
 			// ---
-				
+
 			// Custom for complete
 				if( $order->status == 'complete' ){
 					// OC bonus for complere
@@ -349,7 +349,7 @@ switch ($action) {
 
 							if ($rows_o->num_rows > 0) {
 								$row_o = $rows_o->fetch_assoc();
-								
+
 								$amount = $ba_coin * round($row_o['total'] / $ba_rate);
 							}
 							else {
@@ -357,16 +357,16 @@ switch ($action) {
 							}
 
 							$q = "
-								INSERT INTO `".DB_PREFIX."bonus_history` SET 
-								`bonus_account_id` = '" . $ba_account_id . "', 
-								`customer_id` = '" . $row_order['customer_id'] . "', 
+								INSERT INTO `".DB_PREFIX."bonus_history` SET
+								`bonus_account_id` = '" . $ba_account_id . "',
+								`customer_id` = '" . $row_order['customer_id'] . "',
 								`order_id` = '" . $row_order['order_id'] . "',
 								`amount` = '" . $amount . "',
 								`comment` = '',
 								`time` = '" . time() . "',
-								`stats` = '1'
+								`status` = '1'
 							";
-							
+
 							if ($db->query($q) === TRUE) {
 								$bonus_history_id = $db->insert_id;
 
@@ -384,12 +384,12 @@ switch ($action) {
 						$unix_today_ago_four_week = mktime(0, 0, 0, date('n',time()-2419200), date('j',time()-2419200), date('Y',time()-2419200));
 
 						$q = "
-							SELECT * FROM `".DB_PREFIX."bonus_account` ba 
+							SELECT * FROM `".DB_PREFIX."bonus_account` ba
 							WHERE ba.code='order_weekly' AND ba.status='1' LIMIT 1
 						;";
 
 						$rows_bonus_account = $db->query($q);
-						
+
 						if ($rows_bonus_account->num_rows > 0) {
 							$row_bonus_account = $rows_bonus_account->fetch_assoc();
 
@@ -397,24 +397,26 @@ switch ($action) {
 							$ba_name = $row_bonus_account['name'];
 							$ba_coin = intval($row_bonus_account['coin']);
 							$ba_rate = $row_bonus_account['rate'];
-							
+
 							// One per week
 								$q = "
-									SELECT * FROM `".DB_PREFIX."bonus_history` bh 
+									SELECT * FROM `".DB_PREFIX."bonus_history` bh
 									LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id
 									WHERE bh.customer_id = '".$row_order['customer_id']."' AND ba.code = 'order_weekly' AND bh.time > '" . $unix_today_ago_week . "' LIMIT 1
 								;";
-								
-								$rows_bonus_history = $this->db->query($q);
+
+								//$rows_bonus_history = $this->db->query($q);
+                                $rows_bonus_history = $db->query($q);
 
 								if ($rows_bonus_history->num_rows == 0) {
 									$q = "
-										SELECT * FROM `".DB_PREFIX."order` o 
+										SELECT * FROM `".DB_PREFIX."order` o
 										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_week) . "' LIMIT 1
 									;";
-									
-									$rows_order = $this->db->query($sql);
-									
+
+									//$rows_order = $this->db->query($sql);
+                                    $rows_order = $db->query($q);
+
 									if ($rows_order->num_rows > 0) {
 										$bh_amount = $ba_coin;
 									}
@@ -431,16 +433,16 @@ switch ($action) {
 							// Add history
 								if( $bh_amount != 0 ) {
 									$q = "
-										INSERT INTO `".DB_PREFIX."bonus_history` SET 
-										`bonus_account_id` = '" . $ba_account_id . "', 
-										`customer_id` = '" . $row_order['customer_id'] . "', 
+										INSERT INTO `".DB_PREFIX."bonus_history` SET
+										`bonus_account_id` = '" . $ba_account_id . "',
+										`customer_id` = '" . $row_order['customer_id'] . "',
 										`order_id` = '" . $row_order['order_id'] . "',
 										`amount` = '" . $bh_amount . "',
 										`comment` = '',
 										`time` = '" . time() . "',
 										`status` = '1'
 									";
-									
+
 									if ($db->query($q) === TRUE) {
 										$bonus_history_id = $db->insert_id;
 
@@ -453,21 +455,21 @@ switch ($action) {
 
 							// One per two week
 								$q = "
-									SELECT * FROM `".DB_PREFIX."bonus_history` bh 
+									SELECT * FROM `".DB_PREFIX."bonus_history` bh
 									LEFT JOIN `".DB_PREFIX."bonus_account` ba ON ba.bonus_account_id = bh.bonus_account_id
 									WHERE bh.customer_id = '".$row_order['customer_id']."' AND ba.code = 'order_monthly' AND bh.time > '" . $unix_today_ago_two_week . "' LIMIT 1
 								;";
-								
-								$rows_bonus_history = $this->db->query($q);
 
+								//$rows_bonus_history = $this->db->query($q);
+								$rows_bonus_history = $db->query($q);
 								if ($rows_bonus_history->num_rows == 0) {
 									$q = "
-										SELECT * FROM `".DB_PREFIX."order` o 
+										SELECT * FROM `".DB_PREFIX."order` o
 										WHERE o.customer_id = '".$row_order['customer_id']."' AND o.date_added >= '" . date('Y-m-d 00:00:00',$unix_today_ago_four_week) . "' AND o.date_added <= '" . date('Y-m-d 00:00:00',$unix_today_ago_two_week) . "' LIMIT 1
 									;";
-									
-									$rows_order = $this->db->query($sql);
-									
+
+									//$rows_order = $this->db->query($sql);
+									$rows_order = $db->query($q);
 									if ($rows_order->num_rows > 0) {
 										$bh_amount = $ba_coin;
 									}
@@ -483,16 +485,16 @@ switch ($action) {
 							// Add history
 								if( $bh_amount != 0 ) {
 									$q = "
-										INSERT INTO `".DB_PREFIX."bonus_history` SET 
-										`bonus_account_id` = '" . $ba_account_id . "', 
-										`customer_id` = '" . $row_order['customer_id'] . "', 
+										INSERT INTO `".DB_PREFIX."bonus_history` SET
+										`bonus_account_id` = '" . $ba_account_id . "',
+										`customer_id` = '" . $row_order['customer_id'] . "',
 										`order_id` = '" . $row_order['order_id'] . "',
 										`amount` = '" . $bh_amount . "',
 										`comment` = '',
 										`time` = '" . time() . "',
 										`status` = '1'
 									";
-									
+
 									if ($db->query($q) === TRUE) {
 										$bonus_history_id = $db->insert_id;
 
